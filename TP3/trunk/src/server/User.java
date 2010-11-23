@@ -10,8 +10,9 @@ public class User {
 	private String passwordHash = null;
 	private Status status = Status.OFFLINE;
 	private String nickname = null;
-	private String personalMessage;
+	private String personalMessage = "";
 	private HashMap<String, User> friendList = new HashMap<String, User>();
 	private HashMap<String, User> inFreindList = new HashMap<String, User>();
+	private HashMap<String, User> blockedUsers = new HashMap<String, User>();
 	
 }
