@@ -1,11 +1,14 @@
 package client;
 
+import javax.swing.SwingUtilities;
 import client.ui.*;
 
 public class GimClient {
 	public static void main(String[] args) {
-		GimUI gui = new GimUI();
-		Thread g = new Thread(gui);
-		g.start();
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				new GimUI(new ContactPanel()); 
+			}
+		});
 	}
 }
