@@ -15,7 +15,7 @@ public class GimEvent implements ActionListener {
 			System.out.println("chat clicked.");
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
-					new GimUI(new ChatPanel());
+					new GimUI("GIM - Chat with Contact", new ChatPanel());
 				}
 			});
 		}

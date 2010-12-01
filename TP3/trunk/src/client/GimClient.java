@@ -7,7 +7,7 @@ public class GimClient {
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				new GimUI(new ContactPanel()); 
+				new GimUI("GIM", new ContactPanel()); 
 			}
 		});
 	}

@@ -1,6 +1,7 @@
 package client.ui;
 
 import java.awt.*;
+
 import javax.swing.*;
 
 @SuppressWarnings("serial")
@@ -14,5 +15,9 @@ public class ChatPanel extends JPanel{
 		}
 		
 		add(new JLabel("Chat Panel"));
+	}
+	
+	public Dimension getPreferredSize() {
+		return new Dimension(300, 400);
 	}
 }

@@ -24,11 +24,7 @@ public class GimUI extends JFrame{
 			return null;
 	}
 	
-	//public static void setMainPanel(JPanel panel) {
-	//	main = panel;
-	//}
-	
-	public GimUI(JPanel panel) {
+	public GimUI(String title, JPanel panel) {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
@@ -36,7 +32,7 @@ public class GimUI extends JFrame{
 			System.exit(0);
 		}
 		
-		setTitle("GIM");
+		setTitle(title);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		main = panel;
 		
