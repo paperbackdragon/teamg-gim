@@ -1,26 +1,15 @@
 package client.ui;
 
 import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 @SuppressWarnings("serial")
 public class ContactPanel extends JPanel {
-	private static JButton add, del, chat, group;
+	JButton add, del, chat, group;
 	
-	public static JButton getButton(String str) {
-		if(str.equals("add"))
-			return add;
-		else if(str.equals("del"))
-			return del;
-		else if(str.equals("chat"))
-			return chat;
-		else if(str.equals("group"))
-			return group;
-		else
-			return null;
-	}
-	
+	//CONSTRUCTOR
 	public ContactPanel() {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -28,13 +17,14 @@ public class ContactPanel extends JPanel {
 			System.out.println("Something went wrong!");
 			System.exit(0);
 		}
-		
+	
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		add(new PersonalInfo());
 		add(new ContactList());
 		add(new ButtonPanel());
 	}
 	
+	//PANELS
 	class PersonalInfo extends JPanel {
 		class TextField extends JPanel {
 			public TextField() {
@@ -90,10 +80,11 @@ public class ContactPanel extends JPanel {
 			chat = new JButton("CHAT");
 			group = new JButton("GROUP");
 			
-			add.addActionListener(GimUI.getHandler());
-			del.addActionListener(GimUI.getHandler());
-			chat.addActionListener(GimUI.getHandler());
-			group.addActionListener(GimUI.getHandler());
+			ButtonListener buttonListener = new ButtonListener();
+			add.addActionListener(buttonListener);
+			del.addActionListener(buttonListener);
+			chat.addActionListener(buttonListener);
+			group.addActionListener(buttonListener);
 			
 			add(add);
 			add(del);
@@ -102,6 +93,7 @@ public class ContactPanel extends JPanel {
 		}
 	}
 	
+	//HELPER METHODS
 	public Dimension getPreferredSize() {
 		return new Dimension(300, 400);
 	}
@@ -127,5 +119,29 @@ public class ContactPanel extends JPanel {
 	    status.add(contact);
 	    contact = new DefaultMutableTreeNode("Contact Four");
 	    status.add(contact);
+	}
+	
+	//ACTION LISTENERS
+	private class ButtonListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			if(e.getSource().equals(add)) {
+				System.out.println("add clicked.");
+			}
+			else if(e.getSource().equals(del)) {
+				System.out.println("del clicked.");
+			}
+			else if(e.getSource().equals(chat)) {
+				System.out.println("chat clicked.");
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						GimUI ui = new GimUI("GIM - Chat with Contact", new ChatPanel());
+						ui.setLocationRelativeTo(null);//center new chat window
+					}
+				});
+			}
+			else if(e.getSource().equals(group)) {
+				System.out.println("group clicked.");
+			}
+		}
 	}
 }

@@ -5,25 +5,11 @@ import javax.swing.*;
 
 @SuppressWarnings("serial")
 public class GimUI extends JFrame{
-	private static GimEvent eventHandler = new GimEvent();
-	private static JMenuItem logout, quit, setOptions;
-	private static JPanel main;
+	//private MenuListener menuListener;
+	private JMenuItem logout, quit, setOptions;
+	private JPanel main;
 	
-	public static GimEvent getHandler() {
-		return eventHandler;
-	}
-	
-	public static JMenuItem getMenuItem(String str) {
-		if(str.equals("logout"))
-			return logout;
-		else if(str.equals("quit"))
-			return quit;
-		else if(str.equals("setOptions"))
-			return setOptions;
-		else
-			return null;
-	}
-	
+	//CONSTRUCTOR
 	public GimUI(String title, JPanel panel) {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -46,15 +32,17 @@ public class GimUI extends JFrame{
 		
 		logout = new JMenuItem("Logout");
 		quit = new JMenuItem("Quit");
-		logout.addActionListener(eventHandler);
-		quit.addActionListener(eventHandler);
+		
+		MenuListener menuListener = new MenuListener();
+		logout.addActionListener(menuListener);
+		quit.addActionListener(menuListener);
 		logout.setMnemonic(KeyEvent.VK_L);
 		quit.setMnemonic(KeyEvent.VK_Q);
 		fileMenu.add(logout);
 		fileMenu.add(quit);
 		
 		setOptions = new JMenuItem("Set Options...");
-		setOptions.addActionListener(eventHandler);
+		setOptions.addActionListener(menuListener);
 		optionMenu.add(setOptions);
 		
 		menu.add(fileMenu);
@@ -65,5 +53,20 @@ public class GimUI extends JFrame{
 		setContentPane(main);
 		pack();
 		setVisible(true);
+	}
+	
+	//ACTION LISTENERS
+	class MenuListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			if(e.getSource().equals(logout)) {
+				System.out.println("logout clicked.");
+			}
+			else if(e.getSource().equals(quit)) {
+				System.out.println("quit clicked.");
+			}
+			else if(e.getSource().equals(setOptions)) {
+				System.out.println("setOptions clicked.");
+			}
+		}
 	}
 }
