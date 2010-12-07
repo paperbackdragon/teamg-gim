@@ -4,13 +4,11 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.HashMap;
 
+import server.util.UniqueID;
+
 public class GimServer {
-
-	public enum Status {
-		ONLINE, OFFLINE, BUSY, AWAY, APPEAR
-	}
-
-	private static HashMap<String, ServerConnection> connectedClients = new HashMap<String, ServerConnection>();
+	
+	private static HashMap<Integer, Worker> workers = new HashMap<Integer, Worker>();
 
 	/**
 	 * Starts some threads
@@ -18,7 +16,6 @@ public class GimServer {
 	public static void main(String[] args) {
 
 		ServerSocket serverSocket = null;
-
 		// Create a socket for the client to connect to
 		try {
 			serverSocket = new ServerSocket(4444);
@@ -27,31 +24,21 @@ public class GimServer {
 			System.exit(1);
 		}
 
+		// Listen for connections and pass them off to a Worker
 		try {
-			ServerConnection s = null;
-
+			Worker s = null;
 			while (true) {
-				synchronized (connectedClients) {
-					s = new ServerConnection(serverSocket.accept(),
-							getConnectedClients());
-					s.run();
-					connectedClients.put(s.toString(), s);
+				synchronized (workers) {
+					s = new Worker(serverSocket.accept(), workers);
+					workers.put(UniqueID.getInstance().getNextClientID(), s);
+					Thread t = new Thread(s);
+					t.start();
 				}
 			}
-
 		} catch (IOException e) {
-			System.exit(1);
+			// TODO: We've just crashed, cleanup
 		}
 
-	}
-
-	/**
-	 * Return a HashMap of the currently connected clients
-	 * 
-	 * @return
-	 */
-	public static HashMap<String, ServerConnection> getConnectedClients() {
-		return connectedClients;
 	}
 
 }
