@@ -19,7 +19,6 @@ public class ResponseWriter implements Runnable {
 	public void run() {
 		// Send out any responses in the buffer
 		while(true) {
-			System.out.println("Out cmd");
 			out.println(cmdBuffer.getResponse().toString());
 		}
 

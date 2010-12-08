@@ -42,23 +42,31 @@ public class CommandReader implements Runnable {
 			if (command == null) {
 				parts = line.split(":");
 
+				// parts[0]: Junk data before the first :, we can throw it away
+				// parts[1]: The command name and its arguments
+				// parts[2]: The data that goes with the command
 				if (parts.length == 3) {
 
 					cmdParts = parts[1].split(" ", 2);
 					if (cmdParts.length == 2) {
+						// There is a command and it has arguments
 						command = cmdParts[0];
 						args = cmdParts[1];
 					} else if (cmdParts.length == 1) {
+						// Just the command, no arguments
 						command = cmdParts[0];
 					}
 
+					// Strip the command and its arguments off of the line, the rest is data
 					line = parts[2];
 
 				}
 
 			}
 
+			// Don't proceed if we didn't find a command in the last line
 			if (command != null) {
+				// Look for the end of a command
 				dataParts = line.split(";", 2);
 
 				// No ;, not the end of a command
@@ -68,9 +76,11 @@ public class CommandReader implements Runnable {
 					// End of a command
 					data += dataParts[0];
 
-					commandBuffer.putCommand(new Command(command, args, data));
-					System.out.println(new Command(command, args, data));
+					// Create the command and out in in the buffer
+					commandBuffer.putCommand(new Command(command, args, data.trim()));
+					System.out.println(new Command(command, args, data.trim()));
 
+					// Reset variables for the next command
 					command = null;
 					args = null;
 					data = "";

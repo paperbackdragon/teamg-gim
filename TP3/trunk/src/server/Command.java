@@ -1,7 +1,5 @@
 package server;
 
-import java.lang.reflect.Array;
-
 public class Command {
 
 	// All of the valid commands in the protocol
@@ -40,13 +38,13 @@ public class Command {
 		}
 
 		// Gota make sure there's an array and not just null
-		if(args != null)
+		if (args != null)
 			this.arguments = args.split(" ");
 		else
 			this.arguments = new String[0];
-		
+
 		// We don't like null.
-		if(data != null)
+		if (data != null)
 			this.data = data;
 		else
 			this.data = "";
@@ -77,11 +75,21 @@ public class Command {
 		}
 	}
 
+	/**
+	 * Get the arguments for the command
+	 * 
+	 * @return an array of the arguments
+	 */
 	public String[] getArguments() {
 		return this.arguments;
 	}
 
-	public String getArgsAsString() {
+	/**
+	 * Get the arguments for the command as a String
+	 * 
+	 * @return A string of space separated arguments
+	 */
+	public String getArumentsAsString() {
 		String args = "";
 		for (int i = 0; i < arguments.length; i++) {
 			args += arguments[i];
@@ -92,7 +100,49 @@ public class Command {
 	}
 
 	/**
-	 * Convert the command into a well formated command as a string.
+	 * Set the arguments
+	 * 
+	 * @param args
+	 *            A string of space separated arguments
+	 */
+	public void setArguments(String args) {
+		if (args != null)
+			this.arguments = args.split(" ");
+		else
+			this.arguments = null;
+	}
+
+	/**
+	 * Set the arguments
+	 * 
+	 * @param args
+	 *            An array of arguments
+	 */
+	public void setArguments(String[] args) {
+		this.arguments = args;
+	}
+
+	/**
+	 * Get the data for the command
+	 * 
+	 * @return The data
+	 */
+	public String getData() {
+		return this.data;
+	}
+
+	/**
+	 * Set the data for the command
+	 * 
+	 * @param data
+	 *            the data
+	 */
+	public void setData(String data) {
+		this.data = data;
+	}
+
+	/**
+	 * Convert the command into a well formated command
 	 */
 	public String toString() {
 		String command = ":" + this.command.name();
@@ -104,7 +154,7 @@ public class Command {
 		command += ":";
 
 		if (data != null) {
-			command += " " + data;
+			command += data;
 		}
 
 		command += ";";

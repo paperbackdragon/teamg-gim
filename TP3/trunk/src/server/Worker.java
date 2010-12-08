@@ -50,9 +50,13 @@ public class Worker implements Runnable {
 		
 		// Deal with the commands
 		while(true) {
+			// Load a command for the buffer
 			Command cmd = commandBuffer.getCommand();
+			
+			// Do something with the commands in the buffer
 			Command rsp = cmd;
 			
+			// Send out the response
 			commandBuffer.putResponse(rsp);
 		}
 		
