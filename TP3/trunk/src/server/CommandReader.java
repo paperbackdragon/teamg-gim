@@ -11,7 +11,7 @@ public class CommandReader implements Runnable {
 	private CommandBuffer<Command> commandBuffer;
 
 	/**
-	 * The constructor
+	 * The constructor, 'cos constructing is cool.
 	 * 
 	 * @param in
 	 *            the input to read the commands from
@@ -23,68 +23,60 @@ public class CommandReader implements Runnable {
 		this.commandBuffer = commandBuffer;
 	}
 
+	/**
+	 * Read commands from the input stream and put them into the command buffer
+	 */
 	@Override
 	public void run() {
 		String command = null, args = null, data = "", line = "";
-		int firstColon, secondColon, cmdStop, semiColon;
+		String[] parts, cmdParts, dataParts;
 
 		while (true) {
-			firstColon = -1;
-			secondColon = -1;
-			cmdStop = -1;
-			
+
 			try {
 				line = in.readLine();
 			} catch (IOException e) {
 				// TODO: Cleanup, the client just disconnected.
 			}
 
-			semiColon = line.indexOf(';');
-			
 			if (command == null) {
-				firstColon = line.indexOf(':');
-				cmdStop = line.indexOf(' ', firstColon + 1);
-				secondColon = line.indexOf(':', firstColon + 1);
-				
-				// Invalid command structure, missing a colon
-				if(firstColon == -1 || secondColon == -1)
-					continue;
-				
-				// There aren't any arguments in this command
-				if(cmdStop == -1)
-					cmdStop = secondColon;
-				
-				// The colons are in sensible places
-				if(cmdStop <= secondColon && cmdStop >= firstColon) {
-					command = line.substring(firstColon + 1, cmdStop);
-					args = line.substring(cmdStop, secondColon);
-				} else {
-					// I'm not even sure how this could happen
-					command = "NULL";
-				}
-				line = line.substring(secondColon + 1);
-			}
-			
-			data += line + "\n";
-			
-			if (semiColon != -1) {
-				// Strip the semi-colon
-				data = data.substring(0, data.length() - 2);
-				
-				runCommand(new Command(command, args, data));
+				parts = line.split(":");
 
-				// Reset everything
-				command = null;
-				args = null;
-				data = "";
+				if (parts.length == 3) {
+
+					cmdParts = parts[1].split(" ", 2);
+					if (cmdParts.length == 2) {
+						command = cmdParts[0];
+						args = cmdParts[1];
+					} else if (cmdParts.length == 1) {
+						command = cmdParts[0];
+					}
+
+					line = parts[2];
+
+				}
+
+			}
+
+			if (command != null) {
+				dataParts = line.split(";", 2);
+
+				// No ;, not the end of a command
+				if (dataParts.length == 0) {
+					data += line;
+				} else if (dataParts.length >= 2) {
+					// End of a command
+					data += dataParts[0];
+
+					commandBuffer.putCommand(new Command(command, args, data));
+					System.out.println(new Command(command, args, data));
+
+					command = null;
+					args = null;
+					data = "";
+				}
 			}
 
 		}
 	}
-
-	public boolean runCommand(Command cmd) {
-		commandBuffer.putResponse(cmd);
-		return true;
-	}
-
 }

@@ -9,6 +9,11 @@ import java.util.HashMap;
 
 import server.util.CommandBuffer;
 
+/**
+ * The Worker class takes a socket and data
+ * @author james
+ *
+ */
 public class Worker implements Runnable {
 
 	private HashMap<Integer, Worker> workers;
@@ -39,9 +44,18 @@ public class Worker implements Runnable {
 		Thread cmdReader = new Thread(new CommandReader(in, commandBuffer));
 		cmdReader.start();
 		
+		// Create a thread to print out responses
+		Thread responseWriter = new Thread(new ResponseWriter(out, commandBuffer));
+		responseWriter.start();
+		
+		// Deal with the commands
 		while(true) {
-			out.println(commandBuffer.getResponse().toString());
+			Command cmd = commandBuffer.getCommand();
+			Command rsp = cmd;
+			
+			commandBuffer.putResponse(rsp);
 		}
+		
 
 	}
 
