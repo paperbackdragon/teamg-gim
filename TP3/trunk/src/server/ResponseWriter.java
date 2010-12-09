@@ -2,7 +2,6 @@ package server;
 
 import java.io.PrintWriter;
 
-import server.util.CommandBuffer;
 
 public class ResponseWriter implements Runnable {
 

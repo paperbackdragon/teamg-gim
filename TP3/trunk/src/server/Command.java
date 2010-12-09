@@ -3,13 +3,13 @@ package server;
 public class Command {
 
 	// All of the valid commands in the protocol
-	public enum COMMANDS {
-		PING, PONG, AUTH, QUIT, GETSTATUS, STATUS, KILL, BROADCAST, SET, GET, FRIENDLIST, MESSAGE, FREIND, LOGOUT, FRIENDREQUEST, UPDATE, INFO, ERROR, DOESNOTEXIST
+	public static enum COMMANDS {
+		PING, SERVER, AUTH, QUIT, OKAY, STATUS, KILL, BROADCAST, SET, GET, FRIENDLIST, ROOM, MESSAGE, FREINDREQUEST, UPDATE, INFO, ERROR, DOESNOTEXIST
 	}
 
-	COMMANDS command = null;
-	String[] arguments = null;
-	String data = null;
+	private COMMANDS command = null;
+	private String[] arguments = null;
+	private String data = null;
 
 	/**
 	 * Default constructor, creates an empty command.
@@ -57,6 +57,15 @@ public class Command {
 	 */
 	public String getCommand() {
 		return this.command.toString();
+	}
+	
+	/**
+	 * Get the command as an ENUM value
+	 * 
+	 * @return The command
+	 */
+	public COMMANDS getCommandAsEnum() {
+		return this.command;
 	}
 
 	/**
