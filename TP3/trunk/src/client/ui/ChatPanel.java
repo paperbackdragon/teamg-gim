@@ -2,6 +2,7 @@ package client.ui;
 
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
 
 @SuppressWarnings("serial")
@@ -33,6 +34,8 @@ public class ChatPanel extends JPanel{
 		chatBox.setEditable(true);
 		chatBox.setLineWrap(true);
 		chatBox.setWrapStyleWord(true);
+		EnterListener listener = new EnterListener();
+		chatBox.addKeyListener(listener);
 		JScrollPane chatPane = new JScrollPane(chatBox);
 		chatPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		chatPane.setPreferredSize(new Dimension(235, 50));
@@ -50,6 +53,8 @@ public class ChatPanel extends JPanel{
 		add(new ContactInfo(), BorderLayout.NORTH);
 		add(messagePane, BorderLayout.CENTER);
 		add(chatPanel, BorderLayout.SOUTH);
+		
+		//DOESNT WORK:		chatBox.requestFocusInWindow();
 	}
 	
 	//PANELS
@@ -92,17 +97,39 @@ public class ChatPanel extends JPanel{
 		return new Dimension(300, 400);
 	}
 	
+	public void setFocus() {
+		chatBox.requestFocusInWindow();
+	}
+	
+	private void sendMessage() {
+		//if beginning of box
+		if (messages.getText().equals("")) {
+			messages.append("me: " + chatBox.getText());
+		}
+		else {
+			messages.append("\n" + "me: " + chatBox.getText());
+		}
+	}
+	
 	//ACTION LISTENERS
 	class SendListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			//if beginning of box
-			if (messages.getText().equals("")) {
-				messages.append("me: " + chatBox.getText());
-			}
-			else {
-				messages.append("\n" + "me: " + chatBox.getText());
-			}
+			sendMessage();
 			chatBox.setText("");
+			chatBox.requestFocusInWindow();
 		}
+	}
+	
+	class EnterListener implements KeyListener{
+		public void keyTyped(KeyEvent e) {
+			if(e.getKeyChar() == KeyEvent.VK_ENTER) {
+				String text = chatBox.getText();
+				chatBox.setText(text.substring(0, text.length()-1));
+				sendMessage();
+				chatBox.setText("");
+			}
+		}
+		public void keyPressed(KeyEvent e) {}
+		public void keyReleased(KeyEvent e) {}
 	}
 }

@@ -134,7 +134,7 @@ public class ContactPanel extends JPanel {
 				System.out.println("chat clicked.");
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						GimUI ui = new GimUI("GIM - Chat with Contact", new ChatPanel());
+						GimUI ui = new GimUI("GIM - Chat with Contact", new ContactPanel());
 						ui.setLocationRelativeTo(null);//center new chat window
 					}
 				});
