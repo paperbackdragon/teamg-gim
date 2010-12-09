@@ -34,8 +34,8 @@ public class ChatPanel extends JPanel{
 		chatBox.setEditable(true);
 		chatBox.setLineWrap(true);
 		chatBox.setWrapStyleWord(true);
-		EnterListener listener = new EnterListener();
-		chatBox.addKeyListener(listener);
+		EnterListener enterListener = new EnterListener();
+		chatBox.addKeyListener(enterListener);
 		JScrollPane chatPane = new JScrollPane(chatBox);
 		chatPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		chatPane.setPreferredSize(new Dimension(235, 50));
