@@ -15,38 +15,13 @@ public class Worker implements Runnable {
 	private Socket socket = null;
 	private BufferedReader in;
 	private PrintWriter out;
+
 	private long lastCommunication;
 
 	public Worker(Socket socket) {
 		this.socket = socket;
 		this.commandBuffer = new CommandBuffer<Command>();
 		this.lastCommunication = System.currentTimeMillis();
-	}
-
-	private Command processCommand(Command cmd) {
-		Command response;
-
-		updateLastCommunication();
-
-		switch (cmd.getCommandAsEnum()) {
-		case PING:
-			response = ping(cmd);
-			break;
-
-		case SERVER:
-			response = server(cmd);
-			break;
-
-		case AUTH:
-			response = auth(cmd);
-			break;
-
-		default:
-			response = new Command("ERROR", "SERVER_ERROR", "A server error occured.");
-		}
-
-		return response;
-
 	}
 
 	/**
@@ -68,7 +43,138 @@ public class Worker implements Runnable {
 	}
 
 	/**
-	 * Do nothing, just respond with an OKAY
+	 * Process the given command and get a response.
+	 * 
+	 * @param cmd
+	 *            the command to process
+	 * @return the response to the command
+	 */
+	private Command processCommand(Command cmd) {
+		Command response;
+
+		updateLastCommunication();
+
+		switch (cmd.getCommandAsEnum()) {
+		case PING:
+			response = ping(cmd);
+			break;
+
+		case SERVER:
+			response = server(cmd);
+			break;
+
+		case AUTH:
+			response = auth(cmd);
+			break;
+
+		case QUIT:
+			response = quit(cmd);
+			break;
+
+		case SET:
+			response = set(cmd);
+			break;
+
+		case GET:
+			response = get(cmd);
+			break;
+
+		case FRIENDLIST:
+			response = frindlist(cmd);
+			break;
+
+		case ROOM:
+			response = room(cmd);
+			break;
+
+		case MESSAGE:
+			response = message(cmd);
+			break;
+
+		case FRIEND:
+			response = friend(cmd);
+			break;
+
+		case LOGOUT:
+			response = logout(cmd);
+			break;
+
+		// Below this point, generate an error as the server should not receive
+		// these commands
+		case OKAY:
+		case SERVERSTATUS:
+		case KILL:
+		case BROADCAST:
+		case FREINDREQUEST:
+		case UPDATE:
+		case INFO:
+		case ERROR:
+			response = new Command("ERROR", "COMMAND_RECOGNISED_BUT_NOT_VALID",
+					"The command was recognised by the server however the server should not recieve this command.");
+			break;
+
+		// Somehow the command was recognised but not processed above. This
+		// shouldn't happen.
+		default:
+			response = new Command("ERROR", "SERVER_ERROR", "A server error occured.");
+			break;
+		}
+
+		return response;
+
+	}
+
+	/**
+	 * The LOGOUT command specifies that the client wishes to logout but not
+	 * drop the connection to the server.
+	 * 
+	 * @param cmd
+	 *            the logout command
+	 * @return If successful it should return an OKAY. Upon an error such as the
+	 *         user not being logged in, it should return an ERROR.
+	 */
+	private Command logout(Command cmd) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private Command friend(Command cmd) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private Command message(Command cmd) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private Command room(Command cmd) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private Command frindlist(Command cmd) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private Command get(Command cmd) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private Command set(Command cmd) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private Command quit(Command cmd) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/**
+	 * Do nothing, just respond with an OKAY.
 	 * 
 	 * @param cmd
 	 *            the PING command and any data it contains
