@@ -6,6 +6,11 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import util.Command;
+import util.CommandBuffer;
+import util.CommandReader;
+import util.ResponseWriter;
+
 /**
  * The Worker class takes a socket and data
  */
@@ -16,12 +21,19 @@ public class Worker implements Runnable {
 	private BufferedReader in;
 	private PrintWriter out;
 
+	private Data data = Data.getInstance();
 	private long lastCommunication;
+	private User loggedInUser;
+
+	// Okay command gets used a lot, lets not be wasteful and just have one of
+	// them per worker
+	private Command okay = new Command("OKAY", null, "Random stuff goes here LOLZ!*£\"po4iu+=-0;'@#`£$%?/.,");
 
 	public Worker(Socket socket) {
 		this.socket = socket;
 		this.commandBuffer = new CommandBuffer<Command>();
 		this.lastCommunication = System.currentTimeMillis();
+		this.loggedInUser = null;
 	}
 
 	/**
@@ -134,64 +146,165 @@ public class Worker implements Runnable {
 	 *         user not being logged in, it should return an ERROR.
 	 */
 	private Command logout(Command cmd) {
-		// TODO Auto-generated method stub
+		// TODO: The logout command
 		return null;
 	}
 
 	private Command friend(Command cmd) {
-		// TODO Auto-generated method stub
+		// TODO: The friend command
 		return null;
 	}
 
 	private Command message(Command cmd) {
-		// TODO Auto-generated method stub
+		// TODO: The message command
 		return null;
 	}
 
 	private Command room(Command cmd) {
-		// TODO Auto-generated method stub
+		// TODO: The room command
 		return null;
 	}
 
 	private Command frindlist(Command cmd) {
-		// TODO Auto-generated method stub
+		// TODO: The friendlist command
 		return null;
 	}
 
 	private Command get(Command cmd) {
-		// TODO Auto-generated method stub
+		// TODO: The get command
 		return null;
 	}
 
 	private Command set(Command cmd) {
-		// TODO Auto-generated method stub
+		// TODO: The set command
 		return null;
 	}
 
 	private Command quit(Command cmd) {
-		// TODO Auto-generated method stub
+		// TODO: The quit command
 		return null;
 	}
 
 	/**
-	 * Do nothing, just respond with an OKAY.
+	 * Do nothing, just respond with an OKAY. We'll me getting lots of these.
 	 * 
 	 * @param cmd
-	 *            the PING command and any data it contains
+	 *            the PING Command
 	 * @return an OKAY command
 	 */
 	private Command ping(Command cmd) {
-		return new Command("OKAY", null, null);
+		return this.okay;
 	}
 
 	private Command server(Command cmd) {
-		// TODO Auto-generated method stub
+		// TODO: The server command
 		return null;
 	}
 
+	/**
+	 * The AUTH commands deals with all aspects of user authorisation and
+	 * permissions. The AUTH command alone should should return the users
+	 * current authorisation state, either LOGGEDIN or UNAUTHORIZED.
+	 * 
+	 * LOGIN
+	 * 
+	 * If the details are valid then the server should respond with an :AUTH
+	 * OKAY: command. It should set the user’s state (but not status) to ONLINE.
+	 * If the user is already logged in then the server should send a
+	 * LOGGED_IN_FROM_OTHER_LOCATION error and KILL command to the already
+	 * connected user.
+	 * 
+	 * REGISTER
+	 * 
+	 * The register argument allows for new users to be registered by providing
+	 * a valid email address and password. If the new account is registered
+	 * correctly then the server should respond with AUTH REGISTERED however it
+	 * should not log the user in.
+	 * 
+	 * @param cmd
+	 *            The login Command issued
+	 * @return The appropriate response command
+	 * 
+	 */
 	private Command auth(Command cmd) {
-		// TODO Auto-generated method stub
-		return null;
+
+		// TODO: Check that the user is not already logged in
+
+		// Should give 0) email address 1) password hash
+		String[] dataParts = cmd.getData().split(" ");
+
+		// No arguments, give them their current login status
+		if (cmd.getArguments().length == 0) {
+
+			if (this.loggedInUser == null)
+				return new Command("AUTH", "UNAUTHORIZED", null);
+			else
+				return new Command("AUTH", "LOGGEDIN", this.loggedInUser.getNickname());
+
+			// Attempt to log the user in
+		} else if (cmd.getArguments()[0].equalsIgnoreCase("LOGIN")) {
+
+			// Make sure that they're not already logged in
+			if (this.loggedInUser != null)
+				return new Command("ERROR", "ALREADY_LOGGEDIN", null);
+			
+			// Not enough data to continue
+			if (dataParts.length < 2)
+				return new Command("ERROR", "MISSING_DATA", null);
+
+			// Check the user details
+			User user = data.getUser(dataParts[0]);
+			if (user != null && user.getPasswordHash().equalsIgnoreCase(dataParts[1])) {
+
+				// They provided accurate details, log them in
+				this.loggedInUser = user;
+				this.loggedInUser.setStatus(User.Status.ONLINE);
+				return new Command("AUTH", "LOGGEDIN", null);
+
+				// Something wasn't correct
+			} else {
+
+				// The user doesn't exist
+				if (user == null) {
+					return new Command("ERROR", "USER_DOES_NOT_EXIST", null);
+				} else {
+					// The details were wrong
+					return new Command("ERROR", "LOGIN_DETAILS_INCORRECT", null);
+				}
+
+			}
+
+			// Attempt to register a new account with the given details
+		} else if (cmd.getArguments()[0].equalsIgnoreCase("REGISTER")) {
+
+			// TODO: Check password length
+
+			// Not enough data to continue
+			if (dataParts.length < 2)
+				return new Command("ERROR", "MISSING_DATA", "Not enough data to complete the request");
+
+			// Make sure that they're not already logged in
+			if (this.loggedInUser != null)
+				return new Command("ERROR", "ALREADY_LOGGEDIN",
+						"You cannot register a new account while already logged in.");
+
+			// The email address isn't valid
+			if (!User.validID(dataParts[1]))
+				return new Command("ERROR", "INVALID_EMAIL", "Invalid email address.");
+
+			// The email address is already registered
+			if (data.getUser(dataParts[0]) != null)
+				return new Command("ERROR", "EMAIL_ALREADY_IN_USE",
+						"The email address you are attempting to register is already in use.");
+
+			// If we made it this far everything should be okay! :D
+			data.addUser(new User(dataParts[0], dataParts[1]));
+			return new Command("AUTH", "REGISTERED", null);
+
+		}
+
+		// The arguments given didn't make sense for this command
+		return new Command("ERROR", "INVALID_ARGUMENT", null);
 	}
 
 	@Override
@@ -216,13 +329,8 @@ public class Worker implements Runnable {
 
 		// Deal with the commands
 		while (true) {
-			// Load a command for the buffer
 			Command cmd = commandBuffer.getCommand();
-
-			// Do something with the commands in the buffer
 			Command rsp = processCommand(cmd);
-
-			// Send out the response
 			commandBuffer.putResponse(rsp);
 		}
 

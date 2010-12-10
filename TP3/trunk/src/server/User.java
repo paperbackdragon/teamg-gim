@@ -19,7 +19,7 @@ public class User {
 
 	public User(String id, String passwordHash, Status status, String nickname, String personalMessage,
 			HashMap<String, User> friendList, HashMap<String, User> inFreindList, HashMap<String, User> blockedUsers) {
-		super();
+
 		this.id = id;
 		this.passwordHash = passwordHash;
 		this.status = status;
@@ -29,7 +29,25 @@ public class User {
 		this.inFreindList = inFreindList;
 		this.blockedUsers = blockedUsers;
 	}
-	
+
+	/**
+	 * Constructor with minimum possible details
+	 * 
+	 * @param id
+	 * @param passwordHash
+	 */
+	public User(String id, String passwordHash) {
+		this.id = id;
+		this.passwordHash = passwordHash;
+		this.status = Status.OFFLINE;
+		this.nickname = id;
+		this.personalMessage = "";
+	}
+
+	public static boolean validID(String id) {
+		return true;
+	}
+
 	public String getId() {
 		return id;
 	}

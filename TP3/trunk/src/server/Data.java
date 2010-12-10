@@ -1,20 +1,26 @@
 package server;
 
+import java.util.HashMap;
+
 /**
  * A singleton class to hold references to all of the data on the server. This
  * can be called anywhere and allows any part of the server to access the data
  * in it at any time.
  */
 public class Data {
-	
+
 	private int clientID = 0;
+	private int roomID = 0;
+
+	private HashMap<String, User> users = new HashMap<String, User>();
+	private HashMap<Integer, Room> rooms = new HashMap<Integer, Room>();
 
 	/**
-	 * Do nothing. 
+	 * Do nothing.
 	 */
 	protected Data() {
 	}
-	
+
 	/**
 	 * Apparently doing it this way makes it thread-safe...
 	 */
@@ -31,13 +37,46 @@ public class Data {
 		return SingeltonHolder.INSTANCE;
 	}
 
+	public void addUser(User user) {
+		users.put(user.getId(), user);
+	}
+	
+	public User getUser(String id) {
+		return users.get(id);
+	}
+	
+	public HashMap<String, User> getUsers() {
+		return users;
+	}
+	
+	public void addRoom(Room room) {
+		rooms.put(0, room);
+	}
+	
+	public Room getRoom(Integer id) {
+		return rooms.get(id);
+	}
+	
+	public HashMap<Integer, Room> getRooms() {
+		return this.rooms;
+	}
+	
 	/**
-	 * I assume that this will never get to a point where it'll overflow...
+	 * Get the next client ID
 	 * 
 	 * @return
 	 */
 	public int getNextClientID() {
 		return this.clientID++;
+	}
+
+	/**
+	 * Get the next unique room ID
+	 * 
+	 * @return
+	 */
+	public int getNextRoomID() {
+		return this.roomID++;
 	}
 
 }

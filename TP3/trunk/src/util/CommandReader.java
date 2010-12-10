@@ -1,9 +1,14 @@
-package server;
+package util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 
-
+/**
+ * The command reader reads in commands from a BufferedReader and put them into
+ * a CommandBuffer
+ * 
+ * TODO: Decode any unicode characters
+ */
 public class CommandReader implements Runnable {
 
 	private BufferedReader in;
@@ -56,7 +61,8 @@ public class CommandReader implements Runnable {
 						command = cmdParts[0];
 					}
 
-					// Strip the command and its arguments off of the line, the rest is data
+					// Strip the command and its arguments off of the line, the
+					// rest is data
 					line = parts[2];
 
 				}
@@ -77,8 +83,8 @@ public class CommandReader implements Runnable {
 
 					// Create the command and out in in the buffer
 					commandBuffer.putCommand(new Command(command, args, data.trim()));
-					
-					//TODO: Remove or comment out if not debugging
+
+					// Remove or comment out if not debugging
 					System.out.println(new Command(command, args, data.trim()));
 
 					// Reset variables for the next command
