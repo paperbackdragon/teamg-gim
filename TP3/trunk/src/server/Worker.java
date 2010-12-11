@@ -27,7 +27,7 @@ public class Worker implements Runnable {
 
 	// Okay command gets used a lot, lets not be wasteful and just have one of
 	// them per worker
-	private Command okay = new Command("OKAY", null, "Random stuff goes here LOLZ!*£\"po4iu+=-0;'@#`£$%?/.,");
+	private Command okay = new Command("OKAY", null, null);
 
 	public Worker(Socket socket) {
 		this.socket = socket;
@@ -146,8 +146,12 @@ public class Worker implements Runnable {
 	 *         user not being logged in, it should return an ERROR.
 	 */
 	private Command logout(Command cmd) {
-		// TODO: The logout command
-		return null;
+		if(this.loggedInUser == null)
+			return new Command("ERROR", "UNAUTHORIZED", null);
+		
+		this.loggedInUser = null;
+		
+		return this.okay;
 	}
 
 	private Command friend(Command cmd) {
