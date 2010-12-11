@@ -188,7 +188,7 @@ public class Command {
 		command += ":";
 
 		if (data != null) {
-			command += unicodeEncode(data);
+			command += data;
 		}
 
 		command += ";";

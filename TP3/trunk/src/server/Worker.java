@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Date;
 
 import util.Command;
 import util.CommandBuffer;
@@ -111,10 +112,13 @@ public class Worker implements Runnable {
 			response = logout(cmd);
 			break;
 
+		case SERVERSTATUS:
+			response = serverstatus(cmd);
+			break;
+
 		// Below this point, generate an error as the server should not receive
 		// these commands
 		case OKAY:
-		case SERVERSTATUS:
 		case KILL:
 		case BROADCAST:
 		case FREINDREQUEST:
@@ -136,6 +140,37 @@ public class Worker implements Runnable {
 
 	}
 
+	private Command serverstatus(Command cmd) {
+
+		String time = new Date().toString();
+		String users = "OMG LOL";
+		String uptime = "OMG UPTIME";
+
+		String data = "";
+		String[] args = cmd.getArguments();
+
+		if (cmd.getArguments().length == 0)
+			return new Command("SERVERSTATUS", null, time + "\n" + users + "\n" + uptime);
+
+		for (int i = 0; i < args.length; i++) {
+			if (args[i].equalsIgnoreCase("TIME"))
+				data += time;
+			else if (args[i].equalsIgnoreCase("USERS"))
+				data += users;
+			else if (args[i].equalsIgnoreCase("UPTIME"))
+				data += uptime;
+			else
+				return new Command("ERROR", "INVALID_ARGUMENT", null);
+
+			if (i < (args.length - 1))
+				data += "\n";
+
+		}
+
+		return new Command("SERVERSTATUS", null, data);
+
+	}
+
 	/**
 	 * The LOGOUT command specifies that the client wishes to logout but not
 	 * drop the connection to the server.
@@ -146,11 +181,11 @@ public class Worker implements Runnable {
 	 *         user not being logged in, it should return an ERROR.
 	 */
 	private Command logout(Command cmd) {
-		if(this.loggedInUser == null)
+		if (this.loggedInUser == null)
 			return new Command("ERROR", "UNAUTHORIZED", null);
-		
+
 		this.loggedInUser = null;
-		
+
 		return this.okay;
 	}
 
@@ -251,7 +286,7 @@ public class Worker implements Runnable {
 			// Make sure that they're not already logged in
 			if (this.loggedInUser != null)
 				return new Command("ERROR", "ALREADY_LOGGEDIN", null);
-			
+
 			// Not enough data to continue
 			if (dataParts.length < 2)
 				return new Command("ERROR", "MISSING_DATA", null);
