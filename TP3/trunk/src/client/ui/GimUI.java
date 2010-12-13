@@ -63,6 +63,7 @@ public class GimUI extends JFrame{
 			}
 			else if(e.getSource().equals(quit)) {
 				System.out.println("quit clicked.");
+				System.exit(0);
 			}
 			else if(e.getSource().equals(setOptions)) {
 				System.out.println("setOptions clicked.");

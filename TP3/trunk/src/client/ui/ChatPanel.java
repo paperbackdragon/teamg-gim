@@ -2,7 +2,6 @@ package client.ui;
 
 import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.*;
 
 @SuppressWarnings("serial")
@@ -103,12 +102,14 @@ public class ChatPanel extends JPanel{
 	
 	private void sendMessage() {
 		//if beginning of box
-		if (messages.getText().equals("")) {
-			messages.append("me: " + chatBox.getText());
-		}
-		else {
-			messages.append("\n" + "me: " + chatBox.getText());
-		}
+		if (!chatBox.getText().equals("")){
+			if (messages.getText().equals("")) {
+				messages.append("me: " + chatBox.getText());
+			}
+			else {
+				messages.append("\n" + "me: " + chatBox.getText());
+			}
+	}
 	}
 	
 	//ACTION LISTENERS

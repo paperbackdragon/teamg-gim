@@ -129,7 +129,19 @@ public class ContactPanel extends JPanel {
 			}
 			else if(e.getSource().equals(del)) {
 				System.out.println("del clicked.");
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						GimUI ui = new GimUI("GIM - Remove Contact", new RemovePopup());
+						ui.setLocationRelativeTo(null);//center new chat window
+					}
+				});
+			
+			
+			
 			}
+			
+			
+			
 			else if(e.getSource().equals(chat)) {
 				System.out.println("chat clicked.");
 				SwingUtilities.invokeLater(new Runnable() {
@@ -141,6 +153,12 @@ public class ContactPanel extends JPanel {
 			}
 			else if(e.getSource().equals(group)) {
 				System.out.println("group clicked.");
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						GimUI ui = new GimUI("GIM - Group Chat", new GroupChatPanel());
+						ui.setLocationRelativeTo(null);//center new chat window
+					}
+				});		
 			}
 		}
 	}
