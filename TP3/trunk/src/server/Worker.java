@@ -140,8 +140,15 @@ public class Worker implements Runnable {
 
 	}
 
+	/**
+	 * TODO: Put the java docs in.
+	 * 
+	 * @param cmd
+	 * @return
+	 */
 	private Command serverstatus(Command cmd) {
 
+		// TODO: Make these return the correct things...
 		String time = new Date().toString();
 		String users = "OMG LOL";
 		String uptime = "OMG UPTIME";
@@ -225,7 +232,7 @@ public class Worker implements Runnable {
 	}
 
 	/**
-	 * Do nothing, just respond with an OKAY. We'll me getting lots of these.
+	 * Do nothing, just respond with an OKAY. We'll be getting lots of these.
 	 * 
 	 * @param cmd
 	 *            the PING Command
