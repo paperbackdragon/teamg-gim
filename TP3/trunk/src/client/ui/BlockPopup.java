@@ -6,7 +6,10 @@ import javax.swing.*;
 
 public class BlockPopup extends JPanel{
 
-	//CONSTRUCTOR
+	/**
+	 * Constructor for a block dialog box used to block a contact
+	 * 
+	 */
 	public BlockPopup() {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

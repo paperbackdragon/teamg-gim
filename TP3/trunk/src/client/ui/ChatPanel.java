@@ -9,7 +9,10 @@ public class ChatPanel extends JPanel{
 	private JTextArea messages, chatBox;
 	private JButton send;
 	
-	//CONSTRUCTOR
+	/**
+	 * Constructor for a chatbox
+	 * 
+	 */
 	public ChatPanel() {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -69,7 +72,10 @@ public class ChatPanel extends JPanel{
 				add(status);
 			}
 		}
-		
+		/**
+		 * A panel containing the information of the contact
+		 * 
+		 */
 		public ContactInfo() {
 			setLayout(new FlowLayout(FlowLayout.LEFT));
 			ImageIcon icon = createImageIcon("icon1.jpg", "Icon");
@@ -96,10 +102,15 @@ public class ChatPanel extends JPanel{
 		return new Dimension(300, 400);
 	}
 	
+	/**
+	 * Method to set the focus of the mouse to the input text box
+	 */
 	public void setFocus() {
 		chatBox.requestFocusInWindow();
 	}
-	
+	/**
+	 * Sends a message to the message log
+	 */
 	private void sendMessage() {
 		//if beginning of box
 		if (!chatBox.getText().equals("")){
@@ -120,7 +131,9 @@ public class ChatPanel extends JPanel{
 			chatBox.requestFocusInWindow();
 		}
 	}
-	
+	/**
+	 * A Key listener to send messages upon pressing "Enter"
+	 */
 	class EnterListener implements KeyListener{
 		public void keyTyped(KeyEvent e) {
 			if(e.getKeyChar() == KeyEvent.VK_ENTER) {

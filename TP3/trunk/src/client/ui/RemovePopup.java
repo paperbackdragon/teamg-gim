@@ -7,7 +7,10 @@ import javax.swing.*;
 
 public class RemovePopup extends JPanel {
 	
-	//CONSTRUCTOR
+	/**
+	 * Constructor for a remove dialog box used to delete a contact
+	 * 
+	 */
 	public RemovePopup() {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

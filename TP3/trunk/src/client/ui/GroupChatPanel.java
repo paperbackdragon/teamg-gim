@@ -12,7 +12,7 @@ import client.ui.ChatPanel.ContactInfo.TextField;
 
 @SuppressWarnings("unused")
 public class GroupChatPanel extends JPanel {
-	private JTextArea messages, chatBox;
+	private JTextArea messages, chatBox, guests;
 	private JButton send;
 	
 	//CONSTRUCTOR
@@ -25,12 +25,17 @@ public class GroupChatPanel extends JPanel {
 		}
 		
 		setLayout(new BorderLayout());
-		
 		messages = new JTextArea();
 		messages.setEditable(false);
 		messages.setLineWrap(true);
 		messages.setWrapStyleWord(true);
 		JScrollPane messagePane = new JScrollPane(messages);
+		
+		guests = new JTextArea("Contacts");
+		guests.setEditable(false);
+		guests.setLineWrap(true);
+		guests.setWrapStyleWord(true);
+		JScrollPane guestPane = new JScrollPane(guests);
 		
 		//BOTTOM PANEL
 		JPanel chatPanel = new JPanel();
@@ -55,7 +60,8 @@ public class GroupChatPanel extends JPanel {
 		chatPanel.add(send, BorderLayout.EAST);
 		//END BOTTOM PANEL
 		
-		add(new ContactInfo(), BorderLayout.NORTH);
+		add(new ContactManage(), BorderLayout.NORTH);
+		add(guestPane, BorderLayout.EAST);
 		add(messagePane, BorderLayout.CENTER);
 		add(chatPanel, BorderLayout.SOUTH);
 		
@@ -63,40 +69,25 @@ public class GroupChatPanel extends JPanel {
 	}
 	
 	//PANELS
-	class ContactInfo extends JPanel {
+	class ContactManage extends JPanel {
 		class TextField extends JPanel {
+			public JButton addContact = new JButton("Add Contact");
+			
 			public TextField() {
-				setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-				JLabel name = new JLabel("<html><b>Contact Nickname</b></html>");
-				JLabel message = new JLabel("Personal Message");
-				JLabel status = new JLabel("<html><font size=\"3\">Status: Online</font></html>");
+				setLayout(new GridLayout(2,2));
+				JLabel name = new JLabel("<html><b>Room Name</b></html>");
+				JLabel message = new JLabel("Room topic");
 				add(name);
+				add(addContact);
 				add(message);
-				add(status);
 			}
 		}
 		
-		public ContactInfo() {
-			setLayout(new FlowLayout(FlowLayout.LEFT));
-			ImageIcon icon = createImageIcon("icon1.jpg", "Icon");
-			JLabel iconLabel = new JLabel(icon);
-			iconLabel.setPreferredSize(new Dimension(50, 50));
-			iconLabel.setBorder(BorderFactory.createLineBorder(Color.black));
-			add(iconLabel);
+		public ContactManage() {
 			add(new TextField());
 		}
 		
-		protected ImageIcon createImageIcon(String path, String description) {
-			java.net.URL imgURL = getClass().getResource(path);
-			if (imgURL != null) {
-				return new ImageIcon(imgURL, description);
-			} else {
-				System.err.println("Couldn't find file: " + path);
-				return null;
-			}
-		}
 	}
-	
 	//HELPER METHODS
 	public Dimension getPreferredSize() {
 		return new Dimension(500, 500);
@@ -140,5 +131,4 @@ public class GroupChatPanel extends JPanel {
 		public void keyReleased(KeyEvent e) {}
 	}
 }
-
 	
