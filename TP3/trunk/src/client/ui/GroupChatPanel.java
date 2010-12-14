@@ -13,7 +13,7 @@ import client.ui.ChatPanel.ContactInfo.TextField;
 @SuppressWarnings("unused")
 public class GroupChatPanel extends JPanel {
 	private JTextArea messages, chatBox, guests;
-	private JButton send;
+	private JButton invite, send;
 	
 	//CONSTRUCTOR
 	public GroupChatPanel() {
@@ -51,12 +51,15 @@ public class GroupChatPanel extends JPanel {
 		chatPane.setPreferredSize(new Dimension(235, 50));
 		
 		send = new JButton("Send");
+		invite = new JButton("Invite");
+		invite.setPreferredSize(new Dimension(65,50));
 		send.setPreferredSize(new Dimension(65,50));
 		SendListener sendListener = new SendListener(); 
 		send.addActionListener(sendListener);
 		
 		chatPanel.setPreferredSize(new Dimension(0, 50));
 		chatPanel.add(chatPane, BorderLayout.WEST);
+		chatPanel.add(invite);
 		chatPanel.add(send, BorderLayout.EAST);
 		//END BOTTOM PANEL
 		
@@ -71,15 +74,15 @@ public class GroupChatPanel extends JPanel {
 	//PANELS
 	class ContactManage extends JPanel {
 		class TextField extends JPanel {
-			public JButton addContact = new JButton("Add Contact");
+			public JButton addContact = new JButton("Invite Contact");
 			
 			public TextField() {
 				setLayout(new GridLayout(2,2));
 				JLabel name = new JLabel("<html><b>Room Name</b></html>");
 				JLabel message = new JLabel("Room topic");
-				add(name);
-				add(addContact);
-				add(message);
+				//add(name);
+				//add(addContact);
+				//add(message);
 			}
 		}
 		

@@ -7,7 +7,8 @@ import javax.swing.*;
 @SuppressWarnings("serial")
 public class LoginPanel extends JPanel{
 	GimUI parent;
-	JTextField email, pwd;
+	JTextField email;
+	JPasswordField pwd;
 	JButton loginButton, register;
 	JCheckBox auto;
 	
@@ -37,7 +38,7 @@ public class LoginPanel extends JPanel{
 		email.setAlignmentX(Component.CENTER_ALIGNMENT);
 		add(email);
 		
-		pwd = new JTextField("Password");
+		pwd = new JPasswordField("Password");
 		pwd.setMaximumSize(new Dimension(200, 25));
 		//pwd.addFocusListener(textListener);
 		pwd.setAlignmentX(Component.CENTER_ALIGNMENT);

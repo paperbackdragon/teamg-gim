@@ -8,6 +8,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 @SuppressWarnings("serial")
 public class ContactPanel extends JPanel {
 	JButton add, del, chat, group;
+	JTree contactTree;
 	
 	//CONSTRUCTOR
 	public ContactPanel() {
@@ -126,6 +127,12 @@ public class ContactPanel extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			if(e.getSource().equals(add)) {
 				System.out.println("add clicked.");
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						GimUI ui = new GimUI("GIM - Find Contact", new FindPopup());
+						ui.setLocationRelativeTo(null);//center new chat window
+					}
+				});
 			}
 			else if(e.getSource().equals(del)) {
 				System.out.println("del clicked.");
@@ -146,7 +153,8 @@ public class ContactPanel extends JPanel {
 				System.out.println("chat clicked.");
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						GimUI ui = new GimUI("GIM - Chat with Contact", new ChatPanel());
+						//String node = contactTree.getLastSelectedPathComponent().toString(); Trying to get selected node name
+						GimUI ui = new GimUI("GIM - Chat with Contact ", new ChatPanel());
 						ui.setLocationRelativeTo(null);//center new chat window
 					}
 				});
