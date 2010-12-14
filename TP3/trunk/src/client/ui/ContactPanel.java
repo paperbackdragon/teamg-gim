@@ -7,17 +7,17 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 @SuppressWarnings("serial")
 public class ContactPanel extends JPanel {
-	JButton add, del, chat, group;
+	private JButton add, del, chat, group;
 	JTree contactTree;
 	
 	//CONSTRUCTOR
 	public ContactPanel() {
-		try {
+		/*try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
 			System.out.println("Something went wrong!");
 			System.exit(0);
-		}
+		}*/
 	
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		add(new PersonalInfo());

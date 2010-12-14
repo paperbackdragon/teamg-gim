@@ -10,12 +10,12 @@ public class GimUI extends JFrame{
 	
 	//CONSTRUCTOR
 	public GimUI(String title, JPanel panel) {
-		try {
+		/*try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
 			System.out.println("Something went wrong!");
 			System.exit(0);
-		}
+		}*/
 		
 		setTitle(title);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
