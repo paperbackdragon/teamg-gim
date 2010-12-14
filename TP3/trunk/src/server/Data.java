@@ -15,11 +15,12 @@ import java.util.HashMap;
  */
 public class Data {
 
-	private int clientID = 0;
-	private int roomID = 0;
+	volatile private int clientID = 0;
+	volatile private int roomID = 0;
 
 	private HashMap<String, User> users = new HashMap<String, User>();
 	private HashMap<Integer, Room> rooms = new HashMap<Integer, Room>();
+	private HashMap<Integer, Worker> workers = new HashMap<Integer, Worker>();
 
 	/**
 	 * Do nothing.
@@ -43,24 +44,72 @@ public class Data {
 		return SingeltonHolder.INSTANCE;
 	}
 
+	/**
+	 * Add a new user to the server
+	 * 
+	 * @param user
+	 *            The User to add
+	 */
 	public void addUser(User user) {
-		users.put(user.getId(), user);
+		synchronized (users) {
+			users.put(user.getId(), user);
+		}
 	}
 
+	/**
+	 * Get a user
+	 * 
+	 * @param id
+	 *            The id of the user
+	 * @return the User
+	 */
 	public User getUser(String id) {
-		return users.get(id);
+		return users.get(id.toLowerCase());
 	}
 
+	/**
+	 * Add a new worker
+	 */
+	public void addWorker(int id, Worker worker) {
+		synchronized (users) {
+			workers.put(new Integer(id), worker);
+		}
+	}
+
+	/**
+	 * Get a user
+	 * 
+	 * @param id
+	 *            The id of the user
+	 * @return the User
+	 */
+	public User getWorker(int id) {
+		return users.get(new Integer(id));
+	}
+
+	/**
+	 * Get all of the users
+	 * 
+	 * @return A HashMap of all the users
+	 */
 	public HashMap<String, User> getUsers() {
 		return users;
 	}
 
+	/**
+	 * Add a new room
+	 * 
+	 * @param room
+	 *            the room to add
+	 */
 	public void addRoom(Room room) {
-		rooms.put(0, room);
+		synchronized (rooms) {
+			rooms.put(0, room);
+		}
 	}
 
 	public Room getRoom(Integer id) {
-		return rooms.get(id);
+		return rooms.get(new Integer(id));
 	}
 
 	public HashMap<Integer, Room> getRooms() {

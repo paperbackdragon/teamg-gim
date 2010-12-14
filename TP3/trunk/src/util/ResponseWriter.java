@@ -2,6 +2,8 @@ package util;
 
 import java.io.PrintWriter;
 
+import util.Command.COMMANDS;
+
 /**
  * The response writer reads commands off a CommandBuffer and sends them across
  * the network.
@@ -18,13 +20,23 @@ public class ResponseWriter implements Runnable {
 		this.cmdBuffer = cmdBuffer;
 	}
 
-	@Override
 	public void run() {
-		// Send out any responses in the buffer
-		while (true) {
-			out.println(cmdBuffer.getResponse().toString());
-		}
+		try {
+			
+			// Send out any responses in the buffer
+			while (true) {
+				Command response= cmdBuffer.getResponse();
+				out.println(response.toString());
 
+				// Check we didn't just kill the connection
+				if (response.getCommandAsEnum() == COMMANDS.KILL)
+					break;
+			}
+
+		} catch (InterruptedException e) {
+		}
+		
+		System.out.println("ResponseWriter killed.");
 	}
 
 }

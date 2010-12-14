@@ -14,10 +14,14 @@ public class GimServer {
 	 * Starts some threads
 	 */
 	public static void main(String[] args) {
+	
+		Data data = Data.getInstance();
 
-		Data.getInstance().addUser(
-				new User("cyblob@gmail.com", "password", User.Status.OFFLINE, "James McMinn", "I'm a panda.",
-						new HashMap<String, User>(), new HashMap<String, User>(), new HashMap<String, User>()));
+		data.addUser(new User("cyblob@gmail.com", "password", User.Status.OFFLINE, "James McMinn", "I'm a panda.",
+				new HashMap<String, User>(), new HashMap<String, User>(), new HashMap<String, User>()));
+		
+		data.addUser(new User("me@jamesmcminn.com", "password", User.Status.OFFLINE, "Andrew McMinn", "I'm a panda.",
+				new HashMap<String, User>(), new HashMap<String, User>(), new HashMap<String, User>()));
 
 		// Create a socket for the client to connect to
 		ServerSocket serverSocket = null;
@@ -31,16 +35,17 @@ public class GimServer {
 		// TODO: A thread to check for clients to timeout
 
 		// Listen for connections and create a Worker for them
-		try {
-			while (true) {
-				Worker s = new Worker(serverSocket.accept());
-				System.out.println("Creating new worker thread width id " + Data.getInstance().getNextClientID());
-				//TODO: Add new worker to data class
-				Thread t = new Thread(s);
+		while (true) {
+			try {
+				Worker worker = new Worker(serverSocket.accept());
+				int clientID = data.getNextClientID();
+				System.out.println("Creating new worker thread width id " + clientID);
+				data.addWorker(clientID, worker);
+				Thread t = new Thread(worker);
 				t.start();
+			} catch (IOException e) {
+				// TODO: We've just crashed, cleanup
 			}
-		} catch (IOException e) {
-			// TODO: We've just crashed, cleanup
 		}
 
 	}

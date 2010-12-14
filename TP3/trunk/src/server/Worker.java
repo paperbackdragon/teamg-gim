@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Date;
 
+import server.User.Status;
 import util.Command;
 import util.CommandBuffer;
 import util.CommandReader;
@@ -14,6 +15,8 @@ import util.ResponseWriter;
 
 /**
  * The Worker class takes a socket and data
+ * 
+ * TODO: Encode all of the data generated
  */
 public class Worker implements Runnable {
 
@@ -26,9 +29,12 @@ public class Worker implements Runnable {
 	private long lastCommunication;
 	private User loggedInUser;
 
-	// Okay command gets used a lot, lets not be wasteful and just have one of
-	// them per worker
-	private Command okay = new Command("OKAY", null, null);
+	private Command okay = new Command("OKAY");
+
+	private ResponseWriter responseWriter;
+	private CommandReader commandReader;
+	private Thread responseWriterThread;
+	private Thread commandReaderThread;
 
 	public Worker(Socket socket) {
 		this.socket = socket;
@@ -72,8 +78,8 @@ public class Worker implements Runnable {
 			response = ping(cmd);
 			break;
 
-		case SERVER:
-			response = server(cmd);
+		case SERVERSTATUS:
+			response = serverstatus(cmd);
 			break;
 
 		case AUTH:
@@ -81,7 +87,7 @@ public class Worker implements Runnable {
 			break;
 
 		case QUIT:
-			response = quit(cmd);
+			response = quit();
 			break;
 
 		case SET:
@@ -109,11 +115,7 @@ public class Worker implements Runnable {
 			break;
 
 		case LOGOUT:
-			response = logout(cmd);
-			break;
-
-		case SERVERSTATUS:
-			response = serverstatus(cmd);
+			response = logout();
 			break;
 
 		// Below this point, generate an error as the server should not receive
@@ -132,7 +134,7 @@ public class Worker implements Runnable {
 		// Somehow the command was recognised but not processed above. This
 		// shouldn't happen.
 		default:
-			response = new Command("ERROR", "SERVER_ERROR", "A server error occured.");
+			response = new Command("ERROR", "SERVER_ERROR", Command.encode("A server error occured."));
 			break;
 		}
 
@@ -141,17 +143,83 @@ public class Worker implements Runnable {
 	}
 
 	/**
-	 * TODO: Put the java docs in.
+	 * <p>
+	 * Empty the buffer and kill the worker threads.
+	 * </p>
+	 */
+	private void kill() {
+		this.commandBuffer.putResponse(new Command("KILL"));
+
+		try {
+			responseWriterThread.join();
+		} catch (InterruptedException e1) {
+		}
+
+		try {
+			socket.close();
+		} catch (IOException e) {
+		}
+
+		try {
+			commandReaderThread.join();
+		} catch (InterruptedException e) {
+		}
+
+		Thread.currentThread().interrupt();
+	}
+
+	/**
+	 * <p>
+	 * <b>:PING:;</b>
+	 * </p>
+	 * 
+	 * <p>
+	 * The command is used as a keep-alive command. Its primary use it to
+	 * indicate that the client is still alive even if no other communication
+	 * has been received from the client.
+	 * </p>
 	 * 
 	 * @param cmd
-	 * @return
+	 *            the PING Command
+	 * @return an OKAY command
+	 */
+	private Command ping(Command cmd) {
+		return this.okay;
+	}
+
+	/**
+	 * <p>
+	 * <b>:SERVERSTATUS { USERS | TIME | UPTIME }:;</b>
+	 * </p>
+	 * 
+	 * <p>
+	 * The SERVERSTATUS command returns information about the server including
+	 * the number of users, the local system time and server up-time. In that
+	 * case that an argument is provided then the server should return a
+	 * SERVERSTATUS as defined in the client section. If more than one argument
+	 * is provided then the server should return each value on a new line in the
+	 * order which the arguments were received (reading from left to right).
+	 * </P>
+	 * 
+	 * <p>
+	 * The arguments for this command are as follows:
+	 * <ul>
+	 * <li>USERS - The total number of users and number of online users</li>
+	 * <li>TIME - The current local time of the server</li>
+	 * <li>UPTIME - The up-time of the server instance</li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param cmd
+	 *            A command containing the status command
+	 * @return The serverstatus command with the data requested, as define above
 	 */
 	private Command serverstatus(Command cmd) {
 
 		// TODO: Make these return the correct things...
-		String time = new Date().toString();
-		String users = "OMG LOL";
-		String uptime = "OMG UPTIME";
+		String time = Command.encode(new Date().toString());
+		String users = Command.encode("OMG LOL");
+		String uptime = Command.encode("OMG UPTIME");
 
 		String data = "";
 		String[] args = cmd.getArguments();
@@ -179,93 +247,44 @@ public class Worker implements Runnable {
 	}
 
 	/**
-	 * The LOGOUT command specifies that the client wishes to logout but not
-	 * drop the connection to the server.
+	 * <p>
+	 * <b>:AUTH { LOGIN | REGISTER }: [email address] [password];</b>
+	 * </p>
 	 * 
-	 * @param cmd
-	 *            the logout command
-	 * @return If successful it should return an OKAY. Upon an error such as the
-	 *         user not being logged in, it should return an ERROR.
-	 */
-	private Command logout(Command cmd) {
-		if (this.loggedInUser == null)
-			return new Command("ERROR", "UNAUTHORIZED", null);
-
-		this.loggedInUser = null;
-
-		return this.okay;
-	}
-
-	private Command friend(Command cmd) {
-		// TODO: The friend command
-		return null;
-	}
-
-	private Command message(Command cmd) {
-		// TODO: The message command
-		return null;
-	}
-
-	private Command room(Command cmd) {
-		// TODO: The room command
-		return null;
-	}
-
-	private Command frindlist(Command cmd) {
-		// TODO: The friendlist command
-		return null;
-	}
-
-	private Command get(Command cmd) {
-		// TODO: The get command
-		return null;
-	}
-
-	private Command set(Command cmd) {
-		// TODO: The set command
-		return null;
-	}
-
-	private Command quit(Command cmd) {
-		// TODO: The quit command
-		return null;
-	}
-
-	/**
-	 * Do nothing, just respond with an OKAY. We'll be getting lots of these.
-	 * 
-	 * @param cmd
-	 *            the PING Command
-	 * @return an OKAY command
-	 */
-	private Command ping(Command cmd) {
-		return this.okay;
-	}
-
-	private Command server(Command cmd) {
-		// TODO: The server command
-		return null;
-	}
-
-	/**
+	 * <p>
 	 * The AUTH commands deals with all aspects of user authorisation and
 	 * permissions. The AUTH command alone should should return the users
 	 * current authorisation state, either LOGGEDIN or UNAUTHORIZED.
+	 * </p>
 	 * 
-	 * LOGIN
-	 * 
+	 * <p>
+	 * <b>LOGIN</b><br>
 	 * If the details are valid then the server should respond with an :AUTH
-	 * OKAY: command. It should set the user’s state (but not status) to ONLINE.
+	 * LOGGEDIN: command. It should set the user’s state (but not status) to
+	 * ONLINE. In the event that an error occurs the server should generate one
+	 * of the following ERROR statuses:
+	 * <ul>
+	 * <li>USER_DOES_NOT_EXIST The email address has not been registered
+	 * <li>LOGIN_DETAILS_INCORRECT The password was incorrect MISSING_ARGUMENTS
+	 * There were too few arguments.
+	 * </ul>
+	 * </p>
+	 * <p>
 	 * If the user is already logged in then the server should send a
 	 * LOGGED_IN_FROM_OTHER_LOCATION error and KILL command to the already
 	 * connected user.
+	 * </p>
 	 * 
-	 * REGISTER
-	 * 
+	 * <p>
+	 * <b>REGISTER</b><br>
 	 * The register argument allows for new users to be registered by providing
 	 * a valid email address and password. If the new account is registered
 	 * correctly then the server should respond with AUTH REGISTERED however it
-	 * should not log the user in.
+	 * should not log the user in. If the registration is unsuccessful the
+	 * server should return one of the following ERROR messages: INVALID_EMAIL
+	 * The email address was invalid EMAIL_ALREADY_IN_USE The email address has
+	 * already by registered PASSWORD_TOO_SHORT The password is too short
+	 * MISSING_ARGUMENTS There were too few arguments
 	 * 
 	 * @param cmd
 	 *            The login Command issued
@@ -274,16 +293,16 @@ public class Worker implements Runnable {
 	 */
 	private Command auth(Command cmd) {
 
-		// TODO: Check that the user is not already logged in
-
 		// Should give 0) email address 1) password hash
-		String[] dataParts = cmd.getData().split(" ");
+		String[] dataParts = cmd.splitAndDecodeData(" ");
+		
+		// TODO: decode the data
 
 		// No arguments, give them their current login status
 		if (cmd.getArguments().length == 0) {
 
 			if (this.loggedInUser == null)
-				return new Command("AUTH", "UNAUTHORIZED", null);
+				return new Command("AUTH", "UNAUTHORIZED");
 			else
 				return new Command("AUTH", "LOGGEDIN", this.loggedInUser.getNickname());
 
@@ -292,30 +311,31 @@ public class Worker implements Runnable {
 
 			// Make sure that they're not already logged in
 			if (this.loggedInUser != null)
-				return new Command("ERROR", "ALREADY_LOGGEDIN", null);
+				return new Command("ERROR", "ALREADY_LOGGEDIN");
 
 			// Not enough data to continue
 			if (dataParts.length < 2)
-				return new Command("ERROR", "MISSING_DATA", null);
+				return new Command("ERROR", "MISSING_DATA");
 
 			// Check the user details
 			User user = data.getUser(dataParts[0]);
+			System.out.println(dataParts[0]);
 			if (user != null && user.getPasswordHash().equalsIgnoreCase(dataParts[1])) {
 
 				// They provided accurate details, log them in
 				this.loggedInUser = user;
-				this.loggedInUser.setStatus(User.Status.ONLINE);
-				return new Command("AUTH", "LOGGEDIN", null);
+				this.loggedInUser.setOnline(true);
+				return new Command("AUTH", "LOGGEDIN");
 
 				// Something wasn't correct
 			} else {
 
 				// The user doesn't exist
 				if (user == null) {
-					return new Command("ERROR", "USER_DOES_NOT_EXIST", null);
+					return new Command("ERROR", "USER_DOES_NOT_EXIST");
 				} else {
 					// The details were wrong
-					return new Command("ERROR", "LOGIN_DETAILS_INCORRECT", null);
+					return new Command("ERROR", "LOGIN_DETAILS_INCORRECT");
 				}
 
 			}
@@ -345,12 +365,152 @@ public class Worker implements Runnable {
 
 			// If we made it this far everything should be okay! :D
 			data.addUser(new User(dataParts[0], dataParts[1]));
-			return new Command("AUTH", "REGISTERED", null);
+			return new Command("AUTH", "REGISTERED");
 
 		}
 
 		// The arguments given didn't make sense for this command
-		return new Command("ERROR", "INVALID_ARGUMENT", null);
+		return new Command("ERROR", "INVALID_ARGUMENT");
+	}
+
+	/**
+	 * <p>
+	 * <b>:QUIT:;</b>
+	 * </p>
+	 * 
+	 * <p>
+	 * The QUIT command tells the server that the users wishes to log out (if
+	 * applicable) and disconnect from the server. Once the quit command has
+	 * been received the users’ state should be changed to OFFLINE and the the
+	 * connection broken.
+	 * </p>
+	 * 
+	 * @return an OKAY command, although this should never reach the user
+	 */
+	public Command quit() {
+		logout();
+		kill();
+		return this.okay;
+	}
+
+	private Command friend(Command cmd) {
+
+		if (this.loggedInUser == null)
+			return new Command("ERROR", "UNAUTHORIZED");
+
+		// TODO: The friend command
+		return null;
+	}
+
+	private Command message(Command cmd) {
+
+		if (this.loggedInUser == null)
+			return new Command("ERROR", "UNAUTHORIZED");
+
+		// TODO: The message command
+		return null;
+	}
+
+	private Command room(Command cmd) {
+
+		if (this.loggedInUser == null)
+			return new Command("ERROR", "UNAUTHORIZED");
+
+		// TODO: The room command
+		return null;
+	}
+
+	private Command frindlist(Command cmd) {
+
+		if (this.loggedInUser == null)
+			return new Command("ERROR", "UNAUTHORIZED");
+
+		// TODO: The friendlist command
+		return null;
+	}
+
+	private Command get(Command cmd) {
+
+		if (this.loggedInUser == null)
+			return new Command("ERROR", "UNAUTHORIZED");
+
+		// Split the IDs
+		String[] users = cmd.splitAndDecodeData(",");
+		String response = "";
+
+		// Make sure they provided at least one ID
+		if (users.length == 0)
+			return new Command("ERROR", "INSUFFICENT_DATA_TO_COMPLETE_REQUEST");
+
+		for (String id : users) {
+			if (!User.validID(id))
+				return new Command("ERROR", "INVALID_USER_ID");
+
+			User user = data.getUser(id);
+			if (user == null)
+				return new Command("ERROR", "USER_NOT_FOUND");
+
+			if (!this.loggedInUser.friendListContains(user) && this.loggedInUser != user)
+				return new Command("ERROR", "NOT_AUTHORIZED");
+
+			String[] args = cmd.getArguments();
+			for (int i = 0; i < args.length; i++) {
+
+				if (args[i].equalsIgnoreCase("NICKNAME"))
+					response += user.getNickname();
+				else if (args[i].equalsIgnoreCase("STATUS"))
+					response += user.getStatus().toString();
+				else if (args[i].equalsIgnoreCase("PERSONAL_MESSAGE"))
+					response += user.getPersonalMessage();
+				else if (args[i].equalsIgnoreCase("DISPLAY_PIC"))
+					response += user.getDisplayPic();
+				else
+					return new Command("ERROR", "INVALID_ARGUMENT");
+
+				response += "\n";
+
+			}
+
+		}
+
+		// Remove extra newline
+		response = response.substring(0, response.length() - 2);
+
+		return new Command("INFO", null, response);
+	}
+
+	private Command set(Command cmd) {
+
+		if (this.loggedInUser == null)
+			return new Command("ERROR", "UNAUTHORIZED");
+
+		// TODO: The set command
+		return null;
+	}
+
+	/**
+	 * <p>
+	 * <b>:LOGOUT:;</b>
+	 * </p>
+	 * 
+	 * <p>
+	 * The LOGOUT command specifies that the client wishes to logout but not
+	 * drop the connection to the server.
+	 * </p>
+	 * 
+	 * @return If successful it should return an OKAY. Upon an error such as the
+	 *         user not being logged in, it should return an ERROR.
+	 */
+	private Command logout() {
+
+		if (this.loggedInUser == null)
+			return new Command("ERROR", "UNAUTHORIZED");
+
+		loggedInUser.setOnline(false);
+		loggedInUser.setStatus(Status.OFFLINE);
+		this.loggedInUser = null;
+
+		return this.okay;
 	}
 
 	@Override
@@ -366,20 +526,29 @@ public class Worker implements Runnable {
 		}
 
 		// Create a thread to read in and handle commands
-		Thread cmdReader = new Thread(new CommandReader(in, commandBuffer));
-		cmdReader.start();
+		this.commandReader = new CommandReader(in, commandBuffer);
+		commandReaderThread = new Thread(this.commandReader);
+		commandReaderThread.start();
 
 		// Create a thread to print out responses
-		Thread responseWriter = new Thread(new ResponseWriter(out, commandBuffer));
-		responseWriter.start();
+		this.responseWriter = new ResponseWriter(out, commandBuffer);
+		responseWriterThread = new Thread(this.responseWriter);
+		responseWriterThread.start();
 
-		// Deal with the commands
-		while (true) {
-			Command cmd = commandBuffer.getCommand();
-			Command rsp = processCommand(cmd);
-			commandBuffer.putResponse(rsp);
+		try {
+
+			// Deal with the commands
+			while (socket.isConnected()) {
+				Command cmd = commandBuffer.getCommand();
+				Command rsp = processCommand(cmd);
+				if (rsp != null) {
+					commandBuffer.putResponse(rsp);
+				}
+			}
+
+		} catch (InterruptedException e) {
+			System.out.println("Worker has finished.");
 		}
 
 	}
-
 }

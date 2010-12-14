@@ -12,13 +12,9 @@ public class CommandBuffer<T> {
 		this.responses = new LinkedList<T>();
 	}
 
-	public synchronized T getCommand() {
+	public synchronized T getCommand() throws InterruptedException {
 		while (commands.size() == 0) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				// We're screwed
-			}
+			wait();
 		}
 		notifyAll();
 		return commands.remove();
@@ -29,13 +25,9 @@ public class CommandBuffer<T> {
 		notifyAll();
 	}
 
-	public synchronized T getResponse() {
+	public synchronized T getResponse() throws InterruptedException {
 		while (responses.size() == 0) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				// We're screwed
-			}
+			wait();
 		}
 		notifyAll();
 		return responses.remove();

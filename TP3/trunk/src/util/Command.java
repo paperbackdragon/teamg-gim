@@ -4,12 +4,12 @@ public class Command {
 
 	// All of the valid commands in the protocol
 	public static enum COMMANDS {
-		PING, SERVER, AUTH, QUIT, OKAY, SERVERSTATUS, STATUS, KILL, BROADCAST, SET, GET, FRIENDLIST, ROOM, MESSAGE, FREINDREQUEST, FRIEND, LOGOUT, UPDATE, INFO, ERROR, DOESNOTEXIST
+		PING, SERVER, AUTH, QUIT, OKAY, SERVERSTATUS, KILL, BROADCAST, SET, GET, FRIENDLIST, ROOM, MESSAGE, FREINDREQUEST, FRIEND, LOGOUT, UPDATE, INFO, ERROR, DOESNOTEXIST
 	}
 
 	private COMMANDS command = null;
-	private String[] arguments = null;
-	private String data = null;
+	private String[] arguments = new String[0];
+	private String data = "";
 
 	/**
 	 * Default constructor, creates an empty command.
@@ -40,14 +40,74 @@ public class Command {
 		// Gota make sure there's an array and not just null
 		if (args != null)
 			this.arguments = args.split(" ");
-		else
-			this.arguments = new String[0];
 
 		// We don't like null.
 		if (data != null)
 			this.data = data;
-		else
-			this.data = "";
+	}
+
+	public Command(String cmd, String args) {
+		// Make sure the command is one that we recognise
+		try {
+			this.command = COMMANDS.valueOf(cmd.replaceAll(" ", "").toUpperCase());
+		} catch (IllegalArgumentException e) {
+			this.command = COMMANDS.DOESNOTEXIST;
+		}
+
+		// Gota make sure there's an array and not just null
+		if (args != null)
+			this.arguments = args.split(" ");
+
+	}
+
+	public Command(String cmd) {
+		// Make sure the command is one that we recognise
+		try {
+			this.command = COMMANDS.valueOf(cmd.replaceAll(" ", "").toUpperCase());
+		} catch (IllegalArgumentException e) {
+			this.command = COMMANDS.DOESNOTEXIST;
+		}
+	}
+
+	private static String byteToHex(byte b) {
+		// Returns hex String representation of byte b
+		char hexDigit[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+		char[] array = { hexDigit[(b >> 4) & 0x0f], hexDigit[b & 0x0f] };
+		return new String(array);
+	}
+
+	private static String charToHex(char c) {
+		// Returns hex String representation of char c
+		byte hi = (byte) (c >>> 8);
+		byte lo = (byte) (c & 0xff);
+		return byteToHex(hi) + byteToHex(lo);
+	}
+
+	public static String encode(String s) {
+		String encoded = "";
+		for (Character c : s.toCharArray()) {
+			if (!Character.isLetterOrDigit(c))
+				encoded += "\\U+" + charToHex(c);
+			else
+				encoded += c;
+		}
+		return encoded;
+	}
+
+	public static String decode(String s) {
+		String decoded = "";
+
+		int pos = s.indexOf("\\");
+		while (pos != -1) {
+			decoded += s.substring(0, pos);
+			int val = Integer.parseInt(s.substring(pos + 3, pos + 7), 16);
+			decoded += new Character((char) val);
+			s = s.substring(pos + 7);
+			pos = s.indexOf("\\");
+		}
+		decoded += s;
+		
+		return decoded;
 	}
 
 	/**
@@ -58,7 +118,7 @@ public class Command {
 	public String getCommand() {
 		return this.command.toString();
 	}
-	
+
 	/**
 	 * Get the command as an ENUM value
 	 * 
@@ -140,6 +200,18 @@ public class Command {
 		return this.data;
 	}
 
+	public String[] splitAndDecodeData(String split) {
+		if (data == null)
+			return new String[0];
+
+		String[] parts = getData().split(split);
+		for (int i = 0; i < parts.length; i++)
+			parts[i] = decode(parts[i]);
+
+		return parts;
+
+	}
+
 	/**
 	 * Set the data for the command
 	 * 
@@ -148,31 +220,6 @@ public class Command {
 	 */
 	public void setData(String data) {
 		this.data = data;
-	}
-	
-	static public String byteToHex(byte b) {
-		// Returns hex String representation of byte b
-		char hexDigit[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
-		char[] array = { hexDigit[(b >> 4) & 0x0f], hexDigit[b & 0x0f] };
-		return new String(array);
-	}
-
-	static public String charToHex(char c) {
-		// Returns hex String representation of char c
-		byte hi = (byte) (c >>> 8);
-		byte lo = (byte) (c & 0xff);
-		return byteToHex(hi) + byteToHex(lo);
-	}
-
-	public static String unicodeEncode(String s) {
-		String encoded = "";
-		for (Character c : s.toCharArray()) {
-			if(!Character.isLetterOrDigit(c))
-				encoded += "\\U+" + charToHex(c);
-			else
-				encoded += c;
-		}
-		return encoded;
 	}
 
 	/**
@@ -191,9 +238,7 @@ public class Command {
 			command += data;
 		}
 
-		command += ";";
-
-		return command;
+		return command + ";";
 	}
 
 }

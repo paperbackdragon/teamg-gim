@@ -6,13 +6,12 @@ import java.io.IOException;
 /**
  * The command reader reads in commands from a BufferedReader and put them into
  * a CommandBuffer
- * 
- * TODO: Decode any unicode characters
  */
 public class CommandReader implements Runnable {
 
 	private BufferedReader in;
 	private CommandBuffer<Command> commandBuffer;
+
 
 	/**
 	 * The constructor, 'cos constructing is cool.
@@ -27,6 +26,7 @@ public class CommandReader implements Runnable {
 		this.commandBuffer = commandBuffer;
 	}
 
+
 	/**
 	 * Read commands from the input stream and put them into the command buffer
 	 */
@@ -40,7 +40,13 @@ public class CommandReader implements Runnable {
 			try {
 				line = in.readLine();
 			} catch (IOException e) {
-				// TODO: Cleanup, the client just disconnected.
+				break;
+			}
+
+			if (line == null) {
+				System.out.println("Client closed connection.");
+				commandBuffer.putCommand(new Command("QUIT"));
+				break;
 			}
 
 			if (command == null) {
@@ -95,5 +101,9 @@ public class CommandReader implements Runnable {
 			}
 
 		}
+		
+		// TODO: Clean up
+		System.out.println("CommandReader stopped.");
+		
 	}
 }
