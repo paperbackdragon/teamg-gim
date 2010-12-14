@@ -142,13 +142,7 @@ public class ContactPanel extends JPanel {
 						ui.setLocationRelativeTo(null);//center new chat window
 					}
 				});
-			
-			
-			
 			}
-			
-			
-			
 			else if(e.getSource().equals(chat)) {
 				System.out.println("chat clicked.");
 				SwingUtilities.invokeLater(new Runnable() {
