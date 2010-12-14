@@ -5,7 +5,6 @@ import javax.swing.*;
 
 @SuppressWarnings("serial")
 public class GimUI extends JFrame{
-	//private MenuListener menuListener;
 	private JMenuItem logout, quit, setOptions;
 	private JPanel main;
 	
@@ -20,7 +19,7 @@ public class GimUI extends JFrame{
 		
 		setTitle(title);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		main = panel;
+		setMainPanel(panel);
 		
 		JMenuBar menu = new JMenuBar();
 		JMenu fileMenu = new JMenu("File");
@@ -53,6 +52,12 @@ public class GimUI extends JFrame{
 		setContentPane(main);
 		pack();
 		setVisible(true);
+	}
+	
+	//HELPER METHODS
+	public void setMainPanel(JPanel newPanel) {
+		main = newPanel;
+		newPanel.setVisible(true);
 	}
 	
 	//ACTION LISTENERS

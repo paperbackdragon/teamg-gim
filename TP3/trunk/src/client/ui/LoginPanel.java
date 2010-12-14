@@ -6,6 +6,7 @@ import javax.swing.*;
 
 @SuppressWarnings("serial")
 public class LoginPanel extends JPanel{
+	GimUI parent;
 	JTextField email, pwd;
 	JButton loginButton, register;
 	JCheckBox auto;
@@ -70,11 +71,21 @@ public class LoginPanel extends JPanel{
 		return new Dimension(300, 400);
 	}
 	
+	public void setParent(JFrame frame) {
+		parent = (GimUI) frame;
+	}
+	
 	//ACTION LISTENERS
 	class LoginListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource().equals(loginButton)) {
 				System.out.println("Login pressed");
+				if(parent != null) {
+					parent.setMainPanel(new ContactPanel());
+					System.out.println("set");
+				}
+				else
+					System.out.println("null");
 			}
 			else if (e.getSource().equals(register)) {
 				System.out.println("Register pressed");
