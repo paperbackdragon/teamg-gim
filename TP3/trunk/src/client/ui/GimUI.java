@@ -57,7 +57,8 @@ public class GimUI extends JFrame{
 	//HELPER METHODS
 	public void setMainPanel(JPanel newPanel) {
 		main = newPanel;
-		newPanel.setVisible(true);
+		setContentPane(main);
+		pack();
 	}
 	
 	//ACTION LISTENERS
