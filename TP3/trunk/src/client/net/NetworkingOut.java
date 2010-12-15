@@ -5,7 +5,8 @@ package client.net;
  * networking protocol. Although the server's response is out of the scope of this aspect, it will be indicated in
  * the documentation descriptively how the server will respond, as is considered helpful.
  * 
- * @authors James McMinn, Gordon Martin
+ * @author James McMinn
+ * @author Gordon Martin
  *
  */
 
@@ -93,7 +94,8 @@ public interface NetworkingOut {
 	// figure this one out later... Does it take a string?
 	
 	/** Sends a request to the server to set the user's display picture
-	 * @param x [TO BE IMPLIMENTED] */
+	 * @param displayPicture
+	 *		the display picture */
 	void setDisplayPicture(String displayPicture);
 	
 	// :SET ends
@@ -101,23 +103,23 @@ public interface NetworkingOut {
 	// :GET { NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC }: <user>{,<user>};
 	
 	/** Sends a request to the server to return the nicknames of a list of users
-	 * @param userlist
+	 * @param userList
 	 * 		  A list of one or more users, separated by commas */
 	void getNickname(String userList);
 	
 	/** Sends a request to the server to return the statuses of a list of users
-	 * @param userlist
+	 * @param userList
 	 * 		  A list of one or more users, separated by commas */
 	void getStatus(String userList);
 	
 	
 	/** Sends a request to the server to return the personal messages of a list of users
-	 * @param userlist
+	 * @param userList
 	 * 		  A list of one or more users, separated by commas */
 	void getPersonalMessage(String userList);
 	
 	/** Sends a request to the server to return the display pictures of a list of users
-	 * @param userlist
+	 * @param userList
 	 * 		  A list of one or more users, separated by commas */
 	void getDisplayPicture(String userList);
 	
@@ -152,10 +154,14 @@ public interface NetworkingOut {
 	void join(String roomid);
 	
 	
-	/** sends a request to the server to leave a group chat */
+	/** sends a request to the server to leave a group chat
+	 * @param roomid 
+	 * 		the id of the room to leave the group chat of */
 	void leave(String roomid);
 	
-	/** sends a request to the server to return a list of users currently in a group chat */
+	/** sends a request to the server to return a list of users currently in a group chat
+	 * @param roomid
+	 * 		the id of the room to get the list of users from */
 	void roomusers(String roomid);
 	
 	// :ROOM ends
