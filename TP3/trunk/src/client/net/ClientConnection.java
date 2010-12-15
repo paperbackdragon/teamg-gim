@@ -152,37 +152,37 @@ public class ClientConnection implements Runnable, Networking  {
 	}
 
 	@Override
-	public void acceptfriend(String friend) {
+	public void accept(String friend) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void addfriend(String friend) {
+	public void add(String friend) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void blockfriend(String friend) {
+	public void block(String friend) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void declinefriend(String friend) {
+	public void decline(String friend) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void deletefriend(String friend) {
+	public void delete(String friend) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void unblockfriend(String friend) {
+	public void unblock(String friend) {
 		// TODO Auto-generated method stub
 		
 	}

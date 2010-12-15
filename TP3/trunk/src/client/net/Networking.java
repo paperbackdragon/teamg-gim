@@ -176,32 +176,32 @@ public interface Networking {
 	/** sends a request to the server to add a friend
 	 * @param friend
 	 * 		The e-mail address of the user to add */
-	void addfriend(String friend);
+	void add(String friend);
 	
 	/** sends a request to the server to block a friend
 	 * @param friend
 	 * 		The e-mail address of the user to block */
-	void blockfriend(String friend);
+	void block(String friend);
 	
 	/** sends a request to the server to unblock a friend
 	 * @param friend
 	 * 		The e-mail address of the user to unblock */
-	void unblockfriend(String friend);
+	void unblock(String friend);
 	
 	/** sends a request to the server to accept the friend request of a user
 	 * @param friend
 	 * 		The e-mail address of the user to accept the request from */
-	void acceptfriend(String friend);
+	void accept(String friend);
 	
 	/** sends a request to the server to decline the friend request of a user
 	 * @param friend
 	 * 		The e-mail address of the user to decline the request from */
-	void declinefriend(String friend);
+	void decline(String friend);
 	
 	/** sends a request to the server to delete a friend
 	 * @param friend
 	 * 		The e-mail address of the user to delete */
-	void deletefriend(String friend);
+	void delete(String friend);
 	
 	// end :FRIEND
 	
