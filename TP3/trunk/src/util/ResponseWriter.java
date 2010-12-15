@@ -8,7 +8,6 @@ import util.Command.COMMANDS;
  * The response writer reads commands off a CommandBuffer and sends them across
  * the network.
  * 
- * TODO: Encode any unicode characters
  */
 public class ResponseWriter implements Runnable {
 

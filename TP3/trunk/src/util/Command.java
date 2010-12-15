@@ -12,7 +12,7 @@ public class Command {
 	private String data = "";
 
 	/**
-	 * Default constructor, creates an empty command.
+	 * Default constructor, creates a DOESNOTEXIST command
 	 */
 	public Command() {
 		this("DOESNOTEXIST", null, null);
@@ -46,6 +46,14 @@ public class Command {
 			this.data = data;
 	}
 
+	/**
+	 * Constructor for a command which has no data, only arguments
+	 * 
+	 * @param cmd
+	 *            The type of COMMAND which this command is
+	 * @param args
+	 *            The arguments of the command
+	 */
 	public Command(String cmd, String args) {
 		// Make sure the command is one that we recognise
 		try {
@@ -60,6 +68,12 @@ public class Command {
 
 	}
 
+	/**
+	 * Constructor for a command with no arguments or data
+	 * 
+	 * @param cmd
+	 *            The type of COMMAND which this command is
+	 */
 	public Command(String cmd) {
 		// Make sure the command is one that we recognise
 		try {
@@ -67,47 +81,6 @@ public class Command {
 		} catch (IllegalArgumentException e) {
 			this.command = COMMANDS.DOESNOTEXIST;
 		}
-	}
-
-	private static String byteToHex(byte b) {
-		// Returns hex String representation of byte b
-		char hexDigit[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
-		char[] array = { hexDigit[(b >> 4) & 0x0f], hexDigit[b & 0x0f] };
-		return new String(array);
-	}
-
-	private static String charToHex(char c) {
-		// Returns hex String representation of char c
-		byte hi = (byte) (c >>> 8);
-		byte lo = (byte) (c & 0xff);
-		return byteToHex(hi) + byteToHex(lo);
-	}
-
-	public static String encode(String s) {
-		String encoded = "";
-		for (Character c : s.toCharArray()) {
-			if (!Character.isLetterOrDigit(c))
-				encoded += "\\U+" + charToHex(c);
-			else
-				encoded += c;
-		}
-		return encoded;
-	}
-
-	public static String decode(String s) {
-		String decoded = "";
-
-		int pos = s.indexOf("\\");
-		while (pos != -1) {
-			decoded += s.substring(0, pos);
-			int val = Integer.parseInt(s.substring(pos + 3, pos + 7), 16);
-			decoded += new Character((char) val);
-			s = s.substring(pos + 7);
-			pos = s.indexOf("\\");
-		}
-		decoded += s;
-		
-		return decoded;
 	}
 
 	/**
@@ -200,6 +173,23 @@ public class Command {
 		return this.data;
 	}
 
+	/**
+	 * Get the decoded data
+	 * 
+	 * @return the data
+	 */
+	public String getDecodedData() {
+		return decode(this.data);
+	}
+
+	/**
+	 * Split the data and then decode it
+	 * 
+	 * @param split
+	 *            The regex showing where to split the code (same as
+	 *            String.split();)
+	 * @return The split and decoded data
+	 */
 	public String[] splitAndDecodeData(String split) {
 		if (data == null)
 			return new String[0];
@@ -239,6 +229,85 @@ public class Command {
 		}
 
 		return command + ";";
+	}
+
+	/**
+	 * Convert a byte to its hex representation
+	 * 
+	 * @param b
+	 *            the byte to convert
+	 * @return The hex representation of the byte
+	 */
+	private static String byteToHex(byte b) {
+		// Returns hex String representation of byte b
+		char hexDigit[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+		char[] array = { hexDigit[(b >> 4) & 0x0f], hexDigit[b & 0x0f] };
+		return new String(array);
+	}
+
+	/**
+	 * Convert a character to its hex representation
+	 * 
+	 * @param c
+	 *            The character to convert
+	 * @return The hex representation of the byte
+	 */
+	private static String charToHex(char c) {
+		// Returns hex String representation of char c
+		byte hi = (byte) (c >>> 8);
+		byte lo = (byte) (c & 0xff);
+		return byteToHex(hi) + byteToHex(lo);
+	}
+
+	/**
+	 * Encode a string so that any no Letter or Digit is converted to a Unicode
+	 * character represented by its hex
+	 * 
+	 * @param s
+	 *            The string to encode
+	 * @return The encoded string
+	 */
+	public static String encode(String s) {
+		String encoded = "";
+		for (Character c : s.toCharArray()) {
+			if (!Character.isLetterOrDigit(c))
+				encoded += "\\U+" + charToHex(c);
+			else
+				encoded += c;
+		}
+		return encoded;
+	}
+
+	/**
+	 * Decode a string where any pattern matching \U+XXXX is converted to its
+	 * Unicode character
+	 * 
+	 * @param s
+	 *            The string to decode
+	 * @return The decoded string
+	 * 
+	 *         TODO: Reject badly formatted input
+	 */
+	public static String decode(String s) {
+		String decoded = "";
+
+		int pos = s.indexOf("\\");
+		while (pos != -1) {
+			// Add everything up the first \ to the decoded part of the string
+			decoded += s.substring(0, pos);
+
+			// Convert the next 7 characters to the Unicode character
+			int val = Integer.parseInt(s.substring(pos + 3, pos + 7), 16);
+			decoded += new Character((char) val);
+
+			// Strip the string were decoding up to the point where we've
+			// decoded
+			s = s.substring(pos + 7);
+			pos = s.indexOf("\\");
+		}
+		decoded += s;
+
+		return decoded;
 	}
 
 }

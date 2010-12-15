@@ -20,7 +20,7 @@ public class GimServer {
 		data.addUser(new User("cyblob@gmail.com", "password", User.Status.OFFLINE, "James McMinn", "I'm a panda.",
 				new HashMap<String, User>(), new HashMap<String, User>(), new HashMap<String, User>()));
 		
-		data.addUser(new User("me@jamesmcminn.com", "password", User.Status.OFFLINE, "Andrew McMinn", "I'm a panda.",
+		data.addUser(new User("me@jamesmcminn.com", "password", User.Status.OFFLINE, "Andrew McMinn", "I'm not a panda.",
 				new HashMap<String, User>(), new HashMap<String, User>(), new HashMap<String, User>()));
 
 		// Create a socket for the client to connect to

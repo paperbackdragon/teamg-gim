@@ -81,7 +81,7 @@ public class CommandReader implements Runnable {
 				dataParts = line.split(";", 2);
 
 				// No ;, not the end of a command
-				if (dataParts.length == 0) {
+				if (dataParts.length == 1) {
 					data += line;
 				} else if (dataParts.length >= 2) {
 					// End of a command

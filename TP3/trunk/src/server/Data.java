@@ -104,11 +104,11 @@ public class Data {
 	 */
 	public void addRoom(Room room) {
 		synchronized (rooms) {
-			rooms.put(0, room);
+			rooms.put(room.getId(), room);
 		}
 	}
 
-	public Room getRoom(Integer id) {
+	public Room getRoom(int id) {
 		return rooms.get(new Integer(id));
 	}
 

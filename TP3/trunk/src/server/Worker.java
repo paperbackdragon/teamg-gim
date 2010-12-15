@@ -16,7 +16,6 @@ import util.ResponseWriter;
 /**
  * The Worker class takes a socket and data
  * 
- * TODO: Encode all of the data generated
  */
 public class Worker implements Runnable {
 
@@ -62,6 +61,26 @@ public class Worker implements Runnable {
 	}
 
 	/**
+	 * Put a command in the buffer
+	 * 
+	 * @param cmd
+	 *            The command to place in the buffer
+	 */
+	public void putCommand(Command cmd) {
+		this.commandBuffer.putCommand(cmd);
+	}
+
+	/**
+	 * Put a response in the buffer
+	 * 
+	 * @param cmd
+	 *            The command to put in the response buffer
+	 */
+	public void putResponse(Command cmd) {
+		this.commandBuffer.putResponse(cmd);
+	}
+
+	/**
 	 * Process the given command and get a response.
 	 * 
 	 * @param cmd
@@ -75,7 +94,7 @@ public class Worker implements Runnable {
 
 		switch (cmd.getCommandAsEnum()) {
 		case PING:
-			response = ping(cmd);
+			response = ping();
 			break;
 
 		case SERVERSTATUS:
@@ -99,7 +118,7 @@ public class Worker implements Runnable {
 			break;
 
 		case FRIENDLIST:
-			response = frindlist(cmd);
+			response = friendlist(cmd);
 			break;
 
 		case ROOM:
@@ -183,7 +202,7 @@ public class Worker implements Runnable {
 	 *            the PING Command
 	 * @return an OKAY command
 	 */
-	private Command ping(Command cmd) {
+	private Command ping() {
 		return this.okay;
 	}
 
@@ -295,8 +314,6 @@ public class Worker implements Runnable {
 
 		// Should give 0) email address 1) password hash
 		String[] dataParts = cmd.splitAndDecodeData(" ");
-		
-		// TODO: decode the data
 
 		// No arguments, give them their current login status
 		if (cmd.getArguments().length == 0) {
@@ -319,12 +336,16 @@ public class Worker implements Runnable {
 
 			// Check the user details
 			User user = data.getUser(dataParts[0]);
-			System.out.println(dataParts[0]);
+
 			if (user != null && user.getPasswordHash().equalsIgnoreCase(dataParts[1])) {
+
+				// TODO: Check if the User already has a worker associated
 
 				// They provided accurate details, log them in
 				this.loggedInUser = user;
 				this.loggedInUser.setOnline(true);
+				this.loggedInUser.setWorker(this);
+
 				return new Command("AUTH", "LOGGEDIN");
 
 				// Something wasn't correct
@@ -402,25 +423,193 @@ public class Worker implements Runnable {
 		return null;
 	}
 
+	/**
+	 * <p>
+	 * <b>:MESSAGE: <roomid> <message>;</b>
+	 * </p>
+	 * 
+	 * <p>
+	 * The MESSAGE command specifies a room and a message which should be
+	 * delivered to the room.
+	 * </p>
+	 * 
+	 * @param cmd
+	 * @return
+	 */
 	private Command message(Command cmd) {
 
 		if (this.loggedInUser == null)
 			return new Command("ERROR", "UNAUTHORIZED");
 
-		// TODO: The message command
-		return null;
+		String[] data = cmd.splitAndDecodeData(" ");
+
+		// Make sure all the data we need is there
+		if (data.length < 2)
+			return new Command("ERROR", "MISSING_DATA", "The MESSAGE commange requires a room id and message.");
+
+		// Turn the data into a usable format
+		int roomId = Integer.valueOf(data[0]);
+		Room room = this.data.getRoom(roomId);
+
+		if (room == null)
+			return new Command("ERROR", "ROOM_DOES_NOT_EXIST");
+
+		if (room.messageAll(this.loggedInUser, data[1]))
+			return this.okay;
+
+		return new Command("ERROR", "COULD_NOT_SEND_MESSAGE");
+
 	}
 
+	/**
+	 * <p>
+	 * <b>:ROOM [ CREATE {PUBLIC} | INVITE | JOIN | LEAVE | USERS ]: {<roomid> |
+	 * <user>};</b>
+	 * </p>
+	 * 
+	 * <p>
+	 * The ROOM command deals with all room related requests.
+	 * </p>
+	 * 
+	 * <p>
+	 * <b>CREATE</b><br>
+	 * The CREATE arguments specifies that the client wishes to create a new
+	 * chat room for use. If the PUBLIC argument is also supplied then anyone
+	 * can join the room without an invite.
+	 * 
+	 * <b>INVITE</b><br>
+	 * The INVITE argument sends an invite to join the room to the specified
+	 * user. They are then allowed to join the room at any point.
+	 * 
+	 * <b>JOIN</b><br>
+	 * The JOIN command specifies that the user wishes to join the specified
+	 * room.
+	 * 
+	 * <b>LEAVE</b><br>
+	 * The LEAVE argument specifies that the user wishes to leave the specified
+	 * room.
+	 * 
+	 * <b>USERS</b><br>
+	 * The USERS argument request a list of the users in the room from the
+	 * server.
+	 * 
+	 * @param cmd
+	 * @return
+	 */
 	private Command room(Command cmd) {
 
 		if (this.loggedInUser == null)
 			return new Command("ERROR", "UNAUTHORIZED");
 
-		// TODO: The room command
-		return null;
+		if (cmd.getArguments().length > 2)
+			return new Command("ERROR", "INVALID_NUMBER_OF_ARGUMENTS",
+					"The ROOM command can accept no more than 2 arguments.");
+
+		String arg = cmd.getArguments()[0];
+		if (arg.equalsIgnoreCase("CREATE")) {
+
+			// Do they want a public room?
+			boolean pub = false;
+			if (cmd.getArguments().length == 2 && cmd.getArguments()[1].equalsIgnoreCase("PUBLIC"))
+				pub = true;
+
+			// Create the new room
+			Room room = new Room(this.loggedInUser, pub);
+			data.addRoom(room);
+
+			return new Command("ROOM", "CREATED", room.getId() + "");
+
+		} else {
+
+			String[] data = cmd.splitAndDecodeData(" ");
+
+			if (arg.equalsIgnoreCase("INVITE")) {
+
+				// Make sure all the data we need is there
+				if (data.length < 2)
+					return new Command("ERROR", "MISSING_DATA", "The INVITE argument requires a room id and a user id");
+
+				// Turn the data into a usable format
+				int roomId = Integer.valueOf(data[0]);
+				String userId = data[1];
+
+				// Make sure we have permissions to invite people to the room
+				if (!this.loggedInUser.inRoom(roomId))
+					return new Command("ERROR", "NOT_IN_ROOM",
+							"You cannot invite someone into a room which you are no already in.");
+
+				Room room = this.data.getRoom(roomId);
+
+				// TODO: Make sure that we're in the other users friend list
+				// first
+				User user = this.data.getUser(userId);
+
+				// The user doesn't exist
+				if (user == null)
+					return new Command("ERROR", "USER_DOES_NOT_EXIST");
+
+				// The user they're trying to invite is offline
+				if (!user.isOnline())
+					return new Command("ERROR", "USER_IS_OFFLINE");
+
+				room.invite(user, this.loggedInUser);
+
+				return this.okay;
+
+			} else if (arg.equalsIgnoreCase("JOIN")) {
+
+				// Make sure all the data we need is there
+				if (data.length < 1)
+					return new Command("ERROR", "MISSING_DATA", "The JOIN argument requires a room id.");
+
+				// Turn the data into a usable format
+				int roomId = Integer.valueOf(data[0]);
+				Room room = this.data.getRoom(roomId);
+
+				if (room == null)
+					return new Command("ERROR", "ROOM_DOES_NOT_EXIST");
+
+				if (room.join(this.loggedInUser)) {
+					this.loggedInUser.addRoom(room);
+				} else {
+					// TODO: More useful error messages
+					return new Command("ERROR", "COULD_NOT_JOIN_ROOM");
+				}
+
+				return this.okay;
+
+			} else if (arg.equalsIgnoreCase("LEAVE")) {
+
+				// Make sure all the data we need is there
+				if (data.length < 1)
+					return new Command("ERROR", "MISSING_DATA", "The LEAVE argument requires a room id.");
+
+				// Turn the data into a usable format
+				int roomId = Integer.valueOf(data[0]);
+				Room room = this.data.getRoom(roomId);
+
+				if (room == null)
+					return new Command("ERROR", "ROOM_DOES_NOT_EXIST");
+
+				if (room.leave(this.loggedInUser)) {
+					this.loggedInUser.removeRoom(room);
+				} else {
+					// TODO: More useful error messages
+					return new Command("ERROR", "COULD_NOT_LEAVE_ROOM");
+				}
+
+				return this.okay;
+
+			} else if (arg.equalsIgnoreCase("USERS")) {
+
+			}
+
+		}
+
+		return new Command("ERROR", "INVALID_ARGUMENT");
 	}
 
-	private Command frindlist(Command cmd) {
+	private Command friendlist(Command cmd) {
 
 		if (this.loggedInUser == null)
 			return new Command("ERROR", "UNAUTHORIZED");
@@ -429,6 +618,22 @@ public class Worker implements Runnable {
 		return null;
 	}
 
+	/**
+	 * <p>
+	 * <b>:GET { NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC }:
+	 * <user>{,[user]};</b>
+	 * </p>
+	 * 
+	 * <p>
+	 * The GET command requests a set of attributes for each user in a comma
+	 * separated list of users. The server should respond with an INFO command
+	 * and the appropriate data.
+	 * </p>
+	 * 
+	 * @param cmd
+	 *            The GET command received by the server
+	 * @return An INFO command with the data asked for
+	 */
 	private Command get(Command cmd) {
 
 		if (this.loggedInUser == null)
@@ -443,49 +648,102 @@ public class Worker implements Runnable {
 			return new Command("ERROR", "INSUFFICENT_DATA_TO_COMPLETE_REQUEST");
 
 		for (String id : users) {
+
+			// Make sure the user id they want information about is valid
 			if (!User.validID(id))
 				return new Command("ERROR", "INVALID_USER_ID");
 
+			// Make sure that the user exists
 			User user = data.getUser(id);
 			if (user == null)
-				return new Command("ERROR", "USER_NOT_FOUND");
+				return new Command("ERROR", "USER_NOT_FOUND", Command.encode(id));
 
+			// Stop them from getting access about people who aren't in their
+			// freindlist
+			// TODO: This should also include people who are also in the same
+			// room as the user
 			if (!this.loggedInUser.friendListContains(user) && this.loggedInUser != user)
 				return new Command("ERROR", "NOT_AUTHORIZED");
 
+			// Get the data they asked for
+			response += Command.encode(user.getId()) + "\n";
 			String[] args = cmd.getArguments();
 			for (int i = 0; i < args.length; i++) {
 
-				if (args[i].equalsIgnoreCase("NICKNAME"))
-					response += user.getNickname();
-				else if (args[i].equalsIgnoreCase("STATUS"))
-					response += user.getStatus().toString();
-				else if (args[i].equalsIgnoreCase("PERSONAL_MESSAGE"))
-					response += user.getPersonalMessage();
-				else if (args[i].equalsIgnoreCase("DISPLAY_PIC"))
-					response += user.getDisplayPic();
-				else
+				if (args[i].equalsIgnoreCase("NICKNAME")) {
+					response += Command.encode(user.getNickname());
+
+				} else if (args[i].equalsIgnoreCase("STATUS")) {
+					response += Command.encode(user.getStatus().toString());
+
+				} else if (args[i].equalsIgnoreCase("PERSONAL_MESSAGE")) {
+					response += Command.encode(user.getPersonalMessage());
+
+				} else if (args[i].equalsIgnoreCase("DISPLAY_PIC")) {
+					response += Command.encode(user.getDisplayPic());
+
+				} else {
 					return new Command("ERROR", "INVALID_ARGUMENT");
+				}
 
 				response += "\n";
-
 			}
 
 		}
 
-		// Remove extra newline
-		response = response.substring(0, response.length() - 2);
+		// Remove extra newline added above
+		response = response.substring(0, response.length() - 1);
 
 		return new Command("INFO", null, response);
 	}
 
+	/**
+	 * <p>
+	 * <b>:SET [ NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC ]:
+	 * [value];</b>
+	 * </p>
+	 * 
+	 * <p>
+	 * The SET commands allows various user attributes to be set by the client.
+	 * The exact attribute depends on the augment given however only 1 attribute
+	 * can be set at a time. In the case of DISPLAY_PIC, the image is Base 64
+	 * encoded.
+	 * </p>
+	 * 
+	 * @param cmd
+	 *            The SET command received
+	 * @return Assuming all went well, an OKAY command. Otherwise, an ERROR will
+	 *         be returned
+	 */
 	private Command set(Command cmd) {
 
 		if (this.loggedInUser == null)
 			return new Command("ERROR", "UNAUTHORIZED");
 
-		// TODO: The set command
-		return null;
+		if (cmd.getArguments().length != 1)
+			return new Command("ERROR", "INVALID_NUMBER_OF_ARGUMENTS", "The SET command only accept 1 argument.");
+
+		// TODO: Check that there are no constrains for the values each of these
+		// can take
+		String arg = cmd.getArguments()[0];
+		if (arg.equalsIgnoreCase("NICKNAME")) {
+			this.loggedInUser.setNickname(cmd.getDecodedData());
+
+		} else if (arg.equalsIgnoreCase("STATUS")) {
+			if (!this.loggedInUser.setStatus(cmd.getDecodedData()))
+				return new Command("ERROR", "INVALID_STATUS", cmd.getDecodedData());
+
+		} else if (arg.equalsIgnoreCase("PERSONAL_MESSAGE")) {
+			this.loggedInUser.setPersonalMessage(cmd.getDecodedData());
+
+		} else if (arg.equalsIgnoreCase("DISPLAY_PIC")) {
+			this.loggedInUser.setDisplayPic(cmd.getDecodedData());
+
+		} else {
+			return new Command("ERROR", "INVALID_ARGUMENT", arg);
+		}
+
+		return this.okay;
 	}
 
 	/**
@@ -513,6 +771,13 @@ public class Worker implements Runnable {
 		return this.okay;
 	}
 
+	/**
+	 * RUN FOREST! RUN!
+	 * 
+	 * ...but seriously. This creates the threads that the input and output to
+	 * the socket run in. It then reads commands off the command buffer, and
+	 * processes them, putting responses back into the response buffer.
+	 */
 	@Override
 	public void run() {
 
@@ -548,6 +813,7 @@ public class Worker implements Runnable {
 
 		} catch (InterruptedException e) {
 			System.out.println("Worker has finished.");
+			// TODO: Clean up, the client has disconnected
 		}
 
 	}

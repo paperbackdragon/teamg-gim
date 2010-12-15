@@ -10,10 +10,12 @@ public class DBSetup {
 
 	public static void main(String[] args) throws Exception {
 		Class.forName("org.sqlite.JDBC");
-		Connection conn = DriverManager.getConnection("jdbc:sqlite:test.db");
+		Connection conn = DriverManager.getConnection("jdbc:sqlite:gim.db");
+		
 		Statement stat = conn.createStatement();
 		stat.executeUpdate("drop table if exists users;");
-		stat.executeUpdate("create table people (name, occupation);");
+		stat.executeUpdate("create table people (id, password, nickname, );");
+		
 		PreparedStatement prep = conn.prepareStatement("insert into people values (?, ?);");
 
 		prep.setString(1, "Gandhi");
