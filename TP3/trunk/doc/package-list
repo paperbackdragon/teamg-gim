@@ -1,1 +1,6 @@
+client
 client.net
+client.ui
+server
+server.testing
+util
