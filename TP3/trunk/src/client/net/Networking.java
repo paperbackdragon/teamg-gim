@@ -9,8 +9,6 @@ package client.net;
  *
  */
 
-
-
 public interface Networking {
 	
 	// pre-login commands
@@ -71,11 +69,6 @@ public interface Networking {
 	 * If handled successfully, the connection will be terminated from the server. */
 	void quit();
 	
-	
-	
-	
-	
-	
 	// post-login commands
 	
 	
@@ -105,21 +98,79 @@ public interface Networking {
 	
 	// :SET ends
 	
+	// :GET { NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC }: <user>{,<user>};
 	
-	void get(String attribute, String userlist);
+	/** Sends a request to the server to return the nicknames of a list of users
+	 * @param userlist
+	 * 		  A list of one or more users, separated by commas */
+	void getNickname(String userList);
 	
-	//endcomment
+	/** Sends a request to the server to return the statuses of a list of users
+	 * @param userlist
+	 * 		  A list of one or more users, separated by commas */
+	void getStatus(String userList);
 	
+	
+	/** Sends a request to the server to return the personal messages of a list of users
+	 * @param userlist
+	 * 		  A list of one or more users, separated by commas */
+	void getPersonalMessage(String userList);
+	
+	/** Sends a request to the server to return the display pictures of a list of users
+	 * @param userlist
+	 * 		  A list of one or more users, separated by commas */
+	void getDisplayPicture(String userList);
+	
+	
+	// :GET ends
+	
+	// :FRIENDLIST:;
+	
+	/** Sends a request to the server to return the user's friend list*/
 	void friendlist();
 	
-	// split up
+   // :ROOM [ CREATE {PUBLIC} | INVITE | JOIN | LEAVE | USERS ]: {<roomid> | <user>};
 	
-	void room(String action, String id);
+	/** Sends a request to the server to create a new group chat 
+	 * @param publicchat
+	 * 		if true, then any user has permission to join
+	 * 		if false, only those invited to the chat has permission to join */
+	void createGroupChat(Boolean publicchat);
 	
-	// endcomment
 	
+	/** sends a request to the server to invite a user to a group chat
+	 * @param roomid 
+	 * 		the id of the room to give the user permission to join the group chat of
+	 * @param user
+	 * 		the user to give permission to join the group chat */
+	void invite(String roomid, String user);
+	
+	
+	/** send a request to the server to join a group chat 
+	 * @param roomid
+	 * 		the id of the room to join*/
+	void join(String roomid);
+	
+	
+	/** sends a request to the server to leave a group chat */
+	void leave(String roomid);
+	
+	/** sends a request to the server to return a list of users currently in a group chat */
+	void roomusers(String roomid);
+	
+	// :ROOM ends
+	
+	// :MESSAGE: <roomid> <message>;
+	
+	/** sends a request to the server to send a message to a group chat
+	 * @param roomid
+	 * 		the ID of the room
+	 * @param message
+	 * 		the message to send to the room */
 	void groupmessage(String roomid, String message);
 	
+	
+	// :FRIEND [ ADD | BLOCK | UNBLOCK | ACCEPT | DECLINE | DELETE ]: <target>;
 	
 	// split up
 	void friend(String command, String target);

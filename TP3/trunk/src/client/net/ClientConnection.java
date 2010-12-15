@@ -44,12 +44,6 @@ public class ClientConnection implements Runnable, Networking  {
 	}
 
 	@Override
-	public void get(String attribute, String userlist) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void groupmessage(String roomid, String message) {
 		// TODO Auto-generated method stub
 		
@@ -57,12 +51,6 @@ public class ClientConnection implements Runnable, Networking  {
 
 	@Override
 	public void logout() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void room(String action, String id) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -111,6 +99,60 @@ public class ClientConnection implements Runnable, Networking  {
 
 	@Override
 	public void setStatus(String status) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void createGroupChat(Boolean publicchat) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void getDisplayPicture(String userList) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void getNickname(String userList) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void getPersonalMessage(String userList) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void getStatus(String userList) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void invite(String roomid, String user) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void join(String roomid) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void leave(String roomid) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void roomusers(String roomid) {
 		// TODO Auto-generated method stub
 		
 	}
