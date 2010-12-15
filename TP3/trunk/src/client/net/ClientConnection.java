@@ -92,7 +92,25 @@ public class ClientConnection implements Runnable, Networking  {
 	}
 
 	@Override
-	public void set(String attribute, String value) {
+	public void setDisplayPicture(String displayPicture) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setNickname(String nickname) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setPersonalMessage(String personalmessage) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setStatus(String status) {
 		// TODO Auto-generated method stub
 		
 	}

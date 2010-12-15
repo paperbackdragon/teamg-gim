@@ -15,29 +15,36 @@ public interface Networking {
 	
 	// pre-login commands
 	
+	// :PING:;
+	
 	/** used to implement the "keep-alive" command. Sends a ping to the server to 
 	 * check if the client is still "alive" */
 	void ping();
 	
-	/** Returns global information about the server 
-	 * the server will return:
+	
+	// :SERVERSTATUS { USERS | TIME | UPTIME }:;
+	
+	/** 
+	 * sends a request to the server to return (as a line):
 	 *  the number of users online
 	 *  the time,
 	 *  the uptime of the server */
 	void serverstatus();
 	
-	/** returns the number of users logged in */
+	/** sends a request to the server to the number of users logged in */
 	void servernumberofusers();
 	
-	/** returns the server's time */
+	/** sends a request to the server to return the server's time */
 	void serverTime();
 	
-	/** returns the uptime of the server */
+	/** sends a request to the server to the server to return the uptime of the server */
 	void serverUptime();
 	
+	// :SERVERSTATUS ends
 	
+	// :AUTH { LOGIN | REGISTER }: <email address> <password>;
 	
-	/** attempts a log in 
+	/** sends a request to the server to log in 
 	 * @param emailaddress
 	 * 		a valid e-mail address
 	 * @param password
@@ -47,7 +54,7 @@ public interface Networking {
 	void authenticate(String emailaddress, String password);
 	
 	
-	/** attempts to register an account
+	/** sends a request to the server to register an account
 		 * @param emailaddress
 	 * 		the desired e-mail address
 	 * @param password
@@ -56,7 +63,12 @@ public interface Networking {
 	 *  If the registration is unsuccessful, the server will respond with an error message indicating why */
 	void register(String emailaddress, String password);
 	
-	/** will log the user out from the server. The connection will be terminated from the server. */
+	// :AUTH ends
+	
+	// :QUIT:;
+	
+	/** sends a request to the server to log the user out. 
+	 * If handled successfully, the connection will be terminated from the server. */
 	void quit();
 	
 	
@@ -67,8 +79,32 @@ public interface Networking {
 	// post-login commands
 	
 	
-	// split up 
-	void set(String attribute, String value);
+	// :SET [ NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC ]: <value>;
+	
+	/** Sends a request to the server to set the user's nickname
+	 * @param nickname 
+	 * 		The desired nickname*/
+	void setNickname(String nickname);
+	
+	/** Sends a request to the server to set the user's availability
+	 * @param status 
+	 * 		The desired status*/
+	void setStatus(String status);
+	
+	
+	/** Sends a request to the server to set the user's personal message
+	 * @param personalmessage 
+	 * 		The desired personal message*/
+	void setPersonalMessage(String personalmessage);
+	
+	// figure this one out later... Does it take a string?
+	
+	/** Sends a request to the server to set the user's display picture
+	 * @param x [TO BE IMPLIMENTED] */
+	void setDisplayPicture(String displayPicture);
+	
+	// :SET ends
+	
 	
 	void get(String attribute, String userlist);
 	
