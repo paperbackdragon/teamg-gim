@@ -9,7 +9,7 @@ package client.net;
  *
  */
 
-public interface Networking {
+public interface NetworkingIn {
 	
 	// pre-login commands
 	
