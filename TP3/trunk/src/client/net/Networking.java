@@ -19,20 +19,22 @@ public interface Networking {
 	 * check if the client is still "alive" */
 	void ping();
 	
-	
 	/** Returns global information about the server 
-	 * @param command
-	 * 		if command is null, the server will return the
-	 * 		number of users online, the time, and the uptime of the server
-	 * 
-	 * 		if command is one or more of the following list of tokens, each followed by a space
-	 * 		: "USERS, TIME, UPTIME "
-	 * 		then the server will return information about each token, followed by a new line sequentially
-	 * 
-	 *      example usage: serverstatus("TIME USERS")
-	 *      
-	 *      if any arguments are invalid, the server will return an error */
-	void serverstatus(String command);
+	 * the server will return:
+	 *  the number of users online
+	 *  the time,
+	 *  the uptime of the server */
+	void serverstatus();
+	
+	/** returns the number of users logged in */
+	void servernumberofusers();
+	
+	/** returns the server's time */
+	void serverTime();
+	
+	/** returns the uptime of the server */
+	void serverUptime();
+	
 	
 	
 	/** attempts a log in 
@@ -58,7 +60,39 @@ public interface Networking {
 	void quit();
 	
 	
+	
+	
+	
+	
 	// post-login commands
+	
+	
+	// split up 
+	void set(String attribute, String value);
+	
+	void get(String attribute, String userlist);
+	
+	//endcomment
+	
+	void friendlist();
+	
+	// split up
+	
+	void room(String action, String id);
+	
+	// endcomment
+	
+	void groupmessage(String roomid, String message);
+	
+	
+	// split up
+	void friend(String command, String target);
+	
+	// endcomment
+	
+	
+	void logout();
+	
 	
 	
 	
