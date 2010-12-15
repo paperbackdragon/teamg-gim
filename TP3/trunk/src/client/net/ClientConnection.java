@@ -1,6 +1,6 @@
 package client.net;
 
-public class ClientConnection implements Runnable, NetworkingIn  {
+public class ClientConnection implements Runnable, NetworkingOut  {
 	
 	
 	@Override
