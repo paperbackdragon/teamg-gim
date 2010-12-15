@@ -32,12 +32,6 @@ public class ClientConnection implements Runnable, Networking  {
 	}
 
 	@Override
-	public void friend(String command, String target) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void friendlist() {
 		// TODO Auto-generated method stub
 		
@@ -153,6 +147,42 @@ public class ClientConnection implements Runnable, Networking  {
 
 	@Override
 	public void roomusers(String roomid) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void acceptfriend(String friend) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addfriend(String friend) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void blockfriend(String friend) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void declinefriend(String friend) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deletefriend(String friend) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void unblockfriend(String friend) {
 		// TODO Auto-generated method stub
 		
 	}

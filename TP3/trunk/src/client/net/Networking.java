@@ -172,16 +172,42 @@ public interface Networking {
 	
 	// :FRIEND [ ADD | BLOCK | UNBLOCK | ACCEPT | DECLINE | DELETE ]: <target>;
 	
-	// split up
-	void friend(String command, String target);
 	
-	// endcomment
+	/** sends a request to the server to add a friend
+	 * @param friend
+	 * 		The e-mail address of the user to add */
+	void addfriend(String friend);
 	
+	/** sends a request to the server to block a friend
+	 * @param friend
+	 * 		The e-mail address of the user to block */
+	void blockfriend(String friend);
 	
+	/** sends a request to the server to unblock a friend
+	 * @param friend
+	 * 		The e-mail address of the user to unblock */
+	void unblockfriend(String friend);
+	
+	/** sends a request to the server to accept the friend request of a user
+	 * @param friend
+	 * 		The e-mail address of the user to accept the request from */
+	void acceptfriend(String friend);
+	
+	/** sends a request to the server to decline the friend request of a user
+	 * @param friend
+	 * 		The e-mail address of the user to decline the request from */
+	void declinefriend(String friend);
+	
+	/** sends a request to the server to delete a friend
+	 * @param friend
+	 * 		The e-mail address of the user to delete */
+	void deletefriend(String friend);
+	
+	// end :FRIEND
+	
+	// :LOGOUT:;
+	
+	/** Send a request to the server to log out, but retain a connection to the server */
 	void logout();
 	
-	
-	
-	
-
 }
