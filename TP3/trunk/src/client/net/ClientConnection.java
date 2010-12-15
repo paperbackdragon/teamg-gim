@@ -1,11 +1,25 @@
 package client.net;
 
 public class ClientConnection implements Runnable, Networking  {
-
+	
+	
 	@Override
 	public void run() {
 		
+		
+		
+		
 	}
+	
+	
+	/** Creates a connection to the server
+	 * @param incoming
+	 * 		the class that is called when a command is received from the server */
+	public ClientConnection(ServerConnection incoming) {
+		
+	}
+
+	
 
 	@Override
 	public void ping() {
