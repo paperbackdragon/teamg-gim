@@ -54,10 +54,12 @@ public interface Networking {
 	 *  If the registration is unsuccessful, the server will respond with an error message indicating why */
 	void register(String emailaddress, String password);
 	
-	
+	/** will log the user out from the server. The connection will be terminated from the server. */
+	void quit();
 	
 	
 	// post-login commands
+	
 	
 	
 
