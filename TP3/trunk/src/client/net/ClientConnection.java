@@ -17,6 +17,8 @@ public class ClientConnection implements NetworkingOut {
 	public ClientConnection(ServerConnection incoming) {
 			this.reader = new networkReader();
 			this.writer = new networkWriter();
+			
+			
 	}
 
 	@Override
