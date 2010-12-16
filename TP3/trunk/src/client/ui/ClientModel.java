@@ -1,6 +1,7 @@
 package client.ui;
 
 import java.util.ArrayList;
+import client.net.NetworkingOut;
 
 public class ClientModel {
 	public static enum Status {
