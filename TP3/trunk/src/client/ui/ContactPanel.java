@@ -7,8 +7,9 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 @SuppressWarnings("serial")
 public class ContactPanel extends JPanel {
+	private GimUI parent;
 	private JButton add, del, chat, group;
-	JTree contactTree;
+	private JTree contactTree;
 	
 	//CONSTRUCTOR
 	public ContactPanel() {
@@ -67,7 +68,7 @@ public class ContactPanel extends JPanel {
 			//assuming we are grouping by online/offline status:
 			DefaultMutableTreeNode contacts = new DefaultMutableTreeNode("Contacts");
 			createNodes(contacts);
-			JTree contactTree = new JTree(contacts);
+			contactTree = new JTree(contacts);
 			
 			add(contactTree, BorderLayout.CENTER);
 		}
@@ -97,6 +98,10 @@ public class ContactPanel extends JPanel {
 	//HELPER METHODS
 	public Dimension getPreferredSize() {
 		return new Dimension(300, 400);
+	}
+	
+	public void setParent(JFrame frame) {
+		parent = (GimUI) frame;
 	}
 	
 	private void createNodes(DefaultMutableTreeNode root) {

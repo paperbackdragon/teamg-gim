@@ -66,6 +66,7 @@ public class GimUI extends JFrame{
 		public void actionPerformed(ActionEvent e) {
 			if(e.getSource().equals(logout)) {
 				System.out.println("logout clicked.");
+				setMainPanel(new LoginPanel());
 			}
 			else if(e.getSource().equals(quit)) {
 				System.out.println("quit clicked.");

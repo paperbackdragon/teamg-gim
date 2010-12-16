@@ -6,11 +6,11 @@ import javax.swing.*;
 
 @SuppressWarnings("serial")
 public class LoginPanel extends JPanel{
-	GimUI parent;
-	JTextField email;
-	JPasswordField pwd;
-	JButton loginButton, register;
-	JCheckBox auto;
+	private GimUI parent;
+	private JTextField email;
+	private JPasswordField pwd;
+	private JButton loginButton, register;
+	private JCheckBox auto;
 	
 	//CONSTRUCTOR
 	public LoginPanel() {
@@ -31,18 +31,23 @@ public class LoginPanel extends JPanel{
 		login.setAlignmentX(Component.CENTER_ALIGNMENT);
 		add(login);
 		
-		add(Box.createVerticalStrut(10));
-		email = new JTextField("E-Mail");
-		email.setMaximumSize(new Dimension(200, 25));
-		//email.addFocusListener(textListener);
-		email.setAlignmentX(Component.CENTER_ALIGNMENT);
-		add(email);
+		JPanel emailPanel = new JPanel();
+		emailPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		emailPanel.setMaximumSize(new Dimension(275, 30));
+		email = new JTextField();
+		email.setPreferredSize(new Dimension(200, 25));
+		emailPanel.add(new JLabel("E-Mail:"));
+		emailPanel.add(email);
+		add(emailPanel);
 		
-		pwd = new JPasswordField("Password");
-		pwd.setMaximumSize(new Dimension(200, 25));
-		//pwd.addFocusListener(textListener);
-		pwd.setAlignmentX(Component.CENTER_ALIGNMENT);
-		add(pwd);
+		JPanel pwdPanel = new JPanel();
+		pwdPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		pwdPanel.setMaximumSize(new Dimension(275, 30));
+		pwd = new JPasswordField();
+		pwd.setPreferredSize(new Dimension(200, 25));
+		pwdPanel.add(new JLabel ("Password:"));
+		pwdPanel.add(pwd);
+		add(pwdPanel);
 		
 		add(Box.createVerticalStrut(10));
 		loginButton = new JButton("LOG IN");
@@ -82,14 +87,22 @@ public class LoginPanel extends JPanel{
 			if (e.getSource().equals(loginButton)) {
 				System.out.println("Login pressed");
 				if(parent != null) {
-					parent.setMainPanel(new ContactPanel());
-					System.out.println("set");
+					ContactPanel panel = new ContactPanel();
+					panel.setParent(parent);
+					parent.setMainPanel(panel);
 				}
 				else
-					System.out.println("null");
+					System.out.println("parent is null");
 			}
 			else if (e.getSource().equals(register)) {
 				System.out.println("Register pressed");
+				if(parent != null) {
+					RegisterPanel panel = new RegisterPanel();
+					panel.setParent(parent);
+					parent.setMainPanel(panel);
+				}
+				else
+					System.out.println("parent is null");
 			}
 		}
 	}
