@@ -195,7 +195,7 @@ public interface NetworkingIn {
 	 *            The user that the server is giving nickname information about
 	 * @param nickname
 	 *            The user's nickname
-	 * */
+	 * */				
 	void updateNickname(String user, String nickname);
 
 	/**
