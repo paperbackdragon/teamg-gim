@@ -2,10 +2,15 @@ package client.net;
 
 import java.util.ArrayList;
 
+import util.CommandBuffer;
+import util.CommandReader;
+import util.ResponseWriter;
+
 public class ClientConnection implements NetworkingOut {
 
-	private networkReader reader;
-	private networkWriter writer;
+	private CommandReader reader;
+	private ResponseWriter writer;
+	private CommandBuffer buffer;
 
 	/**
 	 * Creates a connection to the server
@@ -15,10 +20,15 @@ public class ClientConnection implements NetworkingOut {
 	 *            received from the server
 	 */
 	public ClientConnection(ServerConnection incoming) {
-			this.reader = new networkReader();
-			this.writer = new networkWriter();
-			
-			// Some buffer here for the reader and writer... 
+		
+			// initiate connection to server
+		
+			// make a buffered reader
+			// make a print writer
+		
+			this.buffer = new CommandBuffer();
+			this.reader = new CommandReader(null, buffer);
+			this.writer = new ResponseWriter(null, buffer);
 	}
 
 	@Override
