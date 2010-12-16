@@ -2,6 +2,7 @@ package client.net;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -42,11 +43,20 @@ public class ClientConnection implements NetworkingOut {
 		
 			
 			// make a buffered reader
+			
+			try {
+				bufferedreader = new BufferedReader(new InputStreamReader(serverConnection.getInputStream()));
+				printwriter = new PrintWriter(serverConnection.getOutputStream(), true);
+			} catch (IOException e) {
+				System.out.println("aye... what the hell do we do if this happens :|.");
+			}
+			
+			
 			// make a print writer
 		
 			this.buffer = new CommandBuffer();
-			this.reader = new networkReader(null, buffer);
-			this.writer = new networkWriter(null, buffer);
+			this.reader = new networkReader(bufferedreader, buffer);
+			this.writer = new networkWriter(printwriter, buffer);
 	}
 
 	@Override
