@@ -18,7 +18,7 @@ public class ClientConnection implements NetworkingOut {
 			this.reader = new networkReader();
 			this.writer = new networkWriter();
 			
-			
+			// Some buffer here for the reader and writer... 
 	}
 
 	@Override
