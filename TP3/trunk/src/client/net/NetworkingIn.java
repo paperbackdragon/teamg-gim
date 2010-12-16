@@ -107,8 +107,12 @@ public interface NetworkingIn {
 	
 	// :FRIENDREQUEST: <user> <nickname>;
 	
-	/** Indicates the user has received a friend request */
-	void friendrequest();
+	/** the server has notified that the user has received a friend request
+	 * @param user
+	 * 		The user that has sent a friend request
+	 * @param nickname
+	 * 		The user's nickname at the time of sending the friend request */
+	void friendrequest(String user, String nickname);
 	
 	// :UPDATE [ NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC ]: <user>;
 	
@@ -130,19 +134,44 @@ public interface NetworkingIn {
 	/** The server has notified that a user has changed their display picture
 	 * @param user
 	 * 		The user that has changed their display picture*/
-	void notifyDisplayPicture();
+	void notifyDisplayPicture(String user);
 	
 	// end :UPDATE
 	
-	// LET ME KNOW IF YOU THINK THIS IS A SILLY WAY TO GIVE YOU THIS STUFF: :P
-	// I was considering processing it first... but maybe it's better i give you it raw, and you can process
-	// it. DISCUSS Team G! :P
-	
 	
 	// :INFO { NICKNAME | STATUS | PERSONAL_MESSAGE | DISPLAY_PIC }: <user> <data> {<user data>};
+	// ^^ I will parse this and invoke these methods appropriately ... (if we're all agreed this is fine :P)
 	
-	/** The server has notified the user of  */
-	void info(ArrayList<String> Attributes, ArrayList<String> Data);
+	/** The server has given the client information about a user's nickname
+	 * @param user 
+	 * 		The user that the server is giving nickname information about
+	 * @param nickname
+	 * 		The user's nickname
+	 *  */
+	void updateNickname(String user, String nickname);
+	
+	/** The server has given the client information about a user's status
+	 * @param user
+	 * 		The user that the server is giving status information about
+	 * @param status
+	 * 		The user's status */
+	void updateStatus(String user, String status);
+	
+	/** The server has given the client information about a user's personal messages 
+	 * @param user
+	 * 		The user that the server is giving personal information about
+	 * @param status
+	 * 		The user's personal message */
+	void updatePersonalMessage(String user, String personalmessage);
+	
+	/** The server has given the client information about a user's display picture 
+	 * @param user
+	 * 		The user that the server is giving display picture information about
+	 * @param displayPicture
+	 * 		The user's display picture */
+	void updateDisplayPicture(String user, String displayPicture);
+	
+	// end :INFO
 	
 	// errors
 	
