@@ -3,6 +3,8 @@ package client.ui;
 import java.awt.event.*;
 import javax.swing.*;
 
+import client.GimClient;
+
 @SuppressWarnings("serial")
 public class GimUI extends JFrame {
 	private JMenuItem logout, quit, setOptions;
@@ -66,9 +68,10 @@ public class GimUI extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			if(e.getSource().equals(logout)) {
 				System.out.println("logout clicked.");
+				//todo: close all open windows except main window
 				LoginPanel panel = new LoginPanel();
-				panel.setParent(GimUI.this);
-				setMainPanel(panel);
+				panel.setParent(GimClient.getMainWindow());
+				GimClient.getMainWindow().setMainPanel(panel);
 			}
 			else if(e.getSource().equals(quit)) {
 				System.out.println("quit clicked.");
