@@ -9,7 +9,6 @@ import java.util.ArrayList;
  * documentation descriptively how the server will respond, as is considered
  * helpful.
  * 
- * @author James McMinn
  * @author Gordon Martin
  * 
  */

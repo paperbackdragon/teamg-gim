@@ -495,6 +495,8 @@ public class Worker implements Runnable {
 	 * 
 	 * @param cmd
 	 * @return
+	 * 
+	 *         TODO: Check that the user is online
 	 */
 	private Command room(Command cmd) {
 

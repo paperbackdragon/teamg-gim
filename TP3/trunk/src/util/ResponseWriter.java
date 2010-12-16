@@ -21,10 +21,10 @@ public class ResponseWriter implements Runnable {
 
 	public void run() {
 		try {
-			
+
 			// Send out any responses in the buffer
 			while (true) {
-				Command response= cmdBuffer.getResponse();
+				Command response = cmdBuffer.getResponse();
 				out.println(response.toString());
 
 				// Check we didn't just kill the connection
@@ -34,7 +34,7 @@ public class ResponseWriter implements Runnable {
 
 		} catch (InterruptedException e) {
 		}
-		
+
 		System.out.println("ResponseWriter killed.");
 	}
 

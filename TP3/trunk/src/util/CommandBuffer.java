@@ -13,29 +13,37 @@ public class CommandBuffer<T> {
 	}
 
 	public synchronized T getCommand() throws InterruptedException {
-		while (commands.size() == 0) {
-			wait();
+		synchronized (commands) {
+			while (commands.size() == 0) {
+				wait();
+			}
+			notifyAll();
+			return commands.remove();
 		}
-		notifyAll();
-		return commands.remove();
 	}
 
-	public synchronized void putCommand(T cmd) {
-		commands.add(cmd);
-		notifyAll();
-	}
-
-	public synchronized T getResponse() throws InterruptedException {
-		while (responses.size() == 0) {
-			wait();
+	public void putCommand(T cmd) {
+		synchronized (commands) {
+			commands.add(cmd);
+			notifyAll();
 		}
-		notifyAll();
-		return responses.remove();
 	}
 
-	public synchronized void putResponse(T rsp) {
-		responses.add(rsp);
-		notifyAll();
+	public T getResponse() throws InterruptedException {
+		synchronized (responses) {
+			while (responses.size() == 0) {
+				wait();
+			}
+			notifyAll();
+			return responses.remove();
+		}
+	}
+
+	public void putResponse(T rsp) {
+		synchronized (responses) {
+			responses.add(rsp);
+			notifyAll();
+		}
 	}
 
 }
