@@ -20,7 +20,7 @@ public class LoginPanel extends JPanel{
 			System.out.println("Something went wrong!");
 			System.exit(0);
 		}*/
-		
+		EnterListener enterlistener = new EnterListener();
 		LoginListener loginListener = new LoginListener();
 		//TextListener textListener = new TextListener();
 		
@@ -35,6 +35,7 @@ public class LoginPanel extends JPanel{
 		emailPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		emailPanel.setMaximumSize(new Dimension(275, 30));
 		email = new JTextField();
+		email.addKeyListener(enterlistener);
 		email.setPreferredSize(new Dimension(200, 25));
 		emailPanel.add(new JLabel("E-Mail:"));
 		emailPanel.add(email);
@@ -44,6 +45,7 @@ public class LoginPanel extends JPanel{
 		pwdPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		pwdPanel.setMaximumSize(new Dimension(275, 30));
 		pwd = new JPasswordField();
+		pwd.addKeyListener(enterlistener);
 		pwd.setPreferredSize(new Dimension(200, 25));
 		pwdPanel.add(new JLabel ("Password:"));
 		pwdPanel.add(pwd);
@@ -105,6 +107,22 @@ public class LoginPanel extends JPanel{
 					System.out.println("parent is null");
 			}
 		}
+	}
+	
+	class EnterListener implements KeyListener{
+		public void keyTyped(KeyEvent e) {
+			if(e.getKeyChar() == KeyEvent.VK_ENTER) {
+					System.out.println("Login pressed");
+					if(parent != null) {
+						parent.setMainPanel(new ContactPanel());
+						System.out.println("set");
+					}
+					else
+						System.out.println("null");
+				}
+		}
+		public void keyPressed(KeyEvent e) {}
+		public void keyReleased(KeyEvent e) {}
 	}
 	
 	//do we want this functionality?
