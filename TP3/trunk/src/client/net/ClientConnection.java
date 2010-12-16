@@ -3,13 +3,11 @@ package client.net;
 import java.util.ArrayList;
 
 import util.CommandBuffer;
-import util.CommandReader;
-import util.ResponseWriter;
 
 public class ClientConnection implements NetworkingOut {
 
-	private CommandReader reader;
-	private ResponseWriter writer;
+	private networkReader reader;
+	private networkWriter writer;
 	private CommandBuffer buffer;
 
 	/**
@@ -23,12 +21,14 @@ public class ClientConnection implements NetworkingOut {
 		
 			// initiate connection to server
 		
+			
+		
 			// make a buffered reader
 			// make a print writer
 		
 			this.buffer = new CommandBuffer();
-			this.reader = new CommandReader(null, buffer);
-			this.writer = new ResponseWriter(null, buffer);
+			this.reader = new networkReader(null, buffer);
+			this.writer = new networkWriter(null, buffer);
 	}
 
 	@Override
