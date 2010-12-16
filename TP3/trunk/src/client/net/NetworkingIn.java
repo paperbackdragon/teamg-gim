@@ -95,15 +95,15 @@ public interface NetworkingIn {
 	// :FRIENDLIST: ONLINE <user>{,<user>} OFFLINE <user>{,<user>} BLOCKED
 	
 	/** The server has sent the online status of all the users on the buddy list
-	 * @param online
+	 * @param onlinelist
 	 * 		An arraylist of the users online on the buddy list
-	 * @param offline
+	 * @param offlinelist
 	 * 		An arraylist of the users offline on the buddy list
-	 * @param blocked
+	 * @param blockedlist
 	 * 		An arraylist of the users who are blocked on the buddy list
 	 *  */
 	
-	void friendlist(ArrayList<String> online, ArrayList<String> offline, ArrayList<String> blocked);
+	void friendlist(ArrayList<String> onlinelist, ArrayList<String> offlinelist, ArrayList<String> blockedlist);
 	
 	// :FRIENDREQUEST: <user> <nickname>;
 	
@@ -134,14 +134,18 @@ public interface NetworkingIn {
 	
 	// end :UPDATE
 	
+	// LET ME KNOW IF YOU THINK THIS IS A SILLY WAY TO GIVE YOU THIS STUFF: :P
+	// I was considering processing it first... but maybe it's better i give you it raw, and you can process
+	// it. DISCUSS Team G! :P
+	
+	
 	// :INFO { NICKNAME | STATUS | PERSONAL_MESSAGE | DISPLAY_PIC }: <user> <data> {<user data>};
 	
-	
-	
-	
-	// end :INFO
+	/** The server has notified the user of  */
+	void info(ArrayList<String> Attributes, ArrayList<String> Data);
 	
 	// errors
+	
 	
 
 }

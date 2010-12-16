@@ -1,5 +1,7 @@
 package client.net;
 
+import java.util.ArrayList;
+
 public class ClientConnection implements Runnable, NetworkingOut  {
 	
 	
@@ -197,6 +199,14 @@ public class ClientConnection implements Runnable, NetworkingOut  {
 
 	@Override
 	public void unblock(String friend) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void getAttributes(ArrayList<String> attributes,
+			ArrayList<String> users) {
 		// TODO Auto-generated method stub
 		
 	}

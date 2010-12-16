@@ -1,5 +1,7 @@
 package client.net;
 
+import java.util.ArrayList;
+
 /**
  * This will list all of the functions which the UI code expects the networking code to implement, as part of the
  * networking protocol. Although the server's response is out of the scope of this aspect, it will be indicated in
@@ -101,6 +103,13 @@ public interface NetworkingOut {
 	// :SET ends
 	
 	// :GET { NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC }: <user>{,<user>};
+	
+	/** Sends a request to the server to return a list of attributes, about a list of users
+	 * @param attributes
+	 * 		An arrayList of attributes to request from the server
+	 * @param users
+	 * 		An arrayList of users to fetch the attributes of from the server */
+	void getAttributes(ArrayList<String> attributes, ArrayList<String> users);
 	
 	/** Sends a request to the server to return the nicknames of a list of users
 	 * @param userList
