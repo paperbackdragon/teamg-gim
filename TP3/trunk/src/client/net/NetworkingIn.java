@@ -1,5 +1,7 @@
 package client.net;
 
+import java.util.ArrayList;
+
 public interface NetworkingIn {
 	
 	// prelogin
@@ -72,6 +74,8 @@ public interface NetworkingIn {
 	 * 		The message the sender sent */
 	void message(String roomid, String sender, String message);
 	
+	// need james to clarify on these:
+	
 	// :ROOM [ CREATED | JOINED | LEFT | INVITED | USERS ]: <roomid> {<user>};
 	
 	void created();
@@ -83,6 +87,59 @@ public interface NetworkingIn {
 	void invited();
 	
 	void users();
+	
+	// end :ROOM
+	
+	// :p feel free to tell me if you don't think this is a sensible way of dealing with this: 
+	
+	// :FRIENDLIST: ONLINE <user>{,<user>} OFFLINE <user>{,<user>} BLOCKED
+	
+	/** The server has sent the online status of all the users on the buddy list
+	 * @param online
+	 * 		An arraylist of the users online on the buddy list
+	 * @param offline
+	 * 		An arraylist of the users offline on the buddy list
+	 * @param blocked
+	 * 		An arraylist of the users who are blocked on the buddy list
+	 *  */
+	
+	void friendlist(ArrayList<String> online, ArrayList<String> offline, ArrayList<String> blocked);
+	
+	// :FRIENDREQUEST: <user> <nickname>;
+	
+	/** Indicates the user has received a friend request */
+	void friendrequest();
+	
+	// :UPDATE [ NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC ]: <user>;
+	
+	/** The server has notified that a user has changed their nickname
+	 * @param user
+	 * 		The user that changed their nickname */
+	void notifyNickname(String user);
+	
+	/** The server has notified that a user has changed their status 
+	 * @param user
+	 * 		The user that has changed their status*/
+	void notifyStatus(String user);
+	
+	/** The server has notified that a user has changed their personal message
+	 * @param user
+	 * 		The user that has changed their personal message*/
+	void notifyPersonalMessage(String user);
+	
+	/** The server has notified that a user has changed their display picture
+	 * @param user
+	 * 		The user that has changed their display picture*/
+	void notifyDisplayPicture();
+	
+	// end :UPDATE
+	
+	// :INFO { NICKNAME | STATUS | PERSONAL_MESSAGE | DISPLAY_PIC }: <user> <data> {<user data>};
+	
+	
+	
+	
+	// end :INFO
 	
 	// errors
 	
