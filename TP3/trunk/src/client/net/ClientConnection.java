@@ -1,11 +1,20 @@
 package client.net;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import util.CommandBuffer;
 
 public class ClientConnection implements NetworkingOut {
 
+	private Socket serverConnection;
+	private BufferedReader bufferedreader;
+	private PrintWriter printwriter;
+	
 	private networkReader reader;
 	private networkWriter writer;
 	private CommandBuffer buffer;
@@ -20,9 +29,18 @@ public class ClientConnection implements NetworkingOut {
 	public ClientConnection(ServerConnection incoming) {
 		
 			// initiate connection to server
+
+			try {
+				serverConnection = new Socket("127.0.0.1", 4444);
+			} catch (UnknownHostException e) {
+				System.out.println("Could not connect to server");
+				// tell the GUI
+				
+			} catch (IOException e) {
+				// uhm... handle this somehow
+			}
 		
 			
-		
 			// make a buffered reader
 			// make a print writer
 		
