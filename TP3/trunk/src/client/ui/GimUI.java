@@ -4,7 +4,8 @@ import java.awt.event.*;
 import javax.swing.*;
 
 @SuppressWarnings("serial")
-public class GimUI extends JFrame{
+public class GimUI extends JFrame {
+	private GimUI thisFrame = this;
 	private JMenuItem logout, quit, setOptions;
 	private JPanel main;
 	
@@ -66,7 +67,9 @@ public class GimUI extends JFrame{
 		public void actionPerformed(ActionEvent e) {
 			if(e.getSource().equals(logout)) {
 				System.out.println("logout clicked.");
-				setMainPanel(new LoginPanel());
+				LoginPanel panel = new LoginPanel();
+				panel.setParent(thisFrame);
+				setMainPanel(panel);
 			}
 			else if(e.getSource().equals(quit)) {
 				System.out.println("quit clicked.");
