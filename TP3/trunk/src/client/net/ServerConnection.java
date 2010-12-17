@@ -221,6 +221,12 @@ public class ServerConnection implements NetworkingIn {
 		
 	}
 
+	@Override
+	public void registered() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	
 	
 	

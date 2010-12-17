@@ -81,6 +81,9 @@ public interface NetworkingIn {
 
 	/** The server indicated the user is unauthorised */
 	void unauthorised();
+	
+	/** The server has indicated that the user has successfully registered */
+	void registered();
 
 	// end :AUTH
 
