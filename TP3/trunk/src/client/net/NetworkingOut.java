@@ -182,17 +182,18 @@ public interface NetworkingOut {
 	/** Sends a request to the server to return the user's friend list */
 	void friendlist();
 
-	// :ROOM [ CREATE {PUBLIC} | INVITE | JOIN | LEAVE | USERS ]: {<roomid> |
-	// <user>};
+	// :ROOM [ CREATE {GROUP} | INVITE | JOIN | LEAVE | USERS ]: {<roomid> | <user>};
 
+	/** Sends a request to the server to create an IM session with a user
+	 * @param user
+	 * 		The person to create the IM session with */
+	void createSingleChat(String user);
+	
 	/**
 	 * Sends a request to the server to create a new group chat
 	 * 
-	 * @param publicchat
-	 *            if true, then any user has permission to join if false, only
-	 *            those invited to the chat has permission to join
 	 */
-	void createGroupChat(Boolean publicchat);
+	void createGroupChat();
 
 	/**
 	 * sends a request to the server to invite a user to a group chat

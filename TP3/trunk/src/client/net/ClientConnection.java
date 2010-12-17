@@ -67,25 +67,30 @@ public class ClientConnection implements NetworkingOut {
 
 	@Override
 	public void ping() {
-		// TODO Auto-generated method stub
-
+		buffer.putCommand(":PING:;");
 	}
 
 	@Override
 	public void authenticate(String emailaddress, char[] password) {
 		// TODO Auto-generated method stub
+		// :AUTH { LOGIN | REGISTER }: <email address> <password>;
+		
+		// buffer.putCommand(":AUTH LOGIN: %s %s;", emailaddress, password );
 
 	}
 
 	@Override
 	public void quit() {
-		// TODO Auto-generated method stub
-
+		// :QUIT:;
+		buffer.putCommand(":QUIT:;");
 	}
 
 	@Override
 	public void register(String emailaddress, char[] password) {
-		// TODO Auto-generated method stub
+		
+		// :AUTH { LOGIN | REGISTER }: <email address> <password>;
+		
+		// buffer.putCommand(":AUTH REGISTER: %s %s;", emailaddress, password );
 
 	}
 
@@ -151,12 +156,6 @@ public class ClientConnection implements NetworkingOut {
 
 	@Override
 	public void setStatus(String status) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void createGroupChat(Boolean publicchat) {
 		// TODO Auto-generated method stub
 
 	}
@@ -250,6 +249,18 @@ public class ClientConnection implements NetworkingOut {
 			ArrayList<String> users) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void createGroupChat() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void createSingleChat(String user) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
