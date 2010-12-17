@@ -10,6 +10,7 @@ public class FindPopup extends JPanel {
 	
 	JTextField email, username ;
 	JButton find;
+	private GimUI parent;
 
 	public FindPopup(){
 	FindListener findListener = new FindListener();
@@ -17,23 +18,32 @@ public class FindPopup extends JPanel {
 	
 	add(Box.createVerticalStrut(10));
 	JLabel header = new JLabel("<html><b>Find Contact</b></html>");
-	header.setAlignmentX(Component.CENTER_ALIGNMENT);
+	header.setLayout(new FlowLayout(FlowLayout.CENTER));
 	add(header);
 	
 	add(Box.createVerticalStrut(10));
-	email = new JTextField("E-Mail");
+	JPanel emailPanel = new JPanel();
+	emailPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+	emailPanel.setMaximumSize(new Dimension(275, 30));
+	email = new JTextField(17);
 	email.setMaximumSize(new Dimension(200, 25));
-	email.setAlignmentX(Component.CENTER_ALIGNMENT);
-	add(email);
+	emailPanel.add(new JLabel("        E-Mail:"));
+	emailPanel.add(email);
+	add(emailPanel);
 	
 	JLabel or = new JLabel("<html><b>OR</b></html>");
-	or.setAlignmentX(Component.CENTER_ALIGNMENT);
+	or.setLayout(new FlowLayout(FlowLayout.CENTER));
 	add(or);
 	
-	username = new JTextField("User Name");
+	add(Box.createVerticalStrut(5));
+	JPanel namePanel = new JPanel();
+	namePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+	namePanel.setMaximumSize(new Dimension(275, 30));
+	username = new JTextField(17);
 	username.setMaximumSize(new Dimension(200, 25));
-	username.setAlignmentX(Component.CENTER_ALIGNMENT);
-	add(username);
+	namePanel.add(new JLabel("User Name:"));
+	namePanel.add(username);
+	add(namePanel);
 	
 	add(Box.createVerticalStrut(10));
 	find = new JButton("Find");
@@ -41,7 +51,7 @@ public class FindPopup extends JPanel {
 	find.setAlignmentX(Component.CENTER_ALIGNMENT);
 	find.addActionListener(findListener);
 	add(find);
-	setPreferredSize(new Dimension(350, 150));
+	setPreferredSize(new Dimension(350, 175));
 	}
 }
 
@@ -60,3 +70,4 @@ class FindListener implements ActionListener {
 		
 	}
 }
+
