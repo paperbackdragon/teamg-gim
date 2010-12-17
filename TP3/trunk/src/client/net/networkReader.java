@@ -105,11 +105,21 @@ public class networkReader implements Runnable {
 		if (cmd.getCommand().equals("SERVERSTATUS")) {
 			
 			if (cmd.getArguments().equals("USERS")) {
-				
+				gui.usercount(cmd.getData());
 				
 			}
 			
+			else if (cmd.getArguments().equals("TIME")) {
+				gui.servertime(cmd.getData());
+			}
+			
+			else if (cmd.getArguments().equals("UPTIME")) {
+				gui.servertime(cmd.getData());
+			}
+			
 		}
+		
+		
 		
 		else if (cmd.getCommand().equals("OKAY")) {
 			gui.okay();
