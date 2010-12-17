@@ -7,7 +7,7 @@ import util.CommandBuffer;
 public class networkReader implements Runnable {
 	
 	
-	/** Reads commands off the network and places them into the CommandBuffer */
+	/** Reads commands off the network and performs calls the necessary method */
 	public networkReader(BufferedReader reader, CommandBuffer buffer) {
 		
 		

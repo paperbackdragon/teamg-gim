@@ -19,7 +19,6 @@ public class ClientConnection implements NetworkingOut {
 	private networkReader reader;
 	private networkWriter writer;
 	private CommandBuffer buffer;
-	private networkController controller;
 	
 	private Thread readerthread;
 	private Thread writerthread;
@@ -60,11 +59,9 @@ public class ClientConnection implements NetworkingOut {
 			this.buffer = new CommandBuffer();
 			this.reader = new networkReader(bufferedreader, buffer);
 			this.writer = new networkWriter(printwriter, buffer);
-			this.controller = new networkController(buffer, gui);
 			
 			this.readerthread = new Thread(reader);
 			this.writerthread = new Thread(writer);
-			this.controllerthread = new Thread(controller);
 			
 	}
 
