@@ -216,6 +216,48 @@ public class networkReader implements Runnable {
 				String[] blockedlist = blocked.split(" ");
 				
 				gui.friendlist(onlinelist, offlinelist, blockedlist);
+			}
+			
+			else if (cmd.getCommand().equalsIgnoreCase("FRIENDREQUEST")) {
+				String data = cmd.getData();
+				String[] parts = data.split(" ");
+				
+				gui.friendrequest(parts[0], parts[1]);	
+			}
+			
+			else if (cmd.getCommand().equalsIgnoreCase("UPDATE")) {
+				
+				if (cmd.getArgumentsAsString().equalsIgnoreCase("NICKNAME")) {
+					gui.notifyNickname(cmd.getData());
+				}
+				
+				if (cmd.getArgumentsAsString().equalsIgnoreCase("STATUS")) {
+					gui.notifyStatus(cmd.getData());
+				}
+				
+				if (cmd.getArgumentsAsString().equalsIgnoreCase("PERSONAL_MESSAGE")) {
+					gui.notifyPersonalMessage(cmd.getData());
+				}
+				
+				if (cmd.getArgumentsAsString().equalsIgnoreCase("DISPLAY_PIC")) {
+					gui.notifyDisplayPicture(cmd.getData());
+				}
+				
+			}
+			
+			else if (cmd.getCommand().equalsIgnoreCase("INFO")) {
+				
+				
+				
+				
+				
+			}
+			
+			
+			// ERRORS
+			
+			else if (cmd.getCommand().equals("ERROR")) {
+				
 				
 				
 			}
