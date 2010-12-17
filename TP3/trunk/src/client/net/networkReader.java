@@ -2,6 +2,7 @@ package client.net;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import util.Command;
 import util.CommandBuffer;
@@ -156,10 +157,9 @@ public class networkReader implements Runnable {
 			
 			String message = "";
 			for (int i = 2; i < parts.length; i++ ) {
-				message += parts[i];
+				message += parts[i] + " ";
 			}
 			gui.message(roomid, sender, message);
-			
 		}
 		
 		else if (cmd.getCommand().equals("ROOM")) {
@@ -189,6 +189,19 @@ public class networkReader implements Runnable {
 			else if (cmd.getArgumentsAsString().equalsIgnoreCase("USERS")) {
 				String data = cmd.getData();
 				String[] parts = data.split(" ");
+				
+				String roomid = parts[0];
+				
+				ArrayList<String> users = new ArrayList<String>();
+				
+				for (int i = 1; i < parts.length; i++ ) {
+					users.add(parts[i]);
+				}
+				gui.users(users, roomid);
+			}
+			
+			else if (cmd.getCommand().equalsIgnoreCase("FRIENDLIST")) {
+				
 				
 				
 			}
