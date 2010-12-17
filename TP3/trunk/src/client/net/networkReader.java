@@ -202,7 +202,7 @@ public class networkReader implements Runnable {
 				String data = cmd.getData();
 
 				// fix case issues later
-
+				
 				String online = data.split("OFFLINE")[0];
 				online = online.replace("ONLINE", "");
 				String[] onlinelist = online.split(" ");
@@ -306,6 +306,8 @@ public class networkReader implements Runnable {
 			// ERRORS
 
 			else if (cmd.getCommand().equals("ERROR")) {
+				
+				
 
 			}
 
