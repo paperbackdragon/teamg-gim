@@ -33,7 +33,7 @@ public class LoginPanel extends JPanel{
 		
 		JPanel emailPanel = new JPanel();
 		emailPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		emailPanel.setMaximumSize(new Dimension(275, 30));
+		emailPanel.setMaximumSize(new Dimension(290, 30));
 		email = new JTextField();
 		email.addKeyListener(enterlistener);
 		email.setPreferredSize(new Dimension(200, 25));
@@ -43,7 +43,7 @@ public class LoginPanel extends JPanel{
 		
 		JPanel pwdPanel = new JPanel();
 		pwdPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		pwdPanel.setMaximumSize(new Dimension(275, 30));
+		pwdPanel.setMaximumSize(new Dimension(290, 30));
 		pwd = new JPasswordField();
 		pwd.addKeyListener(enterlistener);
 		pwd.setPreferredSize(new Dimension(200, 25));

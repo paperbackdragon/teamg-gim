@@ -87,12 +87,13 @@ public class CommandReader implements Runnable {
 				} else if (dataParts.length >= 2) {
 					// End of a command
 					data += dataParts[0];
-
+					
 					// Create the command and out in in the buffer
-					commandBuffer.putCommand(new Command(command, args, data.trim()));
+					Command cmd = new Command(command, args, data.trim());
+					commandBuffer.putCommand(cmd);
 
 					// Remove or comment out if not debugging
-					System.out.println(new Command(command, args, data.trim()));
+					System.out.println(cmd);
 
 					// Reset variables for the next command
 					command = null;
