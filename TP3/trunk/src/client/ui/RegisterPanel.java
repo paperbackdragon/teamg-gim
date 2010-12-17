@@ -15,6 +15,13 @@ public class RegisterPanel extends JPanel {
 	
 	//CONSTRUCTOR
 	public RegisterPanel() {
+		/*try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e) {
+			System.out.println("Something went wrong!");
+			System.exit(0);
+		}*/
+		
 		RegisterListener regListener = new RegisterListener();
 		
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -29,7 +36,7 @@ public class RegisterPanel extends JPanel {
 		
 		JPanel emailPanel = new JPanel();
 		emailPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		emailPanel.setMaximumSize(new Dimension(275, 30));
+		emailPanel.setMaximumSize(new Dimension(290, 30));
 		email = new JTextField();
 		email.setPreferredSize(new Dimension(200, 25));
 		emailPanel.add(new JLabel("E-Mail:"));
@@ -38,7 +45,7 @@ public class RegisterPanel extends JPanel {
 		
 		JPanel pwdPanel = new JPanel();
 		pwdPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		pwdPanel.setMaximumSize(new Dimension(275, 30));
+		pwdPanel.setMaximumSize(new Dimension(290, 30));
 		pwd = new JPasswordField();
 		pwd.setPreferredSize(new Dimension(200, 25));
 		pwdPanel.add(new JLabel ("Password:"));
@@ -47,7 +54,7 @@ public class RegisterPanel extends JPanel {
 		
 		JPanel confirmPanel = new JPanel();
 		confirmPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		confirmPanel.setMaximumSize(new Dimension(275, 30));
+		confirmPanel.setMaximumSize(new Dimension(290, 30));
 		confirm = new JPasswordField();
 		confirm.setPreferredSize(new Dimension(200, 25));
 		confirmPanel.add(new JLabel ("Confirm: "));
