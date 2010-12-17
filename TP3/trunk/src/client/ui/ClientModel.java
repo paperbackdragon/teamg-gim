@@ -19,7 +19,15 @@ public class ClientModel {
 	//private ArrayList<String> inFreindList = new ArrayList<String>();
 	//private ArrayList<String> blockedUsers = new ArrayList<String>();
 	
-	public void authenticate(String email, char[] password) {
-		link.authenticate(email, password);
+	public void authenticate(String email, char[] pwd) {
+		link.authenticate(email, pwd);
+	}
+	
+	public void register(String email, char[] pwd) {
+		link.register(email, pwd);
+	}
+	
+	public void logout() {
+		link.logout();
 	}
 }

@@ -22,9 +22,9 @@ public class LoginPanel extends JPanel{
 			System.out.println("Something went wrong!");
 			System.exit(0);
 		}*/
+		
 		EnterListener enterlistener = new EnterListener();
 		LoginListener loginListener = new LoginListener();
-		//TextListener textListener = new TextListener();
 		
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
@@ -86,67 +86,33 @@ public class LoginPanel extends JPanel{
 	}
 	
 	private void login() {
-		System.out.println("Login pressed");
+		GimClient.getClient().authenticate(email.getText(), pwd.getPassword());
 		
-		//UNCOMMENT WHEN DONE
-		//GimClient.getClient().authenticate(email.getText(), pwd.getPassword());
-		
-		//DELETE WHEN DONE
-		ContactPanel panel = new ContactPanel();
-		panel.setParent(GimClient.getMainWindow());
-		GimClient.getMainWindow().setMainPanel(panel);
+		//!!DELETE BELOW WHEN LOGIN FEATURE WORKS!!
+			ContactPanel panel = new ContactPanel();
+			panel.setParent(GimClient.getMainWindow());
+			GimClient.getMainWindow().setMainPanel(panel);
 	}
 	
 	//ACTION LISTENERS
 	class LoginListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			if (e.getSource().equals(loginButton)) {
+			if (e.getSource().equals(loginButton))
 				login();
-			}
 			else if (e.getSource().equals(register)) {
-				System.out.println("Register pressed");
-				if(parent != null) {
-					RegisterPanel panel = new RegisterPanel();
-					panel.setParent(parent);
-					parent.setMainPanel(panel);
-				}
-				else
-					System.out.println("parent is null");
+				RegisterPanel panel = new RegisterPanel();
+				panel.setParent(parent);
+				parent.setMainPanel(panel);
 			}
 		}
 	}
 	
 	class EnterListener implements KeyListener{
 		public void keyTyped(KeyEvent e) {
-			if(e.getKeyChar() == KeyEvent.VK_ENTER) {
+			if(e.getKeyChar() == KeyEvent.VK_ENTER)
 				login();
-			}
 		}
 		public void keyPressed(KeyEvent e) {}
 		public void keyReleased(KeyEvent e) {}
 	}
-	
-	//do we want this functionality?
-	/*class TextListener implements FocusListener {
-		public void focusGained(FocusEvent e) {
-			JTextField tf = (JTextField) e.getSource();
-			if(tf.equals(email)) {
-				if(tf.getText().equals("E-Mail"))
-					tf.setText("");
-			}
-			else if(tf.equals(pwd)) {
-				if(tf.getText().equals("Password"))
-					tf.setText("");
-			}
-		}
-		public void focusLost(FocusEvent e) {
-			JTextField tf = (JTextField) e.getSource();
-			if(tf.getText().equals("")) {
-				if(tf.equals(email))
-					tf.setText("E-Mail");
-				else if(tf.equals(pwd))
-					tf.setText("Password");
-			}
-		}
-	}*/
 }

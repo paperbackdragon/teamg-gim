@@ -1,10 +1,10 @@
 package client.ui;
 
+import java.util.Arrays;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
+import java.awt.event.*;
 import javax.swing.*;
+import client.GimClient;
 
 @SuppressWarnings("serial")
 public class RegisterPanel extends JPanel {
@@ -27,13 +27,11 @@ public class RegisterPanel extends JPanel {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
 		add(Box.createVerticalStrut(50));
-		
 		JLabel regLabel = new JLabel("REGISTER");
 		regLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 		add(regLabel);
 		
 		add(Box.createVerticalStrut(10));
-		
 		JPanel emailPanel = new JPanel();
 		emailPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		emailPanel.setMaximumSize(new Dimension(290, 30));
@@ -84,24 +82,19 @@ public class RegisterPanel extends JPanel {
 	class RegisterListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			if(e.getSource().equals(register)) {
-				System.out.println("OK pressed");
-				if(parent != null) {
-					ContactPanel panel = new ContactPanel();
-					panel.setParent(parent);
-					parent.setMainPanel(panel);
+				if(Arrays.equals(pwd.getPassword(), confirm.getPassword())) {
+					GimClient.getClient().register(email.getText(), pwd.getPassword());
 				}
-				else
-					System.out.println("parent is null");
+				else {
+					pwd.setText("");
+					confirm.setText("");
+					JOptionPane.showMessageDialog(RegisterPanel.this, "Passwords do not match.");
+				}
 			}
 			else if(e.getSource().equals(cancel)) {
-				System.out.println("Cancel pressed");
-				if(parent != null) {
-					LoginPanel panel = new LoginPanel();
-					panel.setParent(parent);
-					parent.setMainPanel(panel);
-				}
-				else
-					System.out.println("parent is null");
+				LoginPanel panel = new LoginPanel();
+				panel.setParent(parent);
+				parent.setMainPanel(panel);
 			}
 		}
 	}

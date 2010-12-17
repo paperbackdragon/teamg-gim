@@ -67,7 +67,8 @@ public class GimUI extends JFrame {
 	class MenuListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			if(e.getSource().equals(logout)) {
-				System.out.println("logout clicked.");
+				GimClient.getClient().logout();
+				
 				//todo: close all open windows except main window
 				LoginPanel panel = new LoginPanel();
 				panel.setParent(GimClient.getMainWindow());
