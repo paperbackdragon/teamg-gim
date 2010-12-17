@@ -196,163 +196,173 @@ public class networkReader implements Runnable {
 				}
 				gui.users(users, roomid);
 			}
-
-			else if (cmd.getCommand().equalsIgnoreCase("FRIENDLIST")) {
-
-				String data = cmd.getData();
-
-				// fix case issues later
-
-				String online = data.split("OFFLINE")[0];
-				online = online.replace("ONLINE", "");
-				String[] onlinelist = online.split(" ");
-
-				String offline = data.split("OFFLINE")[1].split("BLOCKED")[0];
-				String[] offlinelist = offline.split(" ");
-
-				String blocked = data.split("BLOCKED")[1];
-				String[] blockedlist = blocked.split(" ");
-
-				gui.friendlist(onlinelist, offlinelist, blockedlist);
+			
+			else if (cmd.getArgumentsAsString().equalsIgnoreCase("PERSONAL")) {
+				gui.personal(cmd.getData());
+			}
+			
+			else if (cmd.getArgumentsAsString().equalsIgnoreCase("GROUP")) {
+				gui.group(cmd.getData());
 			}
 
-			else if (cmd.getCommand().equalsIgnoreCase("FRIENDREQUEST")) {
-				String data = cmd.getData();
-				String[] parts = data.split(" ");
+		}
 
-				gui.friendrequest(parts[0], parts[1]);
+		else if (cmd.getCommand().equalsIgnoreCase("FRIENDLIST")) {
+
+			String data = cmd.getData();
+
+			// fix case issues later
+
+			String online = data.split("OFFLINE")[0];
+			online = online.replace("ONLINE", "");
+			String[] onlinelist = online.split(" ");
+
+			String offline = data.split("OFFLINE")[1].split("BLOCKED")[0];
+			String[] offlinelist = offline.split(" ");
+
+			String blocked = data.split("BLOCKED")[1];
+			String[] blockedlist = blocked.split(" ");
+
+			gui.friendlist(onlinelist, offlinelist, blockedlist);
+		}
+
+		else if (cmd.getCommand().equalsIgnoreCase("FRIENDREQUEST")) {
+			String data = cmd.getData();
+			String[] parts = data.split(" ");
+
+			gui.friendrequest(parts[0], parts[1]);
+		}
+
+		else if (cmd.getCommand().equalsIgnoreCase("UPDATE")) {
+
+			if (cmd.getArgumentsAsString().equalsIgnoreCase("NICKNAME")) {
+				gui.notifyNickname(cmd.getData());
 			}
 
-			else if (cmd.getCommand().equalsIgnoreCase("UPDATE")) {
-
-				if (cmd.getArgumentsAsString().equalsIgnoreCase("NICKNAME")) {
-					gui.notifyNickname(cmd.getData());
-				}
-
-				if (cmd.getArgumentsAsString().equalsIgnoreCase("STATUS")) {
-					gui.notifyStatus(cmd.getData());
-				}
-
-				if (cmd.getArgumentsAsString().equalsIgnoreCase(
-						"PERSONAL_MESSAGE")) {
-					gui.notifyPersonalMessage(cmd.getData());
-				}
-
-				if (cmd.getArgumentsAsString().equalsIgnoreCase("DISPLAY_PIC")) {
-					gui.notifyDisplayPicture(cmd.getData());
-				}
-
+			if (cmd.getArgumentsAsString().equalsIgnoreCase("STATUS")) {
+				gui.notifyStatus(cmd.getData());
 			}
 
-			else if (cmd.getCommand().equalsIgnoreCase("INFO")) {
+			if (cmd.getArgumentsAsString().equalsIgnoreCase("PERSONAL_MESSAGE")) {
+				gui.notifyPersonalMessage(cmd.getData());
+			}
 
-				String[] arguments = cmd.getArguments();
-				int argumentcount = arguments.length;
+			if (cmd.getArgumentsAsString().equalsIgnoreCase("DISPLAY_PIC")) {
+				gui.notifyDisplayPicture(cmd.getData());
+			}
 
-				String data = cmd.getData();
-				String[] parts = data.split(" ");
+		}
 
-				int i = 0;
-				int count = 0;
+		else if (cmd.getCommand().equalsIgnoreCase("INFO")) {
 
-				String currentusername = parts[0];
-				while (i < parts.length) {
+			String[] arguments = cmd.getArguments();
+			int argumentcount = arguments.length;
 
-					if (count != 0) {
+			String data = cmd.getData();
+			String[] parts = data.split(" ");
 
-						if (arguments[count].equalsIgnoreCase("NICKNAME")) {
+			int i = 0;
+			int count = 0;
 
-							gui.updateNickname(parts[i], currentusername);
+			String currentusername = parts[0];
+			while (i < parts.length) {
 
-						}
+				if (count != 0) {
 
-						else if (arguments[count].equalsIgnoreCase("STATUS")) {
-							gui.updateStatus(parts[i], currentusername);
+					if (arguments[count].equalsIgnoreCase("NICKNAME")) {
 
-						}
-
-						else if (arguments[count]
-								.equalsIgnoreCase("PERSONAL_MESSAGE")) {
-							gui
-									.updatePersonalMessage(parts[i],
-											currentusername);
-
-						}
-
-						else if (arguments[count]
-								.equalsIgnoreCase("DISPLAY_PIC")) {
-							gui.updateDisplayPicture(parts[i], currentusername);
-						}
+						gui.updateNickname(parts[i], currentusername);
 
 					}
 
-					else { // it's a username
-						currentusername = parts[i];
+					else if (arguments[count].equalsIgnoreCase("STATUS")) {
+						gui.updateStatus(parts[i], currentusername);
+
 					}
 
-					i++;
+					else if (arguments[count]
+							.equalsIgnoreCase("PERSONAL_MESSAGE")) {
+						gui.updatePersonalMessage(parts[i], currentusername);
 
-					if (count == (argumentcount + 1)) {
-						count = 0;
-					} else {
-						count++;
+					}
+
+					else if (arguments[count].equalsIgnoreCase("DISPLAY_PIC")) {
+						gui.updateDisplayPicture(parts[i], currentusername);
 					}
 
 				}
 
-			}
-
-			// ERRORS
-
-			else if (cmd.getCommand().equals("ERROR")) {
-
-				if (cmd.getArgumentsAsString().equalsIgnoreCase("UNAUTHORISED")) {
-					gui.unauthorisedError(cmd.getData());
-
+				else { // it's a username
+					currentusername = parts[i];
 				}
 
-				if (cmd.getArgumentsAsString().equalsIgnoreCase("INVALID_EMAIL")) {
-					gui.invalidEmailError(cmd.getData());
-				}
+				i++;
 
-				if (cmd.getArgumentsAsString().equalsIgnoreCase("EMAIL_ALREADY_IN_USE")) {
-					gui.emailInuseError(cmd.getData());
+				if (count == (argumentcount + 1)) {
+					count = 0;
+				} else {
+					count++;
 				}
-
-				if (cmd.getArgumentsAsString().equalsIgnoreCase("PASSWORD_TOO_SHORT")) {
-					gui.passwordTooShortError(cmd.getData());
-				}
-
-				if (cmd.getArgumentsAsString().equalsIgnoreCase("MISSING_ARGUMENTS")) {
-					gui.missingArgumentsError(cmd.getData());
-				}
-
-				if (cmd.getArgumentsAsString().equalsIgnoreCase("TOO_MANY_ARGUMENTS")) {
-					gui.tooManyArgumentsError(cmd.getData());
-				}
-
-				if (cmd.getArgumentsAsString().equalsIgnoreCase("INVALID_ARGUMENT")) {
-					gui.invalidArgumentError(cmd.getData());
-
-				}
-
-				if (cmd.getArgumentsAsString().equalsIgnoreCase("LOGGED_IN_FROM_OTHER_LOCATION")) {
-					gui.loggedInFromAnotherLocationError(cmd.getData());
-				}
-				
-				if (cmd.getArgumentsAsString().equalsIgnoreCase("USER_DOES_NOT_EXIST")) {
-					gui.userDoesNotExistError(cmd.getData());
-				}
-				
-				if (cmd.getArgumentsAsString().equalsIgnoreCase("LOGIN_DETAILS_INCORRECT")) {
-					gui.logInDetailsIncorrectError(cmd.getData());
-				}
-				
-				
 
 			}
 
 		}
 
+		// ERRORS
+
+		else if (cmd.getCommand().equals("ERROR")) {
+
+			if (cmd.getArgumentsAsString().equalsIgnoreCase("UNAUTHORISED")) {
+				gui.unauthorisedError(cmd.getData());
+
+			}
+
+			if (cmd.getArgumentsAsString().equalsIgnoreCase("INVALID_EMAIL")) {
+				gui.invalidEmailError(cmd.getData());
+			}
+
+			if (cmd.getArgumentsAsString().equalsIgnoreCase(
+					"EMAIL_ALREADY_IN_USE")) {
+				gui.emailInuseError(cmd.getData());
+			}
+
+			if (cmd.getArgumentsAsString().equalsIgnoreCase(
+					"PASSWORD_TOO_SHORT")) {
+				gui.passwordTooShortError(cmd.getData());
+			}
+
+			if (cmd.getArgumentsAsString()
+					.equalsIgnoreCase("MISSING_ARGUMENTS")) {
+				gui.missingArgumentsError(cmd.getData());
+			}
+
+			if (cmd.getArgumentsAsString().equalsIgnoreCase(
+					"TOO_MANY_ARGUMENTS")) {
+				gui.tooManyArgumentsError(cmd.getData());
+			}
+
+			if (cmd.getArgumentsAsString().equalsIgnoreCase("INVALID_ARGUMENT")) {
+				gui.invalidArgumentError(cmd.getData());
+
+			}
+
+			if (cmd.getArgumentsAsString().equalsIgnoreCase(
+					"LOGGED_IN_FROM_OTHER_LOCATION")) {
+				gui.loggedInFromAnotherLocationError(cmd.getData());
+			}
+
+			if (cmd.getArgumentsAsString().equalsIgnoreCase(
+					"USER_DOES_NOT_EXIST")) {
+				gui.userDoesNotExistError(cmd.getData());
+			}
+
+			if (cmd.getArgumentsAsString().equalsIgnoreCase(
+					"LOGIN_DETAILS_INCORRECT")) {
+				gui.logInDetailsIncorrectError(cmd.getData());
+			}
+
+		}
+
 	}
+
 }
