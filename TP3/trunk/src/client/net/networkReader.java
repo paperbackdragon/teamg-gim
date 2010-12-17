@@ -9,10 +9,12 @@ import util.CommandBuffer;
 public class networkReader implements Runnable {
 	
 	private BufferedReader reader;
+	private ServerConnection gui;
 
 	/** Reads commands off the network and performs calls the necessary method */
-	public networkReader(BufferedReader reader) {
+	public networkReader(BufferedReader reader, ServerConnection gui) {
 		
+		this.gui = gui;
 		this.reader = reader;
 		
 	}
@@ -76,6 +78,9 @@ public class networkReader implements Runnable {
 					
 					// Create the command and out in in the buffer
 					Command cmd = new Command(command, args, data.trim());
+					
+					performCommand(cmd);
+					
 					//commandBuffer.putCommand(cmd);
 
 					// Remove or comment out if not debugging
@@ -92,6 +97,32 @@ public class networkReader implements Runnable {
 		
 		// TODO: Clean up
 		System.out.println("CommandReader stopped.");
+		
+	}
+
+	private void performCommand(Command cmd) {
+		
+		if (cmd.getCommand().equals("SERVERSTATUS")) {
+			
+			
+		}
+		
+
+		
+		else if (cmd.getCommand().equals("OKAY")) {
+			gui.okay();
+		}
+		
+		else if (cmd.getCommand().equals("AUTH")) {
+			
+			if (cmd.getArguments().equals("LOGGEDIN")) {
+				gui.authorised();
+			}
+			else if (cmd.getArguments().equals("UNAUTHORIZED")) {
+				gui.unauthorised();
+			}
+			
+		}
 		
 	}
 
