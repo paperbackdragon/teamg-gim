@@ -204,7 +204,7 @@ public class ServerConnection implements NetworkingIn {
 	}
 
 	@Override
-	public void joined(String roomid, String user) {
+	public void joined(String user, String roomid) {
 		// TODO Auto-generated method stub
 		
 	}
