@@ -16,12 +16,14 @@ public class networkWriter implements Runnable {
 	public networkWriter(PrintWriter writer, CommandBuffer buffer) {
 		
 		this.buffer = buffer;
-		this. writer = writer;
+		this.writer = writer;
 
 	}
 
 	@Override
 	public void run() {
+		
+		
 		
 		
 		
