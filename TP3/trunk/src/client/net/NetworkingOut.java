@@ -60,7 +60,7 @@ public interface NetworkingOut {
 	 *            The server will return the user's authorisation state: logged
 	 *            in, or unauthorised
 	 */
-	void authenticate(String emailaddress, String password);
+	void authenticate(String emailaddress, char[] password);
 
 	/**
 	 * sends a request to the server to register an account
@@ -73,7 +73,7 @@ public interface NetworkingOut {
 	 *            If the registration is unsuccessful, the server will respond
 	 *            with an error message indicating why
 	 */
-	void register(String emailaddress, String password);
+	void register(String emailaddress, char[] password);
 
 	// :AUTH ends
 

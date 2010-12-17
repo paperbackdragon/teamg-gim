@@ -75,7 +75,7 @@ public class ClientConnection implements NetworkingOut {
 	}
 
 	@Override
-	public void authenticate(String emailaddress, String password) {
+	public void authenticate(String emailaddress, char[] password) {
 		// TODO Auto-generated method stub
 
 	}
@@ -87,7 +87,7 @@ public class ClientConnection implements NetworkingOut {
 	}
 
 	@Override
-	public void register(String emailaddress, String password) {
+	public void register(String emailaddress, char[] password) {
 		// TODO Auto-generated method stub
 
 	}
