@@ -102,18 +102,18 @@ public class networkReader implements Runnable {
 
 	private void performCommand(Command cmd) {
 		
-		if (cmd.getCommand().equals("SERVERSTATUS")) {
+		if (cmd.getCommand().equalsIgnoreCase("SERVERSTATUS")) {
 			
-			if (cmd.getArguments().equals("USERS")) {
+			if (cmd.getArumentsAsString().equalsIgnoreCase("USERS")) {
 				gui.usercount(cmd.getData());
 				
 			}
 			
-			else if (cmd.getArguments().equals("TIME")) {
+			else if (cmd.getArumentsAsString().equalsIgnoreCase("TIME")) {
 				gui.servertime(cmd.getData());
 			}
 			
-			else if (cmd.getArguments().equals("UPTIME")) {
+			else if (cmd.getArumentsAsString().equalsIgnoreCase("UPTIME")) {
 				gui.servertime(cmd.getData());
 			}
 			
@@ -127,10 +127,10 @@ public class networkReader implements Runnable {
 		
 		else if (cmd.getCommand().equals("AUTH")) {
 			
-			if (cmd.getArguments().equals("LOGGEDIN")) {
+			if (cmd.getArumentsAsString().equalsIgnoreCase("LOGGEDIN")) {
 				gui.authorised();
 			}
-			else if (cmd.getArguments().equals("UNAUTHORIZED")) {
+			else if (cmd.getArumentsAsString().equalsIgnoreCase("UNAUTHORIZED")) {
 				gui.unauthorised();
 			}
 			
