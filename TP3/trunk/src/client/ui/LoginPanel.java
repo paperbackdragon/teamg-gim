@@ -4,6 +4,8 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import client.GimClient;
+
 @SuppressWarnings("serial")
 public class LoginPanel extends JPanel{
 	private GimUI parent;
@@ -83,18 +85,16 @@ public class LoginPanel extends JPanel{
 		parent = (GimUI) frame;
 	}
 	
+	private void login() {
+		GimClient.getClient().authenticate(email.getText(), pwd.getPassword());
+	}
+	
 	//ACTION LISTENERS
 	class LoginListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource().equals(loginButton)) {
 				System.out.println("Login pressed");
-				if(parent != null) {
-					ContactPanel panel = new ContactPanel();
-					panel.setParent(parent);
-					parent.setMainPanel(panel);
-				}
-				else
-					System.out.println("parent is null");
+				login();
 			}
 			else if (e.getSource().equals(register)) {
 				System.out.println("Register pressed");
@@ -112,14 +112,9 @@ public class LoginPanel extends JPanel{
 	class EnterListener implements KeyListener{
 		public void keyTyped(KeyEvent e) {
 			if(e.getKeyChar() == KeyEvent.VK_ENTER) {
-					System.out.println("Login pressed");
-					if(parent != null) {
-						parent.setMainPanel(new ContactPanel());
-						System.out.println("set");
-					}
-					else
-						System.out.println("null");
-				}
+				System.out.println("Login pressed");
+				login();
+			}
 		}
 		public void keyPressed(KeyEvent e) {}
 		public void keyReleased(KeyEvent e) {}

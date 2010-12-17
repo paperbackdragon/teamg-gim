@@ -120,7 +120,7 @@ public class ChatPanel extends JPanel{
 			else {
 				messages.append("\n" + "me: " + chatBox.getText());
 			}
-	}
+		}
 	}
 	
 	//ACTION LISTENERS

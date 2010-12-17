@@ -2,12 +2,16 @@ package client.net;
 
 import java.util.ArrayList;
 
+import client.GimClient;
+import client.ui.ContactPanel;
+
 public class ServerConnection implements NetworkingIn {
 
 	@Override
 	public void authorised() {
-		// TODO Auto-generated method stub
-		
+		ContactPanel panel = new ContactPanel();
+		panel.setParent(GimClient.getMainWindow());
+		GimClient.getMainWindow().setMainPanel(panel);
 	}
 
 	@Override

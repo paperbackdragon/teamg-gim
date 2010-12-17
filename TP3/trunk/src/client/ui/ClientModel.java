@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import client.net.NetworkingOut;
 
 public class ClientModel {
+	private NetworkingOut link;
 	//public static enum Status {
 	//	OFFLINE, ONLINE, BUSY, AWAY
 	//}
@@ -18,5 +19,7 @@ public class ClientModel {
 	//private ArrayList<String> inFreindList = new ArrayList<String>();
 	//private ArrayList<String> blockedUsers = new ArrayList<String>();
 	
-	
+	public void authenticate(String email, char[] password) {
+		link.authenticate(email, password);
+	}
 }

@@ -5,9 +5,14 @@ import client.ui.*;
 
 public class GimClient {
 	private static GimUI mainWindow;
+	private static ClientModel client;
 	
 	public static GimUI getMainWindow() {
 		return mainWindow;
+	}
+	
+	public static ClientModel getClient() {
+		return client;
 	}
 	
 	public static void main(String[] args) {
