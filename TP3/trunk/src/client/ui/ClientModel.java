@@ -1,10 +1,10 @@
 package client.ui;
 
 import java.util.ArrayList;
-import client.net.NetworkingOut;
+import client.net.ClientConnection;
 
 public class ClientModel {
-	private NetworkingOut link;
+	private ClientConnection link;
 	//public static enum Status {
 	//	OFFLINE, ONLINE, BUSY, AWAY
 	//}
