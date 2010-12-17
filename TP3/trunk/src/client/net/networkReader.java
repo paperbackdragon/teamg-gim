@@ -254,6 +254,7 @@ public class networkReader implements Runnable {
 
 				int i = 0;
 				int count = 0;
+				
 				String currentusername = parts[0];
 				while (i < parts.length) {
 
@@ -262,27 +263,26 @@ public class networkReader implements Runnable {
 						if (arguments[count]
 										.equalsIgnoreCase("NICKNAME")) {
 							
-							
+							gui.updateNickname(parts[i], currentusername);
 							
 								}
 
 								else if (arguments[count]
 										.equalsIgnoreCase("STATUS")) {
-									
+									gui.updateStatus(parts[i], currentusername);
 									
 
 								}
 
 								else if (arguments[count]
 										.equalsIgnoreCase("PERSONAL_MESSAGE")) {
-									
+									gui.updatePersonalMessage(parts[i], currentusername);
 
 								}
 
 								else if (arguments[count]
 										.equalsIgnoreCase("DISPLAY_PIC")) {
-									
-
+									gui.updateDisplayPicture(parts[i], currentusername);
 								}
 						
 					}
