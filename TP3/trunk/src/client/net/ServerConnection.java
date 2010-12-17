@@ -17,12 +17,6 @@ public class ServerConnection implements NetworkingIn {
 	}
 
 	@Override
-	public void created() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void emailInuseError(String message) {
 		// TODO Auto-generated method stub
 		
@@ -54,25 +48,7 @@ public class ServerConnection implements NetworkingIn {
 	}
 
 	@Override
-	public void invited() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void joined() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void kill(String message) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void left() {
 		// TODO Auto-generated method stub
 		
 	}
@@ -210,7 +186,31 @@ public class ServerConnection implements NetworkingIn {
 	}
 
 	@Override
-	public void users() {
+	public void created(String roomid) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void invited(String user, String roomid) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void joined(String user, String roomid) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void left(String user, String roomid) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void users(ArrayList<String> users, String roomid) {
 		// TODO Auto-generated method stub
 		
 	}

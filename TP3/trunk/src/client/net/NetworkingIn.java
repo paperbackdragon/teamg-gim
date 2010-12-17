@@ -104,15 +104,54 @@ public interface NetworkingIn {
 
 	// :ROOM [ CREATED | JOINED | LEFT | INVITED | USERS ]: <roomid> {<user>};
 
-	void created();
+	/**
+	 * The server has notified that the room the user requested to be made was
+	 * created successfully
+	 * 
+	 * @param roomid
+	 *            the roomid they now have permission to join
+	 */
+	void created(String roomid);
 
-	void joined();
+	/**
+	 * The server has notified that a person has joined a group chat that the
+	 * user is in
+	 * 
+	 * @param user
+	 *            The user that joined
+	 */
+	void joined(String user, String roomid);
 
-	void left();
+	/**
+	 * The server has notified that a person has left one of the group chats
+	 * that the user is in
+	 * 
+	 * @param user
+	 *            The user that left
+	 * @param roomid
+	 *            The id of the room the user left
+	 * */
+	void left(String user, String roomid);
 
-	void invited();
+	/**
+	 * The server has notified that the user has been invited to join a room
+	 * 
+	 * @param user
+	 *            the user that sent the invite
+	 * @param roomid
+	 *            the id of the room the person was invited to
+	 */
+	void invited(String user, String roomid);
 
-	void users();
+	/**
+	 * The server has sent a list of users in a group chat
+	 * 
+	 * @param users
+	 *            the arraylist of users
+	 * @param roomid
+	 *            the id of the room the users are in
+	 */
+	void users(ArrayList<String> users, String roomid);
 
 	// end :ROOM
 
@@ -195,7 +234,7 @@ public interface NetworkingIn {
 	 *            The user that the server is giving nickname information about
 	 * @param nickname
 	 *            The user's nickname
-	 * */				
+	 * */
 	void updateNickname(String user, String nickname);
 
 	/**
