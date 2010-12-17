@@ -80,8 +80,9 @@ public interface NetworkingOut {
 	// :QUIT:;
 
 	/**
-	 * sends a request to the server to log the user out. If handled
+	 * sends a request to the server to disconnect the user. If handled
 	 * successfully, the connection will be terminated from the server.
+	 * This can be performed before log in.
 	 */
 	void quit();
 

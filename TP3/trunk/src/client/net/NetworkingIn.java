@@ -51,8 +51,8 @@ public interface NetworkingIn {
 	// :SERVERSTATUS ends
 
 	/**
-	 * The server has indicated that it wants to force the client to disconnect
-	 * gracefully.
+	 * The server has indicated that it is about to force the client to disconnect.
+	 * The server will close the connection after this command is sent.
 	 * 
 	 * @param message
 	 *            The reason why the server wants the client to disconnect
@@ -374,5 +374,8 @@ public interface NetworkingIn {
 	 *            message sent with the error. Gives details.
 	 */
 	void logInDetailsIncorrectError(String message);
+	
+	// /** The logout was successful */
+	//void logoutSuccessful();
 
 }

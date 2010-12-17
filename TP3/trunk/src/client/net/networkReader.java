@@ -194,6 +194,7 @@ public class networkReader implements Runnable {
 				
 				ArrayList<String> users = new ArrayList<String>();
 				
+				
 				for (int i = 1; i < parts.length; i++ ) {
 					users.add(parts[i]);
 				}
@@ -202,6 +203,24 @@ public class networkReader implements Runnable {
 			
 			else if (cmd.getCommand().equalsIgnoreCase("FRIENDLIST")) {
 				
+				String data = cmd.getData();
+				
+				// fix case issues later
+				
+				String online = data.split("OFFLINE")[0];
+				online = online.replace("ONLINE","");
+				String[] onlineList = online.split(" ");
+				
+				String offline = data.split("OFFLINE")[1].split("BLOCKED")[0];
+				String[] offlineList = offline.split(" ");
+				 
+				String blocked = data.split("BLOCKED")[1];
+				String[] blockedList = blocked.split(" ");
+				
+				//gui.buddyList
+				
+				
+				//blockedsdf.
 				
 				
 			}
