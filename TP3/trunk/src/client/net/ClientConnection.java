@@ -75,7 +75,7 @@ public class ClientConnection implements NetworkingOut {
 		// TODO Auto-generated method stub
 		// :AUTH { LOGIN | REGISTER }: <email address> <password>;
 		
-		// buffer.putCommand(":AUTH LOGIN: %s %s;", emailaddress, password );
+		 buffer.putCommand(":AUTH LOGIN: "+ emailaddress+ " " + password + ";" );
 
 	}
 
@@ -90,7 +90,7 @@ public class ClientConnection implements NetworkingOut {
 		
 		// :AUTH { LOGIN | REGISTER }: <email address> <password>;
 		
-		// buffer.putCommand(":AUTH REGISTER: %s %s;", emailaddress, password );
+		buffer.putCommand(":AUTH REGISTER: " + emailaddress + " " + password + ";");
 
 	}
 
@@ -103,6 +103,8 @@ public class ClientConnection implements NetworkingOut {
 
 	@Override
 	public void message(String roomid, String message) {
+		// :MESSAGE: <roomid> <message>;
+		buffer.putCommand(":MESSAGE: " + roomid + " " + message + ";");
 		
 
 	}
