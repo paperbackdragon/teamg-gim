@@ -3,6 +3,7 @@ package client.net;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import client.*;
 import client.ui.*;
@@ -144,8 +145,24 @@ public class ServerConnection implements NetworkingIn, Runnable {
 	}
 
 	public void created(String roomid) {
+		//see how many users are in the 
 		
-	}
+/*		//either
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				GimUI ui = new GimUI("GIM - Chat with Contact ", new ChatPanel());
+				ui.setLocationRelativeTo(null);//center new chat window
+			}
+		});
+		
+		//or (with room id added to GroupChatPanel()
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				GimUI ui = new GimUI("GIM - Group Chat", new GroupChatPanel());
+				ui.setLocationRelativeTo(null);//center new chat window
+			}
+		});	
+*/	}
 
 	public void invited(String user, String roomid) {
 		

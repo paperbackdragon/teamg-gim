@@ -1,11 +1,13 @@
 package client;
 
+import java.util.ArrayList;
 import javax.swing.SwingUtilities;
 import client.ui.*;
 
 public class GimClient {
 	private static GimUI mainWindow;
 	private static ClientModel client;
+	private ArrayList<ChatPanel> rooms;
 	
 	public static GimUI getMainWindow() {
 		return mainWindow;

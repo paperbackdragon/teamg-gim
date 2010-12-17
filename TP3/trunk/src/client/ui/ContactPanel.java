@@ -5,6 +5,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import client.GimClient;
+
 @SuppressWarnings("serial")
 public class ContactPanel extends JPanel {
 	private GimUI parent;
@@ -13,6 +15,7 @@ public class ContactPanel extends JPanel {
 	
 	//CONSTRUCTOR
 	public ContactPanel() {
+		// TODO uncomment eventually?
 		/*try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
@@ -149,23 +152,12 @@ public class ContactPanel extends JPanel {
 				});
 			}
 			else if(e.getSource().equals(chat)) {
-				System.out.println("chat clicked.");
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						//String node = contactTree.getLastSelectedPathComponent().toString(); Trying to get selected node name
-						GimUI ui = new GimUI("GIM - Chat with Contact ", new ChatPanel());
-						ui.setLocationRelativeTo(null);//center new chat window
-					}
-				});
+				//String node = contactTree.getLastSelectedPathComponent().toString(); Trying to get selected node name
+				GimClient.getClient().createRoom(false);
 			}
 			else if(e.getSource().equals(group)) {
-				System.out.println("group clicked.");
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						GimUI ui = new GimUI("GIM - Group Chat", new GroupChatPanel());
-						ui.setLocationRelativeTo(null);//center new chat window
-					}
-				});		
+				//String node = contactTree.getLastSelectedPathComponent().toString(); Trying to get selected node name
+				GimClient.getClient().createRoom(false);
 			}
 		}
 	}

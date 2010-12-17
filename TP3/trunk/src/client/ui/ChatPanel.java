@@ -6,20 +6,23 @@ import javax.swing.*;
 
 @SuppressWarnings("serial")
 public class ChatPanel extends JPanel{
+	private String id;
 	private JTextArea messages, chatBox;
 	private JButton send;
 	
 	/**
 	 * Constructor for a chatbox
-	 * 
 	 */
-	public ChatPanel() {
+	public ChatPanel(String roomID) {
+		// TODO uncomment eventually?
 		/*try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
 			System.out.println("Something went wrong!");
 			System.exit(0);
 		}*/
+		
+		id = roomID;
 		
 		setLayout(new BorderLayout());
 		
@@ -74,7 +77,6 @@ public class ChatPanel extends JPanel{
 		}
 		/**
 		 * A panel containing the information of the contact
-		 * 
 		 */
 		public ContactInfo() {
 			setLayout(new FlowLayout(FlowLayout.LEFT));

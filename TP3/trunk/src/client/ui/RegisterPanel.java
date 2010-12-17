@@ -15,6 +15,7 @@ public class RegisterPanel extends JPanel {
 	
 	//CONSTRUCTOR
 	public RegisterPanel() {
+		// TODO uncomment eventually?
 		/*try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {

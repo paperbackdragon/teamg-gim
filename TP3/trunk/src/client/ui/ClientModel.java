@@ -30,4 +30,14 @@ public class ClientModel {
 	public void logout() {
 		link.logout();
 	}
+	
+	public void quit() {
+		link.logout();
+		// TODO clean up instead of this:
+		System.exit(0);
+	}
+	
+	public void createRoom(Boolean publicchat) {
+		link.createGroupChat(publicchat);
+	}
 }

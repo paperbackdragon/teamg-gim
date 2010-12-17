@@ -12,6 +12,7 @@ public class GimUI extends JFrame {
 	
 	//CONSTRUCTOR
 	public GimUI(String title, JPanel panel) {
+		// TODO uncomment eventually?
 		/*try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
@@ -69,17 +70,18 @@ public class GimUI extends JFrame {
 			if(e.getSource().equals(logout)) {
 				GimClient.getClient().logout();
 				
-				//todo: close all open windows except main window
+				// TODO should below be moved to ServerConnection, after successful logout?
+				// TODO close all open windows except main window
 				LoginPanel panel = new LoginPanel();
 				panel.setParent(GimClient.getMainWindow());
 				GimClient.getMainWindow().setMainPanel(panel);
 			}
 			else if(e.getSource().equals(quit)) {
-				System.out.println("quit clicked.");
-				System.exit(0);
+				GimClient.getClient().quit();
 			}
 			else if(e.getSource().equals(setOptions)) {
 				System.out.println("setOptions clicked.");
+				// TODO create options panel
 			}
 		}
 	}

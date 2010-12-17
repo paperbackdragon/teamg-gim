@@ -16,6 +16,7 @@ public class LoginPanel extends JPanel{
 	
 	//CONSTRUCTOR
 	public LoginPanel() {
+		// TODO uncomment eventually?
 		/*try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
