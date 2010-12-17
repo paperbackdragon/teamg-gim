@@ -155,6 +155,16 @@ public interface NetworkingIn {
 	 *            the id of the room the users are in
 	 */
 	void users(ArrayList<String> users, String roomid);
+	
+	/** The server has reported that a room is a personal chat
+	 * @roomid
+	 * 		The room that is personal*/
+	void personal(String roomid);
+	
+	/** The server has reported that a room is a group chat
+	 * @roomid
+	 * 		The room that is a group chat*/
+	void group(String roomid);
 
 	// end :ROOM
 

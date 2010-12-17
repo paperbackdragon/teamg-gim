@@ -179,4 +179,16 @@ public class ServerConnection implements NetworkingIn, Runnable {
 	public void users(ArrayList<String> users, String roomid) {
 		
 	}
+
+	@Override
+	public void group(String roomid) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void personal(String roomid) {
+		// TODO Auto-generated method stub
+		
+	}
 }
