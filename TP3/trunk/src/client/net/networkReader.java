@@ -193,8 +193,6 @@ public class networkReader implements Runnable {
 				String roomid = parts[0];
 				
 				ArrayList<String> users = new ArrayList<String>();
-				
-				
 				for (int i = 1; i < parts.length; i++ ) {
 					users.add(parts[i]);
 				}
@@ -209,18 +207,15 @@ public class networkReader implements Runnable {
 				
 				String online = data.split("OFFLINE")[0];
 				online = online.replace("ONLINE","");
-				String[] onlineList = online.split(" ");
+				String[] onlinelist = online.split(" ");
 				
 				String offline = data.split("OFFLINE")[1].split("BLOCKED")[0];
-				String[] offlineList = offline.split(" ");
+				String[] offlinelist = offline.split(" ");
 				 
 				String blocked = data.split("BLOCKED")[1];
-				String[] blockedList = blocked.split(" ");
+				String[] blockedlist = blocked.split(" ");
 				
-				//gui.buddyList
-				
-				
-				//blockedsdf.
+				gui.friendlist(onlinelist, offlinelist, blockedlist);
 				
 				
 			}

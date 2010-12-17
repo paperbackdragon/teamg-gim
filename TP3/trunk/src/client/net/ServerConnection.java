@@ -32,8 +32,8 @@ public class ServerConnection implements NetworkingIn, Runnable {
 		GimClient.getMainWindow().setMainPanel(panel);
 	}
 
-	public void friendlist(ArrayList<String> onlinelist,
-			ArrayList<String> offlinelist, ArrayList<String> blockedlist) {
+	public void friendlist(String[] onlinelist,
+			String[] offlinelist, String[] blockedlist) {
 		
 	}
 

@@ -174,8 +174,8 @@ public interface NetworkingIn {
 	 *            An arraylist of the users who are blocked on the buddy list
 	 * */
 
-	void friendlist(ArrayList<String> onlinelist,
-			ArrayList<String> offlinelist, ArrayList<String> blockedlist);
+	void friendlist(String[] onlinelist,
+			String[] offlinelist, String[] blockedlist);
 
 	// :FRIENDREQUEST: <user> <nickname>;
 
