@@ -96,13 +96,14 @@ public class ClientConnection implements NetworkingOut {
 
 	@Override
 	public void friendlist() {
-		// TODO Auto-generated method stub
+		// :FRIENDLIST:;
+		buffer.putCommand(":FRIENDLIST:;");
 
 	}
 
 	@Override
-	public void groupmessage(String roomid, String message) {
-		// TODO Auto-generated method stub
+	public void message(String roomid, String message) {
+		
 
 	}
 

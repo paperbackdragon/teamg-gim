@@ -249,14 +249,14 @@ public interface NetworkingOut {
 	// :MESSAGE: <roomid> <message>;
 
 	/**
-	 * sends a request to the server to send a message to a group chat
+	 * sends a request to the server to send a message to a chat
 	 * 
 	 * @param roomid
 	 *            the ID of the room
 	 * @param message
 	 *            the message to send to the room
 	 */
-	void groupmessage(String roomid, String message);
+	void message(String roomid, String message);
 
 	// :FRIEND [ ADD | BLOCK | UNBLOCK | ACCEPT | DECLINE | DELETE ]: <target>;
 
