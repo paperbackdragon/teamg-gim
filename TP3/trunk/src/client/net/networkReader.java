@@ -254,29 +254,32 @@ public class networkReader implements Runnable {
 
 				int i = 0;
 				while (i < parts.length) {
-					String currentUserName = parts[i];
 
-					for (int j = 0; j < argumentcount; i++) {
-						if (arguments[j].equalsIgnoreCase("NICKNAME")) {
-							
+					if (arguments[(i % argumentcount)]
+							.equalsIgnoreCase("NICKNAME")) {
 
-						}
-
-						if (arguments[j].equalsIgnoreCase("STATUS")) {
-
-						}
-
-						if (arguments[j].equalsIgnoreCase("PERSONAL_MESSAGE")) {
-
-						}
-
-						if (arguments[j].equalsIgnoreCase("DISPLAY_PIC")) {
-
-						}
-
-						i++;
 					}
 
+					else if (arguments[(i % argumentcount)]
+							.equalsIgnoreCase("STATUS")) {
+
+					}
+
+					else if (arguments[(i % argumentcount)]
+							.equalsIgnoreCase("PERSONAL_MESSAGE")) {
+
+					}
+
+					else if (arguments[(i % argumentcount)]
+							.equalsIgnoreCase("DISPLAY_PIC")) {
+
+					}
+					
+					else { // it's a nickname
+						
+					}
+
+					i++;
 				}
 
 			}
