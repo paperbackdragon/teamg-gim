@@ -120,7 +120,7 @@ public interface NetworkingIn {
 	 * @param user
 	 *            The user that joined
 	 */
-	void joined(String user, String roomid);
+	void joined(String roomid, String user);
 
 	/**
 	 * The server has notified that a person has left one of the group chats

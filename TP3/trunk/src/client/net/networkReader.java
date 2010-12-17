@@ -159,7 +159,12 @@ public class networkReader implements Runnable {
 				gui.created(cmd.getData());
 			}
 			
-			//else if (cmd.getAru)
+			else if (cmd.getArgumentsAsString().equalsIgnoreCase("JOINED")) {
+				String data = cmd.getData();
+				String[] parts = data.split(" ");
+				gui.joined(parts[0], parts[1]);
+
+			}
 			
 		}
 		
