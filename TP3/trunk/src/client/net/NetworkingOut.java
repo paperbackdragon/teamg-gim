@@ -81,8 +81,8 @@ public interface NetworkingOut {
 
 	/**
 	 * sends a request to the server to disconnect the user. If handled
-	 * successfully, the connection will be terminated from the server.
-	 * This can be performed before log in.
+	 * successfully, the connection will be terminated from the server. This can
+	 * be performed before log in.
 	 */
 	void quit();
 
@@ -182,13 +182,17 @@ public interface NetworkingOut {
 	/** Sends a request to the server to return the user's friend list */
 	void friendlist();
 
-	// :ROOM [ CREATE {GROUP} | INVITE | JOIN | LEAVE | USERS ]: {<roomid> | <user>};
+	// :ROOM [ CREATE {GROUP} | INVITE | JOIN | LEAVE | USERS ]: {<roomid> |
+	// <user>};
 
-	/** Sends a request to the server to create an IM session with a user
+	/**
+	 * Sends a request to the server to create an IM session with a user
+	 * 
 	 * @param user
-	 * 		The person to create the IM session with */
+	 *            The person to create the IM session with
+	 */
 	void createSingleChat(String user);
-	
+
 	/**
 	 * Sends a request to the server to create a new group chat
 	 * 
@@ -230,6 +234,15 @@ public interface NetworkingOut {
 	 *            the id of the room to get the list of users from
 	 */
 	void roomusers(String roomid);
+
+	/**
+	 * Check if a room is a personal chat, or a group chat
+	 * 
+	 * @param roomid
+	 *            The room to check whether it is a personal chat or a group
+	 *            chat of (brilliant english there, gordon)
+	 */
+	void type(String roomid);
 
 	// :ROOM ends
 

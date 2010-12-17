@@ -263,4 +263,10 @@ public class ClientConnection implements NetworkingOut {
 		
 	}
 
+	@Override
+	public void type(String roomid) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
