@@ -86,14 +86,21 @@ public class LoginPanel extends JPanel{
 	}
 	
 	private void login() {
-		GimClient.getClient().authenticate(email.getText(), pwd.getPassword());
+		System.out.println("Login pressed");
+		
+		//UNCOMMENT WHEN DONE
+		//GimClient.getClient().authenticate(email.getText(), pwd.getPassword());
+		
+		//DELETE WHEN DONE
+		ContactPanel panel = new ContactPanel();
+		panel.setParent(GimClient.getMainWindow());
+		GimClient.getMainWindow().setMainPanel(panel);
 	}
 	
 	//ACTION LISTENERS
 	class LoginListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource().equals(loginButton)) {
-				System.out.println("Login pressed");
 				login();
 			}
 			else if (e.getSource().equals(register)) {
@@ -112,7 +119,6 @@ public class LoginPanel extends JPanel{
 	class EnterListener implements KeyListener{
 		public void keyTyped(KeyEvent e) {
 			if(e.getKeyChar() == KeyEvent.VK_ENTER) {
-				System.out.println("Login pressed");
 				login();
 			}
 		}
