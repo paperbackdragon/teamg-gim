@@ -21,7 +21,7 @@ public class networkReader implements Runnable {
 	public void run() {
 		String command = null, args = null, data = "", line = "";
 		String[] parts, cmdParts, dataParts;
-		
+
 		while (true) {
 
 			try {
@@ -31,11 +31,11 @@ public class networkReader implements Runnable {
 			}
 
 			if (line == null) {
-				System.out.println("Connection to server lost.");
-				// QUIT (send method to blah)
+				System.out.println("Client closed connection.");
+				//commandBuffer.putCommand(new Command("QUIT"));
 				break;
 			}
-			
+
 			if (command == null) {
 				parts = line.split(":");
 
@@ -75,11 +75,11 @@ public class networkReader implements Runnable {
 					data += dataParts[0];
 					
 					// Create the command and out in in the buffer
-					// Command cmd = new Command(command, args, data.trim());
-					// commandBuffer.putCommand(cmd);
+					Command cmd = new Command(command, args, data.trim());
+					//commandBuffer.putCommand(cmd);
 
 					// Remove or comment out if not debugging
-					//System.out.println(cmd);
+					System.out.println(cmd);
 
 					// Reset variables for the next command
 					command = null;
@@ -92,8 +92,6 @@ public class networkReader implements Runnable {
 		
 		// TODO: Clean up
 		System.out.println("CommandReader stopped.");
-
-		
 		
 	}
 
