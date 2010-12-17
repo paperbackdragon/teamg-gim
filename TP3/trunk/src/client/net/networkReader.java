@@ -102,7 +102,12 @@ public class networkReader implements Runnable {
 
 	private void performCommand(Command cmd) {
 		
-		if (cmd.getCommand().equalsIgnoreCase("SERVERSTATUS")) {
+		if (cmd.getCommand().equals("OKAY")) {
+			gui.okay();
+		}
+		
+		
+		else if (cmd.getCommand().equalsIgnoreCase("SERVERSTATUS")) {
 			
 			if (cmd.getArumentsAsString().equalsIgnoreCase("USERS")) {
 				gui.usercount(cmd.getData());
@@ -119,10 +124,14 @@ public class networkReader implements Runnable {
 			
 		}
 		
+
+		else if (cmd.getCommand().equals("KILL")) {
+			gui.kill(cmd.getData());
+		}
 		
-		
-		else if (cmd.getCommand().equals("OKAY")) {
-			gui.okay();
+		else if (cmd.getCommand().equals("BROADCAST")) {
+			gui.broadcast(cmd.getData());
+			
 		}
 		
 		else if (cmd.getCommand().equals("AUTH")) {
@@ -135,6 +144,12 @@ public class networkReader implements Runnable {
 			}
 			
 		}
+		
+		// post login
+		
+		
+		
+		
 		
 		
 		
