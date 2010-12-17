@@ -150,7 +150,16 @@ public class networkReader implements Runnable {
 		else if (cmd.getCommand().equals("MESSAGE")) {
 			String data = cmd.getData();
 			String[] parts = data.split(" ");
-			gui.message(parts[0], parts[1], parts[2]);
+			
+			String roomid = parts[0];
+			String sender = parts[1];
+			
+			String message = "";
+			for (int i = 2; i < parts.length; i++ ) {
+				message += parts[i];
+			}
+			gui.message(roomid, sender, message);
+			
 		}
 		
 		else if (cmd.getCommand().equals("ROOM")) {
@@ -163,6 +172,25 @@ public class networkReader implements Runnable {
 				String data = cmd.getData();
 				String[] parts = data.split(" ");
 				gui.joined(parts[1], parts[0]);
+			}
+			
+			else if (cmd.getArgumentsAsString().equalsIgnoreCase("LEFT")) {
+				String data = cmd.getData();
+				String[] parts = data.split(" ");
+				gui.left(parts[1], parts[0]);
+			}
+			
+			else if (cmd.getArgumentsAsString().equalsIgnoreCase("INVITED")) {
+				String data = cmd.getData();
+				String[] parts = data.split(" ");
+				gui.invited(parts[1], parts[0]);
+			}
+			
+			else if (cmd.getArgumentsAsString().equalsIgnoreCase("USERS")) {
+				String data = cmd.getData();
+				String[] parts = data.split(" ");
+				
+				
 			}
 			
 			
