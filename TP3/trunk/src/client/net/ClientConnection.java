@@ -19,6 +19,12 @@ public class ClientConnection implements NetworkingOut {
 	private networkReader reader;
 	private networkWriter writer;
 	private CommandBuffer buffer;
+	private networkController controller;
+	
+	private Thread readerthread;
+	private Thread writerthread;
+	private Thread controllerthread;
+	private ServerConnection gui;
 
 	/**
 	 * Creates a connection to the server
@@ -27,10 +33,10 @@ public class ClientConnection implements NetworkingOut {
 	 *            the class that methods are called from when a command is
 	 *            received from the server
 	 */
-	public ClientConnection(ServerConnection incoming) {
+	public ClientConnection(ServerConnection gui) {
+			this.gui = gui;
 		
 			// initiate connection to server
-
 			try {
 				serverConnection = new Socket("127.0.0.1", 4444);
 			} catch (UnknownHostException e) {
@@ -38,25 +44,28 @@ public class ClientConnection implements NetworkingOut {
 				// tell the GUI
 				
 			} catch (IOException e) {
-				// uhm... handle this somehow
+				System.out.println("uhm... handle this somehow... what is it anyway");
 			}
 		
 			
-			// make a buffered reader
-			
+			// make a buffered reader and print writer
 			try {
 				bufferedreader = new BufferedReader(new InputStreamReader(serverConnection.getInputStream()));
 				printwriter = new PrintWriter(serverConnection.getOutputStream(), true);
 			} catch (IOException e) {
 				System.out.println("aye... what the hell do we do if this happens :|.");
 			}
-			
-			
-			// make a print writer
 		
+			// get the reader and writer, and buffer on the go... ;x
 			this.buffer = new CommandBuffer();
 			this.reader = new networkReader(bufferedreader, buffer);
 			this.writer = new networkWriter(printwriter, buffer);
+			this.controller = new networkController(buffer, gui);
+			
+			this.readerthread = new Thread(reader);
+			this.writerthread = new Thread(writer);
+			this.controllerthread = new Thread(controller);
+			
 	}
 
 	@Override
