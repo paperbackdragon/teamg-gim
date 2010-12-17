@@ -27,7 +27,7 @@ public class ClientConnection implements NetworkingOut {
 	private ServerConnection gui;
 
 	/**
-	 * Creates a connection to the server
+	 * Creates a connection to the server. Allows the GUI to perform action on server. 
 	 * 
 	 * @param incoming
 	 *            the class that methods are called from when a command is
