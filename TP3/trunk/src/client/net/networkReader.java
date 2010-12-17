@@ -247,6 +247,11 @@ public class networkReader implements Runnable {
 			
 			else if (cmd.getCommand().equalsIgnoreCase("INFO")) {
 				
+				String[] arguments = cmd.getArguments();
+				int argumentcount = arguments.length;
+				
+				String data = cmd.getData();
+				String[] parts = data.split(" ");
 				
 				
 				
