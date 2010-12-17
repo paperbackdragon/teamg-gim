@@ -109,16 +109,16 @@ public class networkReader implements Runnable {
 		
 		else if (cmd.getCommand().equalsIgnoreCase("SERVERSTATUS")) {
 			
-			if (cmd.getArumentsAsString().equalsIgnoreCase("USERS")) {
+			if (cmd.getArgumentsAsString().equalsIgnoreCase("USERS")) {
 				gui.usercount(cmd.getData());
 				
 			}
 			
-			else if (cmd.getArumentsAsString().equalsIgnoreCase("TIME")) {
+			else if (cmd.getArgumentsAsString().equalsIgnoreCase("TIME")) {
 				gui.servertime(cmd.getData());
 			}
 			
-			else if (cmd.getArumentsAsString().equalsIgnoreCase("UPTIME")) {
+			else if (cmd.getArgumentsAsString().equalsIgnoreCase("UPTIME")) {
 				gui.servertime(cmd.getData());
 			}
 			
@@ -136,10 +136,10 @@ public class networkReader implements Runnable {
 		
 		else if (cmd.getCommand().equals("AUTH")) {
 			
-			if (cmd.getArumentsAsString().equalsIgnoreCase("LOGGEDIN")) {
+			if (cmd.getArgumentsAsString().equalsIgnoreCase("LOGGEDIN")) {
 				gui.authorised();
 			}
-			else if (cmd.getArumentsAsString().equalsIgnoreCase("UNAUTHORIZED")) {
+			else if (cmd.getArgumentsAsString().equalsIgnoreCase("UNAUTHORIZED")) {
 				gui.unauthorised();
 			}
 			
@@ -153,7 +153,15 @@ public class networkReader implements Runnable {
 			gui.message(parts[0], parts[1], parts[2]);
 		}
 		
-		
+		else if (cmd.getCommand().equals("ROOM")) {
+			
+			if (cmd.getArgumentsAsString().equalsIgnoreCase("CREATED")) {
+				gui.created(cmd.getData());
+			}
+			
+			//else if (cmd.getAru)
+			
+		}
 		
 		
 		

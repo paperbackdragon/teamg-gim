@@ -131,7 +131,7 @@ public class Command {
 	 * 
 	 * @return A string of space separated arguments
 	 */
-	public String getArumentsAsString() {
+	public String getArgumentsAsString() {
 		String args = "";
 		for (int i = 0; i < arguments.length; i++) {
 			args += arguments[i];
