@@ -104,10 +104,12 @@ public class networkReader implements Runnable {
 		
 		if (cmd.getCommand().equals("SERVERSTATUS")) {
 			
+			if (cmd.getArguments().equals("USERS")) {
+				
+				
+			}
 			
 		}
-		
-
 		
 		else if (cmd.getCommand().equals("OKAY")) {
 			gui.okay();
@@ -123,6 +125,8 @@ public class networkReader implements Runnable {
 			}
 			
 		}
+		
+		
 		
 	}
 

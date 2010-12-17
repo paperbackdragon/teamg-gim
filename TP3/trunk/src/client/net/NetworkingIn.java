@@ -16,13 +16,13 @@ public interface NetworkingIn {
 
 	// :SERVERSTATUS { USERS | TIME | UPTIME }:;
 
-	/**
+/*	*//**
 	 * The server has sent information about the global status of the server
 	 * 
 	 * @param status
 	 *            The string with global information
-	 */
-	void status(String status);
+	 *//*
+	void status(String status);*/
 
 	/**
 	 * The server has sent information about the server's time

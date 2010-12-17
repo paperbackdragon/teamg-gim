@@ -123,11 +123,13 @@ public class ServerConnection implements NetworkingIn {
 		
 	}
 
-	@Override
+	
+	// don't think this one will exist... will need to ask james!
+/*	@Override
 	public void status(String status) {
 		// TODO Auto-generated method stub
 		
-	}
+	}*/
 
 	@Override
 	public void tooManyArgumentsError(String message) {
