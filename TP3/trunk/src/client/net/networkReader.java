@@ -202,7 +202,7 @@ public class networkReader implements Runnable {
 				String data = cmd.getData();
 
 				// fix case issues later
-				
+
 				String online = data.split("OFFLINE")[0];
 				online = online.replace("ONLINE", "");
 				String[] onlinelist = online.split(" ");
@@ -254,51 +254,50 @@ public class networkReader implements Runnable {
 
 				int i = 0;
 				int count = 0;
-				
+
 				String currentusername = parts[0];
 				while (i < parts.length) {
 
 					if (count != 0) {
-						
-						if (arguments[count]
-										.equalsIgnoreCase("NICKNAME")) {
-							
+
+						if (arguments[count].equalsIgnoreCase("NICKNAME")) {
+
 							gui.updateNickname(parts[i], currentusername);
-							
-								}
 
-								else if (arguments[count]
-										.equalsIgnoreCase("STATUS")) {
-									gui.updateStatus(parts[i], currentusername);
-									
+						}
 
-								}
+						else if (arguments[count].equalsIgnoreCase("STATUS")) {
+							gui.updateStatus(parts[i], currentusername);
 
-								else if (arguments[count]
-										.equalsIgnoreCase("PERSONAL_MESSAGE")) {
-									gui.updatePersonalMessage(parts[i], currentusername);
+						}
 
-								}
+						else if (arguments[count]
+								.equalsIgnoreCase("PERSONAL_MESSAGE")) {
+							gui
+									.updatePersonalMessage(parts[i],
+											currentusername);
 
-								else if (arguments[count]
-										.equalsIgnoreCase("DISPLAY_PIC")) {
-									gui.updateDisplayPicture(parts[i], currentusername);
-								}
-						
+						}
+
+						else if (arguments[count]
+								.equalsIgnoreCase("DISPLAY_PIC")) {
+							gui.updateDisplayPicture(parts[i], currentusername);
+						}
+
 					}
-					
+
 					else { // it's a username
 						currentusername = parts[i];
 					}
 
 					i++;
-					
+
 					if (count == (argumentcount + 1)) {
 						count = 0;
 					} else {
 						count++;
 					}
-					
+
 				}
 
 			}
@@ -306,6 +305,48 @@ public class networkReader implements Runnable {
 			// ERRORS
 
 			else if (cmd.getCommand().equals("ERROR")) {
+
+				if (cmd.getArgumentsAsString().equalsIgnoreCase("UNAUTHORISED")) {
+					gui.unauthorisedError(cmd.getData());
+
+				}
+
+				if (cmd.getArgumentsAsString().equalsIgnoreCase("INVALID_EMAIL")) {
+					gui.invalidEmailError(cmd.getData());
+				}
+
+				if (cmd.getArgumentsAsString().equalsIgnoreCase("EMAIL_ALREADY_IN_USE")) {
+					gui.emailInuseError(cmd.getData());
+				}
+
+				if (cmd.getArgumentsAsString().equalsIgnoreCase("PASSWORD_TOO_SHORT")) {
+					gui.passwordTooShortError(cmd.getData());
+				}
+
+				if (cmd.getArgumentsAsString().equalsIgnoreCase("MISSING_ARGUMENTS")) {
+					gui.missingArgumentsError(cmd.getData());
+				}
+
+				if (cmd.getArgumentsAsString().equalsIgnoreCase("TOO_MANY_ARGUMENTS")) {
+					gui.tooManyArgumentsError(cmd.getData());
+				}
+
+				if (cmd.getArgumentsAsString().equalsIgnoreCase("INVALID_ARGUMENT")) {
+					gui.invalidArgumentError(cmd.getData());
+
+				}
+
+				if (cmd.getArgumentsAsString().equalsIgnoreCase("LOGGED_IN_FROM_OTHER_LOCATION")) {
+					gui.loggedInFromAnotherLocationError(cmd.getData());
+				}
+				
+				if (cmd.getArgumentsAsString().equalsIgnoreCase("USER_DOES_NOT_EXIST")) {
+					gui.userDoesNotExistError(cmd.getData());
+				}
+				
+				if (cmd.getArgumentsAsString().equalsIgnoreCase("LOGIN_DETAILS_INCORRECT")) {
+					gui.logInDetailsIncorrectError(cmd.getData());
+				}
 				
 				
 
