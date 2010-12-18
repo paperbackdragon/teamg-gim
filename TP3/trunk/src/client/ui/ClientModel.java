@@ -1,6 +1,8 @@
 package client.ui;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+
 import client.net.ClientConnection;
 
 public class ClientModel {
@@ -18,7 +20,14 @@ public class ClientModel {
 	//private ArrayList<String> friendList = new ArrayList<String>();
 	//private ArrayList<String> inFreindList = new ArrayList<String>();
 	//private ArrayList<String> blockedUsers = new ArrayList<String>();
+	private LinkedList<String[]> newRoomList = new LinkedList<String[]>();
 	
+	//ACCESSORS
+	public LinkedList<String[]> getRoomList() {
+		return newRoomList;
+	}
+	
+	//MESSAGES TO SERVER
 	public void authenticate(String email, char[] pwd) {
 		link.authenticate(email, pwd);
 	}
@@ -37,7 +46,15 @@ public class ClientModel {
 		System.exit(0);
 	}
 	
-	public void createRoom(Boolean publicchat) {
-		link.createGroupChat(publicchat);
+	public void createRoom(Boolean group, String[] contacts) {
+		newRoomList.add(contacts);
+		if(group)
+			link.createGroupChat();
+		else
+			link.createSingleChat(null);// TODO make this not null
+	}
+	
+	public void invite(String roomid, String user) {
+		link.invite(roomid, user);
 	}
 }

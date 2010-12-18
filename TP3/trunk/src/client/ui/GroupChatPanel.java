@@ -10,21 +10,26 @@ import client.ui.ChatPanel.EnterListener;
 import client.ui.ChatPanel.SendListener;
 import client.ui.ChatPanel.ContactInfo.TextField;
 
-@SuppressWarnings("unused")
+@SuppressWarnings("serial")
 public class GroupChatPanel extends JPanel {
+	private String id;
 	private JTextArea messages, chatBox, guests;
 	private JButton invite, send;
 	
 	//CONSTRUCTOR
-	public GroupChatPanel() {
-		try {
+	public GroupChatPanel(String roomID) {
+		// TODO uncomment eventually?
+		/*try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
 			System.out.println("Something went wrong!");
 			System.exit(0);
-		}
+		}*/
+		
+		id = roomID;
 		
 		setLayout(new BorderLayout());
+		
 		messages = new JTextArea();
 		messages.setEditable(false);
 		messages.setLineWrap(true);
@@ -109,7 +114,7 @@ public class GroupChatPanel extends JPanel {
 			else {
 				messages.append("\n" + "me: " + chatBox.getText());
 			}
-	}
+		}
 	}
 	
 	//ACTION LISTENERS

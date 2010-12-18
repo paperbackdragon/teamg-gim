@@ -152,12 +152,14 @@ public class ContactPanel extends JPanel {
 				});
 			}
 			else if(e.getSource().equals(chat)) {
+				String[] contacts = null;
 				//String node = contactTree.getLastSelectedPathComponent().toString(); Trying to get selected node name
-				GimClient.getClient().createRoom(false);
+				GimClient.getClient().createRoom(false, contacts);
 			}
 			else if(e.getSource().equals(group)) {
+				String[] contacts = null;
 				//String node = contactTree.getLastSelectedPathComponent().toString(); Trying to get selected node name
-				GimClient.getClient().createRoom(false);
+				GimClient.getClient().createRoom(true, contacts);
 			}
 		}
 	}
