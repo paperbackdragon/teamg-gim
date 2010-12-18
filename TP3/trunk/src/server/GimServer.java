@@ -31,6 +31,7 @@ public class GimServer {
 			System.err.println("Could not listen on port: 4444.");
 			System.exit(1);
 		}
+		
 
 		// TODO: A thread to check for clients to timeout
 

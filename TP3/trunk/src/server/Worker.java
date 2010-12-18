@@ -21,6 +21,7 @@ import util.ResponseWriter;
 public class Worker implements Runnable {
 
 	private CommandBuffer<Command> commandBuffer;
+	private CommandBuffer<Command> responseBuffer;
 	private Socket socket = null;
 	private BufferedReader in;
 	private PrintWriter out;
@@ -78,7 +79,7 @@ public class Worker implements Runnable {
 	 *            The command to put in the response buffer
 	 */
 	public void putResponse(Command cmd) {
-		this.commandBuffer.putResponse(cmd);
+		this.responseBuffer.putCommand(cmd);
 	}
 
 	/**
@@ -168,7 +169,7 @@ public class Worker implements Runnable {
 	 * </p>
 	 */
 	private void kill() {
-		this.commandBuffer.putResponse(new Command("KILL"));
+		this.responseBuffer.putCommand(new Command("KILL"));
 
 		try {
 			responseWriterThread.join();
@@ -810,7 +811,7 @@ public class Worker implements Runnable {
 				Command cmd = commandBuffer.getCommand();
 				Command rsp = processCommand(cmd);
 				if (rsp != null) {
-					commandBuffer.putResponse(rsp);
+					this.responseBuffer.putCommand(rsp);
 				}
 			}
 

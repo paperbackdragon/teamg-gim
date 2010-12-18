@@ -88,7 +88,7 @@ public class CommandReader implements Runnable {
 					// End of a command
 					data += dataParts[0];
 					
-					// Create the command and out in in the buffer
+					// Create the command and put it in the buffer
 					Command cmd = new Command(command, args, data.trim());
 					commandBuffer.putCommand(cmd);
 

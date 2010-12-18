@@ -12,11 +12,11 @@ import util.Command.COMMANDS;
 public class ResponseWriter implements Runnable {
 
 	private PrintWriter out;
-	private CommandBuffer<Command> cmdBuffer;
+	private CommandBuffer<Command> responseBuffer;
 
 	public ResponseWriter(PrintWriter out, CommandBuffer<Command> cmdBuffer) {
 		this.out = out;
-		this.cmdBuffer = cmdBuffer;
+		this.responseBuffer = cmdBuffer;
 	}
 
 	public void run() {
@@ -24,7 +24,7 @@ public class ResponseWriter implements Runnable {
 
 			// Send out any responses in the buffer
 			while (true) {
-				Command response = cmdBuffer.getResponse();
+				Command response = responseBuffer.getCommand();
 				out.println(response.toString());
 				
 				System.out.println(response.toString());
