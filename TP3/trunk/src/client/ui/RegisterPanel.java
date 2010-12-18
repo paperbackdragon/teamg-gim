@@ -78,7 +78,7 @@ public class RegisterPanel extends JPanel {
 	
 	public void setParent(JFrame frame) {
 		parent = (GimUI) frame;
-		parent.disableLogout();
+		parent.canLogout(false);
 	}
 	
 	//ACTION LISTENERS

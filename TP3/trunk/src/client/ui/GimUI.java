@@ -65,8 +65,8 @@ public class GimUI extends JFrame {
 		pack();
 	}
 	
-	public void disableLogout() {
-		logout.setEnabled(false);
+	public void canLogout(Boolean bool) {
+		logout.setEnabled(bool);
 	}
 	
 	//ACTION LISTENERS

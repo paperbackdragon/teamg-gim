@@ -18,6 +18,7 @@ public class ServerConnection implements NetworkingIn, Runnable {
 		ContactPanel panel = new ContactPanel();
 		panel.setParent(GimClient.getMainWindow());
 		GimClient.getMainWindow().setMainPanel(panel);
+		GimClient.getMainWindow().canLogout(true);
 	}
 
 	public void broadcast(String message) {

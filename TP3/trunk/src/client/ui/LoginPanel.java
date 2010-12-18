@@ -84,16 +84,11 @@ public class LoginPanel extends JPanel{
 	
 	public void setParent(JFrame frame) {
 		parent = (GimUI) frame;
-		parent.disableLogout();
+		parent.canLogout(false);
 	}
 	
 	private void login() {
 		GimClient.getClient().authenticate(email.getText(), pwd.getPassword());
-		
-		//!!DELETE BELOW WHEN LOGIN FEATURE WORKS!!
-			ContactPanel panel = new ContactPanel();
-			panel.setParent(GimClient.getMainWindow());
-			GimClient.getMainWindow().setMainPanel(panel);
 	}
 	
 	//ACTION LISTENERS
