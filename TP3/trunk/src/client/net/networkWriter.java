@@ -15,6 +15,7 @@ public class networkWriter implements Runnable {
 
 	private CommandBuffer buffer;
 	private PrintWriter writer;
+	
 
 	public networkWriter(PrintWriter writer, CommandBuffer buffer) {
 

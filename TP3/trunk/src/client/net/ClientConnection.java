@@ -69,6 +69,21 @@ public class ClientConnection implements NetworkingOut {
 		
 		readerthread.start();
 		writerthread.start();
+		
+		
+		// heart beat
+		// NO IDEA IF THIS IS SENSIBLE, OR EVEN THE WAY TO DO IT
+		while (true) {
+			try {
+				Thread.currentThread();
+				Thread.sleep(12000);
+				ping();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				System.out.println("Oh noes!");
+			}
+		}
 
 	}
 
