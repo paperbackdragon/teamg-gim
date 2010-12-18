@@ -18,7 +18,7 @@ public class ClientConnection implements NetworkingOut {
 
 	private networkReader reader;
 	private networkWriter writer;
-	private CommandBuffer buffer;
+	private CommandBuffer<String> buffer;
 
 	private Thread readerthread;
 	private Thread writerthread;
@@ -80,7 +80,6 @@ public class ClientConnection implements NetworkingOut {
 				ping();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
 				System.out.println("Oh noes!");
 			}
 		}
