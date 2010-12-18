@@ -801,7 +801,7 @@ public class Worker implements Runnable {
 		commandReaderThread.start();
 
 		// Create a thread to print out responses
-		this.responseWriter = new ResponseWriter(out, commandBuffer);
+		this.responseWriter = new ResponseWriter(out, responseBuffer);
 		responseWriterThread = new Thread(this.responseWriter);
 		responseWriterThread.start();
 
