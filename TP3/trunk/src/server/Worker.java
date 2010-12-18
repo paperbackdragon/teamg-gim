@@ -40,6 +40,7 @@ public class Worker implements Runnable {
 	public Worker(Socket socket) {
 		this.socket = socket;
 		this.commandBuffer = new CommandBuffer<Command>();
+		this.responseBuffer = new CommandBuffer<Command>();
 		this.lastCommunication = System.currentTimeMillis();
 		this.loggedInUser = null;
 	}
@@ -513,12 +514,12 @@ public class Worker implements Runnable {
 		if (arg.equalsIgnoreCase("CREATE")) {
 
 			// Do they want a public room?
-			boolean pub = false;
-			if (cmd.getArguments().length == 2 && cmd.getArguments()[1].equalsIgnoreCase("PUBLIC"))
-				pub = true;
+			boolean group = false;
+			if (cmd.getArguments().length == 2 && cmd.getArguments()[1].equalsIgnoreCase("GROUP"))
+				group = true;
 
 			// Create the new room
-			Room room = new Room(this.loggedInUser, pub);
+			Room room = new Room(this.loggedInUser, group);
 			data.addRoom(room);
 
 			return new Command("ROOM", "CREATED", room.getId() + "");
