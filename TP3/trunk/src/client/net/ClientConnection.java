@@ -60,12 +60,15 @@ public class ClientConnection implements NetworkingOut {
 		}
 
 		// get the reader and writer, and buffer on the go... ;x
-		this.buffer = new CommandBuffer();
+		this.buffer = new CommandBuffer<String>();
 		this.reader = new networkReader(bufferedreader, gui);
 		this.writer = new networkWriter(printwriter, buffer);
 
 		this.readerthread = new Thread(reader);
 		this.writerthread = new Thread(writer);
+		
+		readerthread.start();
+		writerthread.start();
 
 	}
 
