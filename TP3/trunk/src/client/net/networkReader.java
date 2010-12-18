@@ -110,26 +110,26 @@ public class networkReader implements Runnable {
 		else if (cmd.getCommand().equalsIgnoreCase("SERVERSTATUS")) {
 
 			if (cmd.getArgumentsAsString().equalsIgnoreCase("USERS")) {
-				gui.usercount(cmd.getData());
+				gui.usercount(Command.decode(cmd.getData()));
 
 			}
 
 			else if (cmd.getArgumentsAsString().equalsIgnoreCase("TIME")) {
-				gui.servertime(cmd.getData());
+				gui.servertime(Command.decode(cmd.getData()));
 			}
 
 			else if (cmd.getArgumentsAsString().equalsIgnoreCase("UPTIME")) {
-				gui.servertime(cmd.getData());
+				gui.servertime(Command.decode(cmd.getData()));
 			}
 
 		}
 
 		else if (cmd.getCommand().equals("KILL")) {
-			gui.kill(cmd.getData());
+			gui.kill(Command.decode(cmd.getData()));
 		}
 
 		else if (cmd.getCommand().equals("BROADCAST")) {
-			gui.broadcast(cmd.getData());
+			gui.broadcast(Command.decode(cmd.getData()));
 
 		}
 
@@ -154,10 +154,11 @@ public class networkReader implements Runnable {
 			String sender = parts[1];
 
 			String message = "";
+			
 			for (int i = 2; i < parts.length; i++) {
 				message += parts[i] + " ";
 			}
-			gui.message(roomid, sender, message);
+			gui.message(Command.decode(roomid), Command.decode(sender), Command.decode(message));
 		}
 
 		else if (cmd.getCommand().equals("ROOM")) {
