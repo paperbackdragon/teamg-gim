@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 import util.CommandBuffer;
 
-public class ClientConnection implements NetworkingOut {
+public class ClientConnection implements NetworkingOut, Runnable {
 
 	private Socket serverConnection;
 	private BufferedReader bufferedreader;
@@ -24,6 +24,7 @@ public class ClientConnection implements NetworkingOut {
 	private Thread writerthread;
 	private Thread controllerthread;
 	private ServerConnection gui;
+	private Thread thread;
 
 	/**
 	 * Creates a connection to the server. Allows the GUI to perform action on
@@ -70,9 +71,14 @@ public class ClientConnection implements NetworkingOut {
 		readerthread.start();
 		writerthread.start();
 		
-		
+		this.thread = new Thread(this);
+		thread.start();
+	}
+	
+	public void run() {
 		// heart beat
 		// NO IDEA IF THIS IS SENSIBLE, OR EVEN THE WAY TO DO IT
+		
 		while (true) {
 			try {
 				Thread.currentThread();
@@ -83,7 +89,7 @@ public class ClientConnection implements NetworkingOut {
 				System.out.println("Oh noes!");
 			}
 		}
-
+		
 	}
 
 	@Override
