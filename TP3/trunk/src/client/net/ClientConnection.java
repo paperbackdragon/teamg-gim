@@ -111,80 +111,91 @@ public class ClientConnection implements NetworkingOut {
 
 	@Override
 	public void logout() {
-		// TODO Auto-generated method stub
-
+		// :LOGOUT:;
+		buffer.putCommand(":LOGOUT:;");
 	}
 
 	@Override
 	public void serverTime() {
-		// TODO Auto-generated method stub
-
+		// :SERVERSTATUS { USERS | TIME | UPTIME }:;
+		buffer.putCommand(":SERVERSTATUS TIME:;");
 	}
 
 	@Override
 	public void serverUptime() {
-		// TODO Auto-generated method stub
+		// :SERVERSTATUS { USERS | TIME | UPTIME }:;
+		buffer.putCommand(":SERVERSTATUS UPTIME:;");
 
 	}
 
 	@Override
 	public void servernumberofusers() {
-		// TODO Auto-generated method stub
-
+		// :SERVERSTATUS { USERS | TIME | UPTIME }:;
+		buffer.putCommand(":SERVERSTATUS USERS:;");
 	}
 
 	@Override
 	public void serverstatus() {
-		// TODO Auto-generated method stub
-
+		// :SERVERSTATUS { USERS | TIME | UPTIME }:;
+		buffer.putCommand(":SERVERSTATUS:;");
 	}
 
 	@Override
 	public void setDisplayPicture(String displayPicture) {
-		// TODO Auto-generated method stub
-
+		// :SET [ NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC ]: <value>;
+		buffer.putCommand(":SET DISPLAY_PIC: " + displayPicture + ";");
 	}
 
 	@Override
 	public void setNickname(String nickname) {
-		// TODO Auto-generated method stub
+		// :SET [ NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC ]: <value>;
+		buffer.putCommand(":SET NICKNAME: " + nickname + ";");
 
 	}
 
 	@Override
 	public void setPersonalMessage(String personalmessage) {
-		// TODO Auto-generated method stub
+		// :SET [ NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC ]: <value>;
+		buffer.putCommand(":SET PERSONAL_MESSAGE: " + personalmessage + ";");
 
 	}
 
 	@Override
 	public void setStatus(String status) {
-		// TODO Auto-generated method stub
+		// :SET [ NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC ]: <value>;
+		buffer.putCommand(":SET STATUS: " + status + ";");
 
 	}
 
 	@Override
 	public void getDisplayPicture(String userList) {
-		// TODO Auto-generated method stub
+		// :GET { NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC }:
+		// <user>{,<user>};
+		buffer.putCommand(":GET DISPLAY_PIC: " + userList + ";");
 
 	}
 
 	@Override
 	public void getNickname(String userList) {
-		// TODO Auto-generated method stub
+		// :GET { NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC }:
+		// <user>{,<user>};
+		buffer.putCommand(":GET NICKNAME: " + userList + ";");
 
 	}
 
 	@Override
 	public void getPersonalMessage(String userList) {
-		// TODO Auto-generated method stub
+		// :GET { NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC }:
+		// <user>{,<user>};
+		buffer.putCommand(":GET PERSONAL_MESSAGE: " + userList + ";");
 
 	}
 
 	@Override
 	public void getStatus(String userList) {
-		// TODO Auto-generated method stub
-
+		// :GET { NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC }:
+		// <user>{,<user>};
+		buffer.putCommand(":GET STATUS: " + userList + ";");
 	}
 
 	@Override
