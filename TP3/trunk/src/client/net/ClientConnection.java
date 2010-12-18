@@ -172,7 +172,8 @@ public class ClientConnection implements NetworkingOut, Runnable {
 	@Override
 	public void setDisplayPicture(String displayPicture) {
 		// :SET [ NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC ]: <value>;
-		buffer.putCommand(":SET DISPLAY_PIC: " + Command.encode(displayPicture) + ";");
+		buffer.putCommand(":SET DISPLAY_PIC: " + Command.encode(displayPicture)
+				+ ";");
 	}
 
 	@Override
@@ -185,7 +186,8 @@ public class ClientConnection implements NetworkingOut, Runnable {
 	@Override
 	public void setPersonalMessage(String personalmessage) {
 		// :SET [ NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC ]: <value>;
-		buffer.putCommand(":SET PERSONAL_MESSAGE: " + Command.encode(personalmessage) + ";");
+		buffer.putCommand(":SET PERSONAL_MESSAGE: "
+				+ Command.encode(personalmessage) + ";");
 
 	}
 
@@ -202,8 +204,8 @@ public class ClientConnection implements NetworkingOut, Runnable {
 		// <user>{ <user>};
 		String[] data = userList.split(" ");
 		String userListString = "";
-		
-		for (int i = 0; i < data.length; i ++) {
+
+		for (int i = 0; i < data.length; i++) {
 			Command.encode(data[i]);
 			userListString += data[i] + " ";
 		}
@@ -214,7 +216,15 @@ public class ClientConnection implements NetworkingOut, Runnable {
 	public void getNickname(String userList) {
 		// :GET { NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC }:
 		// <user>{ <user>};
-		buffer.putCommand(":GET NICKNAME: " + userList + ";");
+
+		String[] data = userList.split(" ");
+		String userListString = "";
+
+		for (int i = 0; i < data.length; i++) {
+			Command.encode(data[i]);
+			userListString += data[i] + " ";
+		}
+		buffer.putCommand(":GET NICKNAME: " + userListString + ";");
 
 	}
 
@@ -222,7 +232,15 @@ public class ClientConnection implements NetworkingOut, Runnable {
 	public void getPersonalMessage(String userList) {
 		// :GET { NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC }:
 		// <user>{ <user>};
-		buffer.putCommand(":GET PERSONAL_MESSAGE: " + userList + ";");
+		String[] data = userList.split(" ");
+		String userListString = "";
+
+		for (int i = 0; i < data.length; i++) {
+			Command.encode(data[i]);
+			userListString += data[i] + " ";
+		}
+
+		buffer.putCommand(":GET PERSONAL_MESSAGE: " + userListString + ";");
 
 	}
 
@@ -230,77 +248,86 @@ public class ClientConnection implements NetworkingOut, Runnable {
 	public void getStatus(String userList) {
 		// :GET { NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC }:
 		// <user>{ <user>};
-		buffer.putCommand(":GET STATUS: " + userList + ";");
+		String[] data = userList.split(" ");
+		String userListString = "";
+
+		for (int i = 0; i < data.length; i++) {
+			Command.encode(data[i]);
+			userListString += data[i] + " ";
+		}
+
+		buffer.putCommand(":GET STATUS: " + userListString + ";");
 	}
 
 	@Override
 	public void invite(String roomid, String user) {
 		// :ROOM [ CREATE {GROUP} | INVITE | JOIN | LEAVE | USERS ]: {<roomid> |
 		// <user>};
-		buffer.putCommand(":ROOM INVITE: " + roomid + " " + user + ";");
+		buffer.putCommand(":ROOM INVITE: " + Command.encode(roomid) + " "
+				+ Command.encode(user) + ";");
 	}
 
 	@Override
 	public void join(String roomid) {
 		// :ROOM [ CREATE {GROUP} | INVITE | JOIN | LEAVE | USERS ]: {<roomid> |
 		// <user>};
-		buffer.putCommand(":ROOM JOIN: " + roomid + ";");
+		buffer.putCommand(":ROOM JOIN: " + Command.encode(roomid) + ";");
 	}
 
 	@Override
 	public void leave(String roomid) {
 		// :ROOM [ CREATE {GROUP} | INVITE | JOIN | LEAVE | USERS ]: {<roomid> |
 		// <user>};
-		buffer.putCommand(":ROOM LEAVE: " + roomid + ";");
+		buffer.putCommand(":ROOM LEAVE: " + Command.encode(roomid) + ";");
 	}
 
 	@Override
 	public void roomusers(String roomid) {
 		// :ROOM [ CREATE {GROUP} | INVITE | JOIN | LEAVE | USERS ]: {<roomid> |
 		// <user>};
-		buffer.putCommand(":ROOM USERS: " + roomid + ";");
+		buffer.putCommand(":ROOM USERS: " + Command.encode(roomid) + ";");
 	}
 
 	@Override
 	public void accept(String friend) {
 		// :FRIEND [ ADD | BLOCK | UNBLOCK | ACCEPT | DECLINE | DELETE ]:
 		// <target>;
-		buffer.putCommand(":FRIEND ACCEPT: " + friend + ";");
+		buffer.putCommand(":FRIEND ACCEPT: " + Command.encode(friend) + ";");
 	}
 
 	@Override
 	public void add(String friend) {
 		// :FRIEND [ ADD | BLOCK | UNBLOCK | ACCEPT | DECLINE | DELETE ]:
 		// <target>;
-		buffer.putCommand(":FRIEND ADD: " + friend + ";");
+		buffer.putCommand(":FRIEND ADD: " + Command.encode(friend) + ";");
 	}
 
 	@Override
 	public void block(String friend) {
 		// :FRIEND [ ADD | BLOCK | UNBLOCK | ACCEPT | DECLINE | DELETE ]:
 		// <target>;
-		buffer.putCommand(":FRIEND BLOCK: " + friend + ";");
+		buffer.putCommand(":FRIEND BLOCK: " + Command.encode(friend) + ";");
 	}
 
 	@Override
 	public void decline(String friend) {
 		// :FRIEND [ ADD | BLOCK | UNBLOCK | ACCEPT | DECLINE | DELETE ]:
 		// <target>;
-		buffer.putCommand(":FRIEND DECLINE: " + friend + ";");
+		buffer.putCommand(":FRIEND DECLINE: " + Command.encode(friend) + ";");
 	}
 
 	@Override
 	public void delete(String friend) {
 		// :FRIEND [ ADD | BLOCK | UNBLOCK | ACCEPT | DECLINE | DELETE ]:
 		// <target>;
-		buffer.putCommand(":FRIEND DELETE: " + friend + ";");
+		buffer.putCommand(":FRIEND DELETE: " + Command.encode(friend) + ";");
 	}
 
 	@Override
 	public void unblock(String friend) {
 		// :FRIEND [ ADD | BLOCK | UNBLOCK | ACCEPT | DECLINE | DELETE ]:
 		// <target>;
-		buffer.putCommand(":FRIEND UNBLOCK: " + friend + ";");
+		buffer.putCommand(":FRIEND UNBLOCK: " + Command.encode(friend) + ";");
 	}
 
 	@Override
@@ -320,7 +347,7 @@ public class ClientConnection implements NetworkingOut, Runnable {
 
 		String usersstring = "";
 		for (int j = 0; j < users.size(); j++) {
-			usersstring += users.get(j);
+			usersstring += Command.encode(users.get(j));
 
 			if (j != users.size()) {
 				usersstring += " ";
@@ -329,7 +356,7 @@ public class ClientConnection implements NetworkingOut, Runnable {
 		}
 
 		buffer
-				.putCommand(":GET: " + attributesstring + ":" + " " + users
+				.putCommand(":GET: " + attributesstring + ":" + " " + usersstring
 						+ ";");
 
 	}
@@ -348,12 +375,12 @@ public class ClientConnection implements NetworkingOut, Runnable {
 		// :ROOM [ CREATE {GROUP} | INVITE | JOIN | LEAVE | USERS | TYPE ]:
 		// {<roomid> |
 		// <user>};
-		buffer.putCommand(":ROOM: CREATE: " + user + ";");
+		buffer.putCommand(":ROOM: CREATE: " + Command.encode(user) + ";");
 	}
 
 	@Override
 	public void type(String roomid) {
-		buffer.putCommand(":ROOM TYPE: " + roomid + ";");
+		buffer.putCommand(":ROOM TYPE: " + Command.encode(roomid) + ";");
 	}
 
 }
