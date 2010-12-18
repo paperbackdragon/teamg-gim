@@ -15,54 +15,58 @@ public class ClientConnection implements NetworkingOut {
 	private Socket serverConnection;
 	private BufferedReader bufferedreader;
 	private PrintWriter printwriter;
-	
+
 	private networkReader reader;
 	private networkWriter writer;
 	private CommandBuffer buffer;
-	
+
 	private Thread readerthread;
 	private Thread writerthread;
 	private Thread controllerthread;
 	private ServerConnection gui;
 
 	/**
-	 * Creates a connection to the server. Allows the GUI to perform action on server. 
+	 * Creates a connection to the server. Allows the GUI to perform action on
+	 * server.
 	 * 
 	 * @param incoming
 	 *            the class that methods are called from when a command is
 	 *            received from the server
 	 */
 	public ClientConnection(ServerConnection gui) {
-			this.gui = gui;
-		
-			// initiate connection to server
-			try {
-				serverConnection = new Socket("127.0.0.1", 4444);
-			} catch (UnknownHostException e) {
-				System.out.println("Could not connect to server");
-				// tell the GUI
-				
-			} catch (IOException e) {
-				System.out.println("uhm... handle this somehow... what is it anyway");
-			}
-		
-			
-			// make a buffered reader and print writer
-			try {
-				bufferedreader = new BufferedReader(new InputStreamReader(serverConnection.getInputStream()));
-				printwriter = new PrintWriter(serverConnection.getOutputStream(), true);
-			} catch (IOException e) {
-				System.out.println("aye... what the hell do we do if this happens :|.");
-			}
-		
-			// get the reader and writer, and buffer on the go... ;x
-			this.buffer = new CommandBuffer();
-			this.reader = new networkReader(bufferedreader, gui);
-			this.writer = new networkWriter(printwriter, buffer);
-			
-			this.readerthread = new Thread(reader);
-			this.writerthread = new Thread(writer);
-			
+		this.gui = gui;
+
+		// initiate connection to server
+		try {
+			serverConnection = new Socket("127.0.0.1", 4444);
+		} catch (UnknownHostException e) {
+			System.out.println("Could not connect to server");
+			// tell the GUI
+
+		} catch (IOException e) {
+			System.out
+					.println("uhm... handle this somehow... what is it anyway");
+		}
+
+		// make a buffered reader and print writer
+		try {
+			bufferedreader = new BufferedReader(new InputStreamReader(
+					serverConnection.getInputStream()));
+			printwriter = new PrintWriter(serverConnection.getOutputStream(),
+					true);
+		} catch (IOException e) {
+			System.out
+					.println("aye... what the hell do we do if this happens :|.");
+		}
+
+		// get the reader and writer, and buffer on the go... ;x
+		this.buffer = new CommandBuffer();
+		this.reader = new networkReader(bufferedreader, gui);
+		this.writer = new networkWriter(printwriter, buffer);
+
+		this.readerthread = new Thread(reader);
+		this.writerthread = new Thread(writer);
+
 	}
 
 	@Override
@@ -74,8 +78,10 @@ public class ClientConnection implements NetworkingOut {
 	public void authenticate(String emailaddress, char[] password) {
 		// TODO Auto-generated method stub
 		// :AUTH { LOGIN | REGISTER }: <email address> <password>;
-		
-		 buffer.putCommand(":AUTH LOGIN: "+ emailaddress+ " " + password + ";" );
+
+		buffer
+				.putCommand(":AUTH LOGIN: " + emailaddress + " " + password
+						+ ";");
 
 	}
 
@@ -87,10 +93,11 @@ public class ClientConnection implements NetworkingOut {
 
 	@Override
 	public void register(String emailaddress, char[] password) {
-		
+
 		// :AUTH { LOGIN | REGISTER }: <email address> <password>;
-		
-		buffer.putCommand(":AUTH REGISTER: " + emailaddress + " " + password + ";");
+
+		buffer.putCommand(":AUTH REGISTER: " + emailaddress + " " + password
+				+ ";");
 
 	}
 
@@ -105,7 +112,6 @@ public class ClientConnection implements NetworkingOut {
 	public void message(String roomid, String message) {
 		// :MESSAGE: <roomid> <message>;
 		buffer.putCommand(":MESSAGE: " + roomid + " " + message + ";");
-		
 
 	}
 
@@ -200,87 +206,125 @@ public class ClientConnection implements NetworkingOut {
 
 	@Override
 	public void invite(String roomid, String user) {
-		// TODO Auto-generated method stub
-
+		// :ROOM [ CREATE {GROUP} | INVITE | JOIN | LEAVE | USERS ]: {<roomid> |
+		// <user>};
+		buffer.putCommand(":ROOM INVITE: " + roomid + " " + user + ";");
 	}
 
 	@Override
 	public void join(String roomid) {
-		// TODO Auto-generated method stub
-
+		// :ROOM [ CREATE {GROUP} | INVITE | JOIN | LEAVE | USERS ]: {<roomid> |
+		// <user>};
+		buffer.putCommand(":ROOM JOIN: " + roomid + ";");
 	}
 
 	@Override
 	public void leave(String roomid) {
-		// TODO Auto-generated method stub
-
+		// :ROOM [ CREATE {GROUP} | INVITE | JOIN | LEAVE | USERS ]: {<roomid> |
+		// <user>};
+		buffer.putCommand(":ROOM LEAVE: " + roomid + ";");
 	}
 
 	@Override
 	public void roomusers(String roomid) {
-		// TODO Auto-generated method stub
-
+		// :ROOM [ CREATE {GROUP} | INVITE | JOIN | LEAVE | USERS ]: {<roomid> |
+		// <user>};
+		buffer.putCommand(":ROOM USERS: " + roomid + ";");
 	}
 
 	@Override
 	public void accept(String friend) {
-		// TODO Auto-generated method stub
-
+		// :FRIEND [ ADD | BLOCK | UNBLOCK | ACCEPT | DECLINE | DELETE ]:
+		// <target>;
+		buffer.putCommand(":FRIEND ACCEPT: " + friend + ";");
 	}
 
 	@Override
 	public void add(String friend) {
-		// TODO Auto-generated method stub
-
+		// :FRIEND [ ADD | BLOCK | UNBLOCK | ACCEPT | DECLINE | DELETE ]:
+		// <target>;
+		buffer.putCommand(":FRIEND ADD: " + friend + ";");
 	}
 
 	@Override
 	public void block(String friend) {
-		// TODO Auto-generated method stub
-
+		// :FRIEND [ ADD | BLOCK | UNBLOCK | ACCEPT | DECLINE | DELETE ]:
+		// <target>;
+		buffer.putCommand(":FRIEND BLOCK: " + friend + ";");
 	}
 
 	@Override
 	public void decline(String friend) {
-		// TODO Auto-generated method stub
-
+		// :FRIEND [ ADD | BLOCK | UNBLOCK | ACCEPT | DECLINE | DELETE ]:
+		// <target>;
+		buffer.putCommand(":FRIEND DECLINE: " + friend + ";");
 	}
 
 	@Override
 	public void delete(String friend) {
-		// TODO Auto-generated method stub
-
+		// :FRIEND [ ADD | BLOCK | UNBLOCK | ACCEPT | DECLINE | DELETE ]:
+		// <target>;
+		buffer.putCommand(":FRIEND DELETE: " + friend + ";");
 	}
 
 	@Override
 	public void unblock(String friend) {
-		// TODO Auto-generated method stub
-
+		// :FRIEND [ ADD | BLOCK | UNBLOCK | ACCEPT | DECLINE | DELETE ]:
+		// <target>;
+		buffer.putCommand(":FRIEND UNBLOCK: " + friend + ";");
 	}
 
 	@Override
 	public void getAttributes(ArrayList<String> attributes,
 			ArrayList<String> users) {
-		// TODO Auto-generated method stub
+		// :GET { NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC }:
+		// <user>{,<user>};
+
+		String attributesstring = "";
+		for (int i = 0; i < attributes.size(); i++) {
+			attributesstring += attributes.get(i);
+
+			if (i != attributes.size()) {
+				attributesstring += " ";
+			}
+		}
+
+		String usersstring = "";
+		for (int j = 0; j < users.size(); j++) {
+			usersstring += users.get(j);
+
+			if (j != users.size()) {
+				usersstring += " ";
+			}
+
+		}
+
+		buffer
+				.putCommand(":GET: " + attributesstring + ":" + " " + users
+						+ ";");
 
 	}
 
 	@Override
 	public void createGroupChat() {
-		// TODO Auto-generated method stub
-		
+		// :ROOM [ CREATE {GROUP} | INVITE | JOIN | LEAVE | USERS | TYPE ]:
+		// {<roomid> |
+		// <user>};
+
+		buffer.putCommand(":ROOM: CREATE GROUP:;");
 	}
 
 	@Override
 	public void createSingleChat(String user) {
-		// TODO Auto-generated method stub
-		
+		// :ROOM [ CREATE {GROUP} | INVITE | JOIN | LEAVE | USERS | TYPE ]:
+		// {<roomid> |
+		// <user>};
+		buffer.putCommand(":ROOM: CREATE: " + user + ";");
 	}
 
 	@Override
 	public void type(String roomid) {
-		// TODO Auto-generated method stub
-		
+		buffer.putCommand(":ROOM TYPE: " + roomid + ";");
 	}
 
 }

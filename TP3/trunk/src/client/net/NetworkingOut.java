@@ -182,7 +182,7 @@ public interface NetworkingOut {
 	/** Sends a request to the server to return the user's friend list */
 	void friendlist();
 
-	// :ROOM [ CREATE {GROUP} | INVITE | JOIN | LEAVE | USERS ]: {<roomid> |
+	// :ROOM [ CREATE {GROUP} | INVITE | JOIN | LEAVE | USERS | TYPE ]: {<roomid> |
 	// <user>};
 
 	/**
