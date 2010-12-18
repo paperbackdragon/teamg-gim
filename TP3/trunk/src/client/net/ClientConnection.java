@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
+import util.Command;
 import util.CommandBuffer;
 
 public class ClientConnection implements NetworkingOut, Runnable {
@@ -67,18 +68,18 @@ public class ClientConnection implements NetworkingOut, Runnable {
 
 		this.readerthread = new Thread(reader);
 		this.writerthread = new Thread(writer);
-		
+
 		readerthread.start();
 		writerthread.start();
-		
+
 		this.thread = new Thread(this);
 		thread.start();
 	}
-	
+
 	public void run() {
 		// heart beat
 		// NO IDEA IF THIS IS SENSIBLE, OR EVEN THE WAY TO DO IT
-		
+
 		while (true) {
 			try {
 				Thread.currentThread();
@@ -89,7 +90,7 @@ public class ClientConnection implements NetworkingOut, Runnable {
 				System.out.println("Oh noes!");
 			}
 		}
-		
+
 	}
 
 	@Override
@@ -102,10 +103,8 @@ public class ClientConnection implements NetworkingOut, Runnable {
 		// TODO Auto-generated method stub
 		// :AUTH { LOGIN | REGISTER }: <email address> <password>;
 
-		buffer
-				.putCommand(":AUTH LOGIN: " + emailaddress + " " + password
-						+ ";");
-
+		buffer.putCommand(":AUTH LOGIN: " + Command.encode(emailaddress) + " "
+				+ Command.encode(new String(password)) + ";");
 	}
 
 	@Override
@@ -119,8 +118,8 @@ public class ClientConnection implements NetworkingOut, Runnable {
 
 		// :AUTH { LOGIN | REGISTER }: <email address> <password>;
 
-		buffer.putCommand(":AUTH REGISTER: " + emailaddress + " " + password
-				+ ";");
+		buffer.putCommand(":AUTH REGISTER: " + Command.encode(emailaddress)
+				+ " " + Command.encode(new String(password)) + ";");
 
 	}
 
@@ -134,7 +133,8 @@ public class ClientConnection implements NetworkingOut, Runnable {
 	@Override
 	public void message(String roomid, String message) {
 		// :MESSAGE: <roomid> <message>;
-		buffer.putCommand(":MESSAGE: " + roomid + " " + message + ";");
+		buffer.putCommand(":MESSAGE: " + Command.encode(roomid) + " "
+				+ Command.encode(message) + ";");
 
 	}
 
@@ -172,42 +172,48 @@ public class ClientConnection implements NetworkingOut, Runnable {
 	@Override
 	public void setDisplayPicture(String displayPicture) {
 		// :SET [ NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC ]: <value>;
-		buffer.putCommand(":SET DISPLAY_PIC: " + displayPicture + ";");
+		buffer.putCommand(":SET DISPLAY_PIC: " + Command.encode(displayPicture) + ";");
 	}
 
 	@Override
 	public void setNickname(String nickname) {
 		// :SET [ NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC ]: <value>;
-		buffer.putCommand(":SET NICKNAME: " + nickname + ";");
+		buffer.putCommand(":SET NICKNAME: " + Command.encode(nickname) + ";");
 
 	}
 
 	@Override
 	public void setPersonalMessage(String personalmessage) {
 		// :SET [ NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC ]: <value>;
-		buffer.putCommand(":SET PERSONAL_MESSAGE: " + personalmessage + ";");
+		buffer.putCommand(":SET PERSONAL_MESSAGE: " + Command.encode(personalmessage) + ";");
 
 	}
 
 	@Override
 	public void setStatus(String status) {
 		// :SET [ NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC ]: <value>;
-		buffer.putCommand(":SET STATUS: " + status + ";");
+		buffer.putCommand(":SET STATUS: " + Command.encode(status) + ";");
 
 	}
 
 	@Override
 	public void getDisplayPicture(String userList) {
 		// :GET { NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC }:
-		// <user>{,<user>};
-		buffer.putCommand(":GET DISPLAY_PIC: " + userList + ";");
-
+		// <user>{ <user>};
+		String[] data = userList.split(" ");
+		String userListString = "";
+		
+		for (int i = 0; i < data.length; i ++) {
+			Command.encode(data[i]);
+			userListString += data[i] + " ";
+		}
+		buffer.putCommand(":GET DISPLAY_PIC: " + userListString + ";");
 	}
 
 	@Override
 	public void getNickname(String userList) {
 		// :GET { NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC }:
-		// <user>{,<user>};
+		// <user>{ <user>};
 		buffer.putCommand(":GET NICKNAME: " + userList + ";");
 
 	}
@@ -215,7 +221,7 @@ public class ClientConnection implements NetworkingOut, Runnable {
 	@Override
 	public void getPersonalMessage(String userList) {
 		// :GET { NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC }:
-		// <user>{,<user>};
+		// <user>{ <user>};
 		buffer.putCommand(":GET PERSONAL_MESSAGE: " + userList + ";");
 
 	}
@@ -223,7 +229,7 @@ public class ClientConnection implements NetworkingOut, Runnable {
 	@Override
 	public void getStatus(String userList) {
 		// :GET { NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC }:
-		// <user>{,<user>};
+		// <user>{ <user>};
 		buffer.putCommand(":GET STATUS: " + userList + ";");
 	}
 

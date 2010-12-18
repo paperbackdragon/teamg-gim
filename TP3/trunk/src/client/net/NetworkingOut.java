@@ -127,7 +127,7 @@ public interface NetworkingOut {
 	// :SET ends
 
 	// :GET { NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC }:
-	// <user>{,<user>};
+	// <user>{ <user>};
 
 	/**
 	 * Sends a request to the server to return a list of attributes, about a
