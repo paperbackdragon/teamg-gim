@@ -13,6 +13,10 @@ public class tester {
 		char[] blah1 = new char[2];
 		blah1[0] = 'b';
 		connection.register("emailaddress123", blah1);
+		connection.authenticate("emailaddress123", blah1);
+		
+		
+		
 		
 		
 
