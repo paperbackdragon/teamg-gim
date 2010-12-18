@@ -152,9 +152,11 @@ public class ServerConnection implements NetworkingIn, Runnable {
 		
 		//open new chat window
 		if (contacts.length > 1) {
-	 		SwingUtilities.invokeLater(new Runnable() {
+			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
-					GimUI ui = new GimUI("GIM - Group Chat", new GroupChatPanel(roomid));
+					GroupChatPanel gcp = new GroupChatPanel(roomid);
+					GimClient.addRoom(gcp);
+					GimUI ui = new GimUI("GIM - Group Chat", gcp);
 					ui.setLocationRelativeTo(null);//center new chat window
 				}
 			});	
@@ -162,7 +164,9 @@ public class ServerConnection implements NetworkingIn, Runnable {
  		else {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
-					GimUI ui = new GimUI("GIM - Chat with Contact ", new ChatPanel(roomid));
+					SingleChatPanel scp = new SingleChatPanel(roomid);
+					GimClient.addRoom(scp);
+					GimUI ui = new GimUI("GIM - Chat with Contact ", scp);
 					ui.setLocationRelativeTo(null);//center new chat window
 				}
 			});

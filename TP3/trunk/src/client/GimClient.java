@@ -8,7 +8,7 @@ import client.ui.*;
 public class GimClient {
 	private static GimUI mainWindow;
 	private static ClientModel client;
-	private ArrayList<ChatPanel> rooms;
+	private static ArrayList<ChatPanel> rooms;
 	
 	public static GimUI getMainWindow() {
 		return mainWindow;
@@ -16,6 +16,19 @@ public class GimClient {
 	
 	public static ClientModel getClient() {
 		return client;
+	}
+	
+	public static void addRoom(ChatPanel panel) {
+		rooms.add(panel);
+	}
+	
+	public static void removeRoom(ChatPanel panel) {
+		for(int i=0; i < rooms.size(); i++) {
+			if(rooms.get(i).getID().equals(panel.getID())) {
+				rooms.remove(i);
+				// TODO some way to reduce memory used in this list?
+			}
+		}
 	}
 	
 	public static void main(String[] args) {
