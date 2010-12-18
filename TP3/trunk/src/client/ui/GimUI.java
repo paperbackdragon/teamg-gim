@@ -3,6 +3,7 @@ package client.ui;
 import java.awt.event.*;
 import javax.swing.*;
 
+
 import client.GimClient;
 
 @SuppressWarnings("serial")
@@ -62,6 +63,10 @@ public class GimUI extends JFrame {
 		main = newPanel;
 		setContentPane(main);
 		pack();
+	}
+	
+	public void disableLogout() {
+		logout.setEnabled(false);
 	}
 	
 	//ACTION LISTENERS

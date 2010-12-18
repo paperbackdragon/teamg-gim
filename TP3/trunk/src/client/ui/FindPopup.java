@@ -6,6 +6,8 @@ import javax.swing.*;
 
 import client.ui.LoginPanel.LoginListener;
 
+
+
 public class FindPopup extends JPanel {
 	
 	JTextField email, username ;

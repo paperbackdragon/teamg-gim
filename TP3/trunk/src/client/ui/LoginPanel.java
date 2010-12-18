@@ -84,6 +84,7 @@ public class LoginPanel extends JPanel{
 	
 	public void setParent(JFrame frame) {
 		parent = (GimUI) frame;
+		parent.disableLogout();
 	}
 	
 	private void login() {

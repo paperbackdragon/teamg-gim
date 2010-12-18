@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+
 import client.GimClient;
 
 @SuppressWarnings("serial")
@@ -77,6 +78,7 @@ public class RegisterPanel extends JPanel {
 	
 	public void setParent(JFrame frame) {
 		parent = (GimUI) frame;
+		parent.disableLogout();
 	}
 	
 	//ACTION LISTENERS
