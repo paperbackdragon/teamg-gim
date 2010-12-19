@@ -107,7 +107,7 @@ public class ContactPanel extends JPanel {
 		parent = (GimUI) frame;
 	}
 	
-	private void createNodes(DefaultMutableTreeNode root) {
+	public void createNodes(DefaultMutableTreeNode root) {
 		DefaultMutableTreeNode status = null;
 		DefaultMutableTreeNode contact = null;
 		

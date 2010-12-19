@@ -9,10 +9,7 @@ import javax.swing.SwingUtilities;
 import client.*;
 import client.ui.*;
 
-public class ServerConnection implements NetworkingIn, Runnable {
-	public void run() {
-		
-	}
+public class ServerConnection implements NetworkingIn {
 	
 	public void authorised() {
 		ContactPanel panel = new ContactPanel();
@@ -22,11 +19,12 @@ public class ServerConnection implements NetworkingIn, Runnable {
 	}
 
 	public void broadcast(String message) {
-		
+		// TODO how to implement this? all chat windows or dialog box?
 	}
 
 	public void emailInuseError(String message) {
-		JOptionPane.showMessageDialog(GimClient.getMainWindow(), "E-Mail is already in use.");
+		//JOptionPane.showMessageDialog(GimClient.getMainWindow(), "E-Mail is already in use.");
+		JOptionPane.showMessageDialog(GimClient.getMainWindow(), message);
 	}
 	
 	public void registered() {
@@ -35,8 +33,7 @@ public class ServerConnection implements NetworkingIn, Runnable {
 		GimClient.getMainWindow().setMainPanel(panel);
 	}
 
-	public void friendlist(String[] onlinelist,
-			String[] offlinelist, String[] blockedlist) {
+	public void friendlist(String[] onlinelist, String[] offlinelist, String[] blockedlist) {
 		
 	}
 
@@ -57,11 +54,13 @@ public class ServerConnection implements NetworkingIn, Runnable {
 	}
 
 	public void logInDetailsIncorrectError(String message) {
-		JOptionPane.showMessageDialog(GimClient.getMainWindow(), "Login details incorrect.");
+		//JOptionPane.showMessageDialog(GimClient.getMainWindow(), "Login details incorrect.");
+		JOptionPane.showMessageDialog(GimClient.getMainWindow(), message);
 	}
 
 	public void loggedInFromAnotherLocationError(String message) {
-		JOptionPane.showMessageDialog(GimClient.getMainWindow(), "Already logged in at another location.");
+		//JOptionPane.showMessageDialog(GimClient.getMainWindow(), "Already logged in at another location.");
+		JOptionPane.showMessageDialog(GimClient.getMainWindow(), message);
 	}
 
 	public void message(String roomid, String sender, String message) {
@@ -93,7 +92,8 @@ public class ServerConnection implements NetworkingIn, Runnable {
 	}
 
 	public void passwordTooShortError(String message) {
-		JOptionPane.showMessageDialog(GimClient.getMainWindow(), "Password is too short.");
+		//JOptionPane.showMessageDialog(GimClient.getMainWindow(), "Password is too short.");
+		JOptionPane.showMessageDialog(GimClient.getMainWindow(), message);
 	}
 
 	public void servertime(String servertime) {
@@ -139,7 +139,8 @@ public class ServerConnection implements NetworkingIn, Runnable {
 	}
 
 	public void userDoesNotExistError(String message) {
-		
+		//JOptionPane.showMessageDialog(GimClient.getMainWindow(), "User does not exist.");
+		JOptionPane.showMessageDialog(GimClient.getMainWindow(), message);
 	}
 
 	public void usercount(String usercount) {
@@ -150,6 +151,7 @@ public class ServerConnection implements NetworkingIn, Runnable {
 		//get next list of users
 		String[] contacts = GimClient.getClient().getRoomList().remove();
 		
+		//TODO this if/else will not work! (presumably)
 		//open new chat window
 		if (contacts.length > 1) {
 			SwingUtilities.invokeLater(new Runnable() {
@@ -184,7 +186,7 @@ public class ServerConnection implements NetworkingIn, Runnable {
 	}
 
 	public void joined(String user, String roomid) {
-		// TODO What happens when it goes from 2->3 people or vice versa?
+		
 	}
 
 	public void left(String user, String roomid) {
@@ -195,15 +197,11 @@ public class ServerConnection implements NetworkingIn, Runnable {
 		
 	}
 
-	@Override
 	public void group(String roomid) {
-		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void personal(String roomid) {
-		// TODO Auto-generated method stub
 		
 	}
 }

@@ -3,9 +3,11 @@ package client.ui;
 import java.util.Arrays;
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
 
 import client.GimClient;
+import client.ui.LoginPanel.EnterListener;
 
 @SuppressWarnings("serial")
 public class RegisterPanel extends JPanel {
@@ -24,6 +26,7 @@ public class RegisterPanel extends JPanel {
 			System.exit(0);
 		}*/
 		
+		EnterListener enterlistener = new EnterListener();
 		RegisterListener regListener = new RegisterListener();
 		
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -38,6 +41,7 @@ public class RegisterPanel extends JPanel {
 		emailPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		emailPanel.setMaximumSize(new Dimension(290, 30));
 		email = new JTextField();
+		email.addKeyListener(enterlistener);
 		email.setPreferredSize(new Dimension(200, 25));
 		emailPanel.add(new JLabel("E-Mail:"));
 		emailPanel.add(email);
@@ -47,6 +51,7 @@ public class RegisterPanel extends JPanel {
 		pwdPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		pwdPanel.setMaximumSize(new Dimension(290, 30));
 		pwd = new JPasswordField();
+		pwd.addKeyListener(enterlistener);
 		pwd.setPreferredSize(new Dimension(200, 25));
 		pwdPanel.add(new JLabel ("Password:"));
 		pwdPanel.add(pwd);
@@ -56,6 +61,7 @@ public class RegisterPanel extends JPanel {
 		confirmPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		confirmPanel.setMaximumSize(new Dimension(290, 30));
 		confirm = new JPasswordField();
+		confirm.addKeyListener(enterlistener);
 		confirm.setPreferredSize(new Dimension(200, 25));
 		confirmPanel.add(new JLabel ("Confirm: "));
 		confirmPanel.add(confirm);
@@ -81,18 +87,28 @@ public class RegisterPanel extends JPanel {
 		parent.canLogout(false);
 	}
 	
+	private void register() {
+		if(email.getText().isEmpty()) {
+			JOptionPane.showMessageDialog(RegisterPanel.this, "Please enter an email.");
+		}
+		else if(pwd.getPassword().length == 0 || confirm.getPassword().length == 0) {
+			JOptionPane.showMessageDialog(RegisterPanel.this, "Please enter a password in both fields.");
+		}
+		else if(Arrays.equals(pwd.getPassword(), confirm.getPassword())) {
+			GimClient.getClient().register(email.getText(), pwd.getPassword());
+		}
+		else {
+			pwd.setText("");
+			confirm.setText("");
+			JOptionPane.showMessageDialog(RegisterPanel.this, "Passwords do not match.");
+		}
+	}
+	
 	//ACTION LISTENERS
 	class RegisterListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			if(e.getSource().equals(register)) {
-				if(Arrays.equals(pwd.getPassword(), confirm.getPassword())) {
-					GimClient.getClient().register(email.getText(), pwd.getPassword());
-				}
-				else {
-					pwd.setText("");
-					confirm.setText("");
-					JOptionPane.showMessageDialog(RegisterPanel.this, "Passwords do not match.");
-				}
+				register();
 			}
 			else if(e.getSource().equals(cancel)) {
 				LoginPanel panel = new LoginPanel();
@@ -100,5 +116,14 @@ public class RegisterPanel extends JPanel {
 				parent.setMainPanel(panel);
 			}
 		}
+	}
+	
+	class EnterListener implements KeyListener{
+		public void keyTyped(KeyEvent e) {
+			if(e.getKeyChar() == KeyEvent.VK_ENTER)
+				register();
+		}
+		public void keyPressed(KeyEvent e) {}
+		public void keyReleased(KeyEvent e) {}
 	}
 }
