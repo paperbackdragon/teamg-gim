@@ -141,14 +141,16 @@ public class networkReader implements Runnable {
 					"UNAUTHORIZED")) {
 				gui.unauthorised();
 			}
-
+		} else if (cmd.getArgumentsAsString().equalsIgnoreCase("REGISTERED")) {
+			gui.registered();
 		}
 
 		// post login
 
 		else if (cmd.getCommand().equals("MESSAGE")) {
 			String[] parts = cmd.splitAndDecodeData(" ");
-			gui.message(Command.decode(parts[0]), Command.decode(parts[1]), Command.decode(parts[2]));
+			gui.message(Command.decode(parts[0]), Command.decode(parts[1]),
+					Command.decode(parts[2]));
 		}
 
 		else if (cmd.getCommand().equals("ROOM")) {
@@ -187,11 +189,11 @@ public class networkReader implements Runnable {
 				}
 				gui.users(users, roomid);
 			}
-			
+
 			else if (cmd.getArgumentsAsString().equalsIgnoreCase("PERSONAL")) {
 				gui.personal(cmd.getData());
 			}
-			
+
 			else if (cmd.getArgumentsAsString().equalsIgnoreCase("GROUP")) {
 				gui.group(cmd.getData());
 			}
