@@ -147,18 +147,8 @@ public class networkReader implements Runnable {
 		// post login
 
 		else if (cmd.getCommand().equals("MESSAGE")) {
-			String data = cmd.getData();
-			String[] parts = data.split(" ");
-
-			String roomid = parts[0];
-			String sender = parts[1];
-
-			String message = "";
-			
-			for (int i = 2; i < parts.length; i++) {
-				message += parts[i] + " ";
-			}
-			gui.message(Command.decode(roomid), Command.decode(sender), Command.decode(message));
+			String[] parts = cmd.splitAndDecodeData(" ");
+			gui.message(Command.decode(parts[0]), Command.decode(parts[1]), Command.decode(parts[2]));
 		}
 
 		else if (cmd.getCommand().equals("ROOM")) {
