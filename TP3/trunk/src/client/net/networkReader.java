@@ -140,9 +140,10 @@ public class networkReader implements Runnable {
 			} else if (cmd.getArgumentsAsString().equalsIgnoreCase(
 					"UNAUTHORIZED")) {
 				gui.unauthorised();
+			} else if (cmd.getArgumentsAsString()
+					.equalsIgnoreCase("REGISTERED")) {
+				gui.registered();
 			}
-		} else if (cmd.getArgumentsAsString().equalsIgnoreCase("REGISTERED")) {
-			gui.registered();
 		}
 
 		// post login
@@ -209,18 +210,21 @@ public class networkReader implements Runnable {
 			String online = data.split("OFFLINE")[0];
 			online = online.replace("ONLINE", "");
 			String[] onlinelist = online.split(" ");
-			
-			for (int i=0;i<onlinelist.length;i++) Command.decode(onlinelist[i]);
+
+			for (int i = 0; i < onlinelist.length; i++)
+				Command.decode(onlinelist[i]);
 
 			String offline = data.split("OFFLINE")[1].split("BLOCKED")[0];
 			String[] offlinelist = offline.split(" ");
-			
-			for (int j=0;j<offlinelist.length;j++) Command.decode(offlinelist[j]);
+
+			for (int j = 0; j < offlinelist.length; j++)
+				Command.decode(offlinelist[j]);
 
 			String blocked = data.split("BLOCKED")[1];
 			String[] blockedlist = blocked.split(" ");
-			
-			for (int k=0;k<blockedlist.length;k++) Command.decode(blockedlist[k]);
+
+			for (int k = 0; k < blockedlist.length; k++)
+				Command.decode(blockedlist[k]);
 
 			gui.friendlist(onlinelist, offlinelist, blockedlist);
 		}
@@ -229,7 +233,8 @@ public class networkReader implements Runnable {
 			String data = cmd.getData();
 			String[] parts = data.split(" ");
 
-			gui.friendrequest(Command.decode(parts[0]), Command.decode(parts[1]));
+			gui.friendrequest(Command.decode(parts[0]), Command
+					.decode(parts[1]));
 		}
 
 		else if (cmd.getCommand().equalsIgnoreCase("UPDATE")) {
@@ -270,23 +275,27 @@ public class networkReader implements Runnable {
 
 					if (arguments[count].equalsIgnoreCase("NICKNAME")) {
 
-						gui.updateNickname(Command.decode(parts[i]), currentusername);
+						gui.updateNickname(Command.decode(parts[i]),
+								currentusername);
 
 					}
 
 					else if (arguments[count].equalsIgnoreCase("STATUS")) {
-						gui.updateStatus(Command.decode(parts[i]), currentusername);
+						gui.updateStatus(Command.decode(parts[i]),
+								currentusername);
 
 					}
 
 					else if (arguments[count]
 							.equalsIgnoreCase("PERSONAL_MESSAGE")) {
-						gui.updatePersonalMessage(Command.decode(parts[i]), currentusername);
+						gui.updatePersonalMessage(Command.decode(parts[i]),
+								currentusername);
 
 					}
 
 					else if (arguments[count].equalsIgnoreCase("DISPLAY_PIC")) {
-						gui.updateDisplayPicture(Command.decode(parts[i]), currentusername);
+						gui.updateDisplayPicture(Command.decode(parts[i]),
+								currentusername);
 					}
 
 				}
@@ -347,7 +356,8 @@ public class networkReader implements Runnable {
 
 			if (cmd.getArgumentsAsString().equalsIgnoreCase(
 					"LOGGED_IN_FROM_OTHER_LOCATION")) {
-				gui.loggedInFromAnotherLocationError(Command.decode(cmd.getData()));
+				gui.loggedInFromAnotherLocationError(Command.decode(cmd
+						.getData()));
 			}
 
 			if (cmd.getArgumentsAsString().equalsIgnoreCase(
