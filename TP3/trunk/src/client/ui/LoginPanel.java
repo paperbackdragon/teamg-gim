@@ -16,13 +16,12 @@ public class LoginPanel extends JPanel{
 	
 	//CONSTRUCTOR
 	public LoginPanel() {
-		// TODO uncomment eventually?
-		/*try {
+		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
 			System.out.println("Something went wrong!");
 			System.exit(0);
-		}*/
+		}
 		
 		EnterListener enterlistener = new EnterListener();
 		LoginListener loginListener = new LoginListener();

@@ -15,13 +15,12 @@ public class ContactPanel extends JPanel {
 	
 	//CONSTRUCTOR
 	public ContactPanel() {
-		// TODO uncomment eventually?
-		/*try {
+		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
 			System.out.println("Something went wrong!");
 			System.exit(0);
-		}*/
+		}
 	
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		add(new PersonalInfo());
