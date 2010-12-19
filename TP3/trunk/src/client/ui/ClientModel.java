@@ -8,12 +8,14 @@ import client.net.ServerConnection;
 public class ClientModel {
 	private ClientConnection outLink;
 	private ServerConnection inLink;
-	private LinkedList<String[]> newRoomList = new LinkedList<String[]>();
+	private LinkedList<String[]> newRoomList;// = new LinkedList<String[]>();
 	
 	//CONSTRUCTOR
 	public ClientModel() {
 		inLink = new ServerConnection();
 		outLink = new ClientConnection(inLink);
+		
+		newRoomList = new LinkedList<String[]>();
 	}
 	
 	//ACCESSORS

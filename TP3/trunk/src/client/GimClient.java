@@ -10,6 +10,20 @@ public class GimClient {
 	private static ClientModel client;
 	private static ArrayList<ChatPanel> rooms;
 	
+	public static void main(String[] args) {
+		client = new ClientModel();
+		rooms = new ArrayList<ChatPanel>();
+		
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				LoginPanel lp = new LoginPanel();
+				mainWindow = new GimUI("GIM", lp);
+				lp.setParent(mainWindow);
+			}
+		});
+	}
+	
+	//ACCESSORS
 	public static GimUI getMainWindow() {
 		return mainWindow;
 	}
@@ -18,6 +32,7 @@ public class GimClient {
 		return client;
 	}
 	
+	//HELPER METHODS
 	public static void addRoom(ChatPanel panel) {
 		rooms.add(panel);
 	}
@@ -29,15 +44,5 @@ public class GimClient {
 				// TODO some way to reduce memory used in this list?
 			}
 		}
-	}
-	
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				LoginPanel lp = new LoginPanel();
-				mainWindow = new GimUI("GIM", lp);
-				lp.setParent(mainWindow);
-			}
-		});
 	}
 }
