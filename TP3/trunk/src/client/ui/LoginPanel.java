@@ -88,6 +88,7 @@ public class LoginPanel extends JPanel{
 	}
 	
 	private void login() {
+		System.out.println(GimClient.getClient().toString());
 		GimClient.getClient().authenticate(email.getText(), pwd.getPassword());
 	}
 	

@@ -7,7 +7,6 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Date;
 
-
 import server.User.Status;
 import util.Command;
 import util.CommandBuffer;
@@ -342,12 +341,17 @@ public class Worker implements Runnable {
 
 			if (user != null && user.getPasswordHash().equalsIgnoreCase(dataParts[1])) {
 
-				// TODO: Check if the User already has a worker associated
+				// TODO: Check if the User already has a worker associated and
+				// log the other user out
 
 				// They provided accurate details, log them in
 				this.loggedInUser = user;
 				this.loggedInUser.setOnline(true);
 				this.loggedInUser.setWorker(this);
+
+				// Add any commands they received while offline
+				while (!loggedInUser.getQueue().isEmpty())
+					commandBuffer.putCommand(loggedInUser.getQueue().remove());
 
 				return new Command("AUTH", "LOGGEDIN");
 
@@ -417,13 +421,85 @@ public class Worker implements Runnable {
 		return this.okay;
 	}
 
+	/**
+	 * <p>
+	 * <b>:FRIEND [ ADD | BLOCK | UNBLOCK | ACCEPT | DECLINE | DELETE ]:
+	 * [target];</b>
+	 * </p>
+	 * 
+	 * <p>
+	 * The FRIEND command controls all friend list data.
+	 * </p>
+	 * 
+	 * <p>
+	 * <b>ADD</b><br>
+	 * The ADD arguments specifies that the client wishes to add the target user
+	 * to their friend list. The server should then send a request to the target
+	 * user asking for permission to access their data.
+	 * </p>
+	 * 
+	 * <p>
+	 * <b>BLOCK</b><br>
+	 * The BLOCK argument places the target user into a list of blocked users
+	 * who cannot access any data about the user.
+	 * </p>
+	 * 
+	 * <p>
+	 * <b>UNBLOCK</b><br>
+	 * The UNBLOCK argument removes the target from the current users blocked
+	 * list.
+	 * </p>
+	 * 
+	 * <p>
+	 * <b>ACCEPT</b><br>
+	 * The ACCEPT arguments specifies that the user is responding to a previous
+	 * friend request, where the target is the user who sent the request. If the
+	 * user accepts then the target user should be given permissions to use the
+	 * users data.
+	 * </p>
+	 * 
+	 * <p>
+	 * <b>DELETE</b><br>
+	 * The DELETE argument specifies that the target user should be deleted from
+	 * the users friend list, however the target user will still have access to
+	 * the users details.
+	 * </p>
+	 * 
+	 * <p>
+	 * <b>DECLINE</b> The DECLINE argument specifies that the user does not wish
+	 * the target user to be to able to access their data.
+	 * </p>
+	 * 
+	 * @param cmd
+	 * @return
+	 */
 	private Command friend(Command cmd) {
 
 		if (this.loggedInUser == null)
 			return new Command("ERROR", "UNAUTHORIZED");
 
-		// TODO: The friend command
-		return null;
+		// Too many arguments
+		if (cmd.getArguments().length > 1)
+			return new Command("ERROR", "TOO_MANY_ARGUMENTS");
+
+		String arg = cmd.getArgumentsAsString();
+		if (arg.equalsIgnoreCase("ADD")) {
+
+		} else if (arg.equalsIgnoreCase("BLOCK")) {
+
+		} else if (arg.equalsIgnoreCase("UNBLOCK")) {
+
+		} else if (arg.equalsIgnoreCase("ACCEPT")) {
+
+		} else if (arg.equalsIgnoreCase("DECLINE")) {
+
+		} else if (arg.equalsIgnoreCase("DELETE")) {
+
+		}
+
+		// If we made it this far in the code then something isn't right
+		return new Command("ERROR", "INVALID_ARGUMENT");
+
 	}
 
 	/**
@@ -437,7 +513,8 @@ public class Worker implements Runnable {
 	 * </p>
 	 * 
 	 * @param cmd
-	 * @return
+	 *            The MESSAGE received
+	 * @return An OKAY or ERROR COMMAND
 	 */
 	private Command message(Command cmd) {
 
@@ -496,8 +573,15 @@ public class Worker implements Runnable {
 	 * The USERS argument request a list of the users in the room from the
 	 * server.
 	 * 
+	 * <b>TYPE</b><br>
+	 * The TYPE argument can be used to check if the ROOM is either a PERSONAL
+	 * or GROUP chat.
+	 * </p>
+	 * 
 	 * @param cmd
-	 * @return
+	 *            The ROOM command received
+	 * @return A bunch of responses depending on the data and arguments
+	 *         received. See above for details.
 	 * 
 	 *         TODO: Check that the user is online
 	 */
@@ -518,9 +602,20 @@ public class Worker implements Runnable {
 			if (cmd.getArguments().length == 2 && cmd.getArguments()[1].equalsIgnoreCase("GROUP"))
 				group = true;
 
+			User invite = null;
+			if (group == false) {
+				invite = data.getUser(cmd.getDecodedData());
+
+				if (invite == null)
+					return new Command("ERROR", "INVALID_USER_SUPPLIED");
+			}
+
 			// Create the new room
 			Room room = new Room(this.loggedInUser, group);
 			data.addRoom(room);
+
+			if (group == false)
+				room.invite(invite, this.loggedInUser);
 
 			return new Command("ROOM", "CREATED", room.getId() + "");
 
@@ -551,11 +646,15 @@ public class Worker implements Runnable {
 
 				// The user doesn't exist
 				if (user == null)
-					return new Command("ERROR", "USER_DOES_NOT_EXIST");
+					return new Command("ERROR", "USER_DOES_NOT_EXIST", userId);
 
 				// The user they're trying to invite is offline
 				if (!user.isOnline())
-					return new Command("ERROR", "USER_IS_OFFLINE");
+					return new Command("ERROR", "USER_IS_OFFLINE", Command.encode(user.getId()));
+
+				// Make sure the room isn't full.
+				if (!room.isGroup() && (room.getUsers().size() > 1 || room.getInvitiedUsers().size() > 1))
+					return new Command("ERROR", "ROOM_FULL", room.getId() + "");
 
 				room.invite(user, this.loggedInUser);
 
@@ -607,6 +706,38 @@ public class Worker implements Runnable {
 
 			} else if (arg.equalsIgnoreCase("USERS")) {
 
+				// Make sure all the data we need is there
+				if (data.length < 1)
+					return new Command("ERROR", "MISSING_DATA", "The USERS argument requires a room id.");
+
+				// Turn the data into a usable format
+				int roomId = Integer.valueOf(data[0]);
+				Room room = this.data.getRoom(roomId);
+
+				if (room == null)
+					return new Command("ERROR", "ROOM_DOES_NOT_EXIST");
+
+				String users = "";
+				for (User user : room.getUsers().values())
+					users += Command.encode(user.getId()) + " ";
+
+				return new Command("ROOM", "USERS", users);
+
+			} else if (arg.equalsIgnoreCase("TYPE")) {
+
+				// Make sure all the data we need is there
+				if (data.length < 1)
+					return new Command("ERROR", "MISSING_DATA", "The TYPE argument requires a room id.");
+
+				// Turn the data into a usable format
+				int roomId = Integer.valueOf(data[0]);
+				Room room = this.data.getRoom(roomId);
+
+				if (room == null)
+					return new Command("ERROR", "ROOM_DOES_NOT_EXIST");
+
+				return new Command("ROOM", room.getType());
+
 			}
 
 		}
@@ -614,19 +745,43 @@ public class Worker implements Runnable {
 		return new Command("ERROR", "INVALID_ARGUMENT");
 	}
 
+	/**
+	 * :FRIENDLIST:;
+	 * 
+	 * The FRIENDLIST command requests a list of users in the users friend list.
+	 * 
+	 * @param cmd The FRIENDLIST command
+	 * @return The friend list of the current user
+	 */
 	private Command friendlist(Command cmd) {
 
 		if (this.loggedInUser == null)
 			return new Command("ERROR", "UNAUTHORIZED");
 
-		// TODO: The friendlist command
-		return null;
+		String online = "ONLINE ";
+		String offline = "OFFLINE ";
+		String blocked = "BLOCKED";
+
+		// Sort the online and offline users
+		for (User user : this.loggedInUser.getFriendList().values()) {
+			if (user.isOnline())
+				online += Command.encode(user.getId()) + " ";
+			else
+				offline += Command.encode(user.getId()) + " ";
+		}
+
+		// Get all of the blocked users
+		for (User user : this.loggedInUser.getBlockedUsers().values())
+			blocked += Command.encode(user.getId()) + " ";
+
+		return new Command("FRIENDLIST", null, online + offline + blocked);
+
 	}
 
 	/**
 	 * <p>
 	 * <b>:GET { NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC }:
-	 * <user>{,[user]};</b>
+	 * {[user],[user]};</b>
 	 * </p>
 	 * 
 	 * <p>
@@ -645,7 +800,7 @@ public class Worker implements Runnable {
 			return new Command("ERROR", "UNAUTHORIZED");
 
 		// Split the IDs
-		String[] users = cmd.splitAndDecodeData(",");
+		String[] users = cmd.splitAndDecodeData(" ");
 		String response = "";
 
 		// Make sure they provided at least one ID
@@ -665,6 +820,7 @@ public class Worker implements Runnable {
 
 			// Stop them from getting access about people who aren't in their
 			// freindlist
+
 			// TODO: This should also include people who are also in the same
 			// room as the user
 			if (!this.loggedInUser.friendListContains(user) && this.loggedInUser != user)
@@ -763,6 +919,8 @@ public class Worker implements Runnable {
 	 * 
 	 * @return If successful it should return an OKAY. Upon an error such as the
 	 *         user not being logged in, it should return an ERROR.
+	 * 
+	 *         TODO: Leave any rooms they're currently in
 	 */
 	private Command logout() {
 
@@ -814,11 +972,11 @@ public class Worker implements Runnable {
 				if (rsp != null) {
 					this.responseBuffer.putCommand(rsp);
 				}
+
 			}
 
 		} catch (InterruptedException e) {
 			System.out.println("Worker has finished.");
-			// TODO: Clean up, the client has disconnected
 		}
 
 	}

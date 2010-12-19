@@ -1,6 +1,7 @@
 package server;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 
 import util.Command;
 
@@ -25,9 +26,9 @@ public class User {
 	private HashMap<String, User> blockedUsers = new HashMap<String, User>();
 
 	private HashMap<Integer, Room> rooms = new HashMap<Integer, Room>();
+	private LinkedList<Command> queue = new LinkedList<Command>();
 
 	private boolean online = false;
-
 	private Worker worker = null;
 
 	public User(String id, String passwordHash, Status status, String nickname, String personalMessage,
@@ -80,6 +81,10 @@ public class User {
 		return id;
 	}
 
+	public LinkedList<Command> getQueue() {
+		return this.queue;
+	}
+	
 	public synchronized void setId(String id) {
 		this.id = id.toLowerCase();
 	}

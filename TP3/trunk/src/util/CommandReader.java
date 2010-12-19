@@ -45,8 +45,6 @@ public class CommandReader implements Runnable {
 			}
 
 			if (line == null) {
-				System.out.println("Client closed connection.");
-				commandBuffer.putCommand(new Command("QUIT"));
 				break;
 			}
 
@@ -104,7 +102,8 @@ public class CommandReader implements Runnable {
 
 		}
 		
-		// TODO: Clean up
+		// Cleaup
+		commandBuffer.putCommand(new Command("QUIT"));
 		System.out.println("CommandReader stopped.");
 		
 	}
