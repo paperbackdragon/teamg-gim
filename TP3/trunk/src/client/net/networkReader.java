@@ -162,40 +162,40 @@ public class networkReader implements Runnable {
 			else if (cmd.getArgumentsAsString().equalsIgnoreCase("JOINED")) {
 				String data = cmd.getData();
 				String[] parts = data.split(" ");
-				gui.joined(parts[1], parts[0]);
+				gui.joined(Command.decode(parts[1]), Command.decode(parts[0]));
 			}
 
 			else if (cmd.getArgumentsAsString().equalsIgnoreCase("LEFT")) {
 				String data = cmd.getData();
 				String[] parts = data.split(" ");
-				gui.left(parts[1], parts[0]);
+				gui.left(Command.decode(parts[1]), Command.decode(parts[0]));
 			}
 
 			else if (cmd.getArgumentsAsString().equalsIgnoreCase("INVITED")) {
 				String data = cmd.getData();
 				String[] parts = data.split(" ");
-				gui.invited(parts[1], parts[0]);
+				gui.invited(Command.decode(parts[1]), Command.decode(parts[0]));
 			}
 
 			else if (cmd.getArgumentsAsString().equalsIgnoreCase("USERS")) {
 				String data = cmd.getData();
 				String[] parts = data.split(" ");
 
-				String roomid = parts[0];
+				String roomid = Command.decode(parts[0]);
 
 				ArrayList<String> users = new ArrayList<String>();
 				for (int i = 1; i < parts.length; i++) {
-					users.add(parts[i]);
+					users.add(Command.decode(parts[i]));
 				}
 				gui.users(users, roomid);
 			}
 
 			else if (cmd.getArgumentsAsString().equalsIgnoreCase("PERSONAL")) {
-				gui.personal(cmd.getData());
+				gui.personal(Command.decode(cmd.getData()));
 			}
 
 			else if (cmd.getArgumentsAsString().equalsIgnoreCase("GROUP")) {
-				gui.group(cmd.getData());
+				gui.group(Command.decode(cmd.getData()));
 			}
 
 		}
@@ -209,12 +209,18 @@ public class networkReader implements Runnable {
 			String online = data.split("OFFLINE")[0];
 			online = online.replace("ONLINE", "");
 			String[] onlinelist = online.split(" ");
+			
+			for (int i=0;i<onlinelist.length;i++) Command.decode(onlinelist[i]);
 
 			String offline = data.split("OFFLINE")[1].split("BLOCKED")[0];
 			String[] offlinelist = offline.split(" ");
+			
+			for (int j=0;j<offlinelist.length;j++) Command.decode(offlinelist[j]);
 
 			String blocked = data.split("BLOCKED")[1];
 			String[] blockedlist = blocked.split(" ");
+			
+			for (int k=0;k<blockedlist.length;k++) Command.decode(blockedlist[k]);
 
 			gui.friendlist(onlinelist, offlinelist, blockedlist);
 		}
@@ -223,25 +229,25 @@ public class networkReader implements Runnable {
 			String data = cmd.getData();
 			String[] parts = data.split(" ");
 
-			gui.friendrequest(parts[0], parts[1]);
+			gui.friendrequest(Command.decode(parts[0]), Command.decode(parts[1]));
 		}
 
 		else if (cmd.getCommand().equalsIgnoreCase("UPDATE")) {
 
 			if (cmd.getArgumentsAsString().equalsIgnoreCase("NICKNAME")) {
-				gui.notifyNickname(cmd.getData());
+				gui.notifyNickname(Command.decode(cmd.getData()));
 			}
 
 			if (cmd.getArgumentsAsString().equalsIgnoreCase("STATUS")) {
-				gui.notifyStatus(cmd.getData());
+				gui.notifyStatus(Command.decode(cmd.getData()));
 			}
 
 			if (cmd.getArgumentsAsString().equalsIgnoreCase("PERSONAL_MESSAGE")) {
-				gui.notifyPersonalMessage(cmd.getData());
+				gui.notifyPersonalMessage(Command.decode(cmd.getData()));
 			}
 
 			if (cmd.getArgumentsAsString().equalsIgnoreCase("DISPLAY_PIC")) {
-				gui.notifyDisplayPicture(cmd.getData());
+				gui.notifyDisplayPicture(Command.decode(cmd.getData()));
 			}
 
 		}
@@ -264,29 +270,29 @@ public class networkReader implements Runnable {
 
 					if (arguments[count].equalsIgnoreCase("NICKNAME")) {
 
-						gui.updateNickname(parts[i], currentusername);
+						gui.updateNickname(Command.decode(parts[i]), currentusername);
 
 					}
 
 					else if (arguments[count].equalsIgnoreCase("STATUS")) {
-						gui.updateStatus(parts[i], currentusername);
+						gui.updateStatus(Command.decode(parts[i]), currentusername);
 
 					}
 
 					else if (arguments[count]
 							.equalsIgnoreCase("PERSONAL_MESSAGE")) {
-						gui.updatePersonalMessage(parts[i], currentusername);
+						gui.updatePersonalMessage(Command.decode(parts[i]), currentusername);
 
 					}
 
 					else if (arguments[count].equalsIgnoreCase("DISPLAY_PIC")) {
-						gui.updateDisplayPicture(parts[i], currentusername);
+						gui.updateDisplayPicture(Command.decode(parts[i]), currentusername);
 					}
 
 				}
 
 				else { // it's a username
-					currentusername = parts[i];
+					currentusername = Command.decode(parts[i]);
 				}
 
 				i++;
@@ -306,52 +312,52 @@ public class networkReader implements Runnable {
 		else if (cmd.getCommand().equals("ERROR")) {
 
 			if (cmd.getArgumentsAsString().equalsIgnoreCase("UNAUTHORISED")) {
-				gui.unauthorisedError(cmd.getData());
+				gui.unauthorisedError(Command.decode(cmd.getData()));
 
 			}
 
 			if (cmd.getArgumentsAsString().equalsIgnoreCase("INVALID_EMAIL")) {
-				gui.invalidEmailError(cmd.getData());
+				gui.invalidEmailError(Command.decode(cmd.getData()));
 			}
 
 			if (cmd.getArgumentsAsString().equalsIgnoreCase(
 					"EMAIL_ALREADY_IN_USE")) {
-				gui.emailInuseError(cmd.getData());
+				gui.emailInuseError(Command.decode(cmd.getData()));
 			}
 
 			if (cmd.getArgumentsAsString().equalsIgnoreCase(
 					"PASSWORD_TOO_SHORT")) {
-				gui.passwordTooShortError(cmd.getData());
+				gui.passwordTooShortError(Command.decode(cmd.getData()));
 			}
 
 			if (cmd.getArgumentsAsString()
 					.equalsIgnoreCase("MISSING_ARGUMENTS")) {
-				gui.missingArgumentsError(cmd.getData());
+				gui.missingArgumentsError(Command.decode(cmd.getData()));
 			}
 
 			if (cmd.getArgumentsAsString().equalsIgnoreCase(
 					"TOO_MANY_ARGUMENTS")) {
-				gui.tooManyArgumentsError(cmd.getData());
+				gui.tooManyArgumentsError(Command.decode(cmd.getData()));
 			}
 
 			if (cmd.getArgumentsAsString().equalsIgnoreCase("INVALID_ARGUMENT")) {
-				gui.invalidArgumentError(cmd.getData());
+				gui.invalidArgumentError(Command.decode(cmd.getData()));
 
 			}
 
 			if (cmd.getArgumentsAsString().equalsIgnoreCase(
 					"LOGGED_IN_FROM_OTHER_LOCATION")) {
-				gui.loggedInFromAnotherLocationError(cmd.getData());
+				gui.loggedInFromAnotherLocationError(Command.decode(cmd.getData()));
 			}
 
 			if (cmd.getArgumentsAsString().equalsIgnoreCase(
 					"USER_DOES_NOT_EXIST")) {
-				gui.userDoesNotExistError(cmd.getData());
+				gui.userDoesNotExistError(Command.decode(cmd.getData()));
 			}
 
 			if (cmd.getArgumentsAsString().equalsIgnoreCase(
 					"LOGIN_DETAILS_INCORRECT")) {
-				gui.logInDetailsIncorrectError(cmd.getData());
+				gui.logInDetailsIncorrectError(Command.decode(cmd.getData()));
 			}
 
 		}
