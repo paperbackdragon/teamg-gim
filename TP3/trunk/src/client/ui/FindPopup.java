@@ -67,7 +67,7 @@ class FindListener implements ActionListener {
 				public void run() {
 					
 					// Gordon's code - sorry ewy - just testing something :P
-					GimClient.getClient().add("cyblob@gmail.com");
+					GimClient.getClient().addfriend("cyblob@gmail.com");
 					// </Gordon's code>
 					GimUI ui = new GimUI("GIM - Invite Sent", new InviteSent());
 					ui.setLocationRelativeTo(null);//center new chat window

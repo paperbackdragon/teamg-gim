@@ -24,6 +24,9 @@ public class ClientModel {
 	}
 	
 	//MESSAGES TO SERVER
+	
+	// Connection stuff
+	
 	public void authenticate(String email, char[] pwd) {
 		outLink.authenticate(email, pwd);
 	}
@@ -42,6 +45,11 @@ public class ClientModel {
 		System.exit(0);
 	}
 	
+	//End: connection stuff
+	
+	
+	// ROOM stuff
+	
 	public void createRoom(Boolean group, String[] contacts) {
 		newRoomList.add(contacts);
 		if(group)
@@ -54,7 +62,43 @@ public class ClientModel {
 		outLink.invite(roomid, user);
 	}
 	
-	public void add(String user) {
+	public void join(String roomid) {
+		outLink.join(roomid);
+	}
+	
+	public void leave(String roomid) {
+		outLink.leave(roomid);
+	}
+	
+	public void users(String roomid) {
+		outLink.roomusers(roomid);
+	}
+	
+	public void type(String roomid) {
+		outLink.type(roomid);
+	}
+	
+	// end: ROOM stuff 
+	
+	
+	
+	// Friends list stuff
+	
+	public void addfriend(String user) {
 		outLink.add(user);
 	}
+	
+	public void blockfriend(String user) {
+		outLink.block(user);
+	}
+	
+	public void unblockfriend(String user) {
+		outLink.unblock(user);
+	}
+	
+	public void removefriend(String user) {
+		outLink.delete(user);
+	}
+	
+	//end: Friends list stuff
 }
