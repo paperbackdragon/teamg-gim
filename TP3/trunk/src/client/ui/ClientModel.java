@@ -53,4 +53,8 @@ public class ClientModel {
 	public void invite(String roomid, String user) {
 		outLink.invite(roomid, user);
 	}
+	
+	public void add(String user) {
+		outLink.add(user);
+	}
 }

@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import client.GimClient;
 import client.ui.LoginPanel.LoginListener;
 
 
@@ -64,6 +65,10 @@ class FindListener implements ActionListener {
 			System.out.println("Find clicked");
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
+					
+					// Gordon's code - sorry ewy - just testing something :P
+					GimClient.getClient().add("cyblob@gmail.com");
+					// </Gordon's code>
 					GimUI ui = new GimUI("GIM - Invite Sent", new InviteSent());
 					ui.setLocationRelativeTo(null);//center new chat window
 					}
