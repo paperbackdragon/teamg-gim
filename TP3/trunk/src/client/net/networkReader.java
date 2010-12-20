@@ -149,16 +149,9 @@ public class networkReader implements Runnable {
 		// post login
 
 		else if (cmd.getCommand().equals("MESSAGE")) {
-			String data = cmd.getData();
-			String[] parts = data.split(" ");
-			
-			String message = "";
-			for (int i = 2; i < parts.length; i++) {
-				message = parts[i] += " ";	
-			}
-			
-			gui.message(Command.decode(parts[0]), Command.decode(parts[1]),
-					Command.decode(message));
+			String[] parts = cmd.splitAndDecodeData(" ");
+			gui.message(parts[0], parts[1],
+					parts[2]);
 		}
 
 		else if (cmd.getCommand().equals("ROOM")) {
@@ -187,14 +180,17 @@ public class networkReader implements Runnable {
 
 			else if (cmd.getArgumentsAsString().equalsIgnoreCase("USERS")) {
 				String data = cmd.getData();
+				
 				String[] parts = data.split(" ");
 
 				String roomid = Command.decode(parts[0]);
+				
+				String[] users = parts[1].split("\n");
 
-				ArrayList<String> users = new ArrayList<String>();
-				for (int i = 1; i < parts.length; i++) {
-					users.add(Command.decode(parts[i]));
+				for (int i = 0; i < users.length; i++) {
+					users[i] = Command.decode(users[i]);
 				}
+				
 				gui.users(users, roomid);
 			}
 
@@ -270,7 +266,7 @@ public class networkReader implements Runnable {
 			int argumentcount = arguments.length;
 
 			String data = cmd.getData();
-			String[] parts = data.split(" ");
+			String[] parts = data.split("\n");
 
 			int i = 0;
 			int count = 0;

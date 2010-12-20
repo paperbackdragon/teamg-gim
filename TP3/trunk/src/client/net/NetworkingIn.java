@@ -154,7 +154,7 @@ public interface NetworkingIn {
 	 * @param roomid
 	 *            the id of the room the users are in
 	 */
-	void users(ArrayList<String> users, String roomid);
+	void users(String[] users, String roomid);
 	
 	/** The server has reported that a room is a personal chat
 	 * @roomid
