@@ -259,7 +259,6 @@ public class ClientConnection implements NetworkingOut, Runnable {
 
 		for (int i = 0; i < data.length; i++) {
 			Command.encode(data[i]);
-			
 			userListString += data[i];
 			
 			if (i < data.length) userListString += " ";
@@ -349,7 +348,7 @@ public class ClientConnection implements NetworkingOut, Runnable {
 		for (int i = 0; i < attributes.size(); i++) {
 			attributesstring += attributes.get(i);
 
-			if (i != attributes.size()) {
+			if (i < attributes.size()) {
 				attributesstring += " ";
 			}
 		}
@@ -358,7 +357,7 @@ public class ClientConnection implements NetworkingOut, Runnable {
 		for (int j = 0; j < users.size(); j++) {
 			usersstring += Command.encode(users.get(j));
 
-			if (j != users.size()) {
+			if (j < users.size()) {
 				usersstring += " ";
 			}
 
