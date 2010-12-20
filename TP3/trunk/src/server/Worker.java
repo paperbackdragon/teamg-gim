@@ -205,7 +205,7 @@ public class Worker implements Runnable {
 	 * @return an OKAY command
 	 */
 	private Command ping() {
-		return this.okay;
+		return new Command("PONG");
 	}
 
 	/**
