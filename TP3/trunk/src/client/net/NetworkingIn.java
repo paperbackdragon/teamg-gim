@@ -150,7 +150,7 @@ public interface NetworkingIn {
 	 * The server has sent a list of users in a group chat
 	 * 
 	 * @param users
-	 *            the arraylist of users
+	 *            the array of users
 	 * @param roomid
 	 *            the id of the room the users are in
 	 */
@@ -177,11 +177,11 @@ public interface NetworkingIn {
 	 * The server has sent the online status of all the users on the buddy list
 	 * 
 	 * @param onlinelist
-	 *            An arraylist of the users online on the buddy list
+	 *            An array of the users online on the buddy list
 	 * @param offlinelist
-	 *            An arraylist of the users offline on the buddy list
+	 *            An array of the users offline on the buddy list
 	 * @param blockedlist
-	 *            An arraylist of the users who are blocked on the buddy list
+	 *            An array of the users who are blocked on the buddy list
 	 * */
 
 	void friendlist(String[] onlinelist,

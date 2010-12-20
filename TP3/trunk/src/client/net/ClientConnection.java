@@ -207,7 +207,9 @@ public class ClientConnection implements NetworkingOut, Runnable {
 
 		for (int i = 0; i < data.length; i++) {
 			Command.encode(data[i]);
-			userListString += data[i] + " ";
+			userListString += data[i];
+			
+			if (i < data.length) userListString += " ";
 		}
 		buffer.putCommand(":GET DISPLAY_PIC: " + userListString + ";");
 	}
@@ -222,7 +224,9 @@ public class ClientConnection implements NetworkingOut, Runnable {
 
 		for (int i = 0; i < data.length; i++) {
 			Command.encode(data[i]);
-			userListString += data[i] + " ";
+			userListString += data[i];
+			
+			if (i < data.length) userListString += " ";
 		}
 		buffer.putCommand(":GET NICKNAME: " + userListString + ";");
 
@@ -237,7 +241,9 @@ public class ClientConnection implements NetworkingOut, Runnable {
 
 		for (int i = 0; i < data.length; i++) {
 			Command.encode(data[i]);
-			userListString += data[i] + " ";
+			userListString += data[i];
+			
+			if (i < data.length) userListString += " ";
 		}
 
 		buffer.putCommand(":GET PERSONAL_MESSAGE: " + userListString + ";");
@@ -253,7 +259,10 @@ public class ClientConnection implements NetworkingOut, Runnable {
 
 		for (int i = 0; i < data.length; i++) {
 			Command.encode(data[i]);
-			userListString += data[i] + " ";
+			
+			userListString += data[i];
+			
+			if (i < data.length) userListString += " ";
 		}
 
 		buffer.putCommand(":GET STATUS: " + userListString + ";");
