@@ -286,7 +286,7 @@ public class Command {
 	 *            The string to decode
 	 * @return The decoded string
 	 * 
-	 *         TODO: Reject badly formatted input
+	 *         TODO: Reject badly formatted input...or just catch the exception?
 	 */
 	public static String decode(String s) {
 		String decoded = "";

@@ -60,10 +60,12 @@ public class User {
 	}
 
 	/**
-	 * Check if the ID is a valid one TODO: Make this work.
+	 * Check if the ID is a valid one
 	 * 
 	 * @param id
-	 * @return
+	 * @return True if the user id is valid, false otherwise
+	 * 
+	 *         TODO: Make this work.
 	 */
 	public static boolean validID(String id) {
 		return true;
@@ -84,7 +86,7 @@ public class User {
 	public LinkedList<Command> getQueue() {
 		return this.queue;
 	}
-	
+
 	public synchronized void setId(String id) {
 		this.id = id.toLowerCase();
 	}
@@ -162,18 +164,17 @@ public class User {
 		return this.friendList.containsKey(user.getId());
 	}
 
-	// TODO: Check that sender is not blocked
 	public void sendMessage(User from, int roomID, String message) {
-		if (this.worker != null) {
+		if(!this.blockedUsers.containsKey(from.getId()) && this.worker != null) {
 			this.worker.putResponse(new Command("MESSAGE", null, roomID + " " + Command.encode(from.getId()) + " "
 					+ Command.encode(message)));
 		}
 	}
-	
+
 	public synchronized void addRoom(Room room) {
 		this.rooms.put(room.getId(), room);
 	}
-	
+
 	public synchronized void removeRoom(Room room) {
 		this.rooms.remove(room.getId());
 	}
@@ -181,5 +182,39 @@ public class User {
 	public boolean inRoom(int roomID) {
 		return this.rooms.containsKey(new Integer(roomID));
 	}
-	
+
+	public void sendFriendRequest(User from) {
+		Command cmd = new Command("FREINDREQUEST", null, Command.encode(from.getId()) + " " + Command.encode(from.getNickname()));
+		if(this.worker == null)
+			this.queue.push(cmd);
+		else
+			worker.putResponse(cmd);
+	}
+
+	public void addFriend(User user) {
+		this.friendList.put(user.getId(), user);
+		user.inFreindList.put(getId(), this);
+	}
+
+	public void removeFriend(User user) {
+		this.friendList.remove(user.getId());
+		user.inFreindList.remove(getId());
+	}
+
+	public void block(User user) {
+		this.blockedUsers.put(user.getId(), user);
+	}
+
+	public void unblock(User user) {
+		this.blockedUsers.remove(user.getId());
+	}
+
+	public boolean inRoomWith(User user) {
+		for (Room room : this.rooms.values()) {
+			if(room.inRoom(user))
+				return true;
+		}
+		return false;
+	}
+
 }

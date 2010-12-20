@@ -341,8 +341,11 @@ public class Worker implements Runnable {
 
 			if (user != null && user.getPasswordHash().equalsIgnoreCase(dataParts[1])) {
 
-				// TODO: Check if the User already has a worker associated and
-				// log the other user out
+				// Make sure the user ins't already logged in
+				if (user.getWorker() != null) {
+					user.getWorker().putResponse(new Command("ERROR", "LOGGED_IN_FROM_OTHER_LOCATION"));
+					user.getWorker().kill();
+				}
 
 				// They provided accurate details, log them in
 				this.loggedInUser = user;
@@ -482,23 +485,52 @@ public class Worker implements Runnable {
 		if (cmd.getArguments().length > 1)
 			return new Command("ERROR", "TOO_MANY_ARGUMENTS");
 
+		User user = data.getUser(cmd.getDecodedData());
+
+		// Can't find the user
+		if (user == null)
+			return new Command("ERROR", "USER_DOES_NOT_EXIST");
+
 		String arg = cmd.getArgumentsAsString();
 		if (arg.equalsIgnoreCase("ADD")) {
 
+			if (this.loggedInUser.friendListContains(user))
+				return new Command("ERROR", "ALREADY_IN_FRIENDLIST", Command.encode(user.getId()));
+
+			user.sendFriendRequest(this.loggedInUser);
+			return this.okay;
+
 		} else if (arg.equalsIgnoreCase("BLOCK")) {
+			if (this.loggedInUser == user)
+				return new Command("ERROR", "CANNOT_BLOCK_YOURSELF");
+
+			this.loggedInUser.block(user);
+			return this.okay;
 
 		} else if (arg.equalsIgnoreCase("UNBLOCK")) {
+			user.unblock(user);
+			return this.okay;
 
 		} else if (arg.equalsIgnoreCase("ACCEPT")) {
+			this.loggedInUser.addFriend(user);
+			user.addFriend(this.loggedInUser);
+			return this.okay;
 
 		} else if (arg.equalsIgnoreCase("DECLINE")) {
+			// I don't actually think we have to do anything, erm....
+			return this.okay;
 
 		} else if (arg.equalsIgnoreCase("DELETE")) {
+			if (!this.loggedInUser.friendListContains(user))
+				return new Command("ERROR", "NOT_IN_FRIENDLIST");
+
+			this.loggedInUser.removeFriend(user);
+			return this.okay;
 
 		}
 
 		// If we made it this far in the code then something isn't right
-		return new Command("ERROR", "INVALID_ARGUMENT");
+		return new Command("ERROR", "INVALID_ARGUMENT", arg);
 
 	}
 
@@ -582,8 +614,6 @@ public class Worker implements Runnable {
 	 *            The ROOM command received
 	 * @return A bunch of responses depending on the data and arguments
 	 *         received. See above for details.
-	 * 
-	 *         TODO: Check that the user is online
 	 */
 	private Command room(Command cmd) {
 
@@ -608,6 +638,9 @@ public class Worker implements Runnable {
 
 				if (invite == null)
 					return new Command("ERROR", "INVALID_USER_SUPPLIED");
+
+				if (!invite.isOnline())
+					return new Command("ERROR", "USER_OFFLINE");
 			}
 
 			// Create the new room
@@ -639,10 +672,10 @@ public class Worker implements Runnable {
 							"You cannot invite someone into a room which you are no already in.");
 
 				Room room = this.data.getRoom(roomId);
-
-				// TODO: Make sure that we're in the other users friend list
-				// first
 				User user = this.data.getUser(userId);
+
+				if (!this.loggedInUser.getInFreindList().containsKey(user.getId()))
+					return new Command("ERROR", "NOT_IN_FRIEND_LIST");
 
 				// The user doesn't exist
 				if (user == null)
@@ -673,12 +706,10 @@ public class Worker implements Runnable {
 				if (room == null)
 					return new Command("ERROR", "ROOM_DOES_NOT_EXIST");
 
-				if (room.join(this.loggedInUser)) {
+				if (room.join(this.loggedInUser))
 					this.loggedInUser.addRoom(room);
-				} else {
-					// TODO: More useful error messages
+				else
 					return new Command("ERROR", "COULD_NOT_JOIN_ROOM");
-				}
 
 				return this.okay;
 
@@ -695,12 +726,10 @@ public class Worker implements Runnable {
 				if (room == null)
 					return new Command("ERROR", "ROOM_DOES_NOT_EXIST");
 
-				if (room.leave(this.loggedInUser)) {
+				if (room.leave(this.loggedInUser))
 					this.loggedInUser.removeRoom(room);
-				} else {
-					// TODO: More useful error messages
+				else
 					return new Command("ERROR", "COULD_NOT_LEAVE_ROOM");
-				}
 
 				return this.okay;
 
@@ -750,7 +779,8 @@ public class Worker implements Runnable {
 	 * 
 	 * The FRIENDLIST command requests a list of users in the users friend list.
 	 * 
-	 * @param cmd The FRIENDLIST command
+	 * @param cmd
+	 *            The FRIENDLIST command
 	 * @return The friend list of the current user
 	 */
 	private Command friendlist(Command cmd) {
@@ -820,10 +850,8 @@ public class Worker implements Runnable {
 
 			// Stop them from getting access about people who aren't in their
 			// freindlist
-
-			// TODO: This should also include people who are also in the same
-			// room as the user
-			if (!this.loggedInUser.friendListContains(user) && this.loggedInUser != user)
+			if (!this.loggedInUser.friendListContains(user) && this.loggedInUser.inRoomWith(user)
+					&& this.loggedInUser != user)
 				return new Command("ERROR", "NOT_AUTHORIZED");
 
 			// Get the data they asked for

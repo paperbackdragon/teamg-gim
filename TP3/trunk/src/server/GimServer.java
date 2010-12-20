@@ -45,7 +45,8 @@ public class GimServer {
 				Thread t = new Thread(worker);
 				t.start();
 			} catch (IOException e) {
-				// TODO: We've just crashed, cleanup
+				// Nothing we can do at this point except kill the program.
+				break;
 			}
 		}
 
