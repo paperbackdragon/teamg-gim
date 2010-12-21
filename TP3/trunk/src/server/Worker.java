@@ -97,43 +97,33 @@ public class Worker implements Runnable {
 		case PING:
 			response = ping();
 			break;
-
 		case SERVERSTATUS:
 			response = serverstatus(cmd);
 			break;
-
 		case AUTH:
 			response = auth(cmd);
 			break;
-
 		case QUIT:
 			response = quit();
 			break;
-
 		case SET:
 			response = set(cmd);
 			break;
-
 		case GET:
 			response = get(cmd);
 			break;
-
 		case FRIENDLIST:
 			response = friendlist(cmd);
 			break;
-
 		case ROOM:
 			response = room(cmd);
 			break;
-
 		case MESSAGE:
 			response = message(cmd);
 			break;
-
 		case FRIEND:
 			response = friend(cmd);
 			break;
-
 		case LOGOUT:
 			response = logout();
 			break;
@@ -152,10 +142,10 @@ public class Worker implements Runnable {
 			break;
 
 		// Somehow the command was recognised but not processed above. This
-		// shouldn't happen.
+		// shouldn't happen. If it does I've messed up somewhere.
 		default:
-			response = new Command("ERROR", "SERVER_ERROR", Command.encode("A server error occured."));
-			break;
+			response = new Command("ERROR", "SERVER_ERROR", Command
+					.encode("A server error occured. Please submit a bug report to cyblob@gmail.com."));
 		}
 
 		return response;
@@ -351,11 +341,15 @@ public class Worker implements Runnable {
 				this.loggedInUser.setOnline(true);
 				this.loggedInUser.setWorker(this);
 
+				// Tell them that they're logged in
+				responseBuffer.putCommand(new Command("AUTH", "LOGGEDIN"));
+				
 				// Add any commands they received while offline
 				while (!loggedInUser.getQueue().isEmpty())
 					responseBuffer.putCommand(loggedInUser.getQueue().remove());
 
-				return new Command("AUTH", "LOGGEDIN");
+				// We did everything already D:
+				return null;
 
 				// Something wasn't correct
 			} else {
@@ -989,7 +983,7 @@ public class Worker implements Runnable {
 		this.responseWriter = new ResponseWriter(out, responseBuffer);
 		responseWriterThread = new Thread(this.responseWriter);
 		responseWriterThread.start();
-
+		
 		// Deal with the commands
 		while (socket.isConnected()) {
 			Command cmd = commandBuffer.getCommand();
@@ -998,6 +992,9 @@ public class Worker implements Runnable {
 			if (rsp != null) {
 				this.responseBuffer.putCommand(rsp);
 			}
+			
+			if(Thread.currentThread().isInterrupted())
+				break;
 
 		}
 

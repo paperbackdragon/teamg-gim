@@ -1,5 +1,7 @@
 package util;
 
+// TODO: Fix bug where u:finrecognised command does not get converted to DOESNOTEXIST
+
 public class Command {
 
 	// All of the valid commands in the protocol
