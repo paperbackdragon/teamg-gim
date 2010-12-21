@@ -6,9 +6,9 @@ import client.net.ClientConnection;
 import client.net.ServerConnection;
 
 public class ClientModel {
-	private ClientConnection outLink;
 	private ServerConnection inLink;
-	private LinkedList<String[]> newRoomList;// = new LinkedList<String[]>();
+	private ClientConnection outLink;
+	private LinkedList<String[]> newRoomList;
 
 	// buddy list
 	private String[] onlinefriends;
@@ -18,17 +18,15 @@ public class ClientModel {
 	// CONSTRUCTOR
 	public ClientModel() {
 		inLink = new ServerConnection();
-		
 		outLink = new ClientConnection(inLink);
-
 		newRoomList = new LinkedList<String[]>();
 	}
 
 	// ACCESSORS
 
-	public LinkedList<String[]> getRoomList() {
-		return newRoomList;
-	}
+	//public LinkedList<String[]> getRoomList() {
+	//	return newRoomList;
+	//}
 
 	public String[] getOnlinefriends() {
 		return onlinefriends;
@@ -81,7 +79,7 @@ public class ClientModel {
 	// ROOM stuff
 
 	public void createRoom(Boolean group, String[] contacts) {
-		newRoomList.add(contacts);
+		//newRoomList.add(contacts);
 		if (group)
 			outLink.createGroupChat();
 		else

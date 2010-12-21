@@ -11,12 +11,13 @@ public class GimClient {
 	private static ArrayList<ChatPanel> rooms;
 	
 	public static void main(String[] args) {
-		client = new ClientModel();
-		rooms = new ArrayList<ChatPanel>();
+		//client = new ClientModel();
+		//rooms = new ArrayList<ChatPanel>();
 		
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				LoginPanel lp = new LoginPanel();
+				//LoginPanel lp = new LoginPanel();
+				ContactPanel lp = new ContactPanel();
 				mainWindow = new GimUI("GIM", lp);
 				lp.setParent(mainWindow);
 			}

@@ -2,8 +2,13 @@ package client.ui;
 
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 
 import client.GimClient;
 
@@ -71,7 +76,9 @@ public class ContactPanel extends JPanel {
 			DefaultMutableTreeNode contacts = new DefaultMutableTreeNode("Contacts");
 			createNodes(contacts);
 			contactTree = new JTree(contacts);
-			
+			contactTree.addMouseListener(new SingleChatListener());
+			contactTree.expandPath()
+			//http://www.exampledepot.com/egs/javax.swing.tree/ExpandAll.html
 			add(contactTree, BorderLayout.CENTER);
 		}
 	}
@@ -107,6 +114,9 @@ public class ContactPanel extends JPanel {
 	}
 	
 	public void createNodes(DefaultMutableTreeNode root) {
+		// TODO change node icons (see java tutorial)
+		// TODO make two separate trees
+		
 		DefaultMutableTreeNode status = null;
 		DefaultMutableTreeNode contact = null;
 		
@@ -129,11 +139,22 @@ public class ContactPanel extends JPanel {
 	    status.add(contact);
 	}
 	
+	private String[] getSelectedContacts() {
+		TreePath[] nodes = contactTree.getSelectionPaths();
+		DefaultMutableTreeNode node;
+		String[] contacts = new String[nodes.length];
+		for(int i=0; i < nodes.length; i++) {
+			node = (DefaultMutableTreeNode) nodes[i].getLastPathComponent();
+			//contacts[i] = (String) node.getUserObject();
+			System.out.println((String) node.getUserObject());
+		}
+		return contacts;
+	}
+	
 	//ACTION LISTENERS
 	private class ButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			if(e.getSource().equals(add)) {
-				System.out.println("add clicked.");
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						GimUI ui = new GimUI("GIM - Find Contact", new FindPopup());
@@ -142,7 +163,6 @@ public class ContactPanel extends JPanel {
 				});
 			}
 			else if(e.getSource().equals(del)) {
-				System.out.println("del clicked.");
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						GimUI ui = new GimUI("GIM - Remove Contact", new RemovePopup());
@@ -150,16 +170,31 @@ public class ContactPanel extends JPanel {
 					}
 				});
 			}
+			//TODO make chat grayed out till someone is clicked
 			else if(e.getSource().equals(chat)) {
-				String[] contacts = null;
-				//String node = contactTree.getLastSelectedPathComponent().toString(); Trying to get selected node name
-				GimClient.getClient().createRoom(false, contacts);
+				//TODO how to make anything but nodes un-selectable?
+				GimClient.getClient().createRoom(false, getSelectedContacts());
 			}
 			else if(e.getSource().equals(group)) {
-				String[] contacts = null;
-				//String node = contactTree.getLastSelectedPathComponent().toString(); Trying to get selected node name
-				GimClient.getClient().createRoom(true, contacts);
+				GimClient.getClient().createRoom(true, getSelectedContacts());
 			}
 		}
+	}
+	
+	private class SingleChatListener implements MouseListener {
+		public void mousePressed(MouseEvent e) {
+			//TODO only do below if contact is clicked
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode) contactTree.getLastSelectedPathComponent();
+			String nodeInfo = (String) node.getUserObject();
+			
+			if(e.getClickCount() == 2) {
+				System.out.println(nodeInfo);
+			}
+		}
+		
+		public void mouseClicked(MouseEvent e) {}
+		public void mouseEntered(MouseEvent e) {}
+		public void mouseExited(MouseEvent e) {}
+		public void mouseReleased(MouseEvent e) {}
 	}
 }
