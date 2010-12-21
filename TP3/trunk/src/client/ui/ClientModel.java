@@ -10,6 +10,12 @@ public class ClientModel {
 	private ServerConnection inLink;
 	private LinkedList<String[]> newRoomList;// = new LinkedList<String[]>();
 	
+	// buddy list
+	private String[] onlinefriends;
+	private String[] offlinefriends;
+	private String[] blockedfriends;
+	
+	
 	//CONSTRUCTOR
 	public ClientModel() {
 		inLink = new ServerConnection();
@@ -19,8 +25,33 @@ public class ClientModel {
 	}
 	
 	//ACCESSORS
+	
 	public LinkedList<String[]> getRoomList() {
 		return newRoomList;
+	}
+	
+	public String[] getOnlinefriends() {
+		return onlinefriends;
+	}
+
+	public void setOnlinefriends(String[] onlinefriends) {
+		this.onlinefriends = onlinefriends;
+	}
+
+	public String[] getOfflinefriends() {
+		return offlinefriends;
+	}
+
+	public void setOfflinefriends(String[] offlinefriends) {
+		this.offlinefriends = offlinefriends;
+	}
+
+	public String[] getBlockedfriends() {
+		return blockedfriends;
+	}
+
+	public void setBlockedfriends(String[] blockedfriends) {
+		this.blockedfriends = blockedfriends;
 	}
 	
 	//MESSAGES TO SERVER
@@ -101,4 +132,6 @@ public class ClientModel {
 	}
 	
 	//end: Friends list stuff
+	
+	
 }

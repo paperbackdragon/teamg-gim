@@ -34,6 +34,13 @@ public class ServerConnection implements NetworkingIn {
 	}
 
 	public void friendlist(String[] onlinelist, String[] offlinelist, String[] blockedlist) {
+		GimClient.getClient().setOnlinefriends(onlinelist);
+		GimClient.getClient().setOfflinefriends(offlinelist);
+		GimClient.getClient().setBlockedfriends(blockedlist);
+		
+		// update the interface
+		
+		
 		
 	}
 
