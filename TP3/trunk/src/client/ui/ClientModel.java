@@ -18,6 +18,7 @@ public class ClientModel {
 	// CONSTRUCTOR
 	public ClientModel() {
 		inLink = new ServerConnection();
+		
 		outLink = new ClientConnection(inLink);
 
 		newRoomList = new LinkedList<String[]>();
