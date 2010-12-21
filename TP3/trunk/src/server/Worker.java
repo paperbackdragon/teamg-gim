@@ -497,7 +497,7 @@ public class Worker implements Runnable {
 				return new Command("ERROR", "ALREADY_IN_FRIENDLIST", Command.encode(user.getId()));
 
 			user.sendFriendRequest(this.loggedInUser);
-			
+
 			return this.okay;
 
 		} else if (arg.equalsIgnoreCase("BLOCK")) {
@@ -510,7 +510,7 @@ public class Worker implements Runnable {
 				return new Command("ERROR", "CANNOT_BLOCK_YOURSELF");
 
 			this.loggedInUser.block(user);
-			
+
 			return this.okay;
 
 		} else if (arg.equalsIgnoreCase("UNBLOCK")) {
@@ -519,7 +519,7 @@ public class Worker implements Runnable {
 			 */
 
 			user.unblock(user);
-			
+
 			return this.okay;
 
 		} else if (arg.equalsIgnoreCase("ACCEPT")) {
@@ -527,24 +527,28 @@ public class Worker implements Runnable {
 			 * Accept the users friend request
 			 */
 
+			if (!user.sentFriendRequestTo(this.loggedInUser))
+				return new Command("ERROR", "CANNOT_ACCEPT_REQUEST", "This user did not send you a friend request.");
+
 			this.loggedInUser.addFriend(user);
 			user.addFriend(this.loggedInUser);
-			
+			user.removeFriendRequest(this.loggedInUser);
+
 			return this.okay;
 
 		} else if (arg.equalsIgnoreCase("DECLINE")) {
 			/**
 			 * Decline the users friend request
 			 */
-			// I don't actually think we have to do anything, erm....
-			
+			user.removeFriendRequest(this.loggedInUser);
+
 			return this.okay;
 
 		} else if (arg.equalsIgnoreCase("DELETE")) {
 			/**
 			 * Delete the user from our friend list
 			 */
-			
+
 			if (!this.loggedInUser.isFriendsWith(user))
 				return new Command("ERROR", "NOT_IN_FRIENDLIST");
 
