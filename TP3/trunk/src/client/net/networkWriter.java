@@ -15,7 +15,6 @@ public class networkWriter implements Runnable {
 
 	private CommandBuffer buffer;
 	private PrintWriter writer;
-	
 
 	public networkWriter(PrintWriter writer, CommandBuffer buffer) {
 
@@ -27,25 +26,20 @@ public class networkWriter implements Runnable {
 	@Override
 	public void run() {
 
-		try {
+		// Send out any responses in the buffer
+		while (true) {
 
-			// Send out any responses in the buffer
-			while (true) {
-				
-				String currentcommand = (String) buffer.getCommand();
-				
-				writer.println(currentcommand);
+			String currentcommand = (String) buffer.getCommand();
 
-				// System.out.println(response.toString());
+			writer.println(currentcommand);
 
-				// Check if we just killed the connection
-				 if (currentcommand.equals(":QUIT:;") || currentcommand.equals(":LOGOUT:;")) {
-					 break; 
-				 }
-				// break;
+			// System.out.println(response.toString());
+
+			// Check if we just killed the connection
+			if (currentcommand.equals(":QUIT:;") || currentcommand.equals(":LOGOUT:;")) {
+				break;
 			}
-
-		} catch (InterruptedException e) {
+			// break;
 		}
 
 		System.out.println("ResponseWriter killed.");

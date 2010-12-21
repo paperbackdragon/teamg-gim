@@ -97,6 +97,8 @@ public class User {
 
 	public synchronized void setOnline(boolean online) {
 		this.online = online;
+		if(!online)
+			this.setStatus("OFFLINE");
 	}
 
 	public boolean isOnline() {
@@ -183,6 +185,10 @@ public class User {
 		return this.rooms.containsKey(new Integer(roomID));
 	}
 
+	
+	// TODO: MAKE EVERYTHING BELOW THIS POINT THREAD SAFE
+	
+	
 	public void sendFriendRequest(User from) {
 		Command cmd = new Command("FREINDREQUEST", null, Command.encode(from.getId()) + " " + Command.encode(from.getNickname()));
 		if(this.worker == null)
@@ -215,6 +221,10 @@ public class User {
 				return true;
 		}
 		return false;
+	}
+
+	public void logout() {
+		setOnline(false);
 	}
 
 }

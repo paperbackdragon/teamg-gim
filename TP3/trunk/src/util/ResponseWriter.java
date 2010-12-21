@@ -20,21 +20,17 @@ public class ResponseWriter implements Runnable {
 	}
 
 	public void run() {
-		try {
 
-			// Send out any responses in the buffer
-			while (true) {
-				Command response = responseBuffer.getCommand();
-				out.println(response.toString());
-				
-				System.out.println(response.toString());
+		// Send out any responses in the buffer
+		while (true) {
+			Command response = responseBuffer.getCommand();
+			out.println(response.toString());
 
-				// Check we didn't just kill the connection
-				if (response.getCommandAsEnum() == COMMANDS.KILL)
-					break;
-			}
+			System.out.println(response.toString());
 
-		} catch (InterruptedException e) {
+			// Check we didn't just kill the connection
+			if (response.getCommandAsEnum() == COMMANDS.KILL)
+				break;
 		}
 
 		System.out.println("ResponseWriter killed.");

@@ -43,6 +43,7 @@ public class GimServer {
 				System.out.println("Creating new worker thread width id " + clientID);
 				data.addWorker(clientID, worker);
 				Thread t = new Thread(worker);
+				t.setName(clientID + " ");
 				t.start();
 			} catch (IOException e) {
 				// Nothing we can do at this point except kill the program.

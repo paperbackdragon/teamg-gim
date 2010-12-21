@@ -7,7 +7,6 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Date;
 
-import server.User.Status;
 import util.Command;
 import util.CommandBuffer;
 import util.CommandReader;
@@ -354,7 +353,7 @@ public class Worker implements Runnable {
 
 				// Add any commands they received while offline
 				while (!loggedInUser.getQueue().isEmpty())
-					commandBuffer.putCommand(loggedInUser.getQueue().remove());
+					responseBuffer.putCommand(loggedInUser.getQueue().remove());
 
 				return new Command("AUTH", "LOGGEDIN");
 
@@ -955,8 +954,8 @@ public class Worker implements Runnable {
 		if (this.loggedInUser == null)
 			return new Command("ERROR", "UNAUTHORIZED");
 
-		loggedInUser.setOnline(false);
-		loggedInUser.setStatus(Status.OFFLINE);
+		this.loggedInUser.logout();
+		this.loggedInUser.setWorker(null);
 		this.loggedInUser = null;
 
 		return this.okay;
@@ -991,21 +990,18 @@ public class Worker implements Runnable {
 		responseWriterThread = new Thread(this.responseWriter);
 		responseWriterThread.start();
 
-		try {
+		// Deal with the commands
+		while (socket.isConnected()) {
+			Command cmd = commandBuffer.getCommand();
+			Command rsp = processCommand(cmd);
 
-			// Deal with the commands
-			while (socket.isConnected()) {
-				Command cmd = commandBuffer.getCommand();
-				Command rsp = processCommand(cmd);
-				if (rsp != null) {
-					this.responseBuffer.putCommand(rsp);
-				}
-
+			if (rsp != null) {
+				this.responseBuffer.putCommand(rsp);
 			}
 
-		} catch (InterruptedException e) {
-			System.out.println("Worker has finished.");
 		}
+
+		System.out.println("Worker finished.");
 
 	}
 }

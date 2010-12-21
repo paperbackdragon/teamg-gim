@@ -10,17 +10,24 @@ public class CommandBuffer<T> {
 		this.commands = new LinkedList<T>();
 	}
 
-	public synchronized T getCommand() throws InterruptedException {
+	public synchronized T getCommand() {
 		while (commands.size() == 0) {
-			wait();
+			try {
+				wait();
+			} catch (InterruptedException e) {
+			}
 		}
-			notifyAll();
-			return commands.remove();
+		notifyAll();
+		return commands.remove();
 	}
 
 	public synchronized void putCommand(T cmd) {
-			commands.add(cmd);
-			notifyAll();
+		commands.add(cmd);
+		notifyAll();
+	}
+
+	public boolean isEmpty() {
+		return (commands.size() == 0);
 	}
 
 }
