@@ -30,7 +30,7 @@ public class Data {
 	}
 
 	/**
-	 * Apparently doing it this way makes it thread-safe...
+	 * Apparently doing it this way makes constructing it thread-safe...
 	 */
 	private static class SingeltonHolder {
 		public static final Data INSTANCE = new Data();
@@ -70,6 +70,11 @@ public class Data {
 
 	/**
 	 * Add a new worker
+	 * 
+	 * @param id
+	 *            The id of the worker
+	 * @param worker
+	 *            The worker itself
 	 */
 	public void addWorker(int id, Worker worker) {
 		synchronized (users) {
@@ -132,7 +137,7 @@ public class Data {
 	/**
 	 * Get the next client ID
 	 * 
-	 * @return
+	 * @return The next free Id for this client to use
 	 */
 	public int getNextClientID() {
 		return this.clientID++;
@@ -141,7 +146,7 @@ public class Data {
 	/**
 	 * Get the next unique room ID
 	 * 
-	 * @return
+	 * @return The new free id for this room to use
 	 */
 	public int getNextRoomID() {
 		return this.roomID++;
