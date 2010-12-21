@@ -343,10 +343,12 @@ public class Worker implements Runnable {
 
 				// Tell them that they're logged in
 				responseBuffer.putCommand(new Command("AUTH", "LOGGEDIN"));
-				
+
 				// Add any commands they received while offline
-				while (!loggedInUser.getQueue().isEmpty())
-					responseBuffer.putCommand(loggedInUser.getQueue().remove());
+				synchronized (this.loggedInUser.getQueue()) {
+					while (!loggedInUser.getQueue().isEmpty())
+						responseBuffer.putCommand(loggedInUser.getQueue().remove());
+				}
 
 				// We did everything already D:
 				return null;
@@ -486,35 +488,64 @@ public class Worker implements Runnable {
 
 		String arg = cmd.getArgumentsAsString();
 		if (arg.equalsIgnoreCase("ADD")) {
+			/**
+			 * Add the user
+			 */
 
-			if (this.loggedInUser.friendListContains(user))
+			// Make sure they're not alread a friend
+			if (this.loggedInUser.isFriendsWith(user))
 				return new Command("ERROR", "ALREADY_IN_FRIENDLIST", Command.encode(user.getId()));
 
 			user.sendFriendRequest(this.loggedInUser);
+			
 			return this.okay;
 
 		} else if (arg.equalsIgnoreCase("BLOCK")) {
+			/**
+			 * Block the user
+			 */
+
+			// You can't block yourself, that would be silly
 			if (this.loggedInUser == user)
 				return new Command("ERROR", "CANNOT_BLOCK_YOURSELF");
 
 			this.loggedInUser.block(user);
+			
 			return this.okay;
 
 		} else if (arg.equalsIgnoreCase("UNBLOCK")) {
+			/**
+			 * Unblock the user
+			 */
+
 			user.unblock(user);
+			
 			return this.okay;
 
 		} else if (arg.equalsIgnoreCase("ACCEPT")) {
+			/**
+			 * Accept the users friend request
+			 */
+
 			this.loggedInUser.addFriend(user);
 			user.addFriend(this.loggedInUser);
+			
 			return this.okay;
 
 		} else if (arg.equalsIgnoreCase("DECLINE")) {
+			/**
+			 * Decline the users friend request
+			 */
 			// I don't actually think we have to do anything, erm....
+			
 			return this.okay;
 
 		} else if (arg.equalsIgnoreCase("DELETE")) {
-			if (!this.loggedInUser.friendListContains(user))
+			/**
+			 * Delete the user from our friend list
+			 */
+			
+			if (!this.loggedInUser.isFriendsWith(user))
 				return new Command("ERROR", "NOT_IN_FRIENDLIST");
 
 			this.loggedInUser.removeFriend(user);
@@ -667,7 +698,7 @@ public class Worker implements Runnable {
 				Room room = this.data.getRoom(roomId);
 				User user = this.data.getUser(userId);
 
-				if (!this.loggedInUser.getInFreindList().containsKey(user.getId()))
+				if (!user.isFriendsWith(this.loggedInUser))
 					return new Command("ERROR", "NOT_IN_FRIEND_LIST");
 
 				// The user doesn't exist
@@ -786,7 +817,7 @@ public class Worker implements Runnable {
 		String blocked = "BLOCKED";
 
 		// Sort the online and offline users
-		for (User user : this.loggedInUser.getFriendList().values()) {
+		for (User user : this.loggedInUser.getFriendList()) {
 			if (user.isOnline())
 				online += Command.encode(user.getId()) + " ";
 			else
@@ -794,7 +825,7 @@ public class Worker implements Runnable {
 		}
 
 		// Get all of the blocked users
-		for (User user : this.loggedInUser.getBlockedUsers().values())
+		for (User user : this.loggedInUser.getBlockedUsers())
 			blocked += Command.encode(user.getId()) + " ";
 
 		return new Command("FRIENDLIST", null, online + offline + blocked);
@@ -843,7 +874,7 @@ public class Worker implements Runnable {
 
 			// Stop them from getting access about people who aren't in their
 			// freindlist
-			if (!this.loggedInUser.friendListContains(user) && this.loggedInUser.inRoomWith(user)
+			if (!this.loggedInUser.isFriendsWith(user) && this.loggedInUser.inRoomWith(user)
 					&& this.loggedInUser != user)
 				return new Command("ERROR", "NOT_AUTHORIZED");
 
@@ -983,7 +1014,7 @@ public class Worker implements Runnable {
 		this.responseWriter = new ResponseWriter(out, responseBuffer);
 		responseWriterThread = new Thread(this.responseWriter);
 		responseWriterThread.start();
-		
+
 		// Deal with the commands
 		while (socket.isConnected()) {
 			Command cmd = commandBuffer.getCommand();
@@ -992,8 +1023,8 @@ public class Worker implements Runnable {
 			if (rsp != null) {
 				this.responseBuffer.putCommand(rsp);
 			}
-			
-			if(Thread.currentThread().isInterrupted())
+
+			if (Thread.currentThread().isInterrupted())
 				break;
 
 		}

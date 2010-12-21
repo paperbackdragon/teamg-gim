@@ -1,5 +1,6 @@
 package server;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -24,6 +25,7 @@ public class User {
 	public static boolean validID(String id) {
 		return true;
 	}
+
 	private String id;
 	private String passwordHash;
 	private Status status = Status.OFFLINE;
@@ -38,15 +40,17 @@ public class User {
 	private HashMap<Integer, Room> rooms = new HashMap<Integer, Room>();
 
 	private LinkedList<Command> queue = new LinkedList<Command>();
-	private boolean online = false;
+	private volatile boolean online = false;
 
 	private Worker worker = null;
 
 	/**
-	 * Constructor with minimum possible details
+	 * Constructor with the minimum possible details
 	 * 
 	 * @param id
+	 *            The user ID of the user
 	 * @param passwordHash
+	 *            The password hash of the user
 	 */
 	public User(String id, String passwordHash) {
 		this.id = id.toLowerCase();
@@ -56,6 +60,26 @@ public class User {
 		this.personalMessage = "";
 	}
 
+	/**
+	 * Constructor with all of the details
+	 * 
+	 * @param id
+	 *            The user ID of the user
+	 * @param passwordHash
+	 *            The password hash of the user
+	 * @param status
+	 *            The Status of the user as an enum from User.status
+	 * @param nickname
+	 *            The nickname of the user
+	 * @param personalMessage
+	 *            The personal message of the user
+	 * @param friendList
+	 *            The friend list of the user
+	 * @param inFreindList
+	 *            A list of users who have this user in their friend list
+	 * @param blockedUsers
+	 *            A list of users this user has blocked
+	 */
 	public User(String id, String passwordHash, Status status, String nickname, String personalMessage,
 			HashMap<String, User> friendList, HashMap<String, User> inFreindList, HashMap<String, User> blockedUsers) {
 
@@ -70,156 +94,404 @@ public class User {
 
 	}
 
+	/**
+	 * Add a user to this user's friend list and place this user into the list
+	 * of people who have that user in their friend list.
+	 * 
+	 * @param user
+	 *            The user to add as a friend.
+	 */
 	public void addFriend(User user) {
-		this.friendList.put(user.getId(), user);
-		user.inFreindList.put(getId(), this);
+		synchronized (this.friendList) {
+			this.friendList.put(user.getId(), user);
+		}
+		user.addToInFriendList(this);
 	}
 
-	public synchronized void addRoom(Room room) {
-		this.rooms.put(room.getId(), room);
+	/**
+	 * Add the user to this users list of people who have them as a friend
+	 * 
+	 * @param user
+	 *            The user to add to the list
+	 */
+	public void addToInFriendList(User user) {
+		synchronized (this.inFreindList) {
+			this.inFreindList.put(user.getId(), user);
+		}
 	}
 
+	/**
+	 * Add a room to the list of rooms that this user is currently in
+	 * 
+	 * @param room
+	 *            the room to add
+	 */
+	public void addRoom(Room room) {
+		synchronized (this.rooms) {
+			this.rooms.put(room.getId(), room);
+		}
+	}
+
+	/**
+	 * Add a user to this users list of blocked users
+	 * 
+	 * @param user
+	 *            the user to block
+	 */
 	public void block(User user) {
-		this.blockedUsers.put(user.getId(), user);
+		synchronized (this.blockedUsers) {
+			this.blockedUsers.put(user.getId(), user);
+		}
 	}
 
-	public boolean friendListContains(User user) {
+	/**
+	 * Check if the current user is friends with another user
+	 * 
+	 * @param user
+	 *            The user to check against
+	 * @return True if the user has the given user in their friend list, false
+	 *         otherwise
+	 */
+	public boolean isFriendsWith(User user) {
 		return this.friendList.containsKey(user.getId());
 	}
 
-	public HashMap<String, User> getBlockedUsers() {
-		return blockedUsers;
+	/**
+	 * Get a list of all the blocked users
+	 * 
+	 * @return A Collection of the blocked users
+	 */
+	public Collection<User> getBlockedUsers() {
+		return this.blockedUsers.values();
 	}
 
+	/**
+	 * Get the display picture as a BASE64 encoded string
+	 * 
+	 * @return The display picture as a BASE64 encoded string
+	 */
 	public String getDisplayPic() {
-		return displayPic;
+		return this.displayPic;
 	}
 
-	public HashMap<String, User> getFriendList() {
-		return friendList;
+	/**
+	 * Get a list of all the users this user is friends with
+	 * 
+	 * @return A Collection of the users this user is friends with
+	 */
+	public Collection<User> getFriendList() {
+		return this.friendList.values();
 	}
 
+	/**
+	 * Get it ID of the user
+	 * 
+	 * @return The ID of the user
+	 */
 	public String getId() {
-		return id;
+		return this.id;
 	}
 
-	public HashMap<String, User> getInFreindList() {
-		return inFreindList;
+	public Collection<User> getInFreindList() {
+		return this.inFreindList.values();
 	}
 
+	/**
+	 * Get the users nickname
+	 * 
+	 * @return Their nickname
+	 */
 	public String getNickname() {
 		return nickname;
 	}
 
+	/**
+	 * Get the users password hash
+	 * 
+	 * @return The password hash
+	 */
 	public String getPasswordHash() {
 		return passwordHash;
 	}
 
+	/**
+	 * Get the users personal message
+	 * 
+	 * @return The personal message
+	 */
 	public String getPersonalMessage() {
 		return personalMessage;
 	}
 
+	/**
+	 * YOU MUST FOR ALL THINGS IN THIS WORLD SYNCHRONIZE ANY ADDITIONS TO THIS
+	 * 
+	 * @return The list of queued commands to the user
+	 */
 	public LinkedList<Command> getQueue() {
 		return this.queue;
 	}
 
+	/**
+	 * Get the users status
+	 * 
+	 * @return The status of the user
+	 */
 	public Status getStatus() {
 		return status;
 	}
 
+	/**
+	 * Get the current worker for this user
+	 * 
+	 * @return A worker if the user is logged in, null otherwise.
+	 */
 	public Worker getWorker() {
 		return this.worker;
 	}
 
+	/**
+	 * Check if a user is in a room
+	 * 
+	 * @param roomID
+	 *            The room ID to check against
+	 * @return True if the user is in the room, false otherwise
+	 */
 	public boolean inRoom(int roomID) {
 		return this.rooms.containsKey(new Integer(roomID));
 	}
 
+	/**
+	 * Check if the user is in a room with another user
+	 * 
+	 * @param user
+	 *            The user to look for
+	 * @return True if they are in the same room as the user, false otherwise
+	 */
 	public boolean inRoomWith(User user) {
 		for (Room room : this.rooms.values()) {
-			if(room.inRoom(user))
+			if (room.inRoom(user))
 				return true;
 		}
 		return false;
 	}
 
+	/**
+	 * Check if the user is online (This is their action online state, not just
+	 * their status. Appear offline counts as online)
+	 * 
+	 * @return True if they are online, false otherwise
+	 */
 	public boolean isOnline() {
 		return this.online;
 	}
 
+	/**
+	 * Log the user out
+	 */
 	public void logout() {
 		setOnline(false);
 	}
 
+	/**
+	 * From a user from this users friend list
+	 * 
+	 * @param user
+	 *            The user to remove
+	 */
 	public void removeFriend(User user) {
-		this.friendList.remove(user.getId());
-		user.inFreindList.remove(getId());
+		synchronized (this.friendList) {
+			this.friendList.remove(user.getId());
+		}
+		user.notInFriendList(user);
 	}
 
-	public synchronized void removeRoom(Room room) {
-		this.rooms.remove(room.getId());
+	/**
+	 * Set the user to not be in the other users friend list
+	 * 
+	 * @param user
+	 *            The user to remove
+	 */
+	public void notInFriendList(User user) {
+		synchronized (this.inFreindList) {
+			this.inFreindList.remove(user.getId());
+		}
 	}
 
+	/**
+	 * Remove a room from the list of rooms this user is in
+	 * 
+	 * @param room
+	 *            The room to remove
+	 */
+	public void removeRoom(Room room) {
+		synchronized (this.rooms) {
+			this.rooms.remove(room.getId());
+		}
+	}
+
+	/**
+	 * Send a friend request to this user
+	 * 
+	 * @param from
+	 *            The person the request was from
+	 */
 	public void sendFriendRequest(User from) {
-		Command cmd = new Command("FREINDREQUEST", null, Command.encode(from.getId()) + " " + Command.encode(from.getNickname()));
-		if(this.worker == null)
-			this.queue.push(cmd);
-		else
+		Command cmd = new Command("FREINDREQUEST", null, Command.encode(from.getId()) + " "
+				+ Command.encode(from.getNickname()));
+
+		// Queue the message if the user is offline
+		if (this.worker == null) {
+			synchronized (this.queue) {
+				this.queue.push(cmd);
+			}
+		} else {
 			worker.putResponse(cmd);
+		}
 	}
 
+	/**
+	 * Send a message to this user
+	 * 
+	 * @param from
+	 *            Who the message is from
+	 * @param roomID
+	 *            The room Id this message belongs to
+	 * @param message
+	 *            The message itself
+	 */
 	public void sendMessage(User from, int roomID, String message) {
-		if(!this.blockedUsers.containsKey(from.getId()) && this.worker != null) {
+		if (!this.blockedUsers.containsKey(from.getId()) && this.worker != null) {
 			this.worker.putResponse(new Command("MESSAGE", null, roomID + " " + Command.encode(from.getId()) + " "
 					+ Command.encode(message)));
 		}
 	}
 
-	public synchronized void setDisplayPic(String displayPic) {
-		this.displayPic = displayPic;
+	/**
+	 * Set the display picture for this user
+	 * 
+	 * @param displayPic
+	 *            The new display picture BASE64 encoded
+	 */
+	public void setDisplayPic(String displayPic) {
+		synchronized (this.displayPic) {
+			this.displayPic = displayPic;
+		}
+
 	}
 
-	public synchronized void setId(String id) {
-		this.id = id.toLowerCase();
+	/**
+	 * Set the Id of the user
+	 * 
+	 * @param id
+	 *            The new ID of the user
+	 */
+	public void setId(String id) {
+		synchronized (this.id) {
+			this.id = id.toLowerCase();
+		}
 	}
 
-	public synchronized void setNickname(String nickname) {
-		this.nickname = nickname;
+	/**
+	 * Set the users nickname
+	 * 
+	 * @param nickname
+	 *            the new nickname
+	 */
+	public void setNickname(String nickname) {
+		synchronized (this.nickname) {
+			this.nickname = nickname;
+		}
 	}
-	
-	public synchronized void setOnline(boolean online) {
+
+	/**
+	 * Set the users online status
+	 * 
+	 * @param online
+	 *            True if the user is online, false otherwise
+	 */
+	public void setOnline(boolean online) {
 		this.online = online;
-		if(!online)
+		if (!online)
 			this.setStatus("OFFLINE");
 	}
 
-	public synchronized void setPasswordHash(String passwordHash) {
-		this.passwordHash = passwordHash;
-	}
-
-	public synchronized void setPersonalMessage(String personalMessage) {
-		this.personalMessage = personalMessage;
-	}
-
-	public synchronized void setStatus(Status status) {
-		this.status = status;
-	}
-
-	public synchronized boolean setStatus(String status) {
-		try {
-			this.status = Status.valueOf(status.toUpperCase());
-		} catch (IllegalArgumentException e) {
-			return false;
+	/**
+	 * Set a new password for the user
+	 * 
+	 * @param passwordHash
+	 *            The hash of the password
+	 */
+	public void setPasswordHash(String passwordHash) {
+		synchronized (this.passwordHash) {
+			this.passwordHash = passwordHash;
 		}
-		return true;
 	}
 
-	public synchronized void setWorker(Worker worker) {
-		this.worker = worker;
+	/**
+	 * Set the personal message for this user
+	 * 
+	 * @param personalMessage
+	 *            The new personal message
+	 */
+	public void setPersonalMessage(String personalMessage) {
+		synchronized (this.personalMessage) {
+			this.personalMessage = personalMessage;
+		}
 	}
 
+	/**
+	 * Set the status for this user
+	 * 
+	 * @param status
+	 *            The new status
+	 */
+	public void setStatus(Status status) {
+		synchronized (this.status) {
+			this.status = status;
+		}
+	}
+
+	/**
+	 * Set the status of this user
+	 * 
+	 * @param status
+	 *            The new status
+	 * @return True if it was successfully set, false otherwise
+	 */
+	public boolean setStatus(String status) {
+		synchronized (this.status) {
+			try {
+				this.status = Status.valueOf(status.toUpperCase());
+			} catch (IllegalArgumentException e) {
+				return false;
+			}
+			return true;
+		}
+	}
+
+	/**
+	 * Set the Worker for this user
+	 * 
+	 * @param worker
+	 *            The worker currently handling this user
+	 */
+	public void setWorker(Worker worker) {
+		synchronized (this.worker) {
+			this.worker = worker;
+		}
+	}
+
+	/**
+	 * Remove a user from this users blocked list
+	 * 
+	 * @param user
+	 *            The user to remove
+	 */
 	public void unblock(User user) {
-		this.blockedUsers.remove(user.getId());
+		synchronized (this.blockedUsers) {
+			this.blockedUsers.remove(user.getId());
+		}
 	}
 
 }

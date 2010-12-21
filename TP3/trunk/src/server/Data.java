@@ -1,5 +1,6 @@
 package server;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 /**
@@ -108,12 +109,24 @@ public class Data {
 		}
 	}
 
+	/**
+	 * Get a room by its ID
+	 * 
+	 * @param id
+	 *            The ID of the room
+	 * @return The room or null if the room does not exist
+	 */
 	public Room getRoom(int id) {
 		return rooms.get(new Integer(id));
 	}
 
-	public HashMap<Integer, Room> getRooms() {
-		return this.rooms;
+	/**
+	 * Get a list of all the rooms
+	 * 
+	 * @return A Collection of all the rooms
+	 */
+	public Collection<Room> getRooms() {
+		return this.rooms.values();
 	}
 
 	/**

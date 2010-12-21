@@ -1,6 +1,6 @@
 package util;
 
-// TODO: Fix bug where u:finrecognised command does not get converted to DOESNOTEXIST
+// TODO: Fix bug where unrecognised command does not get converted to DOESNOTEXIST
 
 public class Command {
 

@@ -74,17 +74,17 @@ public class Room {
 	}
 
 	public boolean messageAll(User sender, String message) {
+		// Whoever tried to sent it wasn't in the room
 		if (!inRoom(sender))
 			return false;
 
-		// Send it to everyone except the user who went it
+		// Send it to everyone except the user who sent it
 		for (User user : users.values()) {
 			if (user != sender)
 				user.sendMessage(sender, this.getId(), message);
 		}
 
 		return true;
-
 	}
 
 	public synchronized boolean leave(User left) {
@@ -103,12 +103,8 @@ public class Room {
 	}
 
 	public synchronized boolean invite(User user, User by) {
-
 		this.invited.put(user.getId(), user);
-
-		// We may have to encode the id here, I'm not sure
 		user.getWorker().putResponse(new Command("ROOM", "INVITIED", this.id + " " + Command.encode(by.getId())));
-
 		return true;
 	}
 
