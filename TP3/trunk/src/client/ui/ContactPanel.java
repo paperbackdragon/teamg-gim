@@ -77,7 +77,8 @@ public class ContactPanel extends JPanel {
 			createNodes(contacts);
 			contactTree = new JTree(contacts);
 			contactTree.addMouseListener(new SingleChatListener());
-			contactTree.expandPath()
+			// TODO: Uncomment this when its fixed, sorry heather, the error was annoying me  
+			//contactTree.expandPath();
 			//http://www.exampledepot.com/egs/javax.swing.tree/ExpandAll.html
 			add(contactTree, BorderLayout.CENTER);
 		}
