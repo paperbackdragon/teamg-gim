@@ -120,14 +120,13 @@ public class ContactPanel extends JPanel {
 		//TODO (heather): make two separate trees
 		//contacts = new DefaultMutableTreeNode("Contacts");
 		
-		DefaultMutableTreeNode root = contacts;
+		contacts.removeAllChildren();
 		DefaultMutableTreeNode status = null;
 		DefaultMutableTreeNode contact = null;
 		
-		root = new DefaultMutableTreeNode("Contacts");
 		
 		status = new DefaultMutableTreeNode("Online");
-		root.add(status);
+		contacts.add(status);
 		
 		//set online contacts
 		for (String str : online) {
@@ -136,7 +135,7 @@ public class ContactPanel extends JPanel {
 		}
 	    
 	    status = new DefaultMutableTreeNode("Offline");
-	    root.add(status);
+	    contacts.add(status);
 	    
 	    //set offline contacts
 	    for (String str : offline) {
