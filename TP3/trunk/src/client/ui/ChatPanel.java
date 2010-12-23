@@ -14,6 +14,11 @@ public class ChatPanel extends JPanel{
 	protected JTextArea messages, chatBox;
 	protected JButton send;
 	
+	/* Gordon: proposed. On adding message to messages JTextArea
+	 *  if messageCount == 0, make window visible*/
+	private int messageCount;
+	// </proposed>
+	
 	/**
 	 * Constructor for a chatbox
 	 */
