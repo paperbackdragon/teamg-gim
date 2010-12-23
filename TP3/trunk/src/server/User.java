@@ -6,8 +6,6 @@ import java.util.LinkedList;
 
 import util.Command;
 
-// TODO: Notify other online users when status' etc are changed
-
 public class User {
 
 	public static enum Status {
@@ -95,6 +93,19 @@ public class User {
 	}
 
 	/**
+	 * Put the the user into the list of people this user has sent friend
+	 * request to
+	 * 
+	 * @param user
+	 *            The user to add
+	 */
+	public void addFreindRequest(User user) {
+		synchronized (this.friendRequests) {
+			this.friendRequests.put(user.getId(), user);
+		}
+	}
+
+	/**
 	 * Add a user to this user's friend list and place this user into the list
 	 * of people who have that user in their friend list.
 	 * 
@@ -105,19 +116,8 @@ public class User {
 		synchronized (this.friendList) {
 			this.friendList.put(user.getId(), user);
 		}
+		this.getWorker().putCommand(new Command("UPDATE", "FRIENDLIST", Command.encode(this.getId())));
 		user.addToInFriendList(this);
-	}
-
-	/**
-	 * Add the user to this users list of people who have them as a friend
-	 * 
-	 * @param user
-	 *            The user to add to the list
-	 */
-	public void addToInFriendList(User user) {
-		synchronized (this.inFreindList) {
-			this.inFreindList.put(user.getId(), user);
-		}
 	}
 
 	/**
@@ -133,6 +133,18 @@ public class User {
 	}
 
 	/**
+	 * Add the user to this users list of people who have them as a friend
+	 * 
+	 * @param user
+	 *            The user to add to the list
+	 */
+	public void addToInFriendList(User user) {
+		synchronized (this.inFreindList) {
+			this.inFreindList.put(user.getId(), user);
+		}
+	}
+
+	/**
 	 * Add a user to this users list of blocked users
 	 * 
 	 * @param user
@@ -142,18 +154,7 @@ public class User {
 		synchronized (this.blockedUsers) {
 			this.blockedUsers.put(user.getId(), user);
 		}
-	}
-
-	/**
-	 * Check if the current user is friends with another user
-	 * 
-	 * @param user
-	 *            The user to check against
-	 * @return True if the user has the given user in their friend list, false
-	 *         otherwise
-	 */
-	public boolean isFriendsWith(User user) {
-		return this.friendList.containsKey(user.getId());
+		this.getWorker().putCommand(new Command("UPDATE", "FRIENDLIST", Command.encode(this.getId())));
 	}
 
 	/**
@@ -233,12 +234,40 @@ public class User {
 	}
 
 	/**
+	 * Get a list of the rooms this user is in
+	 * 
+	 * @return A collection of the rooms
+	 */
+	public Collection<Room> getRooms() {
+		return this.rooms.values();
+	}
+	
+	/**
 	 * Get the users status
 	 * 
 	 * @return The status of the user
 	 */
 	public Status getStatus() {
 		return status;
+	}
+
+	/**
+	 * Get a list of the users who have this user in their friend list and who
+	 * are currently online
+	 * 
+	 * @return A hashmap of the users who are online
+	 */
+	public HashMap<String, User> getUsersToNotify() {
+		HashMap<String, User> users = new HashMap<String, User>();
+
+		for (User user : this.getInFreindList()) {
+			if (user.isOnline()) {
+				users.put(user.getId(), user);
+				System.out.println(user.getId());
+			}
+		}
+
+		return users;
 	}
 
 	/**
@@ -277,6 +306,18 @@ public class User {
 	}
 
 	/**
+	 * Check if the current user is friends with another user
+	 * 
+	 * @param user
+	 *            The user to check against
+	 * @return True if the user has the given user in their friend list, false
+	 *         otherwise
+	 */
+	public boolean isFriendsWith(User user) {
+		return this.friendList.containsKey(user.getId());
+	}
+
+	/**
 	 * Check if the user is online (This is their action online state, not just
 	 * their status. Appear offline counts as online)
 	 * 
@@ -287,10 +328,22 @@ public class User {
 	}
 
 	/**
-	 * Log the user out
+	 * Leave any rooms that the user is currently in and logout.
 	 */
 	public void logout() {
 		setOnline(false);
+	}
+
+	/**
+	 * Set the user to not be in the other users friend list
+	 * 
+	 * @param user
+	 *            The user to remove
+	 */
+	public void notInFriendList(User user) {
+		synchronized (this.inFreindList) {
+			this.inFreindList.remove(user.getId());
+		}
 	}
 
 	/**
@@ -304,17 +357,18 @@ public class User {
 			this.friendList.remove(user.getId());
 		}
 		user.notInFriendList(user);
+		this.sendToAll(new Command("UPDATE", "FRIENDLIST", Command.encode(this.getId())));
 	}
 
 	/**
-	 * Set the user to not be in the other users friend list
+	 * Remove a user from the list of pending requests
 	 * 
 	 * @param user
 	 *            The user to remove
 	 */
-	public void notInFriendList(User user) {
-		synchronized (this.inFreindList) {
-			this.inFreindList.remove(user.getId());
+	public void removeFriendRequest(User user) {
+		synchronized (this.friendRequests) {
+			this.friendRequests.remove(user.getId());
 		}
 	}
 
@@ -353,31 +407,6 @@ public class User {
 	}
 
 	/**
-	 * Put the the user into the list of people this user has sent friend
-	 * request to
-	 * 
-	 * @param user
-	 *            The user to add
-	 */
-	public void addFreindRequest(User user) {
-		synchronized (this.friendRequests) {
-			this.friendRequests.put(user.getId(), user);
-		}
-	}
-
-	/**
-	 * Remove a user from the list of pending requests
-	 * 
-	 * @param user
-	 *            The user to remove
-	 */
-	public void removeFriendRequest(User user) {
-		synchronized (this.friendRequests) {
-			this.friendRequests.remove(user.getId());
-		}
-	}
-
-	/**
 	 * Send a message to this user
 	 * 
 	 * @param from
@@ -395,6 +424,34 @@ public class User {
 	}
 
 	/**
+	 * Send a command to all users who have this user in their friend list and
+	 * who are online
+	 * 
+	 * @param cmd
+	 *            The command to send
+	 */
+	public void sendToAll(Command cmd) {
+		for (User user : getUsersToNotify().values()) {
+			Worker w = user.getWorker();
+			if (w != null)
+				w.putResponse(cmd);
+			else
+				user.logout();
+		}
+	}
+
+	/**
+	 * Check if this user sent a friend request to another
+	 * 
+	 * @param user
+	 *            The user to check for
+	 * @return True if they did, false otherwise
+	 */
+	public boolean sentFriendRequestTo(User user) {
+		return this.friendRequests.containsKey(user.getId());
+	}
+
+	/**
 	 * Set the display picture for this user
 	 * 
 	 * @param displayPic
@@ -404,7 +461,7 @@ public class User {
 		synchronized (this.displayPic) {
 			this.displayPic = displayPic;
 		}
-
+		this.sendToAll(new Command("UPDATE", "DISPLAY_PIC", Command.encode(this.getId())));
 	}
 
 	/**
@@ -429,6 +486,7 @@ public class User {
 		synchronized (this.nickname) {
 			this.nickname = nickname;
 		}
+		this.sendToAll(new Command("UPDATE", "NICKNAME", Command.encode(this.getId())));
 	}
 
 	/**
@@ -465,6 +523,7 @@ public class User {
 		synchronized (this.personalMessage) {
 			this.personalMessage = personalMessage;
 		}
+		this.sendToAll(new Command("UPDATE", "PERSONAL_MESSAGE", Command.encode(this.getId())));
 	}
 
 	/**
@@ -477,6 +536,7 @@ public class User {
 		synchronized (this.status) {
 			this.status = status;
 		}
+		this.sendToAll(new Command("UPDATE", "STATUS", Command.encode(this.getId())));
 	}
 
 	/**
@@ -487,14 +547,18 @@ public class User {
 	 * @return True if it was successfully set, false otherwise
 	 */
 	public boolean setStatus(String status) {
-		synchronized (this.status) {
-			try {
+
+		try {
+			synchronized (this.status) {
 				this.status = Status.valueOf(status.toUpperCase());
-			} catch (IllegalArgumentException e) {
-				return false;
 			}
-			return true;
+		} catch (IllegalArgumentException e) {
+			return false;
 		}
+
+		this.sendToAll(new Command("UPDATE", "STATUS", Command.encode(this.getId())));
+
+		return true;
 	}
 
 	/**
@@ -517,17 +581,7 @@ public class User {
 		synchronized (this.blockedUsers) {
 			this.blockedUsers.remove(user.getId());
 		}
-	}
-
-	/**
-	 * Check if this user sent a friend request to another
-	 * 
-	 * @param user
-	 *            The user to check for
-	 * @return True if they did, false otherwise
-	 */
-	public boolean sentFriendRequestTo(User user) {
-		return this.friendRequests.containsKey(user.getId());
+		this.getWorker().putCommand(new Command("UPDATE", "FRIENDLIST", Command.encode(this.getId())));
 	}
 
 }

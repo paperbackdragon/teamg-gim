@@ -1,10 +1,9 @@
 package server;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 import util.Command;
-
-// TODO: If the last user leaves and no one is queued to join the delete the room
 
 public class Room {
 
@@ -40,15 +39,15 @@ public class Room {
 	}
 
 	public int getId() {
-		return id;
+		return this.id;
 	}
 
-	public HashMap<String, User> getUsers() {
-		return this.users;
+	public Collection<User> getUsers() {
+		return this.users.values();
 	}
 
-	public HashMap<String, User> getInvitiedUsers() {
-		return this.invited;
+	public Collection<User> getInvitiedUsers() {
+		return this.invited.values();
 	}
 
 	public boolean inRoom(User user) {
@@ -98,6 +97,10 @@ public class Room {
 		for (User user : users.values()) {
 			user.getWorker().putResponse(l);
 		}
+
+		// Destroy the room if it's empty and unjoinable
+		if (this.getUsers().size() == 0 && this.getInvitiedUsers().size() == 0)
+			Data.getInstance().removeRoom(this.getId());
 
 		return true;
 	}

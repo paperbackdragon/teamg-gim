@@ -1,7 +1,5 @@
 package util;
 
-// TODO: Fix bug where unrecognised command does not get converted to DOESNOTEXIST
-
 public class Command {
 
 	// All of the valid commands in the protocol
@@ -287,8 +285,6 @@ public class Command {
 	 * @param s
 	 *            The string to decode
 	 * @return The decoded string
-	 * 
-	 *         TODO: Reject badly formatted input...or just catch the exception?
 	 */
 	public static String decode(String s) {
 		String decoded = "";
@@ -298,9 +294,13 @@ public class Command {
 			// Add everything up the first \ to the decoded part of the string
 			decoded += s.substring(0, pos);
 
-			// Convert the next 7 characters to the Unicode character
-			int val = Integer.parseInt(s.substring(pos + 3, pos + 7), 16);
-			decoded += new Character((char) val);
+			try {
+				// Convert the next 7 characters to the Unicode character
+				int val = Integer.parseInt(s.substring(pos + 3, pos + 7), 16);
+				decoded += new Character((char) val);
+			} catch (NumberFormatException e) {
+				decoded += "";
+			}
 
 			// Strip the string were decoding up to the point where we've
 			// decoded

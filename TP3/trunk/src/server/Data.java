@@ -3,21 +3,13 @@ package server;
 import java.util.Collection;
 import java.util.HashMap;
 
-/**
- * A singleton class to hold references to all of the data on the server. This
- * can be called anywhere and allows any part of the server to access the data
- * in it at any time.
- * 
- * Apparently doing this as a singleton is a bad idea. I disagree. The reason
- * against this seems to be that it makes it more difficult to debug, you can't
- * tell which classes changed the data because anything can access it.
- * 
- * Oh really, what about doing a search for Data.getInstance()?
- */
+// TODO: Reuse IDs for new rooms and workers
+
 public class Data {
 
-	volatile private int clientID = 0;
-	volatile private int roomID = 0;
+	private volatile int clientID = 0;
+	private volatile int roomID = 0;
+	public volatile int usersOnline = 0;
 
 	private HashMap<String, User> users = new HashMap<String, User>();
 	private HashMap<Integer, Room> rooms = new HashMap<Integer, Room>();
@@ -52,8 +44,8 @@ public class Data {
 	 *            The User to add
 	 */
 	public void addUser(User user) {
-		synchronized (users) {
-			users.put(user.getId(), user);
+		synchronized (this.users) {
+			this.users.put(user.getId(), user);
 		}
 	}
 
@@ -65,7 +57,7 @@ public class Data {
 	 * @return the User
 	 */
 	public User getUser(String id) {
-		return users.get(id.toLowerCase());
+		return this.users.get(id.toLowerCase());
 	}
 
 	/**
@@ -77,8 +69,8 @@ public class Data {
 	 *            The worker itself
 	 */
 	public void addWorker(int id, Worker worker) {
-		synchronized (users) {
-			workers.put(new Integer(id), worker);
+		synchronized (this.users) {
+			this.workers.put(new Integer(id), worker);
 		}
 	}
 
@@ -90,7 +82,7 @@ public class Data {
 	 * @return the User
 	 */
 	public User getWorker(int id) {
-		return users.get(new Integer(id));
+		return this.users.get(new Integer(id));
 	}
 
 	/**
@@ -98,8 +90,8 @@ public class Data {
 	 * 
 	 * @return A HashMap of all the users
 	 */
-	public HashMap<String, User> getUsers() {
-		return users;
+	public Collection<User> getUsers() {
+		return this.users.values();
 	}
 
 	/**
@@ -109,8 +101,8 @@ public class Data {
 	 *            the room to add
 	 */
 	public void addRoom(Room room) {
-		synchronized (rooms) {
-			rooms.put(room.getId(), room);
+		synchronized (this.rooms) {
+			this.rooms.put(room.getId(), room);
 		}
 	}
 
@@ -122,7 +114,17 @@ public class Data {
 	 * @return The room or null if the room does not exist
 	 */
 	public Room getRoom(int id) {
-		return rooms.get(new Integer(id));
+		return this.rooms.get(new Integer(id));
+	}
+	
+	/**
+	 * Remove a room for the server
+	 * @param id The id of the room to remove
+	 */
+	public void removeRoom(int id) {
+		synchronized (this.rooms) {
+			this.rooms.remove(new Integer(id));
+		}
 	}
 
 	/**
