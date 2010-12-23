@@ -104,11 +104,12 @@ public class ClientModel {
 	// ROOM stuff
 
 	public void createRoom(Boolean group, String[] contacts) {
-		//newRoomList.add(contacts);
+		// Gordon: i've changed this a bit... does this look right to you?
+		newRoomList.add(contacts);
 		if (group)
 			outLink.createGroupChat();
 		else
-			outLink.createSingleChat(null);//TODO (heather): make this not null
+			outLink.createSingleChat(contacts[0]);//TODO (heather): make this not null
 	}
 
 	public void invite(String roomid, String user) {
