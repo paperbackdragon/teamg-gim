@@ -29,7 +29,7 @@ public class ContactPanel extends JPanel {
 			System.exit(0);
 		}
 		
-		//contacts = new DefaultMutableTreeNode("Contacts");
+		contacts = new DefaultMutableTreeNode("Contacts");
 	
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		add(new PersonalInfo());
@@ -76,15 +76,10 @@ public class ContactPanel extends JPanel {
 		public ContactList() {
 			setLayout(new BorderLayout());
 			
-			//TODO (heather): Remove line when testing friend lists
-			//createNodes(new String[] {"One", "Two"}, new String[] {"Three", "Four"});
-			
-			//contactTree = new JTree(contacts);
-			contactTree.addMouseListener(new SingleChatListener());
-			
-			//expand all nodes
-			//TODO (heather): Move to better place?
-			
+			contactTree = new JTree(contacts);
+		    contactTree.addMouseListener(new SingleChatListener());
+		    for(int i=0; i < contactTree.getRowCount(); i++)
+				contactTree.expandRow(i);
 			
 			add(contactTree, BorderLayout.CENTER);
 		}
@@ -123,14 +118,16 @@ public class ContactPanel extends JPanel {
 	public void createNodes(String[] online, String[] offline) {
 		//TODO (heather): change node icons (see java tutorial)
 		//TODO (heather): make two separate trees
-		contacts = new DefaultMutableTreeNode("Contacts");
+		//contacts = new DefaultMutableTreeNode("Contacts");
 		
-		//DefaultMutableTreeNode root = contacts;
+		DefaultMutableTreeNode root = contacts;
 		DefaultMutableTreeNode status = null;
 		DefaultMutableTreeNode contact = null;
 		
+		root = new DefaultMutableTreeNode("Contacts");
+		
 		status = new DefaultMutableTreeNode("Online");
-		contacts.add(status);
+		root.add(status);
 		
 		//set online contacts
 		for (String str : online) {
@@ -139,17 +136,13 @@ public class ContactPanel extends JPanel {
 		}
 	    
 	    status = new DefaultMutableTreeNode("Offline");
-	    contacts.add(status);
+	    root.add(status);
 	    
 	    //set offline contacts
 	    for (String str : offline) {
 			contact = new DefaultMutableTreeNode(str);
 		    status.add(contact);
 		}
-	    
-	    contactTree = new JTree(contacts);
-	    for(int i=0; i < contactTree.getRowCount(); i++)
-			contactTree.expandRow(i);
 	}
 	
 	private String[] getSelectedContacts() {
