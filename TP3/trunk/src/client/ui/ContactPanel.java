@@ -142,6 +142,7 @@ public class ContactPanel extends JPanel {
 			contact = new DefaultMutableTreeNode(str);
 		    status.add(contact);
 		}
+	    contactTree.repaint();
 	}
 	
 	private String[] getSelectedContacts() {
