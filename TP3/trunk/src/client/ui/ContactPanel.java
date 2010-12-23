@@ -77,9 +77,11 @@ public class ContactPanel extends JPanel {
 			createNodes(contacts);
 			contactTree = new JTree(contacts);
 			contactTree.addMouseListener(new SingleChatListener());
-			// TODO: Uncomment this when its fixed, sorry heather, the error was annoying me  
-			//contactTree.expandPath();
-			//http://www.exampledepot.com/egs/javax.swing.tree/ExpandAll.html
+			
+			//expand all nodes as default
+			for(int i=0; i < contactTree.getRowCount(); i++)
+				contactTree.expandRow(i);
+			
 			add(contactTree, BorderLayout.CENTER);
 		}
 	}
@@ -182,7 +184,7 @@ public class ContactPanel extends JPanel {
 		}
 	}
 	
-	private class SingleChatListener implements MouseListener {
+	class SingleChatListener implements MouseListener {
 		public void mousePressed(MouseEvent e) {
 			//TODO only do below if contact is clicked
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode) contactTree.getLastSelectedPathComponent();
