@@ -118,12 +118,10 @@ public class ContactPanel extends JPanel {
 	public void createNodes(String[] online, String[] offline) {
 		//TODO (heather): change node icons (see java tutorial)
 		//TODO (heather): make two separate trees
-		//contacts = new DefaultMutableTreeNode("Contacts");
 		
 		contacts.removeAllChildren();
 		DefaultMutableTreeNode status = null;
 		DefaultMutableTreeNode contact = null;
-		
 		
 		status = new DefaultMutableTreeNode("Online");
 		contacts.add(status);
