@@ -156,7 +156,10 @@ public class ServerConnection implements NetworkingIn {
 
 	public void created(final String roomid) {
 		//get next list of users
-		String[] contacts = new String[1]; // TODO: Change back... GimClient.getClient().getRoomList().remove();
+		
+		// TODO: James Change back... GimClient.getClient().getRoomList().remove();
+		// Maybe not now...
+		String[] contacts = GimClient.getClient().getNextRoom(); 
 		
 		//TODO this if/else will not work! (presumably)
 		//open new chat window

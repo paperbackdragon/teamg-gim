@@ -27,6 +27,17 @@ public class ClientModel {
 	//public LinkedList<String[]> getRoomList() {
 	//	return newRoomList;
 	//}
+	
+	public String[] getNextRoom() {
+		// Gordon: Critical section?
+		return newRoomList.pop();
+	}
+	
+	public void addNextRoom(String[] userlist) {
+		// Gordon: Critical section?
+		newRoomList.add(userlist);
+	}
+	
 
 	public String[] getOnlinefriends() {
 		return onlinefriends;
