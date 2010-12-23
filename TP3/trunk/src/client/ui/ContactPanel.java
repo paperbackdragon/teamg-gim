@@ -79,13 +79,12 @@ public class ContactPanel extends JPanel {
 			//TODO (heather): Remove line when testing friend lists
 			//createNodes(new String[] {"One", "Two"}, new String[] {"Three", "Four"});
 			
-			contactTree = new JTree(contacts);
+			//contactTree = new JTree(contacts);
 			contactTree.addMouseListener(new SingleChatListener());
 			
 			//expand all nodes
 			//TODO (heather): Move to better place?
-			for(int i=0; i < contactTree.getRowCount(); i++)
-				contactTree.expandRow(i);
+			
 			
 			add(contactTree, BorderLayout.CENTER);
 		}
@@ -147,6 +146,10 @@ public class ContactPanel extends JPanel {
 			contact = new DefaultMutableTreeNode(str);
 		    status.add(contact);
 		}
+	    
+	    contactTree = new JTree(contacts);
+	    for(int i=0; i < contactTree.getRowCount(); i++)
+			contactTree.expandRow(i);
 	}
 	
 	private String[] getSelectedContacts() {
