@@ -158,10 +158,10 @@ public class ServerConnection implements NetworkingIn {
 		//get next list of users
 		
 		// TODO: James Change back... GimClient.getClient().getRoomList().remove();
-		// Maybe not now...
+		// Gordon: I've been working on it, so maybe not now...
 		String[] contacts = GimClient.getClient().getNextRoom(); 
 		
-		//TODO this if/else will not work! (presumably)
+		//TODO this if/else will not work! (presumably) gordon: why not? :S
 		//open new chat window
 		if (contacts.length > 1) {
 			SwingUtilities.invokeLater(new Runnable() {
@@ -192,6 +192,15 @@ public class ServerConnection implements NetworkingIn {
 	}
 
 	public void invited(String user, String roomid) {
+		GimClient.getClient().type(roomid);
+		
+		// Store who gave the invitation, for when we ask the user if they want to join
+		GimClient.getClient().addInvitation(user);
+		
+		
+		/* Gordon: it could be possible to display the list of users already in the room
+		* with this invitation... but that would be a bit of work. discuss? 
+		* could be a low priority... */
 		
 	}
 
@@ -208,10 +217,20 @@ public class ServerConnection implements NetworkingIn {
 	}
 
 	public void group(String roomid) {
+		String invitedBy = GimClient.getClient().getNextInvitation();
+		
+		// spawn a new window notifying the user they've been invited to a group chat
+		
 		
 	}
 
 	public void personal(String roomid) {
+		/* gordon: spawn a personal chat window immediately
+		 ... oh wait, what if no message has been sent yet...
+		 ... we might need to keep a log of messages, and make the IM window visable
+		 ... only when a message has been received. This should only be a few lines in
+		 the chat window handler class. Like, when the "write message to window" method is invoked,
+		 if messagecount == 0, spawn a window... */
 		
 	}
 }

@@ -9,6 +9,7 @@ public class ClientModel {
 	private ServerConnection inLink;
 	private ClientConnection outLink;
 	private LinkedList<String[]> newRoomList;
+	private LinkedList<String> invitationsList;
 
 	// buddy list
 	private String[] onlinefriends;
@@ -19,7 +20,11 @@ public class ClientModel {
 	public ClientModel() {
 		inLink = new ServerConnection();
 		outLink = new ClientConnection(inLink);
+		
 		newRoomList = new LinkedList<String[]>();
+		
+		// Gordon: if you don't think this is a sensible way to do it, we can all discuss this :P
+		invitationsList = new LinkedList<String>();
 	}
 
 	// ACCESSORS
@@ -38,6 +43,15 @@ public class ClientModel {
 		newRoomList.add(userlist);
 	}
 	
+	public void addInvitation(String from) {
+		// Gordon: Critical section?
+		invitationsList.add(from);
+	}
+	
+	public String getNextInvitation() {
+		// Gordon: Critical section?
+		return invitationsList.pop();
+	}
 
 	public String[] getOnlinefriends() {
 		return onlinefriends;
