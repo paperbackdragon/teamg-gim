@@ -1013,7 +1013,7 @@ public class Worker implements Runnable {
 
 		} else if (arg.equalsIgnoreCase("STATUS")) {
 			String status = cmd.getDecodedData();
-			if (!status.equalsIgnoreCase("OFFLINE") && !this.loggedInUser.setStatus(status))
+			if (!this.loggedInUser.setStatus(status))
 				return new Command("ERROR", "INVALID_STATUS", cmd.getDecodedData());
 
 		} else if (arg.equalsIgnoreCase("PERSONAL_MESSAGE")) {

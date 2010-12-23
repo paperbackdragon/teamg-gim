@@ -2,7 +2,6 @@ package server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.util.HashMap;
 
 
 /**
@@ -17,11 +16,8 @@ public class GimServer {
 	
 		Data data = Data.getInstance();
 
-		data.addUser(new User("cyblob@gmail.com", "password", User.Status.OFFLINE, "James McMinn", "I'm a panda.",
-				new HashMap<String, User>(), new HashMap<String, User>(), new HashMap<String, User>()));
-		
-		data.addUser(new User("me@jamesmcminn.com", "password", User.Status.OFFLINE, "Andrew McMinn", "I'm not a panda.",
-				new HashMap<String, User>(), new HashMap<String, User>(), new HashMap<String, User>()));
+		data.addUser(new User("cyblob@gmail.com", "password"));
+		data.addUser(new User("me@jamesmcminn.com", "password"));
 
 		// Create a socket for the client to connect to
 		ServerSocket serverSocket = null;

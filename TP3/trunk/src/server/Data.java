@@ -11,7 +11,8 @@ public class Data {
 	private volatile int roomID = 0;
 	public volatile int usersOnline = 0;
 
-	private HashMap<String, User> users = new HashMap<String, User>();
+	// TODO: Change back to private after testing
+	public HashMap<String, User> users = new HashMap<String, User>();
 	private HashMap<Integer, Room> rooms = new HashMap<Integer, Room>();
 	private HashMap<Integer, Worker> workers = new HashMap<Integer, Worker>();
 
