@@ -62,16 +62,28 @@ public class ServerConnection implements NetworkingIn {
 	public void logInDetailsIncorrectError(String message) {
 		// JOptionPane.showMessageDialog(GimClient.getMainWindow(),
 		// "Login details incorrect.");
+		
+		String error = "";
+		if (!message.equals("") ) {
+			error += ":\n\n server reported : " + message;
+		}
+		
 		JOptionPane.showMessageDialog(GimClient.getMainWindow(),
-				"Log in Details Incorrect.\n server reported :\n\n" + message);
+				"Log in Details Incorrect.\n server reported" + error);
 	}
 
 	public void loggedInFromAnotherLocationError(String message) {
 		// JOptionPane.showMessageDialog(GimClient.getMainWindow(),
 		// "Already logged in at another location.");
+		
+		String error = "";
+		if (!message.equals("") ) {
+			error += ":\n\n server reported : " + message;
+		}
+		
 		JOptionPane.showMessageDialog(GimClient.getMainWindow(),
-				"Log in from another location.\n server reported :\n\n"
-						+ message);
+				"Logged in from another location."
+						+ error);
 	}
 
 	public void message(String roomid, String sender, String message) {
@@ -105,8 +117,14 @@ public class ServerConnection implements NetworkingIn {
 	public void passwordTooShortError(String message) {
 		// JOptionPane.showMessageDialog(GimClient.getMainWindow(),
 		// "Password is too short.");
+		
+		String error = "";
+		if (!message.equals("") ) {
+			error += ":\n\n server reported : " + message;
+		}
+		
 		JOptionPane.showMessageDialog(GimClient.getMainWindow(),
-				"Password too short error.\n server reported :\n\n" + message);
+				"Password too short error.\n server reported" + error);
 	}
 
 	public void servertime(String servertime) {
@@ -155,9 +173,14 @@ public class ServerConnection implements NetworkingIn {
 	public void userDoesNotExistError(String message) {
 		// JOptionPane.showMessageDialog(GimClient.getMainWindow(),
 		// "User does not exist.");
+		String error = "";
+		if (!message.equals("") ) {
+			error += ":\n\n server reported : " + message;
+		}
+		
 		JOptionPane.showMessageDialog(GimClient.getMainWindow(),
-				"User does not exist error: .\n server reported :\n\n"
-						+ message);
+				"User does not exist error. "
+						+ error);
 	}
 
 	public void usercount(String usercount) {
