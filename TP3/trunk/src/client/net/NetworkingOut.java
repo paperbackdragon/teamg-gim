@@ -100,6 +100,9 @@ public interface NetworkingOut {
 
 	/**
 	 * Sends a request to the server to set the user's availability
+	 * note: by default, the server logs the user in as appearing as 'offline'
+	 * to allow the user the privacy of logging in as 'appearling offline.'
+	 * This command should be ran on connect to set the user's desired status.
 	 * 
 	 * @param status
 	 *            The desired status
