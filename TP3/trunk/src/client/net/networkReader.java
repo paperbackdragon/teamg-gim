@@ -256,19 +256,19 @@ public class networkReader implements Runnable {
 				gui.notifyFriendsList();
 			}
 
-			if (cmd.getArgumentsAsString().equalsIgnoreCase("NICKNAME")) {
+			else if (cmd.getArgumentsAsString().equalsIgnoreCase("NICKNAME")) {
 				gui.notifyNickname(Command.decode(cmd.getData()));
 			}
 
-			if (cmd.getArgumentsAsString().equalsIgnoreCase("STATUS")) {
+			else if (cmd.getArgumentsAsString().equalsIgnoreCase("STATUS")) {
 				gui.notifyStatus(Command.decode(cmd.getData()));
 			}
 
-			if (cmd.getArgumentsAsString().equalsIgnoreCase("PERSONAL_MESSAGE")) {
+			else if (cmd.getArgumentsAsString().equalsIgnoreCase("PERSONAL_MESSAGE")) {
 				gui.notifyPersonalMessage(Command.decode(cmd.getData()));
 			}
 
-			if (cmd.getArgumentsAsString().equalsIgnoreCase("DISPLAY_PIC")) {
+			else if (cmd.getArgumentsAsString().equalsIgnoreCase("DISPLAY_PIC")) {
 				gui.notifyDisplayPicture(Command.decode(cmd.getData()));
 			}
 
@@ -342,47 +342,47 @@ public class networkReader implements Runnable {
 
 			}
 
-			if (cmd.getArgumentsAsString().equalsIgnoreCase("INVALID_EMAIL")) {
+			else if (cmd.getArgumentsAsString().equalsIgnoreCase("INVALID_EMAIL")) {
 				gui.invalidEmailError(Command.decode(cmd.getData()));
 			}
 
-			if (cmd.getArgumentsAsString().equalsIgnoreCase(
+			else if (cmd.getArgumentsAsString().equalsIgnoreCase(
 					"EMAIL_ALREADY_IN_USE")) {
 				gui.emailInuseError(Command.decode(cmd.getData()));
 			}
 
-			if (cmd.getArgumentsAsString().equalsIgnoreCase(
+			else if (cmd.getArgumentsAsString().equalsIgnoreCase(
 					"PASSWORD_TOO_SHORT")) {
 				gui.passwordTooShortError(Command.decode(cmd.getData()));
 			}
 
-			if (cmd.getArgumentsAsString()
+			else if (cmd.getArgumentsAsString()
 					.equalsIgnoreCase("MISSING_ARGUMENTS")) {
 				gui.missingArgumentsError(Command.decode(cmd.getData()));
 			}
 
-			if (cmd.getArgumentsAsString().equalsIgnoreCase(
+			else if (cmd.getArgumentsAsString().equalsIgnoreCase(
 					"TOO_MANY_ARGUMENTS")) {
 				gui.tooManyArgumentsError(Command.decode(cmd.getData()));
 			}
 
-			if (cmd.getArgumentsAsString().equalsIgnoreCase("INVALID_ARGUMENT")) {
+			else if (cmd.getArgumentsAsString().equalsIgnoreCase("INVALID_ARGUMENT")) {
 				gui.invalidArgumentError(Command.decode(cmd.getData()));
 
 			}
 
-			if (cmd.getArgumentsAsString().equalsIgnoreCase(
+			else if (cmd.getArgumentsAsString().equalsIgnoreCase(
 					"LOGGED_IN_FROM_OTHER_LOCATION")) {
 				gui.loggedInFromAnotherLocationError(Command.decode(cmd
 						.getData()));
 			}
 
-			if (cmd.getArgumentsAsString().equalsIgnoreCase(
+			else if (cmd.getArgumentsAsString().equalsIgnoreCase(
 					"USER_DOES_NOT_EXIST")) {
 				gui.userDoesNotExistError(Command.decode(cmd.getData()));
 			}
 
-			if (cmd.getArgumentsAsString().equalsIgnoreCase(
+			else if (cmd.getArgumentsAsString().equalsIgnoreCase(
 					"LOGIN_DETAILS_INCORRECT")) {
 				gui.logInDetailsIncorrectError(Command.decode(cmd.getData()));
 			}
