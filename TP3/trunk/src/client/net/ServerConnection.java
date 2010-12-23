@@ -65,11 +65,11 @@ public class ServerConnection implements NetworkingIn {
 		
 		String error = "";
 		if (!message.equals("") ) {
-			error += ":\n\n server reported : " + message;
+			error += ":\n\n server reported:\n " + message;
 		}
 		
 		JOptionPane.showMessageDialog(GimClient.getMainWindow(),
-				"Log in Details Incorrect.\n server reported" + error);
+				"Log in Details Incorrect." + error);
 	}
 
 	public void loggedInFromAnotherLocationError(String message) {
@@ -78,7 +78,7 @@ public class ServerConnection implements NetworkingIn {
 		
 		String error = "";
 		if (!message.equals("") ) {
-			error += ":\n\n server reported : " + message;
+			error += ":\n\n server reported:\n " + message;
 		}
 		
 		JOptionPane.showMessageDialog(GimClient.getMainWindow(),
@@ -120,11 +120,11 @@ public class ServerConnection implements NetworkingIn {
 		
 		String error = "";
 		if (!message.equals("") ) {
-			error += ":\n\n server reported : " + message;
+			error += ":\n\n server reported :\n " + message;
 		}
 		
 		JOptionPane.showMessageDialog(GimClient.getMainWindow(),
-				"Password too short error.\n server reported" + error);
+				"Password too short error." + error);
 	}
 
 	public void servertime(String servertime) {
@@ -175,7 +175,7 @@ public class ServerConnection implements NetworkingIn {
 		// "User does not exist.");
 		String error = "";
 		if (!message.equals("") ) {
-			error += ":\n\n server reported : " + message;
+			error += ":\n\n server reported :\n " + message;
 		}
 		
 		JOptionPane.showMessageDialog(GimClient.getMainWindow(),
