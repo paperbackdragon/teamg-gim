@@ -157,5 +157,11 @@ public class ClientModel {
 	}
 
 	// end: Friends list stuff
+	
+	// GET stuff (when something has been updated)
+	
+	public void getFriendList() {
+		outLink.friendlist();
+	}
 
 }

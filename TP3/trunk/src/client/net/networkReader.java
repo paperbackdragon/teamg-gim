@@ -251,6 +251,10 @@ public class networkReader implements Runnable {
 		}
 
 		else if (cmd.getCommand().equalsIgnoreCase("UPDATE")) {
+			
+			if (cmd.getArgumentsAsString().equalsIgnoreCase("FRIENDSLIST")) {
+				gui.notifyFriendsList();
+			}
 
 			if (cmd.getArgumentsAsString().equalsIgnoreCase("NICKNAME")) {
 				gui.notifyNickname(Command.decode(cmd.getData()));
