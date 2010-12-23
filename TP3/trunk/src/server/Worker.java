@@ -99,7 +99,7 @@ public class Worker implements Runnable {
 			if (this.loggedInUser == null)
 				return new Command("AUTH", "UNAUTHORIZED");
 			else
-				return new Command("AUTH", "LOGGEDIN", this.loggedInUser.getNickname());
+				return new Command("AUTH", "LOGGEDIN", Command.encode(this.loggedInUser.getNickname()));
 
 			// Attempt to log the user in
 		} else if (cmd.getArguments()[0].equalsIgnoreCase("LOGIN")) {
@@ -127,9 +127,11 @@ public class Worker implements Runnable {
 				this.loggedInUser = user;
 				this.loggedInUser.setOnline(true);
 				this.loggedInUser.setWorker(this);
-
+				this.loggedInUser.login();
+				
 				// Tell them that they're logged in
-				responseBuffer.putCommand(new Command("AUTH", "LOGGEDIN"));
+				responseBuffer.putCommand(new Command("AUTH", "LOGGEDIN", Command.encode(this.loggedInUser.getNickname())));
+				
 
 				// Add any commands they received while offline
 				synchronized (this.loggedInUser.getQueue()) {
@@ -629,7 +631,6 @@ public class Worker implements Runnable {
 			response = new Command("ERROR", "COMMAND_ERROR", Command.encode("The Command was not recognised."));
 		}
 
-		System.out.println(cmd.getCommandAsEnum());
 		return response;
 
 	}

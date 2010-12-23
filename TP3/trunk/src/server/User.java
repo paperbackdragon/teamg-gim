@@ -330,6 +330,10 @@ public class User {
 		return this.online;
 	}
 
+	public void login() {
+		this.sendToAll(new Command("UPDATE", "FRIENDLIST"));
+	}
+	
 	/**
 	 * Leave any rooms that the user is currently in and logout.
 	 */
