@@ -1,9 +1,6 @@
 package client.net;
 
-import java.util.ArrayList;
-
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 import client.*;
 import client.ui.*;
@@ -11,14 +8,15 @@ import client.ui.*;
 public class ServerConnection implements NetworkingIn {
 
 	public void authorised() {
-		ContactPanel panel = new ContactPanel();
+		ContactPanel panel = GimClient.getContactPanel();
 		panel.setParent(GimClient.getMainWindow());
 		GimClient.getMainWindow().setMainPanel(panel);
 		GimClient.getMainWindow().canLogout(true);
+		GimClient.getClient().setContactList();
 	}
 
 	public void broadcast(String message) {
-		// TODO how to implement this? all chat windows or dialog box?
+		//TODO (heather): how to implement this? all chat windows or dialog box?
 	}
 
 	public void emailInuseError(String message) {
@@ -38,8 +36,9 @@ public class ServerConnection implements NetworkingIn {
 		GimClient.getClient().setOnlinefriends(onlinelist);
 		GimClient.getClient().setOfflinefriends(offlinelist);
 		GimClient.getClient().setBlockedfriends(blockedlist);
-
+		
 		// update the interface
+		GimClient.getContactPanel().createNodes(onlinelist, offlinelist);
 
 	}
 
@@ -60,9 +59,6 @@ public class ServerConnection implements NetworkingIn {
 	}
 
 	public void logInDetailsIncorrectError(String message) {
-		// JOptionPane.showMessageDialog(GimClient.getMainWindow(),
-		// "Login details incorrect.");
-		
 		String error = "";
 		if (!message.equals("") ) {
 			error += ":\n\n server reported:\n " + message;
@@ -73,9 +69,6 @@ public class ServerConnection implements NetworkingIn {
 	}
 
 	public void loggedInFromAnotherLocationError(String message) {
-		// JOptionPane.showMessageDialog(GimClient.getMainWindow(),
-		// "Already logged in at another location.");
-		
 		String error = "";
 		if (!message.equals("") ) {
 			error += ":\n\n server reported:\n " + message;
@@ -115,9 +108,6 @@ public class ServerConnection implements NetworkingIn {
 	}
 
 	public void passwordTooShortError(String message) {
-		// JOptionPane.showMessageDialog(GimClient.getMainWindow(),
-		// "Password is too short.");
-		
 		String error = "";
 		if (!message.equals("") ) {
 			error += ":\n\n server reported :\n " + message;
@@ -171,8 +161,6 @@ public class ServerConnection implements NetworkingIn {
 	}
 
 	public void userDoesNotExistError(String message) {
-		// JOptionPane.showMessageDialog(GimClient.getMainWindow(),
-		// "User does not exist.");
 		String error = "";
 		if (!message.equals("") ) {
 			error += ":\n\n server reported :\n " + message;
@@ -195,7 +183,7 @@ public class ServerConnection implements NetworkingIn {
 		// Gordon: I've been working on it, so maybe not now...
 		String[] contacts = GimClient.getClient().getNextRoom();
 
-		// TODO this if/else will not work! (presumably) gordon: why not? :S
+		//TODO (heather): this if/else will not work! (presumably) gordon: why not? :S
 		// open new chat window
 		if (contacts.length > 1) {
 			SwingUtilities.invokeLater(new Runnable() {

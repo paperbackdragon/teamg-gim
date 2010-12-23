@@ -8,16 +8,17 @@ import client.ui.*;
 public class GimClient {
 	private static GimUI mainWindow;
 	private static ClientModel client;
+	private static ContactPanel contactPanel;
 	private static ArrayList<ChatPanel> rooms;
 	
 	public static void main(String[] args) {
-		//client = new ClientModel();
-		//rooms = new ArrayList<ChatPanel>();
+		client = new ClientModel();
+		rooms = new ArrayList<ChatPanel>();
+		contactPanel = new ContactPanel();
 		
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				//LoginPanel lp = new LoginPanel();
-				ContactPanel lp = new ContactPanel();
+				LoginPanel lp = new LoginPanel();
 				mainWindow = new GimUI("GIM", lp);
 				lp.setParent(mainWindow);
 			}
@@ -33,6 +34,10 @@ public class GimClient {
 		return client;
 	}
 	
+	public static ContactPanel getContactPanel() {
+		return contactPanel;
+	}
+	
 	//HELPER METHODS
 	public static void addRoom(ChatPanel panel) {
 		rooms.add(panel);
@@ -42,7 +47,7 @@ public class GimClient {
 		for(int i=0; i < rooms.size(); i++) {
 			if(rooms.get(i).getID().equals(panel.getID())) {
 				rooms.remove(i);
-				// TODO some way to reduce memory used in this list?
+				//TODO (heather): Some way to reduce memory used in this list?
 			}
 		}
 	}

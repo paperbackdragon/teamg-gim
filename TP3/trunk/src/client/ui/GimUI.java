@@ -74,8 +74,8 @@ public class GimUI extends JFrame {
 			if(e.getSource().equals(logout)) {
 				GimClient.getClient().logout();
 				
-				// TODO should below be moved to ServerConnection, after successful logout?
-				// TODO close all open windows except main window
+				//TODO (heather): should below be moved to ServerConnection, after successful logout?
+				//TODO (heather): close all open windows except main window
 				LoginPanel panel = new LoginPanel();
 				panel.setParent(GimClient.getMainWindow());
 				GimClient.getMainWindow().setMainPanel(panel);
@@ -85,7 +85,7 @@ public class GimUI extends JFrame {
 			}
 			else if(e.getSource().equals(setOptions)) {
 				System.out.println("setOptions clicked.");
-				// TODO create options panel
+				//TODO (heather): create options panel
 			}
 		}
 	}

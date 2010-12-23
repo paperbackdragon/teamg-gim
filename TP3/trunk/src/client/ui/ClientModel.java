@@ -95,7 +95,7 @@ public class ClientModel {
 
 	public void quit() {
 		outLink.logout();
-		// TODO clean up instead of this:
+		//TODO (heather): clean up instead of this:
 		System.exit(0);
 	}
 
@@ -108,7 +108,7 @@ public class ClientModel {
 		if (group)
 			outLink.createGroupChat();
 		else
-			outLink.createSingleChat(null);// TODO make this not null
+			outLink.createSingleChat(null);//TODO (heather): make this not null
 	}
 
 	public void invite(String roomid, String user) {
@@ -149,6 +149,10 @@ public class ClientModel {
 
 	public void removefriend(String user) {
 		outLink.delete(user);
+	}
+
+	public void setContactList() {
+		outLink.friendlist();
 	}
 
 	// end: Friends list stuff

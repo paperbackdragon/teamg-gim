@@ -61,7 +61,7 @@ public class GroupChatPanel extends ChatPanel{
 		add(messagePane, BorderLayout.CENTER);
 		add(chatPanel, BorderLayout.SOUTH);
 		
-		//DOESNT WORK:		chatBox.requestFocusInWindow();
+		//TODO (heather): DOESNT WORK:		chatBox.requestFocusInWindow();
 	}
 	
 	//PANELS

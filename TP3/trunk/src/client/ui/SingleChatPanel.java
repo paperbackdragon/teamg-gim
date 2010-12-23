@@ -49,7 +49,7 @@ public class SingleChatPanel extends ChatPanel{
 		add(messagePane, BorderLayout.CENTER);
 		add(chatPanel, BorderLayout.SOUTH);
 		
-		//DOESNT WORK:		chatBox.requestFocusInWindow();	
+		//TODO (heather): DOESNT WORK:		chatBox.requestFocusInWindow();	
 	}
 	
 	//PANELS

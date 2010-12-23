@@ -17,6 +17,8 @@ public class ContactPanel extends JPanel {
 	private GimUI parent;
 	private JButton add, del, chat, group;
 	private JTree contactTree;
+	private DefaultMutableTreeNode contacts;
+	
 	
 	//CONSTRUCTOR
 	public ContactPanel() {
@@ -26,6 +28,8 @@ public class ContactPanel extends JPanel {
 			System.out.println("Something went wrong!");
 			System.exit(0);
 		}
+		
+		contacts = new DefaultMutableTreeNode("Contacts");
 	
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		add(new PersonalInfo());
@@ -72,13 +76,14 @@ public class ContactPanel extends JPanel {
 		public ContactList() {
 			setLayout(new BorderLayout());
 			
-			//assuming we are grouping by online/offline status:
-			DefaultMutableTreeNode contacts = new DefaultMutableTreeNode("Contacts");
-			createNodes(contacts);
+			//TODO (heather): Remove line when testing friend lists
+			//createNodes(new String[] {"One", "Two"}, new String[] {"Three", "Four"});
+			
 			contactTree = new JTree(contacts);
 			contactTree.addMouseListener(new SingleChatListener());
 			
-			//expand all nodes as default
+			//expand all nodes
+			//TODO (heather): Move to better place?
 			for(int i=0; i < contactTree.getRowCount(); i++)
 				contactTree.expandRow(i);
 			
@@ -116,30 +121,31 @@ public class ContactPanel extends JPanel {
 		parent = (GimUI) frame;
 	}
 	
-	public void createNodes(DefaultMutableTreeNode root) {
-		// TODO change node icons (see java tutorial)
-		// TODO make two separate trees
+	public void createNodes(String[] online, String[] offline) {
+		//TODO (heather): change node icons (see java tutorial)
+		//TODO (heather): make two separate trees
 		
+		DefaultMutableTreeNode root = contacts;
 		DefaultMutableTreeNode status = null;
 		DefaultMutableTreeNode contact = null;
 		
 		status = new DefaultMutableTreeNode("Online");
 		root.add(status);
 		
-		//get contacts somehow
-		contact = new DefaultMutableTreeNode("Contact One");
-	    status.add(contact);
-	    contact = new DefaultMutableTreeNode("Contact Two");
-	    status.add(contact);
+		//set online contacts
+		for (String str : online) {
+			contact = new DefaultMutableTreeNode(str);
+		    status.add(contact);
+		}
 	    
 	    status = new DefaultMutableTreeNode("Offline");
 	    root.add(status);
 	    
-	    //get contacts somehow
-	    contact = new DefaultMutableTreeNode("Contact Three");
-	    status.add(contact);
-	    contact = new DefaultMutableTreeNode("Contact Four");
-	    status.add(contact);
+	    //set offline contacts
+	    for (String str : offline) {
+			contact = new DefaultMutableTreeNode(str);
+		    status.add(contact);
+		}
 	}
 	
 	private String[] getSelectedContacts() {
@@ -148,7 +154,7 @@ public class ContactPanel extends JPanel {
 		String[] contacts = new String[nodes.length];
 		for(int i=0; i < nodes.length; i++) {
 			node = (DefaultMutableTreeNode) nodes[i].getLastPathComponent();
-			//contacts[i] = (String) node.getUserObject();
+			contacts[i] = (String) node.getUserObject();
 			System.out.println((String) node.getUserObject());
 		}
 		return contacts;
@@ -173,9 +179,9 @@ public class ContactPanel extends JPanel {
 					}
 				});
 			}
-			//TODO make chat grayed out till someone is clicked
+			//TODO (heather): make chat grayed out till someone is clicked
+			//TODO (heather): how to make anything but nodes un-selectable?
 			else if(e.getSource().equals(chat)) {
-				//TODO how to make anything but nodes un-selectable?
 				GimClient.getClient().createRoom(false, getSelectedContacts());
 			}
 			else if(e.getSource().equals(group)) {
@@ -186,12 +192,14 @@ public class ContactPanel extends JPanel {
 	
 	class SingleChatListener implements MouseListener {
 		public void mousePressed(MouseEvent e) {
-			//TODO only do below if contact is clicked
+			//TODO (heather): only do below if contact is clicked
+			//TODO (heather): what if someone already has a chat going with this person?
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode) contactTree.getLastSelectedPathComponent();
 			String nodeInfo = (String) node.getUserObject();
 			
 			if(e.getClickCount() == 2) {
 				System.out.println(nodeInfo);
+				GimClient.getClient().createRoom(false, new String[] {nodeInfo});
 			}
 		}
 		
