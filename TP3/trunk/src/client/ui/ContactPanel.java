@@ -29,7 +29,7 @@ public class ContactPanel extends JPanel {
 			System.exit(0);
 		}
 		
-		contacts = new DefaultMutableTreeNode("Contacts");
+		//contacts = new DefaultMutableTreeNode("Contacts");
 	
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		add(new PersonalInfo());
@@ -124,13 +124,14 @@ public class ContactPanel extends JPanel {
 	public void createNodes(String[] online, String[] offline) {
 		//TODO (heather): change node icons (see java tutorial)
 		//TODO (heather): make two separate trees
+		contacts = new DefaultMutableTreeNode("Contacts");
 		
-		DefaultMutableTreeNode root = contacts;
+		//DefaultMutableTreeNode root = contacts;
 		DefaultMutableTreeNode status = null;
 		DefaultMutableTreeNode contact = null;
 		
 		status = new DefaultMutableTreeNode("Online");
-		root.add(status);
+		contacts.add(status);
 		
 		//set online contacts
 		for (String str : online) {
@@ -139,7 +140,7 @@ public class ContactPanel extends JPanel {
 		}
 	    
 	    status = new DefaultMutableTreeNode("Offline");
-	    root.add(status);
+	    contacts.add(status);
 	    
 	    //set offline contacts
 	    for (String str : offline) {

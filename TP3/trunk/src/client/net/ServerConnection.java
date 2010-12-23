@@ -260,7 +260,6 @@ public class ServerConnection implements NetworkingIn {
 	}
 
 	public void notifyFriendsList() {
-		
 		GimClient.getClient().getFriendList();
 	}
 }
