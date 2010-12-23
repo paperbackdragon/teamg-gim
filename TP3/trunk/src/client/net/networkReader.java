@@ -150,8 +150,7 @@ public class networkReader implements Runnable {
 
 		else if (cmd.getCommand().equals("MESSAGE")) {
 			String[] parts = cmd.splitAndDecodeData(" ");
-			gui.message(parts[0], parts[1],
-					parts[2]);
+			gui.message(parts[0], parts[1], parts[2]);
 		}
 
 		else if (cmd.getCommand().equals("ROOM")) {
@@ -180,17 +179,17 @@ public class networkReader implements Runnable {
 
 			else if (cmd.getArgumentsAsString().equalsIgnoreCase("USERS")) {
 				String data = cmd.getData();
-				
+
 				String[] parts = data.split(" ");
 
 				String roomid = Command.decode(parts[0]);
-				
+
 				String[] users = parts[1].split("\n");
 
 				for (int i = 0; i < users.length; i++) {
 					users[i] = Command.decode(users[i]);
 				}
-				
+
 				gui.users(users, roomid);
 			}
 
@@ -214,20 +213,29 @@ public class networkReader implements Runnable {
 			online = online.replace("ONLINE", "");
 			String[] onlinelist = online.split(" ");
 
-			for (int i = 0; i < onlinelist.length; i++)
-				Command.decode(onlinelist[i]);
+			System.out.println("ONLINE: ");
+			for (int i = 0; i < onlinelist.length; i++) {
+				onlinelist[i] = Command.decode(onlinelist[i]);
+				System.out.println(onlinelist[i]);
+			}
 
 			String offline = data.split("OFFLINE")[1].split("BLOCKED")[0];
 			String[] offlinelist = offline.split(" ");
+			
+			System.out.println("OFFLINE: ");
+			for (int j = 0; j < offlinelist.length; j++) {
+				offlinelist[j] = Command.decode(offlinelist[j]);
+				System.out.println(offlinelist[j]);
+			}
 
-			for (int j = 0; j < offlinelist.length; j++)
-				Command.decode(offlinelist[j]);
-
-			String blocked = data.split("BLOCKED")[1];
+			String blocked = data.split("OFFLINE")[1].split("BLOCKED")[0];
 			String[] blockedlist = blocked.split(" ");
-
-			for (int k = 0; k < blockedlist.length; k++)
-				Command.decode(blockedlist[k]);
+			
+			System.out.println("BLOCKED: ");
+			for (int k = 0; k < blockedlist.length; k++) {
+				blockedlist[k] =Command.decode(blockedlist[k]);
+				System.out.println(blockedlist[k]);
+			}
 
 			gui.friendlist(onlinelist, offlinelist, blockedlist);
 		}
