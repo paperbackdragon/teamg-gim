@@ -22,9 +22,16 @@ public class Room {
 		this();
 
 		this.isGroup = isGroup;
+		this.addInvitiedUser(creator);
 		this.join(creator);
 
 		System.out.println("Creating new room with id " + this.id);
+	}
+	
+	public void addInvitiedUser(User user) {
+		synchronized (this.invited) {
+			this.invited.put(user.getId(), user);
+		}
 	}
 
 	public String getType() {
@@ -62,10 +69,11 @@ public class Room {
 			this.invited.remove(joined.getId());
 
 		this.users.put(joined.getId(), joined);
+		joined.addRoom(this);
 
 		// Notify other users that they're joining
 		Command j = new Command("ROOM", "JOINED", this.getId() + " " + Command.encode(joined.getId()));
-		for (User user : users.values()) {
+		for (User user : getUsers()) {
 			user.getWorker().putResponse(j);
 		}
 

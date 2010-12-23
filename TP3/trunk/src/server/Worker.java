@@ -125,9 +125,7 @@ public class Worker implements Runnable {
 
 				// They provided accurate details, log them in
 				this.loggedInUser = user;
-				this.loggedInUser.setOnline(true);
-				this.loggedInUser.setWorker(this);
-				this.loggedInUser.login();
+				this.loggedInUser.login(this);
 				
 				// Tell them that they're logged in
 				responseBuffer.putCommand(new Command("AUTH", "LOGGEDIN", Command.encode(this.loggedInUser.getNickname())));
@@ -729,7 +727,7 @@ public class Worker implements Runnable {
 		String arg = cmd.getArguments()[0];
 		if (arg.equalsIgnoreCase("CREATE")) {
 
-			// Do they want a public room?
+			// Do they want a group chat
 			boolean group = false;
 			if (cmd.getArguments().length == 2 && cmd.getArguments()[1].equalsIgnoreCase("GROUP"))
 				group = true;
@@ -749,7 +747,7 @@ public class Worker implements Runnable {
 			Room room = new Room(this.loggedInUser, group);
 			data.addRoom(room);
 
-			if (group == false)
+			if (invite != null)
 				room.invite(invite, this.loggedInUser);
 
 			return new Command("ROOM", "CREATED", room.getId() + "");
@@ -808,9 +806,7 @@ public class Worker implements Runnable {
 				if (room == null)
 					return new Command("ERROR", "ROOM_DOES_NOT_EXIST");
 
-				if (room.join(this.loggedInUser))
-					this.loggedInUser.addRoom(room);
-				else
+				if (!room.join(this.loggedInUser))
 					return new Command("ERROR", "COULD_NOT_JOIN_ROOM");
 
 				return this.okay;

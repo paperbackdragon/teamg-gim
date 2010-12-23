@@ -330,7 +330,9 @@ public class User {
 		return this.online;
 	}
 
-	public void login() {
+	public void login(Worker w) {
+		this.setOnline(true);
+		this.setWorker(w);
 		this.sendToAll(new Command("UPDATE", "FRIENDLIST"));
 	}
 	
