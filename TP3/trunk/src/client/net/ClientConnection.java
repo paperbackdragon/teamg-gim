@@ -126,7 +126,7 @@ public class ClientConnection implements NetworkingOut, Runnable {
 	@Override
 	public void friendlist() {
 		// :FRIENDLIST:;
-		buffer.putCommand(":FRIENDLIST:;");
+		buffer.putCommand(":GET FRIENDLIST:;");
 
 	}
 
