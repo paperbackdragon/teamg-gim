@@ -878,8 +878,9 @@ public class Worker implements Runnable {
 
 				if (room == null)
 					return new Command("ERROR", "ROOM_DOES_NOT_EXIST");
-
-				return new Command("ROOM", room.getType());
+				
+				// Gordon: you may want to tidy this up
+				return new Command("ROOM", room.getType(), data[0]);
 
 			}
 
