@@ -1,5 +1,6 @@
 package client;
 
+import java.awt.AWTEvent;
 import java.util.ArrayList;
 import javax.swing.SwingUtilities;
 
@@ -92,5 +93,15 @@ public class GimClient {
 			}
 		}
 		return null;
+	}
+
+	public static void removeWindowIdentifier(String roomid) {
+		
+		for (int i =0; i < windows.size(); i ++) {
+			if (windows.get(i).getId().equals(roomid)) {
+				windows.remove(i);
+			}
+		}
+		
 	}
 }
