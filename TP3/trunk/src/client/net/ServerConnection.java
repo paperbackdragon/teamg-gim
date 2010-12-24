@@ -178,7 +178,7 @@ public class ServerConnection implements NetworkingIn {
 	public void created(final String roomid) {
 		// get next list of users
 
-		String[] contacts = GimClient.getClient().getNextRoom();
+		final String[] contacts = GimClient.getClient().getNextRoom();
 
 		//TODO (heather): this if/else will not work! (presumably) gordon: why not? :S
 		// open new chat window
@@ -197,7 +197,7 @@ public class ServerConnection implements NetworkingIn {
 					SingleChatPanel scp = new SingleChatPanel(roomid);
 					
 					// set the chat to be with the user we invited to chat
-					scp.setChatWith(GimClient.getClient().getNextRoom()[0]);
+					scp.setChatWith(contacts[0]);
 					// </Gordon>
 					
 					

@@ -57,7 +57,7 @@ public class GimClient {
 		for (int i = 0; i < rooms.size(); i++ ) {
 			if (rooms.get(i).getChatWith().equals(chatWith)) {
 				// set chat to visible
-				rooms.get(i).setVisible(true);
+				rooms.get(i).showchat();
 				return true;
 			}
 		}

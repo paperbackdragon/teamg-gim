@@ -45,7 +45,8 @@ public class ChatPanel extends JPanel {
 	}
 
 	public void showchat() {
-		this.setVisible(true);
+		System.out.println("trying to show chat again...");
+		
 	}
 
 	/**
