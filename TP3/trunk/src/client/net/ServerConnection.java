@@ -187,7 +187,9 @@ public class ServerConnection implements NetworkingIn {
 				public void run() {
 					GroupChatPanel gcp = new GroupChatPanel(roomid);
 					GimClient.addRoom(gcp);
+					
 					GimUI ui = new GimUI("GIM - Group Chat", gcp);
+					
 					ui.setLocationRelativeTo(null);// center new chat window
 				}
 			});

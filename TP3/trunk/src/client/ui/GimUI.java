@@ -64,6 +64,10 @@ public class GimUI extends JFrame {
 		pack();
 	}
 	
+	public JPanel getMainPanel() {
+		return main;
+	}
+	
 	public void canLogout(Boolean bool) {
 		logout.setEnabled(bool);
 	}
