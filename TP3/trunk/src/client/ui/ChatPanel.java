@@ -2,6 +2,7 @@ package client.ui;
 
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
 
 /**
@@ -9,7 +10,7 @@ import javax.swing.*;
  * @author Heather
  */
 @SuppressWarnings("serial")
-public class ChatPanel extends JPanel{
+public class ChatPanel extends JPanel {
 	private String id;
 	protected JTextArea messages, chatBox;
 	protected JButton send;
@@ -108,4 +109,5 @@ public class ChatPanel extends JPanel{
 		public void keyPressed(KeyEvent e) {}
 		public void keyReleased(KeyEvent e) {}
 	}
+	
 }

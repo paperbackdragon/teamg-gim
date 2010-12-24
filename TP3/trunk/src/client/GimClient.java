@@ -52,12 +52,12 @@ public class GimClient {
 		}
 	}
 	
-	// We do this so we don't open a new chat every time the user clicks that
+	// We do this so we don't open a new chat every time the user clicks chat
 	public static Boolean findRoom(String chatWith) {
 		for (int i = 0; i < rooms.size(); i++ ) {
 			if (rooms.get(i).getChatWith().equals(chatWith)) {
 				// set chat to visible
-				rooms.get(i).showchat();
+				rooms.get(i).setVisible(true);
 				return true;
 			}
 		}
