@@ -240,7 +240,7 @@ public class ServerConnection implements NetworkingIn {
 	}
 
 	public void left(String user, String roomid) {
-
+		
 	}
 
 	public void users(String[] users, String roomid) {

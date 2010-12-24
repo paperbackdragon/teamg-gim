@@ -44,8 +44,8 @@ public class ChatPanel extends JPanel {
 		return chatWith;
 	}
 
-	public void showchat() {
-		System.out.println("trying to show chat again...");
+	public void showChat(String id) {
+		
 		
 	}
 
@@ -88,11 +88,13 @@ public class ChatPanel extends JPanel {
 			if (messages.getText().equals("")) {
 				messages.append("me: " + chatBox.getText());
 				GimClient.getClient().message(id, chatBox.getText());
+				messageCount += 1;
 			} else {
 				messages.append("\n" + "me: " + chatBox.getText());
 				GimClient.getClient().message(id, chatBox.getText());
 			}
 		}
+		
 	}
 
 	/** Sends a received message to the message log */
@@ -103,8 +105,14 @@ public class ChatPanel extends JPanel {
 
 		if (messages.getText().equals("")) {
 			messages.append(sender + ": " + message);
+			messageCount += 1;
 		} else {
 			messages.append("\n" + sender + ": " + message);
+		}
+		
+		
+		if (messageCount > 0) {
+			showChat(id);
 		}
 	}
 
@@ -115,6 +123,7 @@ public class ChatPanel extends JPanel {
 			chatBox.setText("");
 			chatBox.requestFocusInWindow();
 		}
+		
 	}
 
 	/**
