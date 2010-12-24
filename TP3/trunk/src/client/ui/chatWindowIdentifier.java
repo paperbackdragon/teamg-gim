@@ -3,9 +3,11 @@ package client.ui;
 public class chatWindowIdentifier {
 	
 	String id;
+	String user;
 	GimUI window;
 	
-	public chatWindowIdentifier(String id, GimUI window) {
+	public chatWindowIdentifier(String user, String roomid, GimUI window) {
+		this.user = user;
 		this.id = id;
 		this.window = window;
 	}
