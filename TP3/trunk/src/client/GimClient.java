@@ -10,10 +10,12 @@ public class GimClient {
 	private static ClientModel client;
 	private static ContactPanel contactPanel;
 	private static ArrayList<ChatPanel> rooms;
+	private static ArrayList<chatWindowIdentifier> windows;
 	
 	public static void main(String[] args) {
 		client = new ClientModel();
 		rooms = new ArrayList<ChatPanel>();
+		windows = new ArrayList<chatWindowIdentifier>();
 		contactPanel = new ContactPanel();
 		
 		SwingUtilities.invokeLater(new Runnable() {
@@ -53,17 +55,16 @@ public class GimClient {
 	}
 	
 	// We do this so we don't open a new chat every time the user clicks chat
-	public static Boolean findRoom(String chatWith) {
+	public static int findRoom(String chatWith) {
 		for (int i = 0; i < rooms.size(); i++ ) {
 			if (rooms.get(i).getChatWith().equals(chatWith)) {
 				// set chat to visible
-				rooms.get(i).showchat();
-				return true;
+				return i;
 			}
 		}
 		// not found
 		
-		return false;
+		return -1;
 	}
 	
 	
@@ -78,5 +79,18 @@ public class GimClient {
 			}
 		}
 		
+	}
+
+	public static void addWindow(String roomid, GimUI ui) {
+		windows.add(new chatWindowIdentifier(roomid, ui));
+	}
+	
+	public static GimUI getWindow(String roomid) {
+		for (int i = 0; i < windows.size(); i++ ) {
+			if (windows.get(i).getId().equals(roomid)) {
+				return windows.get(i).getWindow();
+			}
+		}
+		return null;
 	}
 }

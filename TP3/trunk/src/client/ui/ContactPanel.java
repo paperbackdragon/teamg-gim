@@ -179,10 +179,13 @@ public class ContactPanel extends JPanel {
 			//TODO (heather): how to make anything but nodes un-selectable?
 			else if(e.getSource().equals(chat)) {
 				// Check if there's already a chat open with this user
-				if (!GimClient.findRoom(getSelectedContacts()[0])) {
+				int find = GimClient.findRoom(getSelectedContacts()[0]);
+				if (find == -1) {
 					GimClient.getClient().createRoom(false, getSelectedContacts());
 				}
 				else {
+					//uhm
+					GimClient.getWindow(getSelectedContacts()[0]).setVisible(true);
 					
 				}
 				
@@ -202,11 +205,12 @@ public class ContactPanel extends JPanel {
 			
 			if(e.getClickCount() == 2) {
 				System.out.println(nodeInfo);
-				if (!GimClient.findRoom(getSelectedContacts()[0])) {
+				int find = GimClient.findRoom(getSelectedContacts()[0]);
+				if (find == -1) {
 					GimClient.getClient().createRoom(false, getSelectedContacts());
 				}
 				else {
-					//uhm..
+					GimClient.getWindow(getSelectedContacts()[0]).setVisible(true);
 				}
 			}
 		}
