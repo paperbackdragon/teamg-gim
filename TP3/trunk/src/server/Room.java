@@ -115,7 +115,7 @@ public class Room {
 
 	public synchronized boolean invite(User user, User by) {
 		this.invited.put(user.getId(), user);
-		user.getWorker().putResponse(new Command("ROOM", "INVITIED", this.id + " " + Command.encode(by.getId())));
+		user.getWorker().putResponse(new Command("ROOM", "INVITED", this.id + " " + Command.encode(by.getId())));
 		return true;
 	}
 
