@@ -103,7 +103,7 @@ public class networkReader implements Runnable {
 
 	private void performCommand(Command cmd) {
 
-		if (cmd.getCommand().equals("OKAY")) {
+		if (cmd.getCommand().equalsIgnoreCase("OKAY")) {
 			gui.okay();
 		}
 
@@ -124,16 +124,16 @@ public class networkReader implements Runnable {
 
 		}
 
-		else if (cmd.getCommand().equals("KILL")) {
+		else if (cmd.getCommand().equalsIgnoreCase("KILL")) {
 			gui.kill(Command.decode(cmd.getData()));
 		}
 
-		else if (cmd.getCommand().equals("BROADCAST")) {
+		else if (cmd.getCommand().equalsIgnoreCase("BROADCAST")) {
 			gui.broadcast(Command.decode(cmd.getData()));
 
 		}
 
-		else if (cmd.getCommand().equals("AUTH")) {
+		else if (cmd.getCommand().equalsIgnoreCase("AUTH")) {
 
 			if (cmd.getArgumentsAsString().equalsIgnoreCase("LOGGEDIN")) {
 				gui.authorised();
@@ -149,6 +149,8 @@ public class networkReader implements Runnable {
 		// post login
 
 		else if (cmd.getCommand().equals("MESSAGE")) {
+			System.out.println("received a message");
+			
 			String[] parts = cmd.splitAndDecodeData(" ");
 			gui.message(parts[0], parts[1], parts[2]);
 		}

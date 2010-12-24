@@ -68,6 +68,7 @@ public class GimClient {
 	
 	
 	public static void routeMessage(String roomid, String sender, String message) {
+		System.out.println("routing message");
 		for (int i=0; i< rooms.size(); i++) {
 			if (rooms.get(i).getID().equals(roomid)) {
 				rooms.get(i).receiveMessage(sender, message);
