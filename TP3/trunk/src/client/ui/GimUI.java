@@ -109,13 +109,14 @@ public class GimUI extends JFrame {
 			// if the window closed is a chat window
 			if (main instanceof ChatPanel) {
 				System.out.println("this seems to work");
+				String roomid = ((ChatPanel) main).getID();
 				
 				// tell the server to leave the room
-				GimClient.getClient().leave(((ChatPanel) main).getID());
+				GimClient.getClient().leave(roomid);
 				
 				// remove from the room list, and the window list
 				GimClient.removeRoom((ChatPanel) main);
-				GimClient.removeWindowIdentifier(((ChatPanel) main).getID());	
+				GimClient.removeWindowIdentifier(roomid);	
 			}
 		}
 

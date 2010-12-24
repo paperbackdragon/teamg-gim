@@ -6,7 +6,7 @@ public class chatWindowIdentifier {
 	String user;
 	GimUI window;
 	
-	public chatWindowIdentifier(String user, String roomid, GimUI window) {
+	public chatWindowIdentifier(String user, String id, GimUI window) {
 		this.user = user;
 		this.id = id;
 		this.window = window;
