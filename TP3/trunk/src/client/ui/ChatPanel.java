@@ -5,6 +5,8 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
+import client.GimClient;
+
 /**
  * General class for a chat panel.
  * @author Heather
@@ -79,9 +81,24 @@ public class ChatPanel extends JPanel {
 		if (!chatBox.getText().equals("")){
 			if (messages.getText().equals("")) {
 				messages.append("me: " + chatBox.getText());
+				GimClient.getClient().message(id, chatBox.getText());
 			}
 			else {
 				messages.append("\n" + "me: " + chatBox.getText());
+				GimClient.getClient().message(id, chatBox.getText());
+			}
+		}
+	}
+	
+	/** Sends a received message to the message log*/
+	public void receiveMessage(String sender, String message) {
+		//if beginning of box
+		if (!chatBox.getText().equals("")){
+			if (messages.getText().equals("")) {
+				messages.append(sender + ": " + message);
+			}
+			else {
+				messages.append("\n" + "sender: " + message);
 			}
 		}
 	}

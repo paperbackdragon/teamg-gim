@@ -88,6 +88,10 @@ public class ClientModel {
 	public void register(String email, char[] pwd) {
 		outLink.register(email, pwd);
 	}
+	
+	public void message(String roomid, String message) {
+		outLink.message(roomid, message);
+	}
 
 	public void logout() {
 		outLink.logout();

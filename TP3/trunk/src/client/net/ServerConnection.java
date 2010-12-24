@@ -80,7 +80,7 @@ public class ServerConnection implements NetworkingIn {
 	}
 
 	public void message(String roomid, String sender, String message) {
-
+		GimClient.routeMessage(roomid, sender, message);
 	}
 
 	public void missingArgumentsError(String message) {
