@@ -203,7 +203,12 @@ public class ContactPanel extends JPanel {
 			
 			if(e.getClickCount() == 2) {
 				System.out.println(nodeInfo);
-				GimClient.getClient().createRoom(false, new String[] {nodeInfo});
+				if (!GimClient.findRoom(getSelectedContacts()[0])) {
+					GimClient.getClient().createRoom(false, getSelectedContacts());
+				}
+				else {
+					//uhm...
+				}
 			}
 		}
 		

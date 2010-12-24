@@ -87,7 +87,7 @@ public class Room {
 
 		// Send it to everyone except the user who sent it
 		for (User user : users.values()) {
-			if (user != sender)
+//			if (user != sender)
 				user.sendMessage(sender, this.getId(), message);
 		}
 
