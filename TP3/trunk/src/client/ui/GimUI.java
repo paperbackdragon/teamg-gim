@@ -1,6 +1,7 @@
 package client.ui;
 
 import java.awt.event.*;
+
 import javax.swing.*;
 
 
@@ -92,5 +93,37 @@ public class GimUI extends JFrame {
 				//TODO (heather): create options panel
 			}
 		}
+	}
+	
+	class windowlistener implements WindowListener {
+
+		@Override
+		public void windowActivated(WindowEvent arg0) {}
+
+		@Override
+		public void windowClosed(WindowEvent e) {
+			
+			// if the window closed is a chat window
+			if (main instanceof ChatPanel) {
+				
+				
+			}
+		}
+
+		@Override
+		public void windowClosing(WindowEvent arg0) {}
+
+		@Override
+		public void windowDeactivated(WindowEvent arg0) {}
+
+		@Override
+		public void windowDeiconified(WindowEvent arg0) {}
+
+		@Override
+		public void windowIconified(WindowEvent arg0) {}
+
+		@Override
+		public void windowOpened(WindowEvent arg0) {}
+		
 	}
 }
