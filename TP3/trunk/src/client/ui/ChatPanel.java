@@ -19,6 +19,20 @@ public class ChatPanel extends JPanel{
 	private int messageCount;
 	// </proposed>
 	
+	/* Gordon: proposed. If someone else opened the chat, grab the username from
+	 * the invitations list in the model. (see personal(final String roomid) in ServerConnection
+	 *  */
+	private String chatWith;
+	// </proposed>
+	
+	
+	public void setChatWith(String chatWith) {
+		this.chatWith = chatWith;
+		
+		// set the window title... (dunno how) </Gordon>
+		
+	}
+	
 	/**
 	 * Constructor for a chatbox
 	 */

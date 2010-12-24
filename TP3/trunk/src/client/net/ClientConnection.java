@@ -375,7 +375,7 @@ public class ClientConnection implements NetworkingOut, Runnable {
 		// {<roomid> |
 		// <user>};
 
-		buffer.putCommand(":ROOM: CREATE GROUP:;");
+		buffer.putCommand(":ROOM CREATE GROUP:;");
 	}
 
 	@Override
@@ -383,7 +383,9 @@ public class ClientConnection implements NetworkingOut, Runnable {
 		// :ROOM [ CREATE {GROUP} | INVITE | JOIN | LEAVE | USERS | TYPE ]:
 		// {<roomid> |
 		// <user>};
-		buffer.putCommand(":ROOM: CREATE: " + Command.encode(user) + ";");
+		
+		System.out.println("got to create single chat");
+		buffer.putCommand(":ROOM CREATE: " + Command.encode(user) + ";");
 	}
 
 	@Override

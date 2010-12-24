@@ -109,7 +109,9 @@ public class ClientModel {
 		if (group)
 			outLink.createGroupChat();
 		else
-			outLink.createSingleChat(contacts[0]);//TODO (heather): make this not null
+			//TODO (heather): make this not null 
+			// Gordon: i think this is fine now
+			outLink.createSingleChat(contacts[0]);
 	}
 
 	public void invite(String roomid, String user) {

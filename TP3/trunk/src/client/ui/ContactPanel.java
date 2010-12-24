@@ -119,6 +119,8 @@ public class ContactPanel extends JPanel {
 		//TODO (heather): change node icons (see java tutorial)
 		//TODO (heather): make two separate trees
 		
+		System.out.println("got here");
+		
 		contacts.removeAllChildren();
 		DefaultMutableTreeNode status = null;
 		DefaultMutableTreeNode contact = null;
@@ -140,7 +142,7 @@ public class ContactPanel extends JPanel {
 			contact = new DefaultMutableTreeNode(str);
 		    status.add(contact);
 		}
-	    contactTree.repaint();
+	    
 	}
 	
 	private String[] getSelectedContacts() {

@@ -247,7 +247,7 @@ public class ServerConnection implements NetworkingIn {
 
 	}
 
-	public void personal(String roomid) {
+	public void personal(final String roomid) {
 		/*
 		 * gordon: spawn a personal chat window immediately ... oh wait, what if
 		 * no message has been sent yet... ... we might need to keep a log of
@@ -256,6 +256,19 @@ public class ServerConnection implements NetworkingIn {
 		 * handler class. Like, when the "write message to window" method is
 		 * invoked, if messagecount == 0, spawn a window...
 		 */
+		final String invitedBy = GimClient.getClient().getNextInvitation();
+		
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				SingleChatPanel scp = new SingleChatPanel(roomid);
+				// gordon
+				scp.setChatWith(invitedBy);
+				// </gordon>
+				GimClient.addRoom(scp);
+				GimUI ui = new GimUI("GIM - Chat with Contact ", scp);
+				ui.setLocationRelativeTo(null);// center new chat window
+			}
+		});
 
 	}
 
