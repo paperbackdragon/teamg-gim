@@ -44,6 +44,9 @@ public class GimUI extends JFrame {
 		fileMenu.add(logout);
 		fileMenu.add(quit);
 		
+		windowListener windowlistener = new windowListener();
+		this.addWindowListener(windowlistener);
+		
 		setOptions = new JMenuItem("Set Options...");
 		setOptions.addActionListener(menuListener);
 		optionMenu.add(setOptions);
@@ -95,7 +98,7 @@ public class GimUI extends JFrame {
 		}
 	}
 	
-	class windowlistener implements WindowListener {
+	class windowListener implements WindowListener {
 
 		@Override
 		public void windowActivated(WindowEvent arg0) {}
@@ -105,8 +108,8 @@ public class GimUI extends JFrame {
 			
 			// if the window closed is a chat window
 			if (main instanceof ChatPanel) {
-				
-				
+				System.out.println("this seems to work");
+				String id = ((ChatPanel) main).getID();
 			}
 		}
 
