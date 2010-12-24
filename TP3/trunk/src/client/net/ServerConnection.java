@@ -202,7 +202,7 @@ public class ServerConnection implements NetworkingIn {
 					
 					
 					GimClient.addRoom(scp);
-					GimUI ui = new GimUI("GIM - Chat with Contact ", scp);
+					GimUI ui = new GimUI("GIM - Chat with " + contacts[0], scp);
 					ui.setLocationRelativeTo(null);// center new chat window
 				}
 			});
@@ -272,7 +272,7 @@ public class ServerConnection implements NetworkingIn {
 				scp.setChatWith(invitedBy);
 				// </gordon>
 				GimClient.addRoom(scp);
-				GimUI ui = new GimUI("GIM - Chat with Contact ", scp);
+				GimUI ui = new GimUI("GIM - Chat with " + invitedBy, scp);
 				ui.setLocationRelativeTo(null);// center new chat window
 			}
 		});
