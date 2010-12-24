@@ -766,14 +766,20 @@ public class Worker implements Runnable {
 				int roomId = Integer.valueOf(data[0]);
 				String userId = data[1];
 
+				Room room = this.data.getRoom(roomId);
+				User user = this.data.getUser(userId);
+				
+				if(room == null)
+					return new Command("ERROR", "INVALID_ROOM_ID");
+				
+				if(user == null)
+					return new Command("ERROR", "INVALID_USER");
+				
 				// Make sure we have permissions to invite people to the room
 				if (!this.loggedInUser.inRoom(roomId))
 					return new Command("ERROR", "NOT_IN_ROOM",
 							"You cannot invite someone into a room which you are no already in.");
-
-				Room room = this.data.getRoom(roomId);
-				User user = this.data.getUser(userId);
-
+				
 				if (!user.isFriendsWith(this.loggedInUser))
 					return new Command("ERROR", "NOT_IN_FRIEND_LIST");
 
