@@ -263,6 +263,8 @@ public class ServerConnection implements NetworkingIn {
 		 */
 		final String invitedBy = GimClient.getClient().getNextInvitation();
 		
+		GimClient.getClient().join(roomid);
+		
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				SingleChatPanel scp = new SingleChatPanel(roomid);
