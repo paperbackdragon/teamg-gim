@@ -30,7 +30,14 @@ public class ChatPanel extends JPanel{
 		this.chatWith = chatWith;
 		
 		// set the window title... (dunno how) </Gordon>
-		
+	}
+	
+	public String getChatWith() {
+		return chatWith;
+	}
+	
+	public void showchat() {
+		this.setVisible(true);
 	}
 	
 	/**

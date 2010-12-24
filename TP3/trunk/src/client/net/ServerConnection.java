@@ -198,6 +198,12 @@ public class ServerConnection implements NetworkingIn {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					SingleChatPanel scp = new SingleChatPanel(roomid);
+					
+					// set the chat to be with the user we invited to chat
+					scp.setChatWith(GimClient.getClient().getNextRoom()[0]);
+					// </Gordon>
+					
+					
 					GimClient.addRoom(scp);
 					GimUI ui = new GimUI("GIM - Chat with Contact ", scp);
 					ui.setLocationRelativeTo(null);// center new chat window
