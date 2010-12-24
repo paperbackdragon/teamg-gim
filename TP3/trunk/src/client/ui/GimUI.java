@@ -107,7 +107,7 @@ public class GimUI extends JFrame {
 		public void windowClosed(WindowEvent e) {
 			
 			// if the window closed is a chat window
-			if (main instanceof ChatPanel) {
+			if (main instanceof GroupChatPanel) {
 				System.out.println("this seems to work");
 				String roomid = ((ChatPanel) main).getID();
 				
