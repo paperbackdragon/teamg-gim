@@ -184,7 +184,7 @@ public class ContactPanel extends JPanel {
 					GimClient.getClient().createRoom(false, getSelectedContacts());
 				}
 				else {
-					//uhm...
+					
 				}
 				
 			}
