@@ -183,6 +183,9 @@ public class ContactPanel extends JPanel {
 				if (!GimClient.findRoom(getSelectedContacts()[0])) {
 					GimClient.getClient().createRoom(false, getSelectedContacts());
 				}
+				else {
+					//uhm...
+				}
 				
 			}
 			else if(e.getSource().equals(group)) {

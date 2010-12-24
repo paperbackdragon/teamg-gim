@@ -98,7 +98,7 @@ public class ChatPanel extends JPanel {
 				messages.append(sender + ": " + message);
 			}
 			else {
-				messages.append("\n" + "sender: " + message);
+				messages.append("\n" + sender +": " + message);
 			}
 		}
 	}

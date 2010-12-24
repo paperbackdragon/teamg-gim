@@ -70,8 +70,10 @@ public class GimClient {
 	public static void routeMessage(String roomid, String sender, String message) {
 		System.out.println("routing message");
 		for (int i=0; i< rooms.size(); i++) {
+			System.out.println("found the room");
 			if (rooms.get(i).getID().equals(roomid)) {
 				rooms.get(i).receiveMessage(sender, message);
+				
 				break;
 			}
 		}
