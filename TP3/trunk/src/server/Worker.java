@@ -23,6 +23,7 @@ public class Worker implements Runnable {
 	private Socket socket = null;
 	private BufferedReader in;
 	private PrintWriter out;
+	private int clientID;
 
 	private Data data = Data.getInstance();
 	private long lastCommunication;
@@ -35,7 +36,7 @@ public class Worker implements Runnable {
 	private Thread responseWriterThread;
 	private Thread commandReaderThread;
 
-	public Worker(Socket socket) {
+	public Worker(int ClientID, Socket socket) {
 		this.socket = socket;
 		this.commandBuffer = new CommandBuffer<Command>();
 		this.responseBuffer = new CommandBuffer<Command>();
@@ -126,10 +127,10 @@ public class Worker implements Runnable {
 				// They provided accurate details, log them in
 				this.loggedInUser = user;
 				this.loggedInUser.login(this);
-				
+
 				// Tell them that they're logged in
-				responseBuffer.putCommand(new Command("AUTH", "LOGGEDIN", Command.encode(this.loggedInUser.getNickname())));
-				
+				responseBuffer.putCommand(new Command("AUTH", "LOGGEDIN", Command.encode(this.loggedInUser
+						.getNickname())));
 
 				// Add any commands they received while offline
 				synchronized (this.loggedInUser.getQueue()) {
@@ -441,6 +442,15 @@ public class Worker implements Runnable {
 		response = response.substring(0, response.length() - 1);
 
 		return new Command("INFO", null, response);
+	}
+
+	/**
+	 * Get the Id of the worker
+	 * 
+	 * @return The id of the worker
+	 */
+	public int getID() {
+		return this.clientID;
 	}
 
 	/**
@@ -768,18 +778,18 @@ public class Worker implements Runnable {
 
 				Room room = this.data.getRoom(roomId);
 				User user = this.data.getUser(userId);
-				
-				if(room == null)
+
+				if (room == null)
 					return new Command("ERROR", "INVALID_ROOM_ID");
-				
-				if(user == null)
+
+				if (user == null)
 					return new Command("ERROR", "INVALID_USER");
-				
+
 				// Make sure we have permissions to invite people to the room
 				if (!this.loggedInUser.inRoom(roomId))
 					return new Command("ERROR", "NOT_IN_ROOM",
 							"You cannot invite someone into a room which you are no already in.");
-				
+
 				if (!user.isFriendsWith(this.loggedInUser))
 					return new Command("ERROR", "NOT_IN_FRIEND_LIST");
 
@@ -921,7 +931,8 @@ public class Worker implements Runnable {
 
 		}
 
-		System.out.println("Worker finished.");
+		data.removeWorker(this);
+		System.out.println("Worker " + this.getID() + " finished.");
 
 	}
 
@@ -954,10 +965,11 @@ public class Worker implements Runnable {
 	 */
 	private Command serverstatus(Command cmd) {
 
-		// TODO: Make these return the correct things...(this depends on the timeout thread for upto date information)
+		// TODO: Make these return the correct things...(this depends on the
+		// timeout thread for upto date information)
 		String time = Command.encode(new Date().toString());
-		String users = Command.encode(" Online, " + data.getUsers().size() + " Total");
-		String uptime = Command.encode("OMG UPTIME");
+		String users = Command.encode(data.online + " Online Users, " + data.getUsers().size() + " Total");
+		String uptime = Command.encode(data.uptime);
 
 		String data = "";
 		String[] args = cmd.getArguments();
@@ -1038,5 +1050,13 @@ public class Worker implements Runnable {
 	 */
 	private void updateLastCommunication() {
 		this.lastCommunication = System.currentTimeMillis();
+	}
+
+	/**
+	 * Check if this worker is a logged in user
+	 * @return True if the worker is logged in
+	 */
+	public boolean isLoggedin() {
+		return (this.loggedInUser != null);
 	}
 }

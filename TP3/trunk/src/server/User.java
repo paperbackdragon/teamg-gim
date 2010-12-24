@@ -257,16 +257,13 @@ public class User {
 	 * 
 	 * @return A hashmap of the users who are online
 	 * 
-	 *         TODO: Change to collection
-	 * 
 	 */
-	private HashMap<String, User> getUsersToNotify() {
-		HashMap<String, User> users = new HashMap<String, User>();
+	private Collection<User> getUsersToNotify() {
+		Collection<User> users = new LinkedList<User>();
 
 		for (User user : this.getInFreindList()) {
 			if (user.isOnline()) {
-				users.put(user.getId(), user);
-				System.out.println(user.getId());
+				users.add(user);
 			}
 		}
 
@@ -439,7 +436,7 @@ public class User {
 	 *            The command to send
 	 */
 	public void sendToAll(Command cmd) {
-		for (User user : getUsersToNotify().values()) {
+		for (User user : getUsersToNotify()) {
 			Worker w = user.getWorker();
 			if (w != null)
 				w.putResponse(cmd);

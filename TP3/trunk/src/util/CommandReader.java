@@ -104,7 +104,6 @@ public class CommandReader implements Runnable {
 		
 		// Cleaup
 		commandBuffer.putCommand(new Command("QUIT"));
-		System.out.println("CommandReader stopped.");
 		
 	}
 }

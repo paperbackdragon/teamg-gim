@@ -33,7 +33,6 @@ public class ResponseWriter implements Runnable {
 				break;
 		}
 
-		System.out.println("ResponseWriter killed.");
 	}
 
 }

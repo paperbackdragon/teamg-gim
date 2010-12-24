@@ -7,10 +7,28 @@ import java.util.HashMap;
 
 public class Data {
 
+	/**
+	 * Apparently doing it this way makes constructing it thread-safe...
+	 */
+	private static class SingeltonHolder {
+		public static final Data INSTANCE = new Data();
+	}
+	/**
+	 * Return the current instance of the data class.
+	 * 
+	 * @return the current instance
+	 */
+	public static Data getInstance() {
+		return SingeltonHolder.INSTANCE;
+	}
+	
 	private volatile int clientID = 0;
 	private volatile int roomID = 0;
 	public volatile int usersOnline = 0;
 
+	public volatile int online = 0;
+	public String uptime = "";
+	
 	// TODO: Change back to private after testing
 	public HashMap<String, User> users = new HashMap<String, User>();
 	private HashMap<Integer, Room> rooms = new HashMap<Integer, Room>();
@@ -23,19 +41,15 @@ public class Data {
 	}
 
 	/**
-	 * Apparently doing it this way makes constructing it thread-safe...
-	 */
-	private static class SingeltonHolder {
-		public static final Data INSTANCE = new Data();
-	}
-
-	/**
-	 * Return the current instance of the data class.
+	 * Add a new room
 	 * 
-	 * @return the current instance
+	 * @param room
+	 *            the room to add
 	 */
-	public static Data getInstance() {
-		return SingeltonHolder.INSTANCE;
+	public void addRoom(Room room) {
+		synchronized (this.rooms) {
+			this.rooms.put(room.getId(), room);
+		}
 	}
 
 	/**
@@ -48,17 +62,6 @@ public class Data {
 		synchronized (this.users) {
 			this.users.put(user.getId(), user);
 		}
-	}
-
-	/**
-	 * Get a user
-	 * 
-	 * @param id
-	 *            The id of the user
-	 * @return the User
-	 */
-	public User getUser(String id) {
-		return this.users.get(id.toLowerCase());
 	}
 
 	/**
@@ -76,35 +79,21 @@ public class Data {
 	}
 
 	/**
-	 * Get a user
+	 * Get the next client ID
 	 * 
-	 * @param id
-	 *            The id of the user
-	 * @return the User
+	 * @return The next free Id for this client to use
 	 */
-	public User getWorker(int id) {
-		return this.users.get(new Integer(id));
+	public int getNextClientID() {
+		return this.clientID++;
 	}
-
+	
 	/**
-	 * Get all of the users
+	 * Get the next unique room ID
 	 * 
-	 * @return A HashMap of all the users
+	 * @return The new free id for this room to use
 	 */
-	public Collection<User> getUsers() {
-		return this.users.values();
-	}
-
-	/**
-	 * Add a new room
-	 * 
-	 * @param room
-	 *            the room to add
-	 */
-	public void addRoom(Room room) {
-		synchronized (this.rooms) {
-			this.rooms.put(room.getId(), room);
-		}
+	public int getNextRoomID() {
+		return this.roomID++;
 	}
 
 	/**
@@ -117,16 +106,6 @@ public class Data {
 	public Room getRoom(int id) {
 		return this.rooms.get(new Integer(id));
 	}
-	
-	/**
-	 * Remove a room for the server
-	 * @param id The id of the room to remove
-	 */
-	public void removeRoom(int id) {
-		synchronized (this.rooms) {
-			this.rooms.remove(new Integer(id));
-		}
-	}
 
 	/**
 	 * Get a list of all the rooms
@@ -138,21 +117,54 @@ public class Data {
 	}
 
 	/**
-	 * Get the next client ID
+	 * Get a user
 	 * 
-	 * @return The next free Id for this client to use
+	 * @param id
+	 *            The id of the user
+	 * @return the User
 	 */
-	public int getNextClientID() {
-		return this.clientID++;
+	public User getUser(String id) {
+		return this.users.get(id.toLowerCase());
+	}
+	
+	/**
+	 * Get all of the users
+	 * 
+	 * @return A HashMap of all the users
+	 */
+	public Collection<User> getUsers() {
+		return this.users.values();
 	}
 
 	/**
-	 * Get the next unique room ID
+	 * Get a user
 	 * 
-	 * @return The new free id for this room to use
+	 * @param id
+	 *            The id of the user
+	 * @return the User
 	 */
-	public int getNextRoomID() {
-		return this.roomID++;
+	public User getWorker(int id) {
+		return this.users.get(new Integer(id));
+	}
+
+	public Collection<Worker> getWorkers() {
+			return this.workers.values();
+	}
+
+	/**
+	 * Remove a room for the server
+	 * @param id The id of the room to remove
+	 */
+	public void removeRoom(int id) {
+		synchronized (this.rooms) {
+			this.rooms.remove(new Integer(id));
+		}
+	}
+
+	public void removeWorker(Worker worker) {
+		synchronized (this.workers) {
+			this.workers.remove(new Integer(worker.getID()));
+		}
 	}
 
 }

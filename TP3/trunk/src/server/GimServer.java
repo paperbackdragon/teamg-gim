@@ -3,7 +3,6 @@ package server;
 import java.io.IOException;
 import java.net.ServerSocket;
 
-
 /**
  * GimServer listen for connections and passes them off to worker threads.
  */
@@ -13,7 +12,7 @@ public class GimServer {
 	 * Starts some threads
 	 */
 	public static void main(String[] args) {
-	
+
 		Data data = Data.getInstance();
 
 		data.addUser(new User("cyblob@gmail.com", "password"));
@@ -27,15 +26,17 @@ public class GimServer {
 			System.err.println("Could not listen on port: 4444.");
 			System.exit(1);
 		}
-		
 
-		// TODO: A thread to check for clients to timeout
+		// Create a new thread to check for timeouts and update system data
+		Timeout timeout = new Timeout(20);
+		Thread timeoutThread = new Thread(timeout);
+		timeoutThread.start();
 
 		// Listen for connections and create a Worker for them
 		while (true) {
 			try {
-				Worker worker = new Worker(serverSocket.accept());
 				int clientID = data.getNextClientID();
+				Worker worker = new Worker(clientID, serverSocket.accept());
 				System.out.println("Creating new worker thread width id " + clientID);
 				data.addWorker(clientID, worker);
 				Thread t = new Thread(worker);
