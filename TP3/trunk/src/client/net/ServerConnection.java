@@ -178,9 +178,6 @@ public class ServerConnection implements NetworkingIn {
 	public void created(final String roomid) {
 		// get next list of users
 
-		// TODO: James Change back...
-		// GimClient.getClient().getRoomList().remove();
-		// Gordon: I've been working on it, so maybe not now...
 		String[] contacts = GimClient.getClient().getNextRoom();
 
 		//TODO (heather): this if/else will not work! (presumably) gordon: why not? :S
@@ -254,6 +251,8 @@ public class ServerConnection implements NetworkingIn {
 	}
 
 	public void personal(final String roomid) {
+		System.out.println("someone invited us to a personal chat");
+		
 		/*
 		 * gordon: spawn a personal chat window immediately ... oh wait, what if
 		 * no message has been sent yet... ... we might need to keep a log of

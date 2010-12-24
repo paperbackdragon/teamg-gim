@@ -218,7 +218,7 @@ public class networkReader implements Runnable {
 			System.out.println("ONLINE: ");
 			for (int i = 0; i < onlinelist.length; i++) {
 				onlinelist[i] = Command.decode(onlinelist[i]);
-				System.out.println(onlinelist[i]);
+				//System.out.println(onlinelist[i]);
 			}
 
 			String offline = data.split("OFFLINE")[1].split("BLOCKED")[0];
@@ -228,7 +228,7 @@ public class networkReader implements Runnable {
 			System.out.println("OFFLINE: ");
 			for (int j = 0; j < offlinelist.length; j++) {
 				offlinelist[j] = Command.decode(offlinelist[j]);
-				System.out.println(offlinelist[j]);
+				//System.out.println(offlinelist[j]);
 			}
 
 			String blocked = data.split("OFFLINE")[1].split("BLOCKED")[0];
@@ -238,7 +238,7 @@ public class networkReader implements Runnable {
 			System.out.println("BLOCKED: ");
 			for (int k = 0; k < blockedlist.length; k++) {
 				blockedlist[k] =Command.decode(blockedlist[k]);
-				System.out.println(blockedlist[k]);
+				//System.out.println(blockedlist[k]);
 			}
 
 			gui.friendlist(onlinelist, offlinelist, blockedlist);
