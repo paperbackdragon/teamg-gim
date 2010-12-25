@@ -81,7 +81,7 @@ public class ChatPanel extends JPanel {
 		}
 
 		id = roomID;
-		LinkedList<String> messageQueue = new LinkedList<String>();
+		messageQueue = new LinkedList<String>();
 	}
 
 	// HELPER METHODS
