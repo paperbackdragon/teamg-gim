@@ -105,10 +105,21 @@ public class ChatPanel extends JPanel {
 	 */
 	private void sendMessage() {
 		// if beginning of box
+		
 		if (!chatBox.getText().equals("")) {
 			if (messages.getText().equals("")) {
 				messages.append("me: " + chatBox.getText());
-				GimClient.getClient().message(id, chatBox.getText());
+				if (getInProgress()) {
+					GimClient.getClient().message(id, chatBox.getText());
+				}
+				else {
+					messageQueue.push(chatBox.getText());
+					
+					if (id.equals("-1")) { // other person has left the room
+						GimClient.getClient().createRoom(false, new String[] {chatWith});
+					}
+				}
+				
 				messageCount += 1;
 			} else {
 				messages.append("\n" + "me: " + chatBox.getText());
@@ -133,13 +144,13 @@ public class ChatPanel extends JPanel {
 		
 		
 		if (messageCount > 0) {
-			showChat(id);
+			showChat();
 		}
 	}
 
 	/* method to display the chat only a message has been received */
-	private void showChat(String id2) {
-		// TODO Auto-generated method stub
+	private void showChat() {
+		
 		
 	}
 
