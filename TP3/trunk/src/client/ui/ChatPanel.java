@@ -2,6 +2,7 @@ package client.ui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.LinkedList;
 
 import javax.swing.*;
 
@@ -14,6 +15,8 @@ import client.GimClient;
  */
 @SuppressWarnings("serial")
 public class ChatPanel extends JPanel {
+	private LinkedList<String> messageQueue;
+	
 	private String id;
 	protected JTextArea messages, chatBox;
 	protected JButton send;
@@ -41,22 +44,26 @@ public class ChatPanel extends JPanel {
 	}
 
 	public void setInProgress(Boolean inProgress) {
+		if (inProgress.equals(true)) {
+			sendMessageQueue();
+		}
 		this.inProgress = inProgress;
+	}
+
+	/* Case where the other user has closed their window. Don't want to
+	 * cocern the user with having to wait for room creation */
+	private void sendMessageQueue() {
+		for (int i = 0; i < messageQueue.size(); i++) {
+			GimClient.getClient().message(id, messageQueue.removeLast());
+		}
 	}
 
 	public void setChatWith(String chatWith) {
 		this.chatWith = chatWith;
-
-		// set the window title... (dunno how) </Gordon>
 	}
 
 	public String getChatWith() {
 		return chatWith;
-	}
-
-	public void showChat(String id) {
-		
-		
 	}
 
 	/**
@@ -128,6 +135,12 @@ public class ChatPanel extends JPanel {
 		if (messageCount > 0) {
 			showChat(id);
 		}
+	}
+
+	/* method to display the chat only a message has been received */
+	private void showChat(String id2) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	// ACTION LISTENERS
