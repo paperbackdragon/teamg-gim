@@ -53,9 +53,12 @@ public class ChatPanel extends JPanel {
 	/* Case where the other user has closed their window. Don't want to
 	 * cocern the user with having to wait for room creation */
 	private void sendMessageQueue() {
-		for (int i = 0; i < messageQueue.size(); i++) {
-			GimClient.getClient().message(id, messageQueue.removeLast());
+		if (!messageQueue.isEmpty()) {
+			for (int i = 0; i < messageQueue.size(); i++) {
+				GimClient.getClient().message(id, messageQueue.removeLast());
+			}
 		}
+		
 	}
 
 	public void setChatWith(String chatWith) {
