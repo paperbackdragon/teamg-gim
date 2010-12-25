@@ -16,7 +16,7 @@ import client.GimClient;
 @SuppressWarnings("serial")
 public class ChatPanel extends JPanel {
 	private LinkedList<String> messageQueue;
-	
+
 	private String id;
 	protected JTextArea messages, chatBox;
 	protected JButton send;
@@ -36,7 +36,7 @@ public class ChatPanel extends JPanel {
 	private String chatWith;
 
 	// </proposed>
-	
+
 	private Boolean inProgress = false;
 
 	public Boolean getInProgress() {
@@ -50,15 +50,17 @@ public class ChatPanel extends JPanel {
 		this.inProgress = inProgress;
 	}
 
-	/* Case where the other user has closed their window. Don't want to
-	 * cocern the user with having to wait for room creation */
+	/*
+	 * Case where the other user has closed their window. Don't want to cocern
+	 * the user with having to wait for room creation
+	 */
 	private void sendMessageQueue() {
 		if (!messageQueue.isEmpty()) {
 			for (int i = 0; i < messageQueue.size(); i++) {
 				GimClient.getClient().message(id, messageQueue.removeLast());
 			}
 		}
-		
+
 	}
 
 	public void setChatWith(String chatWith) {
@@ -92,7 +94,7 @@ public class ChatPanel extends JPanel {
 	public String getID() {
 		return id;
 	}
-	
+
 	public void setId(String id) {
 		this.id = id;
 	}
@@ -109,28 +111,39 @@ public class ChatPanel extends JPanel {
 	 */
 	private void sendMessage() {
 		// if beginning of box
-		
+
 		if (!chatBox.getText().equals("")) {
 			if (messages.getText().equals("")) {
 				messages.append("me: " + chatBox.getText());
 				if (getInProgress()) {
 					GimClient.getClient().message(id, chatBox.getText());
-				}
-				else {
+				} else {
 					messageQueue.push(chatBox.getText());
-					
+
 					if (id.equals("-1")) { // other person has left the room
-						GimClient.getClient().createRoom(false, new String[] {chatWith});
+						GimClient.getClient().createRoom(false,
+								new String[] { chatWith });
 					}
 				}
-				
+
 				messageCount += 1;
 			} else {
 				messages.append("\n" + "me: " + chatBox.getText());
-				GimClient.getClient().message(id, chatBox.getText());
+
+				if (getInProgress()) {
+					GimClient.getClient().message(id, chatBox.getText());
+				} else {
+					messageQueue.push(chatBox.getText());
+
+					if (id.equals("-1")) { // other person has left the room
+						GimClient.getClient().createRoom(false,
+								new String[] { chatWith });
+					}
+
+				}
 			}
 		}
-		
+
 	}
 
 	/** Sends a received message to the message log */
@@ -145,8 +158,7 @@ public class ChatPanel extends JPanel {
 		} else {
 			messages.append("\n" + sender + ": " + message);
 		}
-		
-		
+
 		if (messageCount > 0) {
 			showChat();
 		}
@@ -154,8 +166,7 @@ public class ChatPanel extends JPanel {
 
 	/* method to display the chat only a message has been received */
 	private void showChat() {
-		
-		
+
 	}
 
 	// ACTION LISTENERS
@@ -165,7 +176,7 @@ public class ChatPanel extends JPanel {
 			chatBox.setText("");
 			chatBox.requestFocusInWindow();
 		}
-		
+
 	}
 
 	/**
