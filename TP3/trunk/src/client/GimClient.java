@@ -94,6 +94,16 @@ public class GimClient {
 		}
 		return null;
 	}
+	
+	/* Used for group chat, where "user" is not applicable */
+	public static GimUI getWindowRoom(String id) {
+		for (int i = 0; i < windows.size(); i++ ) {
+			if (windows.get(i).getCp().getID().equals(id)) {
+				return windows.get(i).getWindow();
+			}
+		}
+		return null;
+	}
 
 	
 	// redundant... i think. i'm not certain, yet!

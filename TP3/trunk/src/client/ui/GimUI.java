@@ -114,8 +114,10 @@ public class GimUI extends JFrame {
 				// tell the server to leave the room
 				GimClient.getClient().leave(roomid);
 				
-				// remove from the room list, and the window list
+				// remove from the window list
+				GimUI toDispose = GimClient.getWindowRoom(roomid);
 				GimClient.removeRoom((ChatPanel) main);
+				toDispose.dispose();
 			}
 			
 			else if (main instanceof SingleChatPanel) {
