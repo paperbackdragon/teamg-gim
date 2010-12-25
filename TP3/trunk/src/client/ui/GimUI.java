@@ -116,7 +116,6 @@ public class GimUI extends JFrame {
 				
 				// remove from the room list, and the window list
 				GimClient.removeRoom((ChatPanel) main);
-				GimClient.removeWindowIdentifier(roomid);	
 			}
 			
 			else if (main instanceof SingleChatPanel) {

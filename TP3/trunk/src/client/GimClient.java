@@ -95,13 +95,15 @@ public class GimClient {
 		return null;
 	}
 
-	public static void removeWindowIdentifier(String roomid) {
+	
+	// redundant... i think. i'm not certain, yet!
+/*	public static void removeWindowIdentifier(String roomid) {
 		
 		for (int i =0; i < windows.size(); i ++) {
 			if (windows.get(i).getId().equals(roomid)) {
 				windows.remove(i);
 			}
-		}
-		
-	}
+		}	
+	}*/
+	
 }
