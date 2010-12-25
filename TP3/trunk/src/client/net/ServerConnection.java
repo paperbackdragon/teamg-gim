@@ -236,6 +236,13 @@ public class ServerConnection implements NetworkingIn {
 	}
 
 	public void joined(String user, String roomid) {
+		chatWindowIdentifier l = GimClient.getWindowIdentifierFromUser(user);
+		
+		// The other person has joined the personal chat, it is safe to send 
+		// messages
+		if (l != null) {
+			l.getCp().setInProgress(true);
+		}
 		
 
 	}
