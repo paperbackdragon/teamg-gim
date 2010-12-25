@@ -10,12 +10,12 @@ public class GimClient {
 	private static GimUI mainWindow;
 	private static ClientModel client;
 	private static ContactPanel contactPanel;
-	private static ArrayList<ChatPanel> rooms;
+	//private static ArrayList<ChatPanel> rooms;
 	private static ArrayList<chatWindowIdentifier> windows;
 	
 	public static void main(String[] args) {
 		client = new ClientModel();
-		rooms = new ArrayList<ChatPanel>();
+		//rooms = new ArrayList<ChatPanel>();
 		windows = new ArrayList<chatWindowIdentifier>();
 		contactPanel = new ContactPanel();
 		
@@ -42,14 +42,14 @@ public class GimClient {
 	}
 	
 	//HELPER METHODS
-	public static void addRoom(ChatPanel panel) {
-		rooms.add(panel);
-	}
+	//public static void addRoom(ChatPanel panel) {
+	//	rooms.add(panel);
+	//}
 	
 	public static void removeRoom(ChatPanel panel) {
-		for(int i=0; i < rooms.size(); i++) {
-			if(rooms.get(i).getID().equals(panel.getID())) {
-				rooms.remove(i);
+		for(int i=0; i < windows.size(); i++) {
+			if(windows.get(i).getCp().getID().equals(panel.getID())) {
+				windows.remove(i);
 				//TODO (heather): Some way to reduce memory used in this list?
 			}
 		}
@@ -57,8 +57,8 @@ public class GimClient {
 	
 	// We do this so we don't open a new chat every time the user clicks chat
 	public static int findRoom(String chatWith) {
-		for (int i = 0; i < rooms.size(); i++ ) {
-			if (rooms.get(i).getChatWith().equals(chatWith)) {
+		for (int i = 0; i < windows.size(); i++ ) {
+			if (windows.get(i).getCp().getChatWith().equals(chatWith)) {
 				// set chat to visible
 				return i;
 			}
@@ -71,10 +71,10 @@ public class GimClient {
 	
 	public static void routeMessage(String roomid, String sender, String message) {
 		System.out.println("routing message");
-		for (int i=0; i< rooms.size(); i++) {
+		for (int i=0; i< windows.size(); i++) {
 			System.out.println("found the room");
-			if (rooms.get(i).getID().equals(roomid)) {
-				rooms.get(i).receiveMessage(sender, message);
+			if (windows.get(i).getCp().getID().equals(roomid)) {
+				windows.get(i).getCp().receiveMessage(sender, message);
 				
 				break;
 			}
@@ -82,8 +82,8 @@ public class GimClient {
 		
 	}
 
-	public static void addWindow(String user, String roomid, GimUI ui) {
-		windows.add(new chatWindowIdentifier(user, roomid, ui));
+	public static void addWindow(String user, String roomid, GimUI ui, ChatPanel gcp) {
+		windows.add(new chatWindowIdentifier(user, roomid, ui, gcp));
 	}
 	
 	public static GimUI getWindow(String roomid) {

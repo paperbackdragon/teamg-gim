@@ -186,10 +186,10 @@ public class ServerConnection implements NetworkingIn {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					GroupChatPanel gcp = new GroupChatPanel(roomid);
-					GimClient.addRoom(gcp);
+					//GimClient.addRoom(gcp);
 					
 					GimUI ui = new GimUI("GIM - Group Chat", gcp);
-					GimClient.addWindow(contacts[0], roomid, ui);
+					GimClient.addWindow(contacts[0], roomid, ui,gcp);
 					
 					ui.setLocationRelativeTo(null);// center new chat window
 				}
@@ -203,10 +203,10 @@ public class ServerConnection implements NetworkingIn {
 					scp.setChatWith(contacts[0]);
 					// </Gordon>
 					
-					GimClient.addRoom(scp);
+					//GimClient.addRoom(scp);
 					
 					GimUI ui = new GimUI("GIM - Chat with " + contacts[0], scp);
-					GimClient.addWindow(contacts[0], roomid, ui);
+					GimClient.addWindow(contacts[0], roomid, ui, scp);
 					
 					ui.setLocationRelativeTo(null);// center new chat window
 				}
@@ -276,9 +276,9 @@ public class ServerConnection implements NetworkingIn {
 				// gordon
 				scp.setChatWith(invitedBy);
 				// </gordon>
-				GimClient.addRoom(scp);
+				//GimClient.addRoom(scp);
 				GimUI ui = new GimUI("GIM - Chat with " + invitedBy, scp);
-				GimClient.addWindow(invitedBy,roomid, ui);
+				GimClient.addWindow(invitedBy,roomid, ui, scp);
 				ui.setLocationRelativeTo(null);// center new chat window
 			}
 		});
