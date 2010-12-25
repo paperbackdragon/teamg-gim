@@ -82,13 +82,13 @@ public class GimClient {
 		
 	}
 
-	public static void addWindow(String user, String roomid, GimUI ui, ChatPanel gcp) {
-		windows.add(new chatWindowIdentifier(user, roomid, ui, gcp));
+	public static void addWindow(String user, String roomid, GimUI ui, ChatPanel cp) {
+		windows.add(new chatWindowIdentifier(user, roomid, ui, cp));
 	}
 	
-	public static GimUI getWindow(String roomid) {
+	public static GimUI getWindow(String user) {
 		for (int i = 0; i < windows.size(); i++ ) {
-			if (windows.get(i).getId().equals(roomid)) {
+			if (windows.get(i).getUser().equals(user)) {
 				return windows.get(i).getWindow();
 			}
 		}
