@@ -81,6 +81,10 @@ public class ChatPanel extends JPanel {
 	public String getID() {
 		return id;
 	}
+	
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	/**
 	 * Method to set the focus of the mouse to the input text box

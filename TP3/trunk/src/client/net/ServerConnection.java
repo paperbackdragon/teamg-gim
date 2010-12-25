@@ -236,6 +236,7 @@ public class ServerConnection implements NetworkingIn {
 	}
 
 	public void joined(String user, String roomid) {
+		
 
 	}
 
@@ -243,7 +244,8 @@ public class ServerConnection implements NetworkingIn {
 		chatWindowIdentifier l = GimClient.getWindowIdentifierFromUser(user);
 		if ( l != null) {
 			if (l.getCp() instanceof SingleChatPanel) {
-				l.getCp().setInProgress(null);	
+				l.getCp().setInProgress(false);
+				l.getCp().setId("-1");
 			}
 			else if (l.getCp() instanceof GroupChatPanel) {
 				// do this later...
@@ -280,19 +282,26 @@ public class ServerConnection implements NetworkingIn {
 		
 		GimClient.getClient().join(roomid);
 		
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				SingleChatPanel scp = new SingleChatPanel(roomid);
-				// gordon
-				scp.setChatWith(invitedBy);
-				// </gordon>
-				//GimClient.addRoom(scp);
-				GimUI ui = new GimUI("GIM - Chat with " + invitedBy, scp);
-				GimClient.addWindow(invitedBy, ui, scp);
-				ui.setLocationRelativeTo(null);// center new chat window
-			}
-		});
-
+		chatWindowIdentifier l = GimClient.getWindowIdentifierFromUser(invitedBy);
+		if (l != null) {
+			l.getCp().setId(roomid);
+			// l.setInProgress().true()? -do this by joined
+			
+		}
+		else { // there is no window for this user
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					SingleChatPanel scp = new SingleChatPanel(roomid);
+					// gordon
+					scp.setChatWith(invitedBy);
+					// </gordon>
+					//GimClient.addRoom(scp);
+					GimUI ui = new GimUI("GIM - Chat with " + invitedBy, scp);
+					GimClient.addWindow(invitedBy, ui, scp);
+					ui.setLocationRelativeTo(null);// center new chat window
+				}
+			});
+		}
 	}
 
 	public void notifyFriendsList() {
