@@ -104,6 +104,16 @@ public class GimClient {
 		}
 		return null;
 	}
+	
+	public static chatWindowIdentifier getWindowIdentifierFromUser(String user) {
+		for (int i = 0; i < windows.size(); i++) {
+			if (windows.get(i).getCp().getChatWith().equals(user)) {
+				return windows.get(i);
+			}
+		}
+		return null;
+		
+	}
 
 	
 	// redundant... i think. i'm not certain, yet!

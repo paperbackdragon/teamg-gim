@@ -107,7 +107,7 @@ public class GimUI extends JFrame {
 		public void windowClosed(WindowEvent e) {
 			
 			// if the window closed is a chat window
-			if (main instanceof GroupChatPanel) {
+			if (main instanceof ChatPanel) {
 				System.out.println("this seems to work");
 				String roomid = ((ChatPanel) main).getID();
 				
@@ -119,10 +119,7 @@ public class GimUI extends JFrame {
 				GimClient.removeRoom((ChatPanel) main);
 				toDispose.dispose();
 			}
-			
-			else if (main instanceof SingleChatPanel) {
-				// i need to think about what we're going to do...
-			}
+
 		}
 
 		@Override

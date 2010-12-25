@@ -240,6 +240,16 @@ public class ServerConnection implements NetworkingIn {
 	}
 
 	public void left(String user, String roomid) {
+		chatWindowIdentifier l = GimClient.getWindowIdentifierFromUser(user);
+		if ( l != null) {
+			if (l.getCp() instanceof SingleChatPanel) {
+				l.getCp().setInProgress(null);	
+			}
+			else if (l.getCp() instanceof GroupChatPanel) {
+				// do this later...
+			}
+			
+		}
 		
 	}
 

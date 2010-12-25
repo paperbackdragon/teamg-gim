@@ -33,6 +33,16 @@ public class ChatPanel extends JPanel {
 	private String chatWith;
 
 	// </proposed>
+	
+	private Boolean inProgress;
+
+	public Boolean getInProgress() {
+		return inProgress;
+	}
+
+	public void setInProgress(Boolean inProgress) {
+		this.inProgress = inProgress;
+	}
 
 	public void setChatWith(String chatWith) {
 		this.chatWith = chatWith;
