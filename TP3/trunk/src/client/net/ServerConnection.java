@@ -268,6 +268,7 @@ public class ServerConnection implements NetworkingIn {
 			if (l.getCp() instanceof SingleChatPanel) {
 				l.getCp().setInProgress(false);
 				l.getCp().setId("-1");
+				GimClient.getClient().leave(roomid);
 			}
 			else if (l.getCp() instanceof GroupChatPanel) {
 				// do this later...
