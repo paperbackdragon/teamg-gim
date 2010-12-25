@@ -37,7 +37,7 @@ public class ChatPanel extends JPanel {
 
 	// </proposed>
 	
-	private Boolean inProgress;
+	private Boolean inProgress = false;
 
 	public Boolean getInProgress() {
 		return inProgress;

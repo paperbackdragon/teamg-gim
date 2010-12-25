@@ -212,6 +212,7 @@ public class ServerConnection implements NetworkingIn {
 						
 						// set the chat to be with the user we invited to chat
 						scp.setChatWith(contacts[0]);
+						scp.setInProgress(true);
 						// </Gordon>
 						
 						//GimClient.addRoom(scp);
@@ -314,6 +315,7 @@ public class ServerConnection implements NetworkingIn {
 					SingleChatPanel scp = new SingleChatPanel(roomid);
 					// gordon
 					scp.setChatWith(invitedBy);
+					scp.setInProgress(true);
 					// </gordon>
 					//GimClient.addRoom(scp);
 					GimUI ui = new GimUI("GIM - Chat with " + invitedBy, scp);
