@@ -82,8 +82,8 @@ public class GimClient {
 		
 	}
 
-	public static void addWindow(String user, String roomid, GimUI ui, ChatPanel cp) {
-		windows.add(new chatWindowIdentifier(user, roomid, ui, cp));
+	public static void addWindow(String user, GimUI ui, ChatPanel cp) {
+		windows.add(new chatWindowIdentifier(user, ui, cp));
 	}
 	
 	public static GimUI getWindow(String user) {

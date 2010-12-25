@@ -2,14 +2,13 @@ package client.ui;
 
 public class chatWindowIdentifier {
 	
-	String id;
+	//String id;
 	String user;
 	GimUI window;
 	ChatPanel cp;
 	
-	public chatWindowIdentifier(String user, String id, GimUI window, ChatPanel cp) {
+	public chatWindowIdentifier(String user, GimUI window, ChatPanel cp) {
 		this.user = user;
-		this.id = id;
 		this.window = window;
 		this.cp = cp;
 	}
@@ -28,14 +27,6 @@ public class chatWindowIdentifier {
 
 	public void setGcp(ChatPanel cp) {
 		this.cp = cp;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	public GimUI getWindow() {
