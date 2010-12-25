@@ -199,7 +199,7 @@ public class ServerConnection implements NetworkingIn {
 		} else {
 			
 			// if we already have a window...
-			chatWindowIdentifier l = GimClient.getWindowIdentifierFromId(roomid);
+			chatWindowIdentifier l = GimClient.getWindowIdentifierFromUser(contacts[0]);
 			if (l != null) {
 				l.getCp().setId(roomid);
 				l.getCp().setInProgress(true); // find a better way
