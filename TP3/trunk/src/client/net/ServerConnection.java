@@ -153,6 +153,7 @@ public class ServerConnection implements NetworkingIn {
 	}
 
 	public void updateStatus(String user, String status) {
+		// if status offline, if we have a chat box for this user, grey it out
 
 	}
 
@@ -183,6 +184,7 @@ public class ServerConnection implements NetworkingIn {
 		//TODO (heather): this if/else will not work! (presumably) gordon: why not? :S
 		// open new chat window
 		if (contacts.length > 1) {
+			
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					GroupChatPanel gcp = new GroupChatPanel(roomid);
@@ -195,22 +197,34 @@ public class ServerConnection implements NetworkingIn {
 				}
 			});
 		} else {
-			SwingUtilities.invokeLater(new Runnable() {
-				public void run() {
-					SingleChatPanel scp = new SingleChatPanel(roomid);
-					
-					// set the chat to be with the user we invited to chat
-					scp.setChatWith(contacts[0]);
-					// </Gordon>
-					
-					//GimClient.addRoom(scp);
-					
-					GimUI ui = new GimUI("GIM - Chat with " + contacts[0], scp);
-					GimClient.addWindow(contacts[0], ui, scp);
-					
-					ui.setLocationRelativeTo(null);// center new chat window
-				}
-			});
+			
+			// if we already have a window...
+			chatWindowIdentifier l = GimClient.getWindowIdentifierFromId(roomid);
+			if (l != null) {
+				l.getCp().setId(roomid);
+				l.getCp().setInProgress(true); // find a better way
+				
+			}
+			else {
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						SingleChatPanel scp = new SingleChatPanel(roomid);
+						
+						// set the chat to be with the user we invited to chat
+						scp.setChatWith(contacts[0]);
+						// </Gordon>
+						
+						//GimClient.addRoom(scp);
+						
+						GimUI ui = new GimUI("GIM - Chat with " + contacts[0], scp);
+						GimClient.addWindow(contacts[0], ui, scp);
+						
+						ui.setLocationRelativeTo(null);// center new chat window
+					}
+				});
+			}
+			
+	
 		}
 
 		// invite contacts
@@ -292,8 +306,7 @@ public class ServerConnection implements NetworkingIn {
 		chatWindowIdentifier l = GimClient.getWindowIdentifierFromUser(invitedBy);
 		if (l != null) {
 			l.getCp().setId(roomid);
-			// l.setInProgress().true()? -do this by joined
-			
+			l.getCp().setInProgress(true); // find a better way later
 		}
 		else { // there is no window for this user
 			SwingUtilities.invokeLater(new Runnable() {
