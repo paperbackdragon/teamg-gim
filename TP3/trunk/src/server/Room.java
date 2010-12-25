@@ -106,6 +106,7 @@ public class Room {
 			user.getWorker().putResponse(l);
 		}
 
+		// Refactor out to another method so that the messages go where they need to go.
 		// Destroy the room if it's empty and unjoinable
 		if (this.getUsers().size() == 0 && this.getInvitiedUsers().size() == 0)
 			Data.getInstance().removeRoom(this.getId());

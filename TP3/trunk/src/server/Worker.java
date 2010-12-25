@@ -966,8 +966,6 @@ public class Worker implements Runnable {
 	 */
 	private Command serverstatus(Command cmd) {
 
-		// TODO: Make these return the correct things...(this depends on the
-		// timeout thread for upto date information)
 		String time = Command.encode(new Date().toString());
 		String users = Command.encode(data.online + " Online Users, " + data.getUsers().size() + " Total");
 		String uptime = Command.encode(data.uptime);
