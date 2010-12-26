@@ -212,7 +212,7 @@ public class ServerConnection implements NetworkingIn {
 						
 						// set the chat to be with the user we invited to chat
 						scp.setChatWith(contacts[0]);
-						//scp.setInProgress(true);
+						scp.setInProgress(true);
 						// </Gordon>
 						
 						//GimClient.addRoom(scp);
