@@ -40,7 +40,7 @@ public class ClientConnection implements NetworkingOut, Runnable {
 
 		// initiate connection to server
 		try {
-			serverConnection = new Socket("rooster.dyndns.info", 4444);
+			serverConnection = new Socket("62.56.118.210", 4444);
 		} catch (UnknownHostException e) {
 			System.out.println("Could not connect to server");
 			// tell the GUI
