@@ -44,6 +44,7 @@ public class ChatPanel extends JPanel {
 	}
 
 	public void setInProgress(Boolean inProgress) {
+		System.out.println("letting client talk!");
 		if (inProgress.equals(true)) {
 			sendMessageQueue();
 		}

@@ -16,7 +16,8 @@ public class ServerConnection implements NetworkingIn {
 	}
 
 	public void broadcast(String message) {
-		//TODO (heather): how to implement this? all chat windows or dialog box?
+		// TODO (heather): how to implement this? all chat windows or dialog
+		// box?
 	}
 
 	public void emailInuseError(String message) {
@@ -36,7 +37,7 @@ public class ServerConnection implements NetworkingIn {
 		GimClient.getClient().setOnlinefriends(onlinelist);
 		GimClient.getClient().setOfflinefriends(offlinelist);
 		GimClient.getClient().setBlockedfriends(blockedlist);
-		
+
 		// update the interface
 		GimClient.getContactPanel().createNodes(onlinelist, offlinelist);
 
@@ -60,23 +61,22 @@ public class ServerConnection implements NetworkingIn {
 
 	public void logInDetailsIncorrectError(String message) {
 		String error = "";
-		if (!message.equals("") ) {
+		if (!message.equals("")) {
 			error += ":\n\n server reported:\n " + message;
 		}
-		
+
 		JOptionPane.showMessageDialog(GimClient.getMainWindow(),
 				"Log in Details Incorrect." + error);
 	}
 
 	public void loggedInFromAnotherLocationError(String message) {
 		String error = "";
-		if (!message.equals("") ) {
+		if (!message.equals("")) {
 			error += ":\n\n server reported:\n " + message;
 		}
-		
+
 		JOptionPane.showMessageDialog(GimClient.getMainWindow(),
-				"Logged in from another location."
-						+ error);
+				"Logged in from another location." + error);
 	}
 
 	public void message(String roomid, String sender, String message) {
@@ -109,10 +109,10 @@ public class ServerConnection implements NetworkingIn {
 
 	public void passwordTooShortError(String message) {
 		String error = "";
-		if (!message.equals("") ) {
+		if (!message.equals("")) {
 			error += ":\n\n server reported :\n " + message;
 		}
-		
+
 		JOptionPane.showMessageDialog(GimClient.getMainWindow(),
 				"Password too short error." + error);
 	}
@@ -163,13 +163,12 @@ public class ServerConnection implements NetworkingIn {
 
 	public void userDoesNotExistError(String message) {
 		String error = "";
-		if (!message.equals("") ) {
+		if (!message.equals("")) {
 			error += ":\n\n server reported :\n " + message;
 		}
-		
+
 		JOptionPane.showMessageDialog(GimClient.getMainWindow(),
-				"User does not exist error. "
-						+ error);
+				"User does not exist error. " + error);
 	}
 
 	public void usercount(String usercount) {
@@ -181,51 +180,52 @@ public class ServerConnection implements NetworkingIn {
 
 		final String[] contacts = GimClient.getClient().getNextRoom();
 
-		//TODO (heather): this if/else will not work! (presumably) gordon: why not? :S
+		// TODO (heather): this if/else will not work! (presumably) gordon: why
+		// not? :S
 		// open new chat window
 		if (contacts.length > 1) {
-			
+
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					GroupChatPanel gcp = new GroupChatPanel(roomid);
-					//GimClient.addRoom(gcp);
-					
+					// GimClient.addRoom(gcp);
+
 					GimUI ui = new GimUI("GIM - Group Chat", gcp);
-					GimClient.addWindow(contacts[0],ui,gcp);
-					
+					GimClient.addWindow(contacts[0], ui, gcp);
+
 					ui.setLocationRelativeTo(null);// center new chat window
 				}
 			});
 		} else {
-			
+
 			// if we already have a window...
-			chatWindowIdentifier l = GimClient.getWindowIdentifierFromUser(contacts[0]);
+			chatWindowIdentifier l = GimClient
+					.getWindowIdentifierFromUser(contacts[0]);
 			if (l != null) {
 				l.getCp().setId(roomid);
-				l.getCp().setInProgress(true); // find a better way
-				
-			}
-			else {
+				// l.getCp().setInProgress(true); // find a better way
+
+			} else {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						SingleChatPanel scp = new SingleChatPanel(roomid);
-						
+
 						// set the chat to be with the user we invited to chat
 						scp.setChatWith(contacts[0]);
-						scp.setInProgress(true);
+						// scp.setInProgress(true);
 						// </Gordon>
-						
-						//GimClient.addRoom(scp);
-						
-						GimUI ui = new GimUI("GIM - Chat with " + contacts[0], scp);
+
+						// GimClient.addRoom(scp);
+
+						GimUI ui = new GimUI("GIM - Chat with " + contacts[0],
+								scp);
 						GimClient.addWindow(contacts[0], ui, scp);
-						
+
 						ui.setLocationRelativeTo(null);// center new chat window
 					}
 				});
 			}
-			
-	
+
 		}
 
 		// invite contacts
@@ -250,32 +250,38 @@ public class ServerConnection implements NetworkingIn {
 
 	}
 
-	public void joined(String user, String roomid) {
-		chatWindowIdentifier l = GimClient.getWindowIdentifierFromUser(user);
-		
-		// The other person has joined the personal chat, it is safe to send 
-		// messages
-		if (l != null) {
-			l.getCp().setInProgress(true);
-		}
-		
+	public void joined(String user, final String roomid) {
+		SwingUtilities.invokeLater(new Runnable() {
+
+			@Override
+			public void run() {
+				System.out.println("got to the joined method");
+				chatWindowIdentifier l = GimClient.getWindowIdentifierFromId(roomid);
+
+				// The other person has joined the personal chat, it is safe to send
+				// messages
+				if (l != null) {
+					System.out.println("got to the if block");
+					l.getCp().setInProgress(true);
+				}
+				
+			}});
 
 	}
 
 	public void left(String user, String roomid) {
 		chatWindowIdentifier l = GimClient.getWindowIdentifierFromUser(user);
-		if ( l != null) {
+		if (l != null) {
 			if (l.getCp() instanceof SingleChatPanel) {
 				l.getCp().setInProgress(false);
 				l.getCp().setId("-1");
 				GimClient.getClient().leave(roomid);
-			}
-			else if (l.getCp() instanceof GroupChatPanel) {
+			} else if (l.getCp() instanceof GroupChatPanel) {
 				// do this later...
 			}
-			
+
 		}
-		
+
 	}
 
 	public void users(String[] users, String roomid) {
@@ -292,7 +298,7 @@ public class ServerConnection implements NetworkingIn {
 
 	public void personal(final String roomid) {
 		System.out.println("someone invited us to a personal chat");
-		
+
 		/*
 		 * gordon: spawn a personal chat window immediately ... oh wait, what if
 		 * no message has been sent yet... ... we might need to keep a log of
@@ -302,15 +308,15 @@ public class ServerConnection implements NetworkingIn {
 		 * invoked, if messagecount == 0, spawn a window...
 		 */
 		final String invitedBy = GimClient.getClient().getNextInvitation();
-		
+
 		GimClient.getClient().join(roomid);
-		
-		chatWindowIdentifier l = GimClient.getWindowIdentifierFromUser(invitedBy);
+
+		chatWindowIdentifier l = GimClient
+				.getWindowIdentifierFromUser(invitedBy);
 		if (l != null) {
 			l.getCp().setId(roomid);
 			l.getCp().setInProgress(true); // find a better way later
-		}
-		else { // there is no window for this user
+		} else { // there is no window for this user
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					SingleChatPanel scp = new SingleChatPanel(roomid);
@@ -318,7 +324,7 @@ public class ServerConnection implements NetworkingIn {
 					scp.setChatWith(invitedBy);
 					scp.setInProgress(true);
 					// </gordon>
-					//GimClient.addRoom(scp);
+					// GimClient.addRoom(scp);
 					GimUI ui = new GimUI("GIM - Chat with " + invitedBy, scp);
 					GimClient.addWindow(invitedBy, ui, scp);
 					ui.setLocationRelativeTo(null);// center new chat window
@@ -335,17 +341,17 @@ public class ServerConnection implements NetworkingIn {
 	public void invalidUserError(String message) {
 		// FIX THIS LATER TO PARSE FOR CONTEXT. FOR NOW, ASSUME
 		// USER HAS DOUBLE CLICKED 'ONLINE' on buddy list
-		
+
 		// the invitatiation we queued up was invalid
 		GimClient.getClient().getNextRoom();
-		
+
 	}
 
 	@Override
 	public void userOfflineError(String message) {
 		// FIX THIS LATER TO PARSE FOR CONTEXT. FOR NOW, ASSUME
 		// USER HAS DOUBLE CLICKED AN OFFLINE USER on buddy list
-		
+
 		// the invitatiation we queued up was invalid
 		GimClient.getClient().getNextRoom();
 	}

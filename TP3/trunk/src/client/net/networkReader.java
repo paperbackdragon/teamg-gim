@@ -155,7 +155,7 @@ public class networkReader implements Runnable {
 			gui.message(parts[0], parts[1], parts[2]);
 		}
 
-		else if (cmd.getCommand().equals("ROOM")) {
+		else if (cmd.getCommand().equalsIgnoreCase("ROOM")) {
 
 			if (cmd.getArgumentsAsString().equalsIgnoreCase("CREATED")) {
 				gui.created(Command.decode(cmd.getData()));
