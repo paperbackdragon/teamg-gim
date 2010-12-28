@@ -135,7 +135,7 @@ public class ChatPanel extends JPanel {
 	 * Sends a received message to the message log
 	 */
 	public void receiveMessage(String sender, String message) {
-		StyledDocument doc = messages.getStyledDocument();
+		final StyledDocument doc = messages.getStyledDocument();
 
 		// Load the default style and add it as the "regular" text
 	    Style def = StyleContext.getDefaultStyleContext().getStyle( StyleContext.DEFAULT_STYLE );
