@@ -18,10 +18,10 @@ public class GroupChatPanel extends ChatPanel{
 		
 		setLayout(new BorderLayout());
 		
-		messages = new JTextArea();
+		//messages = new JTextArea();
 		messages.setEditable(false);
-		messages.setLineWrap(true);
-		messages.setWrapStyleWord(true);
+		//messages.setLineWrap(true);
+		//messages.setWrapStyleWord(true);
 		JScrollPane messagePane = new JScrollPane(messages);
 		
 		guests = new JTextArea("Contacts");

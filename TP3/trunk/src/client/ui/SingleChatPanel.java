@@ -16,10 +16,11 @@ public class SingleChatPanel extends ChatPanel{
 
 		setLayout(new BorderLayout());
 		
-		messages = new JTextArea();
+		messages = new JTextPane();
+		messages.setContentType("text/html");
 		messages.setEditable(false);
-		messages.setLineWrap(true);
-		messages.setWrapStyleWord(true);
+		//messages.setLineWrap(true);
+		//messages.setWrapStyleWord(true);
 		JScrollPane messagePane = new JScrollPane(messages);
 		
 		//BOTTOM PANEL

@@ -5,6 +5,12 @@ import java.awt.event.*;
 import java.util.LinkedList;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
+import javax.swing.text.StyledDocument;
 
 import client.GimClient;
 
@@ -17,8 +23,9 @@ import client.GimClient;
 public class ChatPanel extends JPanel {
 	private LinkedList<String> messageQueue;
 
-	private String id;
-	protected JTextArea messages, chatBox;
+	protected String id;
+	protected JTextArea chatBox;
+	protected JTextPane messages;
 	protected JButton send;
 
 	/*
@@ -111,57 +118,47 @@ public class ChatPanel extends JPanel {
 	 * Sends a message to the message log
 	 */
 	private void sendMessage() {
-		// if beginning of box
+		if (chatBox.getText().length() > 0) {
+			receiveMessage("Me", chatBox.getText());
 
-		if (!chatBox.getText().equals("")) {
-			if (messages.getText().equals("")) {
-				messages.append("me: " + chatBox.getText());
-				if (getInProgress()) {
-					GimClient.getClient().message(id, chatBox.getText());
-				} else {
-					messageQueue.push(chatBox.getText());
-
-					if (id.equals("-1")) { // other person has left the room
-						GimClient.getClient().createRoom(false,
-								new String[] { chatWith });
-					}
-				}
-
+			if (getInProgress()) {
+				GimClient.getClient().message(id, chatBox.getText());
 			} else {
-				messages.append("\n" + "me: " + chatBox.getText());
-
-				if (getInProgress()) {
-					GimClient.getClient().message(id, chatBox.getText());
-				} else {
-					messageQueue.push(chatBox.getText());
-
-					if (id.equals("-1")) { // other person has left the room
-						GimClient.getClient().createRoom(false,
-								new String[] { chatWith });
-					}
-
-				}
+				messageQueue.push(chatBox.getText());
+				if (id.equals("-1"))
+					GimClient.getClient().createRoom(false, new String[] { chatWith });
 			}
 		}
-
 	}
 
-	/** Sends a received message to the message log */
+	/**
+	 * Sends a received message to the message log
+	 */
 	public void receiveMessage(String sender, String message) {
-		System.out.println("displaying received message");
+		StyledDocument doc = messages.getStyledDocument();
 
-		// if beginning of box
+		// Load the default style and add it as the "regular" text
+	    Style def = StyleContext.getDefaultStyleContext().getStyle( StyleContext.DEFAULT_STYLE );
+	    Style regular = doc.addStyle( "regular", def );
+	    StyleConstants.setFontSize( regular, 14 );
 
-		if (messages.getText().equals("")) {
-			messages.append(sender + ": " + message);
-			messageCount += 1;
-		} else {
-			messages.append("\n" + sender + ": " + message);
+	    // Create an italic style
+	    Style italic = doc.addStyle( "italic", regular );
+	    StyleConstants.setItalic( italic, true );
+
+	    // Create a bold style
+	    Style bold = doc.addStyle( "bold", regular );
+	    StyleConstants.setBold( bold, true );
+
+		try {
+			doc.insertString(doc.getLength(), sender + "\n", bold);
+			doc.insertString(doc.getLength(), message + "\n\n", regular);
+		} catch (BadLocationException e) {
 		}
 
-		if (messageCount == 1) {
+		messageCount += 1;
+		if (messageCount == 1)
 			showChat();
-		}
 	}
 
 	/* method to display the chat only a message has been received */

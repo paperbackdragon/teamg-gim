@@ -36,12 +36,13 @@ public class Worker implements Runnable {
 	private Thread responseWriterThread;
 	private Thread commandReaderThread;
 
-	public Worker(int ClientID, Socket socket) {
+	public Worker(int clientID, Socket socket) {
 		this.socket = socket;
 		this.commandBuffer = new CommandBuffer<Command>();
 		this.responseBuffer = new CommandBuffer<Command>();
 		this.lastCommunication = System.currentTimeMillis();
 		this.loggedInUser = null;
+		this.clientID = clientID;
 	}
 
 	/**
@@ -877,10 +878,9 @@ public class Worker implements Runnable {
 				Room room = this.data.getRoom(roomId);
 
 				if (room == null)
-					return new Command("ERROR", "ROOM_DOES_NOT_EXIST");
+					return new Command("ERROR", "ROOM_DOES_NOT_EXIST", "Room " + roomId + "does not exist.");
 				
-				// Gordon: you may want to tidy this up
-				return new Command("ROOM", room.getType(), data[0]);
+				return new Command("ROOM", room.getType(), room.getId() + " ");
 
 			}
 
