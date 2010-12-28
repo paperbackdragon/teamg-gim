@@ -152,9 +152,11 @@ public class ChatPanel extends JPanel {
 
 		try {
 			doc.insertString(doc.getLength(), sender + "\n", bold);
-			doc.insertString(doc.getLength(), message + "\n\n", regular);
+			doc.insertString(doc.getLength(), message + "\n", regular);
 		} catch (BadLocationException e) {
 		}
+		
+		messages.setCaretPosition(doc.getLength());
 
 		messageCount += 1;
 		if (messageCount == 1)
