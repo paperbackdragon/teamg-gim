@@ -164,8 +164,10 @@ public class ChatPanel extends JPanel {
 	}
 
 	/* method to display the chat only a message has been received */
+	
+	// Override for group chat!
 	private void showChat() {
-		GimClient.getWindowIdentifierFromId(chatWith).getWindow().setVisible(true);
+		GimClient.getWindowIdentifierFromUser(chatWith).getWindow().setVisible(true);
 	}
 
 	// ACTION LISTENERS
