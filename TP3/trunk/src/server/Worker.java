@@ -747,10 +747,10 @@ public class Worker implements Runnable {
 				invite = data.getUser(cmd.getDecodedData());
 
 				if (invite == null)
-					return new Command("ERROR", "INVALID_USER_SUPPLIED");
+					return new Command("ERROR", "INVALID_USER_SUPPLIED", "The user does not exist.");
 
 				if (!invite.isOnline())
-					return new Command("ERROR", "USER_OFFLINE");
+					return new Command("ERROR", "USER_OFFLINE", "The user is currently offline.");
 			}
 
 			// Create the new room
@@ -780,10 +780,10 @@ public class Worker implements Runnable {
 				User user = this.data.getUser(userId);
 
 				if (room == null)
-					return new Command("ERROR", "INVALID_ROOM_ID");
+					return new Command("ERROR", "INVALID_ROOM_ID", "The room does not exist.");
 
 				if (user == null)
-					return new Command("ERROR", "INVALID_USER");
+					return new Command("ERROR", "INVALID_USER_SUPPLIED", "User " + userId + " does not exist.");
 
 				// Make sure we have permissions to invite people to the room
 				if (!this.loggedInUser.inRoom(roomId))
@@ -791,7 +791,7 @@ public class Worker implements Runnable {
 							"You cannot invite someone into a room which you are no already in.");
 
 				if (!user.isFriendsWith(this.loggedInUser))
-					return new Command("ERROR", "NOT_IN_FRIEND_LIST");
+					return new Command("ERROR", "NOT_IN_FRIEND_LIST", user.getId() + " is not is your friend list");
 
 				// The user doesn't exist
 				if (user == null)

@@ -99,17 +99,19 @@ public class Room {
 			return false;
 
 		this.users.remove(left.getId());
+		left.removeRoom(this);
+
+		// TODO: Refactor out to another method so that the messages go where
+		// they need to go.
+		// Destroy the room if it's empty and unjoinable
+		if (this.getUsers().size() == 0 && this.getInvitiedUsers().size() == 0)
+			Data.getInstance().removeRoom(this.getId());
 
 		// Notify other users that they've left
 		Command l = new Command("ROOM", "LEFT", this.getId() + " " + Command.encode(left.getId()));
 		for (User user : users.values()) {
 			user.getWorker().putResponse(l);
 		}
-
-		// Refactor out to another method so that the messages go where they need to go.
-		// Destroy the room if it's empty and unjoinable
-		if (this.getUsers().size() == 0 && this.getInvitiedUsers().size() == 0)
-			Data.getInstance().removeRoom(this.getId());
 
 		return true;
 	}
