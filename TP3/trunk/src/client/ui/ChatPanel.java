@@ -127,7 +127,6 @@ public class ChatPanel extends JPanel {
 					}
 				}
 
-				messageCount += 1;
 			} else {
 				messages.append("\n" + "me: " + chatBox.getText());
 
@@ -160,14 +159,14 @@ public class ChatPanel extends JPanel {
 			messages.append("\n" + sender + ": " + message);
 		}
 
-		if (messageCount > 0) {
+		if (messageCount == 1) {
 			showChat();
 		}
 	}
 
 	/* method to display the chat only a message has been received */
 	private void showChat() {
-
+		GimClient.getWindowIdentifierFromId(id).getWindow().setVisible(true);
 	}
 
 	// ACTION LISTENERS

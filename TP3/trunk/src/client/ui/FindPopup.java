@@ -71,6 +71,7 @@ class FindListener implements ActionListener {
 					// </Gordon's code>
 					GimUI ui = new GimUI("GIM - Invite Sent", new InviteSent());
 					ui.setLocationRelativeTo(null);//center new chat window
+					ui.setVisible(true);
 					}
 			});
 		}

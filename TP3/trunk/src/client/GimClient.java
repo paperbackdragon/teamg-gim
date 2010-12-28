@@ -24,6 +24,7 @@ public class GimClient {
 				LoginPanel lp = new LoginPanel();
 				mainWindow = new GimUI("GIM", lp);
 				lp.setParent(mainWindow);
+				mainWindow.setVisible(true);
 			}
 		});
 	}

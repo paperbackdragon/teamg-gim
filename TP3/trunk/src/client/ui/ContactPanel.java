@@ -163,6 +163,7 @@ public class ContactPanel extends JPanel {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						GimUI ui = new GimUI("GIM - Find Contact", new FindPopup());
+						ui.setVisible(true);
 						ui.setLocationRelativeTo(null);//center new chat window
 					}
 				});
@@ -172,6 +173,7 @@ public class ContactPanel extends JPanel {
 					public void run() {
 						GimUI ui = new GimUI("GIM - Remove Contact", new RemovePopup());
 						ui.setLocationRelativeTo(null);//center new chat window
+						ui.setVisible(true);
 					}
 				});
 			}

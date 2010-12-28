@@ -58,7 +58,7 @@ public class GimUI extends JFrame {
 		setJMenuBar(menu);
 		setContentPane(main);
 		pack();
-		setVisible(true);
+		//setVisible(true);
 	}
 	
 	//HELPER METHODS

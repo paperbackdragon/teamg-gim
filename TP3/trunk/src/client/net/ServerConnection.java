@@ -222,6 +222,7 @@ public class ServerConnection implements NetworkingIn {
 						GimClient.addWindow(contacts[0], ui, scp);
 
 						ui.setLocationRelativeTo(null);// center new chat window
+						ui.setVisible(true);
 					}
 				});
 			}
