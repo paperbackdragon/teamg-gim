@@ -257,16 +257,19 @@ public class ServerConnection implements NetworkingIn {
 			@Override
 			public void run() {
 				System.out.println("got to the joined method");
-				chatWindowIdentifier l = GimClient.getWindowIdentifierFromId(roomid);
+				chatWindowIdentifier l = GimClient
+						.getWindowIdentifierFromId(roomid);
 
-				// The other person has joined the personal chat, it is safe to send
+				// The other person has joined the personal chat, it is safe to
+				// send
 				// messages
 				if (l != null) {
 					System.out.println("got to the if block");
 					l.getCp().setInProgress(true);
 				}
-				
-			}});
+
+			}
+		});
 
 	}
 
