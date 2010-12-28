@@ -150,7 +150,7 @@ public class networkReader implements Runnable {
 
 		else if (cmd.getCommand().equalsIgnoreCase("MESSAGE")) {
 			System.out.println("received a message");
-			
+
 			String[] parts = cmd.splitAndDecodeData(" ");
 			gui.message(parts[0], parts[1], parts[2]);
 		}
@@ -218,27 +218,27 @@ public class networkReader implements Runnable {
 			System.out.println("ONLINE: ");
 			for (int i = 0; i < onlinelist.length; i++) {
 				onlinelist[i] = Command.decode(onlinelist[i]);
-				//System.out.println(onlinelist[i]);
+				// System.out.println(onlinelist[i]);
 			}
 
 			String offline = data.split("OFFLINE")[1].split("BLOCKED")[0];
 			offline = offline.replaceFirst(" ", "");
 			String[] offlinelist = offline.split(" ");
-			
+
 			System.out.println("OFFLINE: ");
 			for (int j = 0; j < offlinelist.length; j++) {
 				offlinelist[j] = Command.decode(offlinelist[j]);
-				//System.out.println(offlinelist[j]);
+				// System.out.println(offlinelist[j]);
 			}
 
 			String blocked = data.split("OFFLINE")[1].split("BLOCKED")[0];
 			blocked = blocked.replaceFirst(" ", "");
 			String[] blockedlist = blocked.split(" ");
-			
+
 			System.out.println("BLOCKED: ");
 			for (int k = 0; k < blockedlist.length; k++) {
-				blockedlist[k] =Command.decode(blockedlist[k]);
-				//System.out.println(blockedlist[k]);
+				blockedlist[k] = Command.decode(blockedlist[k]);
+				// System.out.println(blockedlist[k]);
 			}
 
 			gui.friendlist(onlinelist, offlinelist, blockedlist);
@@ -253,7 +253,7 @@ public class networkReader implements Runnable {
 		}
 
 		else if (cmd.getCommand().equalsIgnoreCase("UPDATE")) {
-			
+
 			if (cmd.getArgumentsAsString().equalsIgnoreCase("FRIENDLIST")) {
 				gui.notifyFriendsList();
 			}
@@ -266,7 +266,8 @@ public class networkReader implements Runnable {
 				gui.notifyStatus(Command.decode(cmd.getData()));
 			}
 
-			else if (cmd.getArgumentsAsString().equalsIgnoreCase("PERSONAL_MESSAGE")) {
+			else if (cmd.getArgumentsAsString().equalsIgnoreCase(
+					"PERSONAL_MESSAGE")) {
 				gui.notifyPersonalMessage(Command.decode(cmd.getData()));
 			}
 
@@ -344,7 +345,8 @@ public class networkReader implements Runnable {
 
 			}
 
-			else if (cmd.getArgumentsAsString().equalsIgnoreCase("INVALID_EMAIL")) {
+			else if (cmd.getArgumentsAsString().equalsIgnoreCase(
+					"INVALID_EMAIL")) {
 				gui.invalidEmailError(Command.decode(cmd.getData()));
 			}
 
@@ -358,8 +360,8 @@ public class networkReader implements Runnable {
 				gui.passwordTooShortError(Command.decode(cmd.getData()));
 			}
 
-			else if (cmd.getArgumentsAsString()
-					.equalsIgnoreCase("MISSING_ARGUMENTS")) {
+			else if (cmd.getArgumentsAsString().equalsIgnoreCase(
+					"MISSING_ARGUMENTS")) {
 				gui.missingArgumentsError(Command.decode(cmd.getData()));
 			}
 
@@ -368,7 +370,8 @@ public class networkReader implements Runnable {
 				gui.tooManyArgumentsError(Command.decode(cmd.getData()));
 			}
 
-			else if (cmd.getArgumentsAsString().equalsIgnoreCase("INVALID_ARGUMENT")) {
+			else if (cmd.getArgumentsAsString().equalsIgnoreCase(
+					"INVALID_ARGUMENT")) {
 				gui.invalidArgumentError(Command.decode(cmd.getData()));
 
 			}
@@ -387,6 +390,15 @@ public class networkReader implements Runnable {
 			else if (cmd.getArgumentsAsString().equalsIgnoreCase(
 					"LOGIN_DETAILS_INCORRECT")) {
 				gui.logInDetailsIncorrectError(Command.decode(cmd.getData()));
+			}
+
+			else if (cmd.getArgumentsAsString().equalsIgnoreCase(
+					"INVALID_USER_SUPPLIED")) {
+				gui.invalidUserError(Command.decode(cmd.getData()));
+			}
+			
+			else if (cmd.getArgumentsAsString().equalsIgnoreCase("USER_OFFLINE")) {
+				gui.userOfflineError(Command.decode(cmd.getData()));
 			}
 
 		}

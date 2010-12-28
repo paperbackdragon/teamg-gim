@@ -330,4 +330,23 @@ public class ServerConnection implements NetworkingIn {
 	public void notifyFriendsList() {
 		GimClient.getClient().getFriendList();
 	}
+
+	@Override
+	public void invalidUserError(String message) {
+		// FIX THIS LATER TO PARSE FOR CONTEXT. FOR NOW, ASSUME
+		// USER HAS DOUBLE CLICKED 'ONLINE' on buddy list
+		
+		// the invitatiation we queued up was invalid
+		GimClient.getClient().getNextRoom();
+		
+	}
+
+	@Override
+	public void userOfflineError(String message) {
+		// FIX THIS LATER TO PARSE FOR CONTEXT. FOR NOW, ASSUME
+		// USER HAS DOUBLE CLICKED AN OFFLINE USER on buddy list
+		
+		// the invitatiation we queued up was invalid
+		GimClient.getClient().getNextRoom();
+	}
 }

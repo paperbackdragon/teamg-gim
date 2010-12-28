@@ -385,6 +385,26 @@ public interface NetworkingIn {
 	 */
 	void logInDetailsIncorrectError(String message);
 	
+	/**
+	 * Server has thrown a 'invalid user' error. This is thrown when
+	 * the user has provided an invalid user with a command.
+	 * 
+	 * @param message
+	 *            message sent with the error. Gives details of context.
+	 */
+	void invalidUserError(String message);
+	
+	/**
+	 * Server has thrown a 'user offline' error. This is thrown when
+	 * the user has provided an invalid user that is online a command.
+	 * 
+	 * @param message
+	 *            message sent with the error. Gives details of context.
+	 */
+	void userOfflineError(String message);
+	
+	
+	
 	// /** The logout was successful */
 	//void logoutSuccessful();
 
