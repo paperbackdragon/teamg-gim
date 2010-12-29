@@ -2,13 +2,8 @@ package client.ui;
 
 import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.*;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreePath;
+import javax.swing.tree.*;
 
 import client.GimClient;
 
@@ -18,7 +13,7 @@ public class ContactPanel extends JPanel {
 	private JButton add, del, chat, group;
 	private JTree contactTree;
 	private DefaultMutableTreeNode contacts;
-	
+	private SingleChatListener chatListener;
 	
 	//CONSTRUCTOR
 	public ContactPanel() {
@@ -30,7 +25,7 @@ public class ContactPanel extends JPanel {
 		}
 		
 		contacts = new DefaultMutableTreeNode("Contacts");
-	
+		
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		add(new PersonalInfo());
 		add(new ContactList());
@@ -77,9 +72,7 @@ public class ContactPanel extends JPanel {
 			setLayout(new BorderLayout());
 			
 			contactTree = new JTree(contacts);
-		    contactTree.addMouseListener(new SingleChatListener());
-		    for(int i=0; i < contactTree.getRowCount(); i++)
-				contactTree.expandRow(i);
+			contactTree.addMouseListener(chatListener);
 			
 			add(contactTree, BorderLayout.CENTER);
 		}
@@ -119,9 +112,9 @@ public class ContactPanel extends JPanel {
 		//TODO (heather): change node icons (see java tutorial)
 		//TODO (heather): make two separate trees
 		
-		System.out.println("got here");
-		
 		contacts.removeAllChildren();
+		//contacts = new DefaultMutableTreeNode("Contacts");
+		
 		DefaultMutableTreeNode status = null;
 		DefaultMutableTreeNode contact = null;
 		
@@ -191,9 +184,7 @@ public class ContactPanel extends JPanel {
 				else {
 					//uhm
 					GimClient.getWindow(getSelectedContacts()[0]).setVisible(true);
-					
 				}
-				
 			}
 			else if(e.getSource().equals(group)) {
 				GimClient.getClient().createRoom(true, getSelectedContacts());
