@@ -111,8 +111,8 @@ public class ContactPanel extends JPanel {
 		//TODO (heather): change node icons (see java tutorial)
 		//TODO (heather): make two separate trees
 		contactTree.setModel(null);
-		//DefaultTreeModel model = (DefaultTreeModel)contactTree.getModel();
-		DefaultMutableTreeNode root = new DefaultMutableTreeNode("Contacts");// = (DefaultMutableTreeNode)model.getRoot();
+		
+		DefaultMutableTreeNode root = new DefaultMutableTreeNode("Contacts");
 		DefaultMutableTreeNode status = null;
 		DefaultMutableTreeNode contact = null;
 		
@@ -135,6 +135,7 @@ public class ContactPanel extends JPanel {
 		}
 	    
 	    contactTree.setModel(new DefaultTreeModel(root));
+	    ((DefaultTreeModel) contactTree.getModel()).reload();
 	    
 	    for(int i=0; i < contactTree.getRowCount(); i++)
 			contactTree.expandRow(i);
