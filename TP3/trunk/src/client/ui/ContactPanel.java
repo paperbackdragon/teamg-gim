@@ -13,7 +13,7 @@ public class ContactPanel extends JPanel {
 	private JButton add, del, chat, group;
 	private JTree contactTree;
 	private DefaultMutableTreeNode contacts;
-	private SingleChatListener chatListener;
+	//private  chatListener;
 	
 	//CONSTRUCTOR
 	public ContactPanel() {
@@ -72,7 +72,7 @@ public class ContactPanel extends JPanel {
 			setLayout(new BorderLayout());
 			
 			contactTree = new JTree(contacts);
-			contactTree.addMouseListener(chatListener);
+			contactTree.addMouseListener(new SingleChatListener());
 			
 			add(contactTree, BorderLayout.CENTER);
 		}

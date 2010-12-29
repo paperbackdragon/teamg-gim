@@ -70,7 +70,6 @@ public class ChatPanel extends JPanel {
 				GimClient.getClient().message(id, messageQueue.removeLast());
 			}
 		}
-
 	}
 
 	public void setChatWith(String chatWith) {
