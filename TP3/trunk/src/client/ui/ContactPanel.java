@@ -118,6 +118,7 @@ public class ContactPanel extends JPanel {
 	public void createNodes(String[] online, String[] offline) {
 		//TODO (heather): change node icons (see java tutorial)
 		//TODO (heather): make two separate trees
+		//TODO (heather): fix double-clicking bug
 		
 		System.out.println("got here");
 		
@@ -142,6 +143,9 @@ public class ContactPanel extends JPanel {
 			contact = new DefaultMutableTreeNode(str);
 		    status.add(contact);
 		}
+	    
+	    for(int i=0; i < contactTree.getRowCount(); i++)
+			contactTree.expandRow(i);
 	}
 	
 	private String[] getSelectedContacts() {

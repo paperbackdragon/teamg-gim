@@ -28,6 +28,8 @@ public class ChatPanel extends JPanel {
 	protected JTextPane messages;
 	protected JButton send;
 
+	//TODO (heather): make sure window scrolls down when chatting
+	
 	/*
 	 * Gordon: proposed. On adding message to messages JTextArea if messageCount
 	 * == 0, make window visible
