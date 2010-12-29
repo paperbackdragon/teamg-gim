@@ -126,7 +126,8 @@ public class ChatPanel extends JPanel {
 			} else {
 				messageQueue.push(chatBox.getText());
 				if (id.equals("-1"))
-					GimClient.getClient().createRoom(false, new String[] { chatWith });
+					GimClient.getClient().createRoom(false,
+							new String[] { chatWith });
 			}
 		}
 	}
@@ -134,33 +135,41 @@ public class ChatPanel extends JPanel {
 	/**
 	 * Sends a received message to the message log
 	 */
-	public void receiveMessage(String sender, String message) {
-		final StyledDocument doc = messages.getStyledDocument();
+	public void receiveMessage(final String sender, final String message) {
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				final StyledDocument doc = messages.getStyledDocument();
 
-		// Load the default style and add it as the "regular" text
-	    Style def = StyleContext.getDefaultStyleContext().getStyle( StyleContext.DEFAULT_STYLE );
-	    Style regular = doc.addStyle( "regular", def );
-	    StyleConstants.setFontSize( regular, 14 );
+				// Load the default style and add it as the "regular" text
+				Style def = StyleContext.getDefaultStyleContext().getStyle(
+						StyleContext.DEFAULT_STYLE);
+				Style regular = doc.addStyle("regular", def);
+				StyleConstants.setFontSize(regular, 14);
 
-	    // Create an italic style
-	    Style italic = doc.addStyle( "italic", regular );
-	    StyleConstants.setItalic( italic, true );
+				// Create an italic style
+				Style italic = doc.addStyle("italic", regular);
+				StyleConstants.setItalic(italic, true);
 
-	    // Create a bold style
-	    Style bold = doc.addStyle( "bold", regular );
-	    StyleConstants.setBold( bold, true );
+				// Create a bold style
+				Style bold = doc.addStyle("bold", regular);
+				StyleConstants.setBold(bold, true);
 
-		try {
-			doc.insertString(doc.getLength(), sender + "\n", bold);
-			doc.insertString(doc.getLength(), message + "\n", regular);
-		} catch (BadLocationException e) {
-		}
-		
-		messages.setCaretPosition(doc.getLength());
+				try {
+					doc.insertString(doc.getLength(), sender + "\n", bold);
+					doc.insertString(doc.getLength(), message + "\n", regular);
+				} catch (BadLocationException e) {
+				}
 
-		messageCount += 1;
-		if (messageCount == 1)
-			showChat();
+				messages.setCaretPosition(doc.getLength());
+
+				messageCount += 1;
+				if (messageCount == 1)
+					showChat();
+
+			}
+		});
+
+
 	}
 
 	/* method to display the chat only a message has been received */
