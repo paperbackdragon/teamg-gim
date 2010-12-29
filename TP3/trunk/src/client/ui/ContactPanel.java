@@ -113,7 +113,6 @@ public class ContactPanel extends JPanel {
 		//TODO (heather): make two separate trees
 		
 		contacts.removeAllChildren();
-		//contacts = new DefaultMutableTreeNode("Contacts");
 		
 		DefaultMutableTreeNode status = null;
 		DefaultMutableTreeNode contact = null;
@@ -195,8 +194,6 @@ public class ContactPanel extends JPanel {
 	
 	class SingleChatListener implements MouseListener {
 		public void mousePressed(MouseEvent e) {
-			//TODO (heather): only do below if contact is clicked
-			//TODO (heather): what if someone already has a chat going with this person?
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode) contactTree.getLastSelectedPathComponent();
 			String nodeInfo = (String) node.getUserObject();
 			if(e.getClickCount() == 2) {
