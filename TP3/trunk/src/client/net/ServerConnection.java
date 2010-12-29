@@ -100,6 +100,15 @@ public class ServerConnection implements NetworkingIn {
 	}
 
 	public void notifyStatus(String user) {
+		// the user might have gone offline, tell the server
+		// to send an updated buddy list
+		// (this may change if the server sends it anyway... 
+		// need to talk to james on that one)
+		GimClient.getClient().getFriendList();
+		
+		// Stuff to perform the neccessary changes on the status
+		// info of this user
+		
 
 	}
 
