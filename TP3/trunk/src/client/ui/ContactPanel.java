@@ -118,7 +118,6 @@ public class ContactPanel extends JPanel {
 	public void createNodes(String[] online, String[] offline) {
 		//TODO (heather): change node icons (see java tutorial)
 		//TODO (heather): make two separate trees
-		//TODO (heather): fix double-clicking bug
 		
 		System.out.println("got here");
 		
@@ -208,15 +207,16 @@ public class ContactPanel extends JPanel {
 			//TODO (heather): what if someone already has a chat going with this person?
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode) contactTree.getLastSelectedPathComponent();
 			String nodeInfo = (String) node.getUserObject();
-			
 			if(e.getClickCount() == 2) {
-				System.out.println(nodeInfo);
-				int find = GimClient.findRoom(getSelectedContacts()[0]);
-				if (find == -1) {
-					GimClient.getClient().createRoom(false, getSelectedContacts());
-				}
-				else {
-					GimClient.getWindow(getSelectedContacts()[0]).setVisible(true);
+				if (nodeInfo != "Online" && nodeInfo != "Offline") {
+					System.out.println(nodeInfo);
+					int find = GimClient.findRoom(getSelectedContacts()[0]);
+					if (find == -1) {
+						GimClient.getClient().createRoom(false, getSelectedContacts());
+					}
+					else {
+						GimClient.getWindow(getSelectedContacts()[0]).setVisible(true);
+					}
 				}
 			}
 		}
