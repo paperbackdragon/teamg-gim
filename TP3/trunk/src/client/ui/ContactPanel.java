@@ -12,8 +12,8 @@ public class ContactPanel extends JPanel {
 	private GimUI parent;
 	private JButton add, del, chat, group;
 	private JTree contactTree;
-	private DefaultMutableTreeNode contacts;
-	private SingleChatListener chatListener;
+	//private DefaultMutableTreeNode contacts;
+	ContactList cl;
 	
 	//CONSTRUCTOR
 	public ContactPanel() {
@@ -24,11 +24,12 @@ public class ContactPanel extends JPanel {
 			System.exit(0);
 		}
 		
-		contacts = new DefaultMutableTreeNode("Contacts");
+		//contacts = new DefaultMutableTreeNode("Contacts");
 		
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		add(new PersonalInfo());
-		add(new ContactList());
+		cl = new ContactList();
+		add(cl);
 		add(new ButtonPanel());
 	}
 	
@@ -70,10 +71,8 @@ public class ContactPanel extends JPanel {
 	class ContactList extends JPanel {
 		public ContactList() {
 			setLayout(new BorderLayout());
-			
-			contactTree = new JTree(contacts);
-			contactTree.addMouseListener(chatListener);
-			
+			contactTree = new JTree(new DefaultMutableTreeNode("Contacts"));
+			contactTree.addMouseListener(new SingleChatListener());
 			add(contactTree, BorderLayout.CENTER);
 		}
 	}
@@ -111,15 +110,14 @@ public class ContactPanel extends JPanel {
 	public void createNodes(String[] online, String[] offline) {
 		//TODO (heather): change node icons (see java tutorial)
 		//TODO (heather): make two separate trees
-		
-		contacts.removeAllChildren();
-		//contacts = new DefaultMutableTreeNode("Contacts");
-		
+		contactTree.setModel(null);
+		//DefaultTreeModel model = (DefaultTreeModel)contactTree.getModel();
+		DefaultMutableTreeNode root = new DefaultMutableTreeNode("Contacts");// = (DefaultMutableTreeNode)model.getRoot();
 		DefaultMutableTreeNode status = null;
 		DefaultMutableTreeNode contact = null;
 		
 		status = new DefaultMutableTreeNode("Online");
-		contacts.add(status);
+		root.add(status);
 		
 		//set online contacts
 		for (String str : online) {
@@ -128,13 +126,15 @@ public class ContactPanel extends JPanel {
 		}
 	    
 	    status = new DefaultMutableTreeNode("Offline");
-	    contacts.add(status);
+	    root.add(status);
 	    
 	    //set offline contacts
 	    for (String str : offline) {
 			contact = new DefaultMutableTreeNode(str);
 		    status.add(contact);
 		}
+	    
+	    contactTree.setModel(new DefaultTreeModel(root));
 	    
 	    for(int i=0; i < contactTree.getRowCount(); i++)
 			contactTree.expandRow(i);
