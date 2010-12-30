@@ -47,8 +47,9 @@ public class ServerConnection implements NetworkingIn {
 		// update the interface
 
 		for (int i = 0; i < onlinelist.length; i++) {
-			if (GimClient.getClient().getUser(onlinelist[i]) != null) {
+			if (GimClient.getClient().getUser(onlinelist[i]) == null) {
 				GimClient.getClient().addUser(onlinelist[i]);
+				GimClient.getClient().getUser(onlinelist[i]).setStatus("Online");
 			}
 		}
 		GimClient.getContactPanel().createNodes(onlinelist, offlinelist);

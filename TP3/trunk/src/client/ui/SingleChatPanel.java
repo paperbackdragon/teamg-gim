@@ -13,12 +13,9 @@ public class SingleChatPanel extends ChatPanel {
 
 	private ContactInfo info;
 
-
-
 	// CONSTRUCTOR
 	public SingleChatPanel(String roomID) {
 		super(roomID);
-		ContactInfo info;
 		setLayout(new BorderLayout());
 
 		messages = new JTextPane();
@@ -52,41 +49,41 @@ public class SingleChatPanel extends ChatPanel {
 		chatPanel.add(send, BorderLayout.EAST);
 		// END BOTTOM PANEL
 
-		info = new ContactInfo();
+		this.info = new ContactInfo();
 		add(info, BorderLayout.NORTH);
 		add(messagePane, BorderLayout.CENTER);
 		add(chatPanel, BorderLayout.SOUTH);
 
 		// TODO (heather): DOESNT WORK: chatBox.requestFocusInWindow();
-		
+
 	}
-	
+
 	public void setStatus(String status) {
+		System.out
+				.println("i'm attempting to call the method to update the status label");
 		info.setStatus(status);
 	}
-	
+
 	public void setNickname(String name) {
 		info.setNickname(name);
 	}
-	
+
 	public void setPersonalMessage(String message) {
 		info.setMessage(message);
 	}
 
-
-	
 	// PANELS
 	class ContactInfo extends JPanel {
 		private JLabel name;
 		private JLabel message;
 		private JLabel status;
-		
+
 		class TextField extends JPanel {
 			public TextField() {
 				setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-				 name = new JLabel("<html><b>Contact Nickname</b></html>");
-				 message = new JLabel("Personal Message");
-				 status = new JLabel(
+				name = new JLabel("<html><b>Contact Nickname</b></html>");
+				message = new JLabel("Personal Message");
+				status = new JLabel(
 						"<html><font size=\"3\">Status: Online</font></html>");
 				add(name);
 				add(message);
@@ -119,12 +116,14 @@ public class SingleChatPanel extends ChatPanel {
 
 		public void setNickname(String name) {
 			this.name.setText(name);
+
 		}
 
 		public void setStatus(String status) {
 			this.status.setText(status);
+			System.out.println("i'm attempting to change the status label");
 		}
-		
+
 		public void setMessage(String message) {
 			this.message.setText(message);
 		}
