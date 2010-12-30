@@ -416,6 +416,7 @@ public class ServerConnection implements NetworkingIn {
 				gcp.setInProgress(true);
 
 				ui.setLocationRelativeTo(null);// center new chat window
+				GimClient.getClient().users(roomid);
 			}
 		});
 		}
