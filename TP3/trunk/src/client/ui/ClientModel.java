@@ -135,13 +135,10 @@ public class ClientModel {
 	// ROOM stuff
 
 	public void createRoom(Boolean group, String[] contacts) {
-		// Gordon: i've changed this a bit... does this look right to you?
 		newRoomList.add(contacts);
 		if (group)
 			outLink.createGroupChat();
 		else
-			// TODO (heather): make this not null
-			// Gordon: i think this is fine now
 			outLink.createSingleChat(contacts[0]);
 	}
 

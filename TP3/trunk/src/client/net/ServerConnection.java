@@ -248,6 +248,10 @@ public class ServerConnection implements NetworkingIn {
 
 		// TODO (heather): this if/else will not work! (presumably) gordon: why
 		// not? :S
+		
+		// heather: what if there is a group with only 1 person? it will make
+		// the wrong kind of chat box.
+		
 		// open new chat window
 		if (contacts.length > 1) {
 
@@ -323,7 +327,6 @@ public class ServerConnection implements NetworkingIn {
 		 * the room with this invitation... but that would be a bit of work.
 		 * discuss? could be a low priority...
 		 */
-
 	}
 
 	public void joined(String user, final String roomid) {
@@ -336,8 +339,7 @@ public class ServerConnection implements NetworkingIn {
 						.getWindowIdentifierFromId(roomid);
 
 				// The other person has joined the personal chat, it is safe to
-				// send
-				// messages
+				// send messages
 				if (l != null) {
 					System.out.println("got to the if block");
 					l.getCp().setInProgress(true);

@@ -174,7 +174,6 @@ public class ContactPanel extends JPanel {
 				});
 			}
 			//TODO (heather): make chat grayed out till someone is clicked
-			//TODO (heather): how to make anything but nodes un-selectable?
 			else if(e.getSource().equals(chat)) {
 				// Check if there's already a chat open with this user
 				int find = GimClient.findRoom(getSelectedContacts()[0]);
@@ -182,7 +181,6 @@ public class ContactPanel extends JPanel {
 					GimClient.getClient().createRoom(false, getSelectedContacts());
 				}
 				else {
-					//uhm
 					GimClient.getWindow(getSelectedContacts()[0]).setVisible(true);
 				}
 			}
