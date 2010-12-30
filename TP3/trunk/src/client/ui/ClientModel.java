@@ -51,6 +51,10 @@ public class ClientModel {
 		newRoomList.add(userlist);
 	}
 	
+	public void addUser(String user) {
+		users.add(new User(user));
+	}
+	
 	public User getUser(String user) {
 		if (!users.isEmpty()) {
 			for (int i = 0; i < users.size(); i ++) {

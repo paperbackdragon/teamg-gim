@@ -12,8 +12,8 @@ public class User {
 	private String displayPic;
 	//private Object lock;
 
-	public User() {
-		this.email = null;
+	public User(String email) {
+		this.email = email;
 		this.nickname = null;
 		this.status = null;
 		this.personalMessage = null;
