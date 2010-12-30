@@ -66,7 +66,7 @@ public class SingleChatPanel extends ChatPanel {
 	}
 	
 	public void setNickname(String name) {
-		info.setName(name);
+		info.setNickname(name);
 	}
 	
 	public void setPersonalMessage(String message) {

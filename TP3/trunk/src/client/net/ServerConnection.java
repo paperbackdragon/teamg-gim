@@ -275,6 +275,15 @@ public class ServerConnection implements NetworkingIn {
 						// </Gordon>
 
 						// GimClient.addRoom(scp);
+						
+						// get contact info
+						User l = GimClient.getClient().getUser(contacts[0]);
+						if (l != null ) {
+							scp.setNickname(l.getNickname());
+							scp.setStatus(l.getStatus());
+							scp.setPersonalMessage(l.getPersonalMessage());
+						}
+						
 
 						GimUI ui = new GimUI("GIM - Chat with " + contacts[0],
 								scp);
@@ -386,6 +395,15 @@ public class ServerConnection implements NetworkingIn {
 					// gordon
 					scp.setChatWith(invitedBy);
 					scp.setInProgress(true);
+					
+					// set contact info
+					
+					User l = GimClient.getClient().getUser(invitedBy);
+					if (l != null ) {
+						scp.setNickname(l.getNickname());
+						scp.setStatus(l.getStatus());
+						scp.setPersonalMessage(l.getPersonalMessage());
+					}
 					// </gordon>
 					// GimClient.addRoom(scp);
 					GimUI ui = new GimUI("GIM - Chat with " + invitedBy, scp);
