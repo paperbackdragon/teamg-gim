@@ -13,6 +13,12 @@ public class ServerConnection implements NetworkingIn {
 		GimClient.getMainWindow().setMainPanel(panel);
 		GimClient.getMainWindow().canLogout(true);
 		GimClient.getClient().setContactList();
+		
+		// Do this properly later...
+		// may want to sign in appearing offline
+		
+		GimClient.getClient().setStatus("ONLINE");
+		
 	}
 
 	public void broadcast(String message) {
@@ -39,13 +45,13 @@ public class ServerConnection implements NetworkingIn {
 		GimClient.getClient().setBlockedfriends(blockedlist);
 
 		// update the interface
-		GimClient.getContactPanel().createNodes(onlinelist, offlinelist);
 
 		for (int i = 0; i < onlinelist.length; i++) {
 			if (GimClient.getClient().getUser(onlinelist[i]) != null) {
 				GimClient.getClient().addUser(onlinelist[i]);
 			}
 		}
+		GimClient.getContactPanel().createNodes(onlinelist, offlinelist);
 
 	}
 

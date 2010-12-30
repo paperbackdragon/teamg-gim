@@ -213,4 +213,9 @@ public class ClientModel {
 		outLink.getDisplayPicture(user);		
 	}
 
+	public void setStatus(String status) {
+		outLink.setStatus(status);
+		
+	}
+
 }
