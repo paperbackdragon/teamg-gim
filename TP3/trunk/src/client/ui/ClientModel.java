@@ -178,4 +178,33 @@ public class ClientModel {
 		outLink.friendlist();
 	}
 
+	public void getStatus(String user) {
+		outLink.getStatus(user);
+	}
+
+	public void getPersonalMessage(String user) {
+		outLink.getPersonalMessage(user);
+	}
+
+	public void getNickName(String user) {
+		outLink.getNickname(user);
+	}
+
+	public void getDisplayPicture(String user) {
+		outLink.getDisplayPicture(user);		
+	}
+
+	public User getUser(String user) {
+		if (!users.isEmpty()) {
+			for (int i = 0; i < users.size(); i ++) {
+				if (users.get(i).getEmail().equals(user)) {
+					return users.get(i);
+				}
+			}
+			return null;
+		}
+		return null;
+		
+	}
+
 }

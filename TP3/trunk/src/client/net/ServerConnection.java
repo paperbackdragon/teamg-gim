@@ -88,14 +88,16 @@ public class ServerConnection implements NetworkingIn {
 	}
 
 	public void notifyDisplayPicture(String user) {
-
+		GimClient.getClient().getDisplayPicture(user);
 	}
 
 	public void notifyNickname(String user) {
+		GimClient.getClient().getNickName(user);
 
 	}
 
 	public void notifyPersonalMessage(String user) {
+		GimClient.getClient().getPersonalMessage(user);
 
 	}
 
@@ -106,8 +108,7 @@ public class ServerConnection implements NetworkingIn {
 		// need to talk to james on that one)
 		GimClient.getClient().getFriendList();
 		
-		// Stuff to perform the neccessary changes on the status
-		// info of this user
+		GimClient.getClient().getStatus(user);
 		
 
 	}
@@ -150,19 +151,41 @@ public class ServerConnection implements NetworkingIn {
 	}
 
 	public void updateDisplayPicture(String user, String displayPicture) {
+		if (GimClient.getClient().getUser(user) != null) {
+			User l = GimClient.getClient().getUser(user);
+			if (l  != null ) {
+				l.setDisplayPic(displayPicture);
+			}
+			
+		} else {
+			//uhm...
+		}
 
 	}
 
 	public void updateNickname(String user, String nickname) {
+		User l = GimClient.getClient().getUser(nickname);
+		if (l  != null ) {
+			l.setNickname(nickname);
+	
+		}
 
 	}
 
 	public void updatePersonalMessage(String user, String personalmessage) {
+		User l = GimClient.getClient().getUser(user);
+		if (l  != null ) {
+			l.setPersonalMessage(personalmessage);
+		}
 
 	}
 
 	public void updateStatus(String user, String status) {
-		// if status offline, if we have a chat box for this user, grey it out
+		User l = GimClient.getClient().getUser(user);
+		if (l  != null ) {
+			l.setStatus(status);
+		}
+		
 
 	}
 

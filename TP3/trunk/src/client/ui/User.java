@@ -5,6 +5,7 @@ public class User {
 	// gordon: THREAD SAFETY? (had attempted to implement it, but think
 	// i did it wrong
 	
+	private String email;
 	private String nickname;
 	private String status;
 	private String personalMessage;
@@ -12,6 +13,7 @@ public class User {
 	//private Object lock;
 
 	public User() {
+		this.email = null;
 		this.nickname = null;
 		this.status = null;
 		this.personalMessage = null;
@@ -19,6 +21,10 @@ public class User {
 		//lock = new Object();
 	}
 
+	public String getEmail() {
+		return email;
+	}
+	
 	public String getNickname() {
 		return nickname;
 	}
