@@ -261,9 +261,10 @@ public class ServerConnection implements NetworkingIn {
 					// GimClient.addRoom(gcp);
 
 					GimUI ui = new GimUI("GIM - Group Chat", gcp);
-					GimClient.addWindow(contacts[0], ui, gcp);
+					GimClient.addWindow(null, ui, gcp);
 
 					ui.setLocationRelativeTo(null);// center new chat window
+					ui.setVisible(true);
 				}
 			});
 		} else {
@@ -351,7 +352,9 @@ public class ServerConnection implements NetworkingIn {
 	}
 
 	public void left(String user, String roomid) {
-		chatWindowIdentifier l = GimClient.getWindowIdentifierFromUser(user);
+		// this used to be FromUser... this change shouldn't screw anything up as far as i know
+		// but this is a reminder to myself...
+		chatWindowIdentifier l = GimClient.getWindowIdentifierFromId(roomid);
 		if (l != null) {
 			if (l.getCp() instanceof SingleChatPanel) {
 				l.getCp().setInProgress(false);
@@ -369,11 +372,29 @@ public class ServerConnection implements NetworkingIn {
 
 	}
 
-	public void group(String roomid) {
+	public void group(final String roomid) {
 		String invitedBy = GimClient.getClient().getNextInvitation();
 
 		// spawn a new window notifying the user they've been invited to a group
 		// chat
+		
+		// FOR NOW, FOR TESTING PURPOSES... JUST JOIN IT
+		
+		GimClient.getClient().join(roomid);
+
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					GroupChatPanel gcp = new GroupChatPanel(roomid);
+					// GimClient.addRoom(gcp);
+
+					GimUI ui = new GimUI("GIM - Group Chat", gcp);
+					GimClient.addWindow(null, ui, gcp);
+					ui.setVisible(true);
+
+					ui.setLocationRelativeTo(null);// center new chat window
+				}
+			});
+		
 
 	}
 

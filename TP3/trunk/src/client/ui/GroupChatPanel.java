@@ -18,7 +18,7 @@ public class GroupChatPanel extends ChatPanel{
 		
 		setLayout(new BorderLayout());
 		
-		//messages = new JTextArea();
+		messages = new JTextPane();
 		messages.setEditable(false);
 		//messages.setLineWrap(true);
 		//messages.setWrapStyleWord(true);
