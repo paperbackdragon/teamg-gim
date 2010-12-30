@@ -1,5 +1,6 @@
 package server;
 
+import java.net.ServerSocket;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -25,10 +26,11 @@ public class Data {
 
 	private volatile int clientID = 0;
 	private volatile int roomID = 0;
+	
 	public volatile int usersOnline = 0;
-
 	public volatile int online = 0;
 	public String uptime = "";
+	public ServerSocket serverSocket = null;
 
 	// TODO: Change back to private after testing
 	public ConcurrentHashMap<String, User> users = new ConcurrentHashMap<String, User>();
