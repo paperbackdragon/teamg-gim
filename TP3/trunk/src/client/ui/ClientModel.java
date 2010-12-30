@@ -16,42 +16,46 @@ public class ClientModel {
 	private String[] onlinefriends;
 	private String[] offlinefriends;
 	private String[] blockedfriends;
-	
+
 	private ArrayList<User> users;
+
+	//private Object lock;
 
 	// CONSTRUCTOR
 	public ClientModel() {
 		inLink = new ServerConnection();
 		outLink = new ClientConnection(inLink);
-		
+
 		newRoomList = new LinkedList<String[]>();
-		
-		// Gordon: if you don't think this is a sensible way to do it, we can all discuss this :P
+
+		// Gordon: if you don't think this is a sensible way to do it, we can
+		// all discuss this :P
 		invitationsList = new LinkedList<String>();
 		users = new ArrayList<User>();
+		//lock = new Object();
 	}
 
 	// ACCESSORS
 
-	//public LinkedList<String[]> getRoomList() {
-	//	return newRoomList;
-	//}
-	
+	// public LinkedList<String[]> getRoomList() {
+	// return newRoomList;
+	// }
+
 	public String[] getNextRoom() {
 		// Gordon: Critical section?
-		return newRoomList.pop();
+			return newRoomList.pop();
 	}
-	
+
 	public void addNextRoom(String[] userlist) {
 		// Gordon: Critical section?
 		newRoomList.add(userlist);
 	}
-	
+
 	public void addInvitation(String from) {
 		// Gordon: Critical section?
 		invitationsList.add(from);
 	}
-	
+
 	public String getNextInvitation() {
 		// Gordon: Critical section?
 		return invitationsList.pop();
@@ -92,7 +96,7 @@ public class ClientModel {
 	public void register(String email, char[] pwd) {
 		outLink.register(email, pwd);
 	}
-	
+
 	public void message(String roomid, String message) {
 		outLink.message(roomid, message);
 	}
@@ -103,7 +107,7 @@ public class ClientModel {
 
 	public void quit() {
 		outLink.logout();
-		//TODO (heather): clean up instead of this:
+		// TODO (heather): clean up instead of this:
 		System.exit(0);
 	}
 
@@ -117,7 +121,7 @@ public class ClientModel {
 		if (group)
 			outLink.createGroupChat();
 		else
-			//TODO (heather): make this not null 
+			// TODO (heather): make this not null
 			// Gordon: i think this is fine now
 			outLink.createSingleChat(contacts[0]);
 	}
@@ -167,9 +171,9 @@ public class ClientModel {
 	}
 
 	// end: Friends list stuff
-	
+
 	// GET stuff (when something has been updated)
-	
+
 	public void getFriendList() {
 		outLink.friendlist();
 	}
