@@ -1,6 +1,5 @@
 package client;
 
-import java.awt.AWTEvent;
 import java.util.ArrayList;
 import javax.swing.SwingUtilities;
 

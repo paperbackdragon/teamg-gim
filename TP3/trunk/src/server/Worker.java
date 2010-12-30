@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Date;
 
+import server.User.Status;
 import util.Command;
 import util.CommandBuffer;
 import util.CommandReader;
@@ -119,11 +120,13 @@ public class Worker implements Runnable {
 
 			if (user != null && user.getPasswordHash().equalsIgnoreCase(dataParts[1])) {
 
+				
 				// Make sure the user ins't already logged in
 				if (user.getWorker() != null) {
 					user.getWorker().putResponse(new Command("ERROR", "LOGGED_IN_FROM_OTHER_LOCATION"));
-					user.getWorker().kill();
+					user.getWorker().putCommand(new Command("QUIT"));
 				}
+				
 
 				// They provided accurate details, log them in
 				this.loggedInUser = user;
@@ -353,7 +356,7 @@ public class Worker implements Runnable {
 
 		// Sort the online and offline users
 		for (User user : this.loggedInUser.getFriendList()) {
-			if (user.isOnline())
+			if (user.isOnline() && user.getStatus() != Status.OFFLINE)
 				online += Command.encode(user.getId()) + " ";
 			else
 				offline += Command.encode(user.getId()) + " ";
@@ -442,7 +445,7 @@ public class Worker implements Runnable {
 		// Remove extra newline added above
 		response = response.substring(0, response.length() - 1);
 
-		return new Command("INFO", null, response);
+		return new Command("INFO", cmd.getArgumentsAsString(), response);
 	}
 
 	/**

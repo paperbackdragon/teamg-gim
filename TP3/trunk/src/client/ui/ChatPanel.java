@@ -6,7 +6,6 @@ import java.util.LinkedList;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
@@ -127,8 +126,7 @@ public class ChatPanel extends JPanel {
 			} else {
 				messageQueue.push(chatBox.getText());
 				if (id.equals("-1"))
-					GimClient.getClient().createRoom(false,
-							new String[] { chatWith });
+					GimClient.getClient().createRoom(false, new String[] { chatWith });
 			}
 		}
 	}
@@ -142,11 +140,8 @@ public class ChatPanel extends JPanel {
 				final StyledDocument doc = messages.getStyledDocument();
 
 				// Load the default style and add it as the "regular" text
-				Style def = StyleContext.getDefaultStyleContext().getStyle(
-						StyleContext.DEFAULT_STYLE);
+				Style def = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
 				Style regular = doc.addStyle("regular", def);
-				StyleConstants.setFontSize(regular, 14);
-
 				// Create an italic style
 				Style italic = doc.addStyle("italic", regular);
 				StyleConstants.setItalic(italic, true);
@@ -169,7 +164,6 @@ public class ChatPanel extends JPanel {
 
 			}
 		});
-
 
 	}
 
