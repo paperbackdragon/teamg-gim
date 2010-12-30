@@ -1,5 +1,6 @@
 package client.ui;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import client.net.ClientConnection;
@@ -15,6 +16,8 @@ public class ClientModel {
 	private String[] onlinefriends;
 	private String[] offlinefriends;
 	private String[] blockedfriends;
+	
+	private ArrayList<User> users;
 
 	// CONSTRUCTOR
 	public ClientModel() {
@@ -25,6 +28,7 @@ public class ClientModel {
 		
 		// Gordon: if you don't think this is a sensible way to do it, we can all discuss this :P
 		invitationsList = new LinkedList<String>();
+		users = new ArrayList<User>();
 	}
 
 	// ACCESSORS
