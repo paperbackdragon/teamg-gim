@@ -277,7 +277,7 @@ public class networkReader implements Runnable {
 
 		}
 
-		/*else if (cmd.getCommand().equalsIgnoreCase("INFO")) {
+		else if (cmd.getCommand().equalsIgnoreCase("INFO")) {
 
 			String[] arguments = cmd.getArguments();
 			int argumentcount = arguments.length;
@@ -292,30 +292,35 @@ public class networkReader implements Runnable {
 			while (i < parts.length) {
 
 				if (count != 0) {
+					// note to self: lol.. eh... do this better. this probably won't work for
+					// multiple madness
+					count--;
 
 					if (arguments[count].equalsIgnoreCase("NICKNAME")) {
 
-						gui.updateNickname(Command.decode(parts[i]),
-								currentusername);
+						gui.updateNickname(currentusername,Command.decode(parts[i])
+								);
 
 					}
 
 					else if (arguments[count].equalsIgnoreCase("STATUS")) {
-						gui.updateStatus(Command.decode(parts[i]),
-								currentusername);
+						gui.updateStatus(currentusername, Command.decode(parts[i])
+								);
+						
+						System.out.println("got where i wanted");
 
 					}
 
 					else if (arguments[count]
 							.equalsIgnoreCase("PERSONAL_MESSAGE")) {
-						gui.updatePersonalMessage(Command.decode(parts[i]),
-								currentusername);
+						gui.updatePersonalMessage(currentusername, Command.decode(parts[i])
+								);
 
 					}
 
 					else if (arguments[count].equalsIgnoreCase("DISPLAY_PIC")) {
-						gui.updateDisplayPicture(Command.decode(parts[i]),
-								currentusername);
+						gui.updateDisplayPicture(currentusername,Command.decode(parts[i])
+								);
 					}
 
 				}
@@ -335,7 +340,7 @@ public class networkReader implements Runnable {
 			}
 
 		}
-*/
+
 		// ERRORS
 
 		else if (cmd.getCommand().equals("ERROR")) {
