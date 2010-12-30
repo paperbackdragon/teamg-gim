@@ -277,7 +277,7 @@ public class networkReader implements Runnable {
 
 		}
 
-		else if (cmd.getCommand().equalsIgnoreCase("INFO")) {
+		/*else if (cmd.getCommand().equalsIgnoreCase("INFO")) {
 
 			String[] arguments = cmd.getArguments();
 			int argumentcount = arguments.length;
@@ -335,7 +335,7 @@ public class networkReader implements Runnable {
 			}
 
 		}
-
+*/
 		// ERRORS
 
 		else if (cmd.getCommand().equals("ERROR")) {
