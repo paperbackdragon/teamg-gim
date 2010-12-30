@@ -13,12 +13,12 @@ public class ServerConnection implements NetworkingIn {
 		GimClient.getMainWindow().setMainPanel(panel);
 		GimClient.getMainWindow().canLogout(true);
 		GimClient.getClient().setContactList();
-		
+
 		// Do this properly later...
 		// may want to sign in appearing offline
-		
+
 		GimClient.getClient().setStatus("ONLINE");
-		
+
 	}
 
 	public void broadcast(String message) {
@@ -49,7 +49,8 @@ public class ServerConnection implements NetworkingIn {
 		for (int i = 0; i < onlinelist.length; i++) {
 			if (GimClient.getClient().getUser(onlinelist[i]) == null) {
 				GimClient.getClient().addUser(onlinelist[i]);
-				GimClient.getClient().getUser(onlinelist[i]).setStatus("Online");
+				GimClient.getClient().getUser(onlinelist[i])
+						.setStatus("Online");
 			}
 		}
 		GimClient.getContactPanel().createNodes(onlinelist, offlinelist);
@@ -216,8 +217,7 @@ public class ServerConnection implements NetworkingIn {
 					.getWindowIdentifierFromUser(user);
 
 			if (s != null) {
-				((SingleChatPanel) s.getCp())
-						.setStatus(status);
+				((SingleChatPanel) s.getCp()).setStatus(status);
 			}
 		}
 
@@ -249,12 +249,12 @@ public class ServerConnection implements NetworkingIn {
 
 		// TODO (heather): this if/else will not work! (presumably) gordon: why
 		// not? :S
-		
+
 		// heather: what if there is a group with only 1 person? it will make
 		// the wrong kind of chat box.
-		
+
 		// Gordon: good point, i should've sorted that now...
-		
+
 		// open new chat window
 		if (isGroup) {
 
@@ -290,15 +290,14 @@ public class ServerConnection implements NetworkingIn {
 						// </Gordon>
 
 						// GimClient.addRoom(scp);
-						
+
 						// get contact info
 						User l = GimClient.getClient().getUser(contacts[0]);
-						if (l != null ) {
+						if (l != null) {
 							scp.setNickname(l.getNickname());
 							scp.setStatus(l.getStatus());
 							scp.setPersonalMessage(l.getPersonalMessage());
 						}
-						
 
 						GimUI ui = new GimUI("GIM - Chat with " + contacts[0],
 								scp);
@@ -355,7 +354,8 @@ public class ServerConnection implements NetworkingIn {
 	}
 
 	public void left(String user, String roomid) {
-		// this used to be FromUser... this change shouldn't screw anything up as far as i know
+		// this used to be FromUser... this change shouldn't screw anything up
+		// as far as i know
 		// but this is a reminder to myself...
 		chatWindowIdentifier l = GimClient.getWindowIdentifierFromId(roomid);
 		if (l != null) {
@@ -380,24 +380,31 @@ public class ServerConnection implements NetworkingIn {
 
 		// spawn a new window notifying the user they've been invited to a group
 		// chat
+
+		Object[] options = { "Accept", "Decline" };
+		int n = JOptionPane.showOptionDialog(GimClient.getMainWindow(),
+				"You have been invited to a group chat by " + invitedBy
+						+ ". Would you like to accept?", "Group chat invitation",
+				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+				options, // the titles of buttons
+				options[0]); // default button title
 		
-		// FOR NOW, FOR TESTING PURPOSES... JUST JOIN IT
-		
+		if (n==0) {
 		GimClient.getClient().join(roomid);
 
-			SwingUtilities.invokeLater(new Runnable() {
-				public void run() {
-					GroupChatPanel gcp = new GroupChatPanel(roomid);
-					// GimClient.addRoom(gcp);
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				GroupChatPanel gcp = new GroupChatPanel(roomid);
+				// GimClient.addRoom(gcp);
 
-					GimUI ui = new GimUI("GIM - Group Chat", gcp);
-					GimClient.addWindow(null, ui, gcp);
-					ui.setVisible(true);
+				GimUI ui = new GimUI("GIM - Group Chat", gcp);
+				GimClient.addWindow(null, ui, gcp);
+				ui.setVisible(true);
 
-					ui.setLocationRelativeTo(null);// center new chat window
-				}
-			});
-		
+				ui.setLocationRelativeTo(null);// center new chat window
+			}
+		});
+		}
 
 	}
 
@@ -428,11 +435,11 @@ public class ServerConnection implements NetworkingIn {
 					// gordon
 					scp.setChatWith(invitedBy);
 					scp.setInProgress(true);
-					
+
 					// set contact info
-					
+
 					User l = GimClient.getClient().getUser(invitedBy);
-					if (l != null ) {
+					if (l != null) {
 						scp.setNickname(l.getNickname());
 						scp.setStatus(l.getStatus());
 						scp.setPersonalMessage(l.getPersonalMessage());
