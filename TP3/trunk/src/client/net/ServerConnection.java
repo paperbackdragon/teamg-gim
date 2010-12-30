@@ -40,14 +40,12 @@ public class ServerConnection implements NetworkingIn {
 
 		// update the interface
 		GimClient.getContactPanel().createNodes(onlinelist, offlinelist);
-		
-		
-		for (int i = 0; i < onlinelist.length; i ++) {
-			if (GimClient.getClient().getUser(onlinelist[i]) != null ) {
+
+		for (int i = 0; i < onlinelist.length; i++) {
+			if (GimClient.getClient().getUser(onlinelist[i]) != null) {
 				GimClient.getClient().addUser(onlinelist[i]);
 			}
 		}
-		
 
 	}
 
@@ -112,12 +110,11 @@ public class ServerConnection implements NetworkingIn {
 	public void notifyStatus(String user) {
 		// the user might have gone offline, tell the server
 		// to send an updated buddy list
-		// (this may change if the server sends it anyway... 
+		// (this may change if the server sends it anyway...
 		// need to talk to james on that one)
 		GimClient.getClient().getFriendList();
-		
+
 		GimClient.getClient().getStatus(user);
-		
 
 	}
 
@@ -161,39 +158,61 @@ public class ServerConnection implements NetworkingIn {
 	public void updateDisplayPicture(String user, String displayPicture) {
 		if (GimClient.getClient().getUser(user) != null) {
 			User l = GimClient.getClient().getUser(user);
-			if (l  != null ) {
+			if (l != null) {
 				l.setDisplayPic(displayPicture);
+				// lul'z: dunno how to get this into an imageIcon
 			}
-			
+
 		} else {
-			//uhm...
+			// uhm...
 		}
 
 	}
 
 	public void updateNickname(String user, String nickname) {
 		User l = GimClient.getClient().getUser(nickname);
-		if (l  != null ) {
+		if (l != null) {
 			l.setNickname(nickname);
-	
+
+			chatWindowIdentifier s = GimClient
+					.getWindowIdentifierFromUser(user);
+
+			if (s != null) {
+				((SingleChatPanel) s.getCp()).setNickname(nickname);
+			}
 		}
 
 	}
 
 	public void updatePersonalMessage(String user, String personalmessage) {
 		User l = GimClient.getClient().getUser(user);
-		if (l  != null ) {
+		if (l != null) {
 			l.setPersonalMessage(personalmessage);
+
+			chatWindowIdentifier s = GimClient
+					.getWindowIdentifierFromUser(user);
+
+			if (s != null) {
+				((SingleChatPanel) s.getCp())
+						.setPersonalMessage(personalmessage);
+			}
 		}
 
 	}
 
 	public void updateStatus(String user, String status) {
 		User l = GimClient.getClient().getUser(user);
-		if (l  != null ) {
+		if (l != null) {
 			l.setStatus(status);
+
+			chatWindowIdentifier s = GimClient
+					.getWindowIdentifierFromUser(user);
+
+			if (s != null) {
+				((SingleChatPanel) s.getCp())
+						.setStatus(status);
+			}
 		}
-		
 
 	}
 

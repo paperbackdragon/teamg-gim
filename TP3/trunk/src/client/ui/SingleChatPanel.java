@@ -65,7 +65,7 @@ public class SingleChatPanel extends ChatPanel {
 		info.setStatus(status);
 	}
 	
-	public void setName(String name) {
+	public void setNickname(String name) {
 		info.setName(name);
 	}
 	
@@ -117,7 +117,7 @@ public class SingleChatPanel extends ChatPanel {
 			}
 		}
 
-		public void setName(String name) {
+		public void setNickname(String name) {
 			this.name.setText(name);
 		}
 
