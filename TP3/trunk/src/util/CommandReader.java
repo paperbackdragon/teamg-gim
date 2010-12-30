@@ -81,10 +81,10 @@ public class CommandReader implements Runnable {
 
 				// No ;, not the end of a command
 				if (dataParts.length == 1) {
-					data += line;
+					data += "\n" + line;
 				} else if (dataParts.length >= 2) {
 					// End of a command
-					data += dataParts[0];
+					data += "\n" + dataParts[0];
 					
 					// Create the command and put it in the buffer
 					Command cmd = new Command(command, args, data.trim());

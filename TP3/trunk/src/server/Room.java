@@ -1,20 +1,18 @@
 package server;
 
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import util.Command;
 
 public class Room {
 
-	private HashMap<String, User> users;
-	private HashMap<String, User> invited;
+	private ConcurrentHashMap<String, User> users = new ConcurrentHashMap<String, User>();
+	private ConcurrentHashMap<String, User> invited = new ConcurrentHashMap<String, User>();
 	private boolean isGroup;
 	private int id;
 
 	public Room() {
-		this.users = new HashMap<String, User>();
-		this.invited = new HashMap<String, User>();
 		this.id = Data.getInstance().getNextRoomID();
 	}
 
@@ -29,9 +27,7 @@ public class Room {
 	}
 
 	public void addInvitiedUser(User user) {
-		synchronized (this.invited) {
-			this.invited.put(user.getId(), user);
-		}
+		this.invited.put(user.getId(), user);
 	}
 
 	public String getType() {

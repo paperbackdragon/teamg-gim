@@ -1,7 +1,7 @@
 package server;
 
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 // TODO: Reuse IDs for new rooms and workers
 
@@ -13,6 +13,7 @@ public class Data {
 	private static class SingeltonHolder {
 		public static final Data INSTANCE = new Data();
 	}
+
 	/**
 	 * Return the current instance of the data class.
 	 * 
@@ -21,18 +22,18 @@ public class Data {
 	public static Data getInstance() {
 		return SingeltonHolder.INSTANCE;
 	}
-	
+
 	private volatile int clientID = 0;
 	private volatile int roomID = 0;
 	public volatile int usersOnline = 0;
 
 	public volatile int online = 0;
 	public String uptime = "";
-	
+
 	// TODO: Change back to private after testing
-	public HashMap<String, User> users = new HashMap<String, User>();
-	private HashMap<Integer, Room> rooms = new HashMap<Integer, Room>();
-	private HashMap<Integer, Worker> workers = new HashMap<Integer, Worker>();
+	public ConcurrentHashMap<String, User> users = new ConcurrentHashMap<String, User>();
+	private ConcurrentHashMap<Integer, Room> rooms = new ConcurrentHashMap<Integer, Room>();
+	private ConcurrentHashMap<Integer, Worker> workers = new ConcurrentHashMap<Integer, Worker>();
 
 	/**
 	 * Do nothing.
@@ -47,9 +48,7 @@ public class Data {
 	 *            the room to add
 	 */
 	public void addRoom(Room room) {
-		synchronized (this.rooms) {
-			this.rooms.put(room.getId(), room);
-		}
+		this.rooms.put(room.getId(), room);
 	}
 
 	/**
@@ -59,9 +58,7 @@ public class Data {
 	 *            The User to add
 	 */
 	public void addUser(User user) {
-		synchronized (this.users) {
-			this.users.put(user.getId(), user);
-		}
+		this.users.put(user.getId(), user);
 	}
 
 	/**
@@ -73,9 +70,7 @@ public class Data {
 	 *            The worker itself
 	 */
 	public void addWorker(int id, Worker worker) {
-		synchronized (this.users) {
-			this.workers.put(new Integer(id), worker);
-		}
+		this.workers.put(new Integer(id), worker);
 	}
 
 	/**
@@ -86,7 +81,7 @@ public class Data {
 	public int getNextClientID() {
 		return this.clientID++;
 	}
-	
+
 	/**
 	 * Get the next unique room ID
 	 * 
@@ -126,7 +121,7 @@ public class Data {
 	public User getUser(String id) {
 		return this.users.get(id.toLowerCase());
 	}
-	
+
 	/**
 	 * Get all of the users
 	 * 
@@ -148,23 +143,21 @@ public class Data {
 	}
 
 	public Collection<Worker> getWorkers() {
-			return this.workers.values();
+		return this.workers.values();
 	}
 
 	/**
 	 * Remove a room for the server
-	 * @param id The id of the room to remove
+	 * 
+	 * @param id
+	 *            The id of the room to remove
 	 */
 	public void removeRoom(int id) {
-		synchronized (this.rooms) {
-			this.rooms.remove(new Integer(id));
-		}
+		this.rooms.remove(new Integer(id));
 	}
 
 	public void removeWorker(Worker worker) {
-		synchronized (this.workers) {
-			this.workers.remove(new Integer(worker.getID()));
-		}
+		this.workers.remove(new Integer(worker.getID()));
 	}
 
 }
