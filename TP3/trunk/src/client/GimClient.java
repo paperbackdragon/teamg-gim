@@ -107,9 +107,13 @@ public class GimClient {
 	
 	public static chatWindowIdentifier getWindowIdentifierFromUser(String user) {
 		for (int i = 0; i < windows.size(); i++) {
-			if (windows.get(i).getCp().getChatWith().equals(user)) {
-				return windows.get(i);
+			if (windows.get(i).getCp() instanceof SingleChatPanel) {
+				if (windows.get(i).getCp().getChatWith().equals(user)) {
+					return windows.get(i);
+				}
 			}
+			
+			
 		}
 		return null;
 		

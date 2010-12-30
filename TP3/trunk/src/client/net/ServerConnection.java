@@ -265,7 +265,7 @@ public class ServerConnection implements NetworkingIn {
 					gcp.setInProgress(true);
 
 					GimUI ui = new GimUI("GIM - Group Chat", gcp);
-					GimClient.addWindow(null, ui, gcp);
+					GimClient.addWindow(" ", ui, gcp);
 
 					ui.setLocationRelativeTo(null);// center new chat window
 					ui.setVisible(true);
@@ -411,7 +411,7 @@ public class ServerConnection implements NetworkingIn {
 				// GimClient.addRoom(gcp);
 
 				GimUI ui = new GimUI("GIM - Group Chat", gcp);
-				GimClient.addWindow(null, ui, gcp);
+				GimClient.addWindow(" ", ui, gcp);
 				ui.setVisible(true);
 				gcp.setInProgress(true);
 
