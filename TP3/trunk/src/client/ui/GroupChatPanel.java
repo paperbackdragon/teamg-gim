@@ -83,5 +83,10 @@ public class GroupChatPanel extends ChatPanel{
 			add(new TextField());
 		}
 	}
+	
+	// update the user list
+	public void updateUserList(String[] participants) {
+		
+	}
 }
 	
