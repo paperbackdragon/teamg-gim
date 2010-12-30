@@ -262,6 +262,7 @@ public class ServerConnection implements NetworkingIn {
 				public void run() {
 					GroupChatPanel gcp = new GroupChatPanel(roomid);
 					// GimClient.addRoom(gcp);
+					gcp.setInProgress(true);
 
 					GimUI ui = new GimUI("GIM - Group Chat", gcp);
 					GimClient.addWindow(null, ui, gcp);
@@ -332,7 +333,7 @@ public class ServerConnection implements NetworkingIn {
 		 */
 	}
 
-	public void joined(String user, final String roomid) {
+	public void joined(final String user, final String roomid) {
 		SwingUtilities.invokeLater(new Runnable() {
 
 			@Override
@@ -344,8 +345,15 @@ public class ServerConnection implements NetworkingIn {
 				// The other person has joined the personal chat, it is safe to
 				// send messages
 				if (l != null) {
-					System.out.println("got to the if block");
-					l.getCp().setInProgress(true);
+					if (l.getCp() instanceof SingleChatPanel) {
+						l.getCp().setInProgress(true);
+					}
+					else { // group chat
+						GimClient.getClient().users(roomid);
+						l.getCp().receiveMessage("", user + " has joined the chat");
+						
+					}
+					
 				}
 
 			}
@@ -365,6 +373,8 @@ public class ServerConnection implements NetworkingIn {
 				GimClient.getClient().leave(roomid);
 			} else if (l.getCp() instanceof GroupChatPanel) {
 				// do this later...
+				GimClient.getWindowIdentifierFromId(roomid).getCp().receiveMessage("", user + " has left the chat");
+				GimClient.getClient().users(roomid);
 			}
 
 		}
@@ -372,6 +382,9 @@ public class ServerConnection implements NetworkingIn {
 	}
 
 	public void users(String[] users, String roomid) {
+		// could work out their nickname... but screw it, do it later
+		
+		((GroupChatPanel) GimClient.getWindowIdentifierFromId(roomid).getCp()).updateUserList(users);
 
 	}
 

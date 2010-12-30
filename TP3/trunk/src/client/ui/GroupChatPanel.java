@@ -24,7 +24,7 @@ public class GroupChatPanel extends ChatPanel{
 		//messages.setWrapStyleWord(true);
 		JScrollPane messagePane = new JScrollPane(messages);
 		
-		guests = new JTextArea("Contacts");
+		guests = new JTextArea("");
 		guests.setEditable(false);
 		guests.setLineWrap(true);
 		guests.setWrapStyleWord(true);
@@ -84,8 +84,13 @@ public class GroupChatPanel extends ChatPanel{
 		}
 	}
 	
-	// update the user list
+	// update the user list... this method may change. may not use a text box to display users
+	// in future :P
 	public void updateUserList(String[] participants) {
+		guests.setText("");
+		for (int i = 0; i < participants.length; i ++) {
+			guests.append(participants[i] + "\n");
+		}
 		
 	}
 }

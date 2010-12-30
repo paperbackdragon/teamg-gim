@@ -186,7 +186,7 @@ public class networkReader implements Runnable {
 
 				String roomid = Command.decode(parts[0]);
 
-				String[] users = parts[1].split("\n");
+				String[] users = parts[1].split(" ");
 
 				for (int i = 0; i < users.length; i++) {
 					users[i] = Command.decode(users[i]);
