@@ -50,6 +50,19 @@ public class ClientModel {
 		// Gordon: Critical section?
 		newRoomList.add(userlist);
 	}
+	
+	public User getUser(String user) {
+		if (!users.isEmpty()) {
+			for (int i = 0; i < users.size(); i ++) {
+				if (users.get(i).getEmail().equals(user)) {
+					return users.get(i);
+				}
+			}
+			return null;
+		}
+		return null;
+		
+	}
 
 	public void addInvitation(String from) {
 		// Gordon: Critical section?
@@ -84,6 +97,8 @@ public class ClientModel {
 	public void setBlockedfriends(String[] blockedfriends) {
 		this.blockedfriends = blockedfriends;
 	}
+	
+	
 
 	// MESSAGES TO SERVER
 
@@ -192,19 +207,6 @@ public class ClientModel {
 
 	public void getDisplayPicture(String user) {
 		outLink.getDisplayPicture(user);		
-	}
-
-	public User getUser(String user) {
-		if (!users.isEmpty()) {
-			for (int i = 0; i < users.size(); i ++) {
-				if (users.get(i).getEmail().equals(user)) {
-					return users.get(i);
-				}
-			}
-			return null;
-		}
-		return null;
-		
 	}
 
 }
