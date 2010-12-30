@@ -5,25 +5,30 @@ import javax.swing.*;
 
 /**
  * Specific class for a chat panel used for a conversation between two people.
+ * 
  * @author Heather
  */
 @SuppressWarnings("serial")
-public class SingleChatPanel extends ChatPanel{
+public class SingleChatPanel extends ChatPanel {
 
-	//CONSTRUCTOR
+	private ContactInfo info;
+
+
+
+	// CONSTRUCTOR
 	public SingleChatPanel(String roomID) {
 		super(roomID);
-
+		ContactInfo info;
 		setLayout(new BorderLayout());
-		
+
 		messages = new JTextPane();
 		messages.setContentType("text/html");
 		messages.setEditable(false);
-		//messages.setLineWrap(true);
-		//messages.setWrapStyleWord(true);
+		// messages.setLineWrap(true);
+		// messages.setWrapStyleWord(true);
 		JScrollPane messagePane = new JScrollPane(messages);
-		
-		//BOTTOM PANEL
+
+		// BOTTOM PANEL
 		JPanel chatPanel = new JPanel();
 		chatPanel.setLayout(new BorderLayout());
 		chatBox = new JTextArea();
@@ -33,39 +38,62 @@ public class SingleChatPanel extends ChatPanel{
 		EnterListener enterListener = new EnterListener();
 		chatBox.addKeyListener(enterListener);
 		JScrollPane chatPane = new JScrollPane(chatBox);
-		chatPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		chatPane
+				.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		chatPane.setPreferredSize(new Dimension(235, 50));
-		
+
 		send = new JButton("Send");
-		send.setPreferredSize(new Dimension(65,50));
-		SendListener sendListener = new SendListener(); 
+		send.setPreferredSize(new Dimension(65, 50));
+		SendListener sendListener = new SendListener();
 		send.addActionListener(sendListener);
-		
+
 		chatPanel.setPreferredSize(new Dimension(0, 50));
 		chatPanel.add(chatPane, BorderLayout.WEST);
 		chatPanel.add(send, BorderLayout.EAST);
-		//END BOTTOM PANEL
-		
-		add(new ContactInfo(), BorderLayout.NORTH);
+		// END BOTTOM PANEL
+
+		info = new ContactInfo();
+		add(info, BorderLayout.NORTH);
 		add(messagePane, BorderLayout.CENTER);
 		add(chatPanel, BorderLayout.SOUTH);
+
+		// TODO (heather): DOESNT WORK: chatBox.requestFocusInWindow();
 		
-		//TODO (heather): DOESNT WORK:		chatBox.requestFocusInWindow();	
 	}
 	
-	//PANELS
+	public void setStatus(String status) {
+		info.setStatus(status);
+	}
+	
+	public void setName(String name) {
+		info.setName(name);
+	}
+	
+	public void setPersonalMessage(String message) {
+		info.setMessage(message);
+	}
+
+
+	
+	// PANELS
 	class ContactInfo extends JPanel {
+		private JLabel name;
+		private JLabel message;
+		private JLabel status;
+		
 		class TextField extends JPanel {
 			public TextField() {
 				setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-				JLabel name = new JLabel("<html><b>Contact Nickname</b></html>");
-				JLabel message = new JLabel("Personal Message");
-				JLabel status = new JLabel("<html><font size=\"3\">Status: Online</font></html>");
+				 name = new JLabel("<html><b>Contact Nickname</b></html>");
+				 message = new JLabel("Personal Message");
+				 status = new JLabel(
+						"<html><font size=\"3\">Status: Online</font></html>");
 				add(name);
 				add(message);
 				add(status);
 			}
 		}
+
 		/**
 		 * A panel containing the information of the contact
 		 */
@@ -78,7 +106,7 @@ public class SingleChatPanel extends ChatPanel{
 			add(iconLabel);
 			add(new TextField());
 		}
-		
+
 		protected ImageIcon createImageIcon(String path, String description) {
 			java.net.URL imgURL = getClass().getResource(path);
 			if (imgURL != null) {
@@ -87,6 +115,18 @@ public class SingleChatPanel extends ChatPanel{
 				System.err.println("Couldn't find file: " + path);
 				return null;
 			}
+		}
+
+		public void setName(String name) {
+			this.name.setText(name);
+		}
+
+		public void setStatus(String status) {
+			this.status.setText(status);
+		}
+		
+		public void setMessage(String message) {
+			this.message.setText(message);
 		}
 	}
 }
