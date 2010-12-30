@@ -245,6 +245,7 @@ public class ServerConnection implements NetworkingIn {
 		// get next list of users
 
 		final String[] contacts = GimClient.getClient().getNextRoom();
+		final Boolean isGroup = GimClient.getClient().getNextType();
 
 		// TODO (heather): this if/else will not work! (presumably) gordon: why
 		// not? :S
@@ -252,8 +253,10 @@ public class ServerConnection implements NetworkingIn {
 		// heather: what if there is a group with only 1 person? it will make
 		// the wrong kind of chat box.
 		
+		// Gordon: good point, i should've sorted that now...
+		
 		// open new chat window
-		if (contacts.length > 1) {
+		if (isGroup) {
 
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {

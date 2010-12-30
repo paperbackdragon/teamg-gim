@@ -11,6 +11,7 @@ public class ClientModel {
 	private ClientConnection outLink;
 	private LinkedList<String[]> newRoomList;
 	private LinkedList<String> invitationsList;
+	private LinkedList<Boolean> typeList;
 
 	// buddy list
 	private String[] onlinefriends;
@@ -27,6 +28,7 @@ public class ClientModel {
 		outLink = new ClientConnection(inLink);
 
 		newRoomList = new LinkedList<String[]>();
+		typeList = new LinkedList<Boolean>();
 
 		// Gordon: if you don't think this is a sensible way to do it, we can
 		// all discuss this :P
@@ -49,6 +51,10 @@ public class ClientModel {
 	public void addNextRoom(String[] userlist) {
 		// Gordon: Critical section?
 		newRoomList.add(userlist);
+	}
+	
+	public Boolean getNextType() {
+		return typeList.pop();
 	}
 	
 	public void addUser(String user) {
@@ -136,6 +142,8 @@ public class ClientModel {
 
 	public void createRoom(Boolean group, String[] contacts) {
 		newRoomList.add(contacts);
+		typeList.add(group);
+		
 		if (group)
 			outLink.createGroupChat();
 		else
