@@ -73,6 +73,8 @@ public class ContactPanel extends JPanel {
 			
 			contactTree = new JTree(contacts);
 			contactTree.addMouseListener(new SingleChatListener());
+			contactTree.setRootVisible(false);
+			contactTree.setShowsRootHandles(true);
 			
 			add(contactTree, BorderLayout.CENTER);
 		}
