@@ -350,7 +350,7 @@ public class ServerConnection implements NetworkingIn {
 					}
 					else { // group chat
 						GimClient.getClient().users(roomid);
-						l.getCp().receiveMessage("", user + " has joined the chat");
+						l.getCp().receiveMessage("", user + " has joined the chat\n");
 						
 					}
 					
@@ -373,7 +373,7 @@ public class ServerConnection implements NetworkingIn {
 				GimClient.getClient().leave(roomid);
 			} else if (l.getCp() instanceof GroupChatPanel) {
 				// do this later...
-				GimClient.getWindowIdentifierFromId(roomid).getCp().receiveMessage("", user + " has left the chat");
+				GimClient.getWindowIdentifierFromId(roomid).getCp().receiveMessage("", user + " has left the chat\n");
 				GimClient.getClient().users(roomid);
 			}
 
