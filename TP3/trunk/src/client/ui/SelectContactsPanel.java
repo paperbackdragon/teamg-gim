@@ -17,11 +17,14 @@ public class SelectContactsPanel extends JPanel {
 
 		for (int i = 0; i < friendlist.length; i++) {
 
-			if ( true /*inroomparticipants(friendlist[i]) == false */) {
-				boxes.add(new JCheckBox(friendlist[i]));
-				add(boxes.get(i));
-				boxes.get(i).setVisible(true);
+			boxes.add(new JCheckBox(friendlist[i]));
+			add(boxes.get(i));
+			
+			if (inroomparticipants(friendlist[i])) {
+				boxes.get(i).setEnabled(false);
 			}
+			
+			boxes.get(i).setVisible(true);
 		}
 		this.setVisible(true);
 
