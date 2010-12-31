@@ -112,7 +112,6 @@ public class ContactPanel extends JPanel {
 	
 	public void createNodes(String[] online, String[] offline) {
 		//TODO (heather): change node icons (see java tutorial)
-		//TODO (heather): make two separate trees
 		
 		contacts.removeAllChildren();
 		
