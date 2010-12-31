@@ -6,14 +6,21 @@ import javax.swing.JCheckBox;
 
 public class SelectContactsPanel {
 	
-	JCheckBox checkbox;
-	ArrayList<String> selected;
+	ArrayList<JCheckBox> boxes;
 	
 	public SelectContactsPanel(String[] friendlist) {
 		
+		boxes = new ArrayList<JCheckBox>();
 		
-		
-		
+		for (int i = 0; i < friendlist.length; i++) {
+			boxes.add(new JCheckBox(friendlist[i]));
+			boxes.get(i).setVisible(true);
+		}
+	
+	}
+	
+	public ArrayList<JCheckBox> getBoxes() {
+		return boxes;
 	}
 
 }
