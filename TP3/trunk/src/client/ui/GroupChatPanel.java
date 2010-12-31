@@ -20,11 +20,12 @@ import client.ui.ChatPanel.SendListener;
 public class GroupChatPanel extends ChatPanel {
 	private JTextArea guests;
 	private JButton invite;
+	private String[] participants;
 
 	// CONSTRUCTOR
 	public GroupChatPanel(String roomID) {
 		super(roomID);
-
+		
 		setLayout(new BorderLayout());
 
 		messages = new JTextPane();
@@ -102,6 +103,7 @@ public class GroupChatPanel extends ChatPanel {
 	// display users
 	// in future :P
 	public void updateUserList(String[] participants) {
+		this.participants = participants;
 		String theString = "";
 		for (int i = 0; i < participants.length; i++) {
 			theString += participants[i] + "\n";
@@ -115,8 +117,13 @@ public class GroupChatPanel extends ChatPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			String[] temp = {" "};
+			if (participants == null) {
+				participants = temp;
+			}
+			
 			SelectContactsPanel inputs = new SelectContactsPanel(GimClient
-					.getClient().getOnlinefriends());
+					.getClient().getOnlinefriends(), participants);
 
 			JOptionPane.showMessageDialog(null, inputs, "Select contacts to invite",
 					JOptionPane.PLAIN_MESSAGE);

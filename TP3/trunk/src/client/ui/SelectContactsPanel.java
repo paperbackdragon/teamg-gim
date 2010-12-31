@@ -6,22 +6,38 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
 public class SelectContactsPanel extends JPanel {
-	
+
 	ArrayList<JCheckBox> boxes;
-	
-	public SelectContactsPanel(String[] friendlist) {
-		
+	String[] roomparticipants;
+
+	public SelectContactsPanel(String[] friendlist, String[] participants) {
+
 		boxes = new ArrayList<JCheckBox>();
-		
+		roomparticipants = participants;
+
 		for (int i = 0; i < friendlist.length; i++) {
-			boxes.add(new JCheckBox(friendlist[i]));
-			add(boxes.get(i));
-			boxes.get(i).setVisible(true);
+
+			if ( true /*inroomparticipants(friendlist[i]) == false */) {
+				boxes.add(new JCheckBox(friendlist[i]));
+				add(boxes.get(i));
+				boxes.get(i).setVisible(true);
+			}
 		}
 		this.setVisible(true);
-	
+
 	}
-	
+
+	private boolean inroomparticipants(String tocheck) {
+
+		for (int i = 0; i < roomparticipants.length; i++) {
+			if (roomparticipants[i].equals(tocheck)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	public ArrayList<JCheckBox> getBoxes() {
 		return boxes;
 	}
