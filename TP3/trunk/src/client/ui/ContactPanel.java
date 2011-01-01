@@ -189,7 +189,7 @@ public class ContactPanel extends JPanel {
 										null,
 										"Are you sure you want to remove: "
 												+ theString
-												+ " from your contacts? (note, for beta testing this function is disallowed and will not work for now)",
+												+ " from your contacts? (note, for current testing purposes this function is disallowed and will not work for now)",
 										"remove friends",
 										JOptionPane.YES_NO_CANCEL_OPTION,
 										JOptionPane.QUESTION_MESSAGE, null,
