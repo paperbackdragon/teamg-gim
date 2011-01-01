@@ -25,7 +25,7 @@ public class ClientConnection implements NetworkingOut, Runnable {
 
 	private Thread readerthread;
 	private Thread writerthread;
-	private Thread controllerthread;
+
 	private ServerConnection gui;
 	private Thread thread;
 

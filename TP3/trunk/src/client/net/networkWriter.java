@@ -36,7 +36,7 @@ public class networkWriter implements Runnable {
 			// System.out.println(response.toString());
 
 			// Check if we just killed the connection
-			if (currentcommand.equals(":QUIT:;") || currentcommand.equals(":LOGOUT:;")) {
+			if (currentcommand.equals(":QUIT:;"))/* || currentcommand.equals(":LOGOUT:;")) */ {
 				break;
 			}
 			// break;
