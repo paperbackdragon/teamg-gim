@@ -4,6 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import client.GimClient;
+import client.ui.LoginPanel;
+
 import util.Command;
 import util.CommandBuffer;
 
@@ -98,6 +101,11 @@ public class networkReader implements Runnable {
 
 		// TODO: Clean up
 		System.out.println("CommandReader stopped.");
+		
+		LoginPanel panel = new LoginPanel();
+		panel.setParent(GimClient.getMainWindow());
+		
+		GimClient.getMainWindow().setMainPanel(panel);
 
 	}
 

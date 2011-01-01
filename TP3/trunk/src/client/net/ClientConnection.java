@@ -8,6 +8,8 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 import util.Command;
 import util.CommandBuffer;
 
@@ -27,6 +29,8 @@ public class ClientConnection implements NetworkingOut, Runnable {
 	private ServerConnection gui;
 	private Thread thread;
 
+	boolean connected;
+
 	/**
 	 * Creates a connection to the server. Allows the GUI to perform action on
 	 * server.
@@ -38,19 +42,11 @@ public class ClientConnection implements NetworkingOut, Runnable {
 	public ClientConnection(ServerConnection gui) {
 		this.gui = gui;
 
-		// initiate connection to server
-		try {
-			serverConnection = new Socket("62.56.118.210", 4444);
-		} catch (UnknownHostException e) {
-			System.out.println("Could not connect to server");
-			// tell the GUI
+		connect();
 
-		} catch (IOException e) {
-			System.out
-					.println("uhm... handle this somehow... what is it anyway");
-		}
+	}
 
-		// make a buffered reader and print writer
+	private void readandwrite() {
 		try {
 			bufferedreader = new BufferedReader(new InputStreamReader(
 					serverConnection.getInputStream()));
@@ -59,6 +55,9 @@ public class ClientConnection implements NetworkingOut, Runnable {
 		} catch (IOException e) {
 			System.out
 					.println("aye... what the hell do we do if this happens :|.");
+
+			bufferedreader = null;
+			printwriter = null;
 		}
 
 		// get the reader and writer, and buffer on the go... ;x
@@ -74,6 +73,27 @@ public class ClientConnection implements NetworkingOut, Runnable {
 
 		this.thread = new Thread(this);
 		thread.start();
+
+	}
+
+	public Boolean connect() {
+		try {
+			serverConnection = new Socket("62.56.118.210", 4444);
+			readandwrite();
+			this.connected = true;
+		} catch (UnknownHostException e) {
+			System.out.println("Could not connect to server");
+			// tell the GUI
+
+		} catch (IOException e) {
+			System.out
+					.println("uhm... handle this somehow... what is it anyway");
+
+			serverConnection = null;
+			this.connected = false;
+			return false;
+		}
+		return true;
 	}
 
 	public void run() {
@@ -81,13 +101,15 @@ public class ClientConnection implements NetworkingOut, Runnable {
 		// NO IDEA IF THIS IS SENSIBLE, OR EVEN THE WAY TO DO IT
 
 		while (true) {
-			try {
-				Thread.currentThread();
-				Thread.sleep(12000);
-				ping();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				System.out.println("Oh noes!");
+			if (connected == true) {
+				try {
+					Thread.currentThread();
+					Thread.sleep(12000);
+					ping();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					System.out.println("Oh noes!");
+				}
 			}
 		}
 
@@ -103,8 +125,21 @@ public class ClientConnection implements NetworkingOut, Runnable {
 		// TODO Auto-generated method stub
 		// :AUTH { LOGIN | REGISTER }: <email address> <password>;
 
-		buffer.putCommand(":AUTH LOGIN: " + Command.encode(emailaddress) + " "
-				+ Command.encode(new String(password)) + ";");
+		if (connected == true) {
+			buffer.putCommand(":AUTH LOGIN: " + Command.encode(emailaddress)
+					+ " " + Command.encode(new String(password)) + ";");
+		} else {
+			if (connect() != true) { // couldn't connect
+				JOptionPane
+						.showMessageDialog(null,
+								"Server is down. Contact us... Or try logging in again.");
+			} else { // returned true. was able to establish connection
+				buffer.putCommand(":AUTH LOGIN: "
+						+ Command.encode(emailaddress) + " "
+						+ Command.encode(new String(password)) + ";");
+			}
+		}
+
 	}
 
 	@Override
@@ -208,8 +243,9 @@ public class ClientConnection implements NetworkingOut, Runnable {
 		for (int i = 0; i < data.length; i++) {
 			Command.encode(data[i]);
 			userListString += data[i];
-			
-			if (i < data.length) userListString += " ";
+
+			if (i < data.length)
+				userListString += " ";
 		}
 		buffer.putCommand(":GET DISPLAY_PIC: " + userListString + ";");
 	}
@@ -225,8 +261,9 @@ public class ClientConnection implements NetworkingOut, Runnable {
 		for (int i = 0; i < data.length; i++) {
 			Command.encode(data[i]);
 			userListString += data[i];
-			
-			if (i < data.length) userListString += " ";
+
+			if (i < data.length)
+				userListString += " ";
 		}
 		buffer.putCommand(":GET NICKNAME: " + userListString + ";");
 
@@ -242,8 +279,9 @@ public class ClientConnection implements NetworkingOut, Runnable {
 		for (int i = 0; i < data.length; i++) {
 			Command.encode(data[i]);
 			userListString += data[i];
-			
-			if (i < data.length) userListString += " ";
+
+			if (i < data.length)
+				userListString += " ";
 		}
 
 		buffer.putCommand(":GET PERSONAL_MESSAGE: " + userListString + ";");
@@ -260,8 +298,9 @@ public class ClientConnection implements NetworkingOut, Runnable {
 		for (int i = 0; i < data.length; i++) {
 			Command.encode(data[i]);
 			userListString += data[i];
-			
-			if (i < data.length) userListString += " ";
+
+			if (i < data.length)
+				userListString += " ";
 		}
 
 		buffer.putCommand(":GET STATUS: " + userListString + ";");
@@ -363,9 +402,8 @@ public class ClientConnection implements NetworkingOut, Runnable {
 
 		}
 
-		buffer
-				.putCommand(":GET: " + attributesstring + ":" + " " + usersstring
-						+ ";");
+		buffer.putCommand(":GET: " + attributesstring + ":" + " " + usersstring
+				+ ";");
 
 	}
 
@@ -383,7 +421,7 @@ public class ClientConnection implements NetworkingOut, Runnable {
 		// :ROOM [ CREATE {GROUP} | INVITE | JOIN | LEAVE | USERS | TYPE ]:
 		// {<roomid> |
 		// <user>};
-		
+
 		System.out.println("got to create single chat");
 		buffer.putCommand(":ROOM CREATE: " + Command.encode(user) + ";");
 	}
