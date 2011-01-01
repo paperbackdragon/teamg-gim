@@ -119,6 +119,10 @@ public class GimUI extends JFrame {
 				GimClient.removeRoom((ChatPanel) main);
 				//toDispose.dispose();
 			}
+			
+			else {
+				System.exit(0);
+			}
 
 		}
 
