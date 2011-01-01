@@ -161,10 +161,25 @@ public class ContactPanel extends JPanel {
 			if (e.getSource().equals(add)) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						GimUI ui = new GimUI("GIM - Find Contact",
-								new FindPopup());
-						ui.setVisible(true);
-						ui.setLocationRelativeTo(null);// center new chat window
+						/*
+						 * GimUI ui = new GimUI("GIM - Find Contact", new
+						 * FindPopup()); ui.setVisible(true);
+						 * ui.setLocationRelativeTo(null);// center new chat
+						 * window
+						 */
+
+						Object[] possibilities = null;
+						String s = (String) JOptionPane.showInputDialog(null,
+								"Input the user name of the person you wish to add to your contacts",
+								"Add afriend", JOptionPane.PLAIN_MESSAGE,
+								null, null, "ham");
+						
+						if (s!=null) {
+							GimClient.getClient().addfriend(s);
+						}
+						
+						GimClient.getClient().getFriendList();
+						
 					}
 				});
 			} else if (e.getSource().equals(del)) {
@@ -202,7 +217,7 @@ public class ContactPanel extends JPanel {
 								// for now, disallow
 								// GimClient.getClient().removefriend(getSelectedContacts()[i]);
 							}
-							
+
 							// update friendslist
 							GimClient.getClient().getFriendList();
 

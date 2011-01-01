@@ -412,6 +412,10 @@ public class networkReader implements Runnable {
 			else if (cmd.getArgumentsAsString().equalsIgnoreCase("USER_OFFLINE")) {
 				gui.userOfflineError(Command.decode(cmd.getData()));
 			}
+			
+			else if (cmd.getArgumentsAsString().equalsIgnoreCase("ALREADY_IN_FRIENDLIST")) {
+				gui.userAlreadyinFriendlistError(Command.decode(cmd.getData()));
+			}
 
 		}
 

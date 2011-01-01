@@ -1,4 +1,7 @@
-package client.ui;
+/*
+ * class no longer required
+ *  
+ *package client.ui;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -7,10 +10,10 @@ import javax.swing.*;
 
 public class RemovePopup extends JPanel {
 	
-	/**
+	*//**
 	 * Constructor for a remove dialog box used to delete a contact
 	 * 
-	 */
+	 *//*
 	public RemovePopup() {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -31,3 +34,4 @@ public class RemovePopup extends JPanel {
 	}
 
 
+*/

@@ -236,6 +236,17 @@ public class ServerConnection implements NetworkingIn {
 		JOptionPane.showMessageDialog(GimClient.getMainWindow(),
 				"User does not exist error. " + error);
 	}
+	
+	public void userAlreadyinFriendlistError(String message) {
+		String error = "";
+		if (!message.equals("")) {
+			error += ":\n\n server reported :\n " + message;
+		}
+
+		JOptionPane.showMessageDialog(GimClient.getMainWindow(),
+				"User already in friendslist. " + error);
+		
+	}
 
 	public void usercount(String usercount) {
 
@@ -492,4 +503,6 @@ public class ServerConnection implements NetworkingIn {
 		// the invitatiation we queued up was invalid
 		GimClient.getClient().getNextRoom();
 	}
+
+
 }
