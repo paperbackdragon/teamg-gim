@@ -268,6 +268,7 @@ public class ServerConnection implements NetworkingIn {
 					GimClient.addWindow(" ", ui, gcp);
 
 					ui.setLocationRelativeTo(null);// center new chat window
+					GimClient.getClient().users(roomid);
 					ui.setVisible(true);
 				}
 			});
