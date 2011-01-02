@@ -505,5 +505,13 @@ public class ServerConnection implements NetworkingIn {
 		GimClient.getClient().getNextRoom();
 	}
 
+	public void connectionDroppedError() {
+		
+		JOptionPane.showMessageDialog(GimClient.getMainWindow(),
+				"Connection to server lost. Try logging in again. ");
+		
+		
+	}
+
 
 }

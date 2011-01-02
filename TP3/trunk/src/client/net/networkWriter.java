@@ -30,16 +30,24 @@ public class networkWriter implements Runnable {
 		while (true) {
 
 			String currentcommand = (String) buffer.getCommand();
+			
+			
 
+			// check if connection was lost
+			if (currentcommand.equals("STOP")) {
+				break;
+			}
+			
 			writer.println(currentcommand);
+			
+			// Check if we just killed the connection
+			if (currentcommand.equals(":QUIT:;")) {
+				break;
+			}
 
 			// System.out.println(response.toString());
 
-			// Check if we just killed the connection
-			if (currentcommand.equals(":QUIT:;"))/* || currentcommand.equals(":LOGOUT:;")) */ {
-				break;
-			}
-			// break;
+			
 		}
 
 		System.out.println("ResponseWriter killed.");

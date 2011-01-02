@@ -94,6 +94,12 @@ public class MainWindow extends JFrame {
 			else if(e.getSource().equals(setOptions)) {
 				System.out.println("setOptions clicked.");
 				//TODO (heather): create options panel
+				
+				OptionsPanel options = new OptionsPanel();
+				
+				Object[] buttons = {"Confirm", "Cancel"};
+				int n = JOptionPane.showOptionDialog(null, options, "Select options",
+						JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
 			}
 		}
 	}

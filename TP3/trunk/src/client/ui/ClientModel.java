@@ -238,5 +238,9 @@ public class ClientModel {
 	public void setConnected(boolean b) {
 		outLink.setConnected(false);
 	}
+	
+	public void endNetworkWriter() {
+		outLink.endNetworkWriter();
+	}
 
 }

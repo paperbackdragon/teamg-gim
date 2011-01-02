@@ -439,4 +439,8 @@ public class ClientConnection implements NetworkingOut, Runnable {
 		buffer.putCommand(":ROOM TYPE: " + Command.encode(roomid) + ";");
 	}
 
+	public void endNetworkWriter() {
+		buffer.putCommand("STOP");
+	}
+
 }
