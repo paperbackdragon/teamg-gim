@@ -46,6 +46,14 @@ public class ClientConnection implements NetworkingOut, Runnable {
 
 	}
 
+	public boolean isConnected() {
+		return connected;
+	}
+
+	public void setConnected(boolean connected) {
+		this.connected = connected;
+	}
+
 	private void readandwrite() {
 		try {
 			bufferedreader = new BufferedReader(new InputStreamReader(

@@ -104,6 +104,7 @@ public class networkReader implements Runnable {
 		
 		LoginPanel panel = new LoginPanel();
 		panel.setParent(GimClient.getMainWindow());
+		GimClient.getClient().setConnected(false);
 		
 		GimClient.getMainWindow().setMainPanel(panel);
 

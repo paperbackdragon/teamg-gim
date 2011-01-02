@@ -128,6 +128,9 @@ public class ClientModel {
 
 	public void logout() {
 		outLink.logout();
+		
+		// maybe should not be here...
+		outLink.setConnected(false);
 	}
 
 	public void quit() {
@@ -221,6 +224,10 @@ public class ClientModel {
 	public void setStatus(String status) {
 		outLink.setStatus(status);
 		
+	}
+
+	public void setConnected(boolean b) {
+		outLink.setConnected(false);
 	}
 
 }
