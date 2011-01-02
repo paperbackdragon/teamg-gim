@@ -13,7 +13,7 @@ public class FindPopup extends JPanel {
 	
 	JTextField email, username ;
 	JButton find;
-	private GimUI parent;
+	private MainWindow parent;
 
 	public FindPopup(){
 	FindListener findListener = new FindListener();
@@ -69,7 +69,7 @@ class FindListener implements ActionListener {
 					// Gordon's code - sorry ewy - just testing something :P
 					GimClient.getClient().addfriend("cyblob@gmail.com");
 					// </Gordon's code>
-					GimUI ui = new GimUI("GIM - Invite Sent", new InviteSent());
+					MainWindow ui = new MainWindow("GIM - Invite Sent", new InviteSent());
 					ui.setLocationRelativeTo(null);//center new chat window
 					ui.setVisible(true);
 					}

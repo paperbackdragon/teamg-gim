@@ -9,10 +9,12 @@ import client.GimClient;
 
 @SuppressWarnings("serial")
 public class ContactPanel extends JPanel {
-	private GimUI parent;
+
+	private MainWindow parent;
 	private JButton add, del, chat, group;
 	private JTree contactTree;
 	private DefaultMutableTreeNode contacts;
+	private ClientModel model = ClientModel.getInstance();
 
 	// private chatListener;
 
@@ -21,12 +23,10 @@ public class ContactPanel extends JPanel {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
-			System.out.println("Something went wrong!");
-			System.exit(0);
 		}
 
 		contacts = new DefaultMutableTreeNode("Contacts");
-
+		
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		add(new PersonalInfo());
 		add(new ContactList());
@@ -35,13 +35,14 @@ public class ContactPanel extends JPanel {
 
 	// PANELS
 	class PersonalInfo extends JPanel {
+
 		class TextField extends JPanel {
+
 			public TextField() {
 				setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-				JLabel name = new JLabel("<html><b>Nickname</b></html>");
+				JLabel name = new JLabel("<html><b>" + model.getUser("cyblob@gmail.com") + "</b></html>");
 				JLabel message = new JLabel("Personal Message");
-				JLabel status = new JLabel(
-						"<html><font size=\"3\">Status: Online</font></html>");
+				JLabel status = new JLabel("<html><font size=\"3\">Status: Online</font></html>");
 				add(name);
 				add(message);
 				add(status);
@@ -109,7 +110,7 @@ public class ContactPanel extends JPanel {
 	}
 
 	public void setParent(JFrame frame) {
-		parent = (GimUI) frame;
+		parent = (MainWindow) frame;
 	}
 
 	public void createNodes(String[] online, String[] offline) {
@@ -170,16 +171,15 @@ public class ContactPanel extends JPanel {
 
 						Object[] possibilities = null;
 						String s = (String) JOptionPane.showInputDialog(null,
-								"Input the user name of the person you wish to add to your contacts",
-								"Add afriend", JOptionPane.PLAIN_MESSAGE,
-								null, null, "ham");
-						
-						if (s!=null) {
+								"Input the user name of the person you wish to add to your contacts", "Add afriend",
+								JOptionPane.PLAIN_MESSAGE, null, null, "ham");
+
+						if (s != null) {
 							GimClient.getClient().addfriend(s);
 						}
-						
+
 						GimClient.getClient().getFriendList();
-						
+
 					}
 				});
 			} else if (e.getSource().equals(del)) {
@@ -205,10 +205,8 @@ public class ContactPanel extends JPanel {
 										"Are you sure you want to remove: "
 												+ theString
 												+ " from your contacts? (note, for current testing purposes this function is disallowed and will not work for now)",
-										"remove friends",
-										JOptionPane.YES_NO_CANCEL_OPTION,
-										JOptionPane.QUESTION_MESSAGE, null,
-										options, options[1]);
+										"remove friends", JOptionPane.YES_NO_CANCEL_OPTION,
+										JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
 
 						if (n == 0) {
 							System.out.println("yes");
@@ -231,11 +229,9 @@ public class ContactPanel extends JPanel {
 				// Check if there's already a chat open with this user
 				int find = GimClient.findRoom(getSelectedContacts()[0]);
 				if (find == -1) {
-					GimClient.getClient().createRoom(false,
-							getSelectedContacts());
+					GimClient.getClient().createRoom(false, getSelectedContacts());
 				} else {
-					GimClient.getWindow(getSelectedContacts()[0]).setVisible(
-							true);
+					GimClient.getWindow(getSelectedContacts()[0]).setVisible(true);
 				}
 			} else if (e.getSource().equals(group)) {
 				GimClient.getClient().createRoom(true, getSelectedContacts());
@@ -245,19 +241,16 @@ public class ContactPanel extends JPanel {
 
 	class SingleChatListener implements MouseListener {
 		public void mousePressed(MouseEvent e) {
-			DefaultMutableTreeNode node = (DefaultMutableTreeNode) contactTree
-					.getLastSelectedPathComponent();
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode) contactTree.getLastSelectedPathComponent();
 			String nodeInfo = (String) node.getUserObject();
 			if (e.getClickCount() == 2) {
 				if (nodeInfo != "Online" && nodeInfo != "Offline") {
 					System.out.println(nodeInfo);
 					int find = GimClient.findRoom(getSelectedContacts()[0]);
 					if (find == -1) {
-						GimClient.getClient().createRoom(false,
-								getSelectedContacts());
+						GimClient.getClient().createRoom(false, getSelectedContacts());
 					} else {
-						GimClient.getWindow(getSelectedContacts()[0])
-								.setVisible(true);
+						GimClient.getWindow(getSelectedContacts()[0]).setVisible(true);
 					}
 				}
 			}

@@ -868,7 +868,7 @@ public class Worker implements Runnable {
 				for (User user : room.getUsers())
 					users += Command.encode(user.getId()) + " ";
 
-				return new Command("ROOM", "USERS", users);
+				return new Command("ROOM", "USERS", room.getId() + " " + users);
 
 			} else if (arg.equalsIgnoreCase("TYPE")) {
 

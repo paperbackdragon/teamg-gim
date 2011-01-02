@@ -275,7 +275,7 @@ public class ServerConnection implements NetworkingIn {
 					// GimClient.addRoom(gcp);
 					gcp.setInProgress(true);
 
-					GimUI ui = new GimUI("GIM - Group Chat", gcp);
+					MainWindow ui = new MainWindow("GIM - Group Chat", gcp);
 					GimClient.addWindow(" ", ui, gcp);
 
 					ui.setLocationRelativeTo(null);// center new chat window
@@ -283,6 +283,7 @@ public class ServerConnection implements NetworkingIn {
 					ui.setVisible(true);
 				}
 			});
+			
 		} else {
 
 			// if we already have a window...
@@ -312,7 +313,7 @@ public class ServerConnection implements NetworkingIn {
 							scp.setPersonalMessage(l.getPersonalMessage());
 						}
 
-						GimUI ui = new GimUI("GIM - Chat with " + contacts[0],
+						MainWindow ui = new MainWindow("GIM - Chat with " + contacts[0],
 								scp);
 						GimClient.addWindow(contacts[0], ui, scp);
 
@@ -422,7 +423,7 @@ public class ServerConnection implements NetworkingIn {
 				GroupChatPanel gcp = new GroupChatPanel(roomid);
 				// GimClient.addRoom(gcp);
 
-				GimUI ui = new GimUI("GIM - Group Chat", gcp);
+				MainWindow ui = new MainWindow("GIM - Group Chat", gcp);
 				GimClient.addWindow(" ", ui, gcp);
 				ui.setVisible(true);
 				gcp.setInProgress(true);
@@ -473,7 +474,7 @@ public class ServerConnection implements NetworkingIn {
 					}
 					// </gordon>
 					// GimClient.addRoom(scp);
-					GimUI ui = new GimUI("GIM - Chat with " + invitedBy, scp);
+					MainWindow ui = new MainWindow("GIM - Chat with " + invitedBy, scp);
 					GimClient.addWindow(invitedBy, ui, scp);
 					ui.setLocationRelativeTo(null);// center new chat window
 				}

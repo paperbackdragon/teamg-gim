@@ -1,16 +1,12 @@
 package client.ui;
 
 public class User {
-
-	// gordon: THREAD SAFETY? (had attempted to implement it, but think
-	// i did it wrong
 	
 	private String email;
 	private String nickname;
 	private String status;
 	private String personalMessage;
 	private String displayPic;
-	//private Object lock;
 
 	public User(String email) {
 		this.email = email;
@@ -18,7 +14,6 @@ public class User {
 		this.status = null;
 		this.personalMessage = null;
 		this.displayPic = null;
-		//lock = new Object();
 	}
 
 	public String getEmail() {

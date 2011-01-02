@@ -4,10 +4,10 @@ public class chatWindowIdentifier {
 	
 	//String id;
 	String user;
-	GimUI window;
+	MainWindow window;
 	ChatPanel cp;
 	
-	public chatWindowIdentifier(String user, GimUI window, ChatPanel cp) {
+	public chatWindowIdentifier(String user, MainWindow window, ChatPanel cp) {
 		this.user = user;
 		this.window = window;
 		this.cp = cp;
@@ -29,11 +29,11 @@ public class chatWindowIdentifier {
 		this.cp = cp;
 	}
 
-	public GimUI getWindow() {
+	public MainWindow getWindow() {
 		return window;
 	}
 
-	public void setWindow(GimUI window) {
+	public void setWindow(MainWindow window) {
 		this.window = window;
 	}
 	

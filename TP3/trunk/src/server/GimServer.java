@@ -23,6 +23,7 @@ public class GimServer {
 		
 		System.out.println("Loading users...");
 		
+		// Load the users from the "db"
 		String filename = "users.db";
 		ArrayList<Object> users = new ArrayList<Object>();
 		FileInputStream fis = null;
@@ -38,8 +39,22 @@ public class GimServer {
 			e.printStackTrace();
 		}
 		
+		// Add all the users
 		for(Object user : users) {
 			data.addUser((User) user);
+		}
+		
+		// Make the friendlists etc. work correctly...
+		for(User user : data.getUsers()) {
+			for(User friend : user.getFriendList()) {
+				User realUser = data.getUser(friend.getId());
+				user.addFreindRequest(realUser);
+				realUser.addToInFriendList(user);
+			}
+			
+			for(User blocked : user.getBlockedUsers()) {
+				user.block(data.getUser(blocked.getId()));
+			}
 		}
 		
 		System.out.println(users.size() + " users loaded.");

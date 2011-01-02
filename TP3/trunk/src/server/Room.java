@@ -57,7 +57,7 @@ public class Room {
 		return this.users.containsKey(user.getId());
 	}
 
-	public synchronized boolean join(User joined) {
+	public boolean join(User joined) {
 		// Make sure they've been invited
 		if (!this.invited.containsKey(joined.getId()))
 			return false;
@@ -70,7 +70,7 @@ public class Room {
 		// Notify other users that they're joining
 		Command j = new Command("ROOM", "JOINED", this.getId() + " " + Command.encode(joined.getId()));
 		for (User user : getUsers()) {
-			user.getWorker().putResponse(j);
+				user.getWorker().putResponse(j);
 		}
 
 		return true;
@@ -90,7 +90,7 @@ public class Room {
 		return true;
 	}
 
-	public synchronized boolean leave(User left) {
+	public boolean leave(User left) {
 		if (!inRoom(left))
 			return false;
 

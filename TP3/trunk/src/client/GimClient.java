@@ -6,14 +6,16 @@ import javax.swing.SwingUtilities;
 import client.ui.*;
 
 public class GimClient {
-	private static GimUI mainWindow;
+	
+	private static MainWindow mainWindow;
 	private static ClientModel client;
 	private static ContactPanel contactPanel;
 	// private static ArrayList<ChatPanel> rooms;
 	private static ArrayList<chatWindowIdentifier> windows;
 
 	public static void main(String[] args) {
-		client = new ClientModel();
+		client = ClientModel.getInstance();
+		
 		// rooms = new ArrayList<ChatPanel>();
 		windows = new ArrayList<chatWindowIdentifier>();
 		contactPanel = new ContactPanel();
@@ -21,7 +23,7 @@ public class GimClient {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				LoginPanel lp = new LoginPanel();
-				mainWindow = new GimUI("GIM", lp);
+				mainWindow = new MainWindow("GIM", lp);
 				lp.setParent(mainWindow);
 				mainWindow.setVisible(true);
 			}
@@ -29,7 +31,7 @@ public class GimClient {
 	}
 
 	// ACCESSORS
-	public static GimUI getMainWindow() {
+	public static MainWindow getMainWindow() {
 		return mainWindow;
 	}
 
@@ -83,11 +85,11 @@ public class GimClient {
 
 	}
 
-	public static void addWindow(String user, GimUI ui, ChatPanel cp) {
+	public static void addWindow(String user, MainWindow ui, ChatPanel cp) {
 		windows.add(new chatWindowIdentifier(user, ui, cp));
 	}
 
-	public static GimUI getWindow(String user) {
+	public static MainWindow getWindow(String user) {
 		for (int i = 0; i < windows.size(); i++) {
 			if (windows.get(i).getUser().equals(user)) {
 				return windows.get(i).getWindow();
@@ -97,7 +99,7 @@ public class GimClient {
 	}
 
 	/* Used for group chat, where "user" is not applicable */
-	public static GimUI getWindowRoom(String id) {
+	public static MainWindow getWindowRoom(String id) {
 		for (int i = 0; i < windows.size(); i++) {
 			if (windows.get(i).getCp().getID().equals(id)) {
 				return windows.get(i).getWindow();

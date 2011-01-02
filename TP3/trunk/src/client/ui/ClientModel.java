@@ -1,40 +1,47 @@
 package client.ui;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.concurrent.ConcurrentHashMap;
 
 import client.net.ClientConnection;
 import client.net.ServerConnection;
 
 public class ClientModel {
-	private ServerConnection inLink;
-	private ClientConnection outLink;
-	private LinkedList<String[]> newRoomList;
-	private LinkedList<String> invitationsList;
-	private LinkedList<Boolean> typeList;
+
+	private ServerConnection inLink = new ServerConnection();
+	private ClientConnection outLink = new ClientConnection(inLink);
+
+	private LinkedList<String[]> newRoomList = new LinkedList<String[]>();
+	private LinkedList<String> invitationsList = new LinkedList<String>();
+	private LinkedList<Boolean> typeList = new LinkedList<Boolean>();
 
 	// buddy list
 	private String[] onlinefriends;
 	private String[] offlinefriends;
 	private String[] blockedfriends;
 
-	private ArrayList<User> users;
+	private ConcurrentHashMap<String, User> users = new ConcurrentHashMap<String, User>();
 
-	//private Object lock;
-
-	// CONSTRUCTOR
+	/**
+	 * Do nothing, just here to beat default constructor
+	 */
 	public ClientModel() {
-		inLink = new ServerConnection();
-		outLink = new ClientConnection(inLink);
+	}
 
-		newRoomList = new LinkedList<String[]>();
-		typeList = new LinkedList<Boolean>();
+	/**
+	 * Apparently doing it this way makes constructing it thread-safe...
+	 */
+	private static class SingeltonHolder {
+		public static final ClientModel INSTANCE = new ClientModel();
+	}
 
-		// Gordon: if you don't think this is a sensible way to do it, we can
-		// all discuss this :P
-		invitationsList = new LinkedList<String>();
-		users = new ArrayList<User>();
-		//lock = new Object();
+	/**
+	 * Return the current instance of the data class.
+	 * 
+	 * @return the current instance
+	 */
+	public static ClientModel getInstance() {
+		return SingeltonHolder.INSTANCE;
 	}
 
 	// ACCESSORS
@@ -45,33 +52,37 @@ public class ClientModel {
 
 	public String[] getNextRoom() {
 		// Gordon: Critical section?
-			return newRoomList.pop();
+		return newRoomList.pop();
 	}
 
 	public void addNextRoom(String[] userlist) {
 		// Gordon: Critical section?
 		newRoomList.add(userlist);
 	}
-	
+
 	public Boolean getNextType() {
 		return typeList.pop();
 	}
-	
+
+	/**
+	 * Add a user to the list of global users
+	 * 
+	 * @param user
+	 *            The ID of the user to add
+	 */
 	public void addUser(String user) {
-		users.add(new User(user));
+		this.users.put(user, new User(user));
 	}
-	
+
+	/**
+	 * Get a user from the list of users
+	 * 
+	 * @param user
+	 *            The ID of the user
+	 * @return The User object or null of no user was found
+	 */
 	public User getUser(String user) {
-		if (!users.isEmpty()) {
-			for (int i = 0; i < users.size(); i ++) {
-				if (users.get(i).getEmail().equals(user)) {
-					return users.get(i);
-				}
-			}
-			return null;
-		}
-		return null;
-		
+		return this.users.get(user);
 	}
 
 	public void addInvitation(String from) {
@@ -107,8 +118,6 @@ public class ClientModel {
 	public void setBlockedfriends(String[] blockedfriends) {
 		this.blockedfriends = blockedfriends;
 	}
-	
-	
 
 	// MESSAGES TO SERVER
 
@@ -128,9 +137,9 @@ public class ClientModel {
 
 	public void logout() {
 		outLink.logout();
-		
+
 		// maybe should not be here...
-		//outLink.setConnected(false);
+		// outLink.setConnected(false);
 	}
 
 	public void quit() {
@@ -146,7 +155,7 @@ public class ClientModel {
 	public void createRoom(Boolean group, String[] contacts) {
 		newRoomList.add(contacts);
 		typeList.add(group);
-		
+
 		if (group)
 			outLink.createGroupChat();
 		else
@@ -218,12 +227,12 @@ public class ClientModel {
 	}
 
 	public void getDisplayPicture(String user) {
-		outLink.getDisplayPicture(user);		
+		outLink.getDisplayPicture(user);
 	}
 
 	public void setStatus(String status) {
 		outLink.setStatus(status);
-		
+
 	}
 
 	public void setConnected(boolean b) {

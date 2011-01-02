@@ -11,7 +11,7 @@ import client.ui.LoginPanel.EnterListener;
 
 @SuppressWarnings("serial")
 public class RegisterPanel extends JPanel {
-	private GimUI parent;
+	private MainWindow parent;
 	private JTextField email;
 	private JPasswordField pwd, confirm;
 	private JButton register, cancel;
@@ -82,7 +82,7 @@ public class RegisterPanel extends JPanel {
 	}
 	
 	public void setParent(JFrame frame) {
-		parent = (GimUI) frame;
+		parent = (MainWindow) frame;
 		parent.canLogout(false);
 	}
 	

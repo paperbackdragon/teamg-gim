@@ -8,17 +8,16 @@ import javax.swing.*;
 import client.GimClient;
 
 @SuppressWarnings("serial")
-public class GimUI extends JFrame {
+public class MainWindow extends JFrame {
+	
 	private JMenuItem logout, quit, setOptions;
 	private JPanel main;
 	
 	//CONSTRUCTOR
-	public GimUI(String title, JPanel panel) {
+	public MainWindow(String title, JPanel panel) {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
-			System.out.println("Something went wrong!");
-			System.exit(0);
 		}
 		
 		setTitle(title);
@@ -66,6 +65,7 @@ public class GimUI extends JFrame {
 		main = newPanel;
 		setContentPane(main);
 		pack();
+		setVisible(true);
 	}
 	
 	public JPanel getMainPanel() {
@@ -115,7 +115,7 @@ public class GimUI extends JFrame {
 				GimClient.getClient().leave(roomid);
 				
 				// remove from the window list
-				GimUI toDispose = GimClient.getWindowRoom(roomid);
+				//GimUI toDispose = GimClient.getWindowRoom(roomid);
 				GimClient.removeRoom((ChatPanel) main);
 				//toDispose.dispose();
 			}

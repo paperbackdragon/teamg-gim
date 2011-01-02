@@ -2,96 +2,117 @@ package client.ui;
 
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 
 import client.GimClient;
 
 @SuppressWarnings("serial")
-public class LoginPanel extends JPanel{
-	private GimUI parent;
+public class LoginPanel extends JPanel {
+
+	private MainWindow parent;
 	private JTextField email;
 	private JPasswordField pwd;
 	private JButton loginButton, register;
-	private JCheckBox auto;
-	
-	//CONSTRUCTOR
+	private JCheckBox autoLogin, savePassword, rememberUser;
+
+	// CONSTRUCTOR
 	public LoginPanel() {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
-			System.out.println("Something went wrong!");
-			System.exit(0);
 		}
-		
+
 		EnterListener enterlistener = new EnterListener();
 		LoginListener loginListener = new LoginListener();
-		
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		
-		add(Box.createVerticalStrut(50));
-		JLabel login = new JLabel("LOG IN");
-		login.setAlignmentX(Component.CENTER_ALIGNMENT);
-		add(login);
-		
+
+		// Main JPanel
+		JPanel loginFrame = new JPanel();
+		loginFrame.setLayout(new BoxLayout(loginFrame, BoxLayout.Y_AXIS));
+
+		// Panel containing email address label and text box
 		JPanel emailPanel = new JPanel();
-		emailPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		emailPanel.setMaximumSize(new Dimension(290, 30));
+		emailPanel.setLayout(new GridLayout(2, 1, 15, 0));
 		email = new JTextField();
 		email.addKeyListener(enterlistener);
-		email.setPreferredSize(new Dimension(200, 25));
-		emailPanel.add(new JLabel("E-Mail:"));
+		emailPanel.add(new JLabel("E-Mail Address"));
 		emailPanel.add(email);
-		add(emailPanel);
-		
+
+		// Panel containing password label and text box
 		JPanel pwdPanel = new JPanel();
-		pwdPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		pwdPanel.setMaximumSize(new Dimension(290, 30));
+		pwdPanel.setLayout(new GridLayout(2, 1, 15, 0));
 		pwd = new JPasswordField();
 		pwd.addKeyListener(enterlistener);
-		pwd.setPreferredSize(new Dimension(200, 25));
-		pwdPanel.add(new JLabel ("Password:"));
+		pwdPanel.add(new JLabel("Password"));
 		pwdPanel.add(pwd);
-		add(pwdPanel);
-		
-		add(Box.createVerticalStrut(10));
-		loginButton = new JButton("LOG IN");
+
+		// Panel containing account options
+		JPanel options = new JPanel();
+		options.setLayout(new GridLayout(3, 1));
+		autoLogin = new JCheckBox("Log me in automiatically");
+		savePassword = new JCheckBox("Save my password");
+		rememberUser = new JCheckBox("Remember me");
+		options.add(autoLogin);
+		options.add(savePassword);
+		options.add(rememberUser);
+
+		// Login button and panel
+		JPanel l = new JPanel();
+		l.setLayout(new BoxLayout(l, BoxLayout.X_AXIS));
+		loginButton = new JButton("Log In");
 		loginButton.addActionListener(loginListener);
-		loginButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-		add(loginButton);
-		
-		add(Box.createVerticalStrut(10));
-		auto = new JCheckBox("Log in automatically?");
-		auto.setAlignmentX(Component.CENTER_ALIGNMENT);
-		add(auto);
-		
-		add(Box.createVerticalStrut(30));
-		JLabel notReg = new JLabel("NOT REGISTERED?");
+		l.add(loginButton, BorderLayout.CENTER);
+
+		// Register button
+		JPanel registerPanel = new JPanel();
+		JLabel notReg = new JLabel("<html><b>Need an account?</b></html>");
 		notReg.setAlignmentX(Component.CENTER_ALIGNMENT);
-		add(notReg);
-		
-		add(Box.createVerticalStrut(10));
 		register = new JButton("Register");
 		register.addActionListener(loginListener);
 		register.setAlignmentX(Component.CENTER_ALIGNMENT);
-		add(register);
+		registerPanel.add(notReg);
+		registerPanel.add(register);
+
+		// A panel with a border
+		JPanel borderedArea = new JPanel();
+		borderedArea.setLayout(new BoxLayout(borderedArea, BoxLayout.Y_AXIS));
+		TitledBorder title = BorderFactory.createTitledBorder("Please Login");
+		borderedArea.setBorder(title);
+
+		// Add things to the bordered panel
+		borderedArea.add(emailPanel);
+		borderedArea.add(Box.createVerticalStrut(5));
+		borderedArea.add(pwdPanel);
+		borderedArea.add(Box.createVerticalStrut(10));
+		borderedArea.add(options);
+		borderedArea.add(Box.createVerticalStrut(10));
+
+		// Add the bordered panel to the window
+		loginFrame.add(Box.createVerticalStrut(10));
+		loginFrame.add(borderedArea);
+		add(Box.createVerticalStrut(5));
+		loginFrame.add(l);
+
+		setLayout(new BorderLayout(15, 15));
+		setPreferredSize(new Dimension(235, 500));
+
+		add(loginFrame, BorderLayout.NORTH);
+		add(registerPanel, BorderLayout.SOUTH);
+
 	}
-	
-	//HELPER METHODS
-	public Dimension getPreferredSize() {
-		return new Dimension(300, 400);
-	}
-	
+
 	public void setParent(JFrame frame) {
-		parent = (GimUI) frame;
+		parent = (MainWindow) frame;
 		parent.canLogout(false);
 	}
-	
+
 	private void login() {
 		System.out.println(GimClient.getClient().toString());
 		GimClient.getClient().authenticate(email.getText(), pwd.getPassword());
 	}
-	
-	//ACTION LISTENERS
+
+	// ACTION LISTENERS
 	class LoginListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource().equals(loginButton))
@@ -103,13 +124,17 @@ public class LoginPanel extends JPanel{
 			}
 		}
 	}
-	
-	class EnterListener implements KeyListener{
+
+	class EnterListener implements KeyListener {
 		public void keyTyped(KeyEvent e) {
-			if(e.getKeyChar() == KeyEvent.VK_ENTER)
+			if (e.getKeyChar() == KeyEvent.VK_ENTER)
 				login();
 		}
-		public void keyPressed(KeyEvent e) {}
-		public void keyReleased(KeyEvent e) {}
+
+		public void keyPressed(KeyEvent e) {
+		}
+
+		public void keyReleased(KeyEvent e) {
+		}
 	}
 }
