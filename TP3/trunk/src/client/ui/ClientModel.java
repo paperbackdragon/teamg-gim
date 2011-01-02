@@ -19,8 +19,51 @@ public class ClientModel {
 	private String[] onlinefriends;
 	private String[] offlinefriends;
 	private String[] blockedfriends;
+	
+	// options
+	
+	private String personalMessage;
+	private String status;
+	private String nickname;
+	private String displayPicture;
+	
+	public void setOwnUserName(String username) {
+		this.username = username;	
+	}
+	
+	public String getOwnUserName() {
+		return username;
+	}
+	
+	public void setOwnPersonalMessage(String personalMessage) {
+		outLink.setPersonalMessage(personalMessage);
+		this.personalMessage = personalMessage;
+	}
+	
+	public String getOwnPersonalMessage() {
+		return personalMessage;
+	}
+	
+	public void setOwnStatus(String status) {
+		outLink.setStatus(status);
+		this.status = status;
+	}
+	
+	public String getOwnStatus() {
+		return status;
+	}
+	
+	public String getOwnNickname() {
+		return nickname;
+	}
+	
+	public void setOwnNickname(String nickname) {
+		this.nickname = nickname;
+		outLink.setNickname(nickname);
+	}
 
 	private ConcurrentHashMap<String, User> users = new ConcurrentHashMap<String, User>();
+	private String username;
 
 	/**
 	 * Do nothing, just here to beat default constructor
@@ -200,10 +243,6 @@ public class ClientModel {
 
 	public void removefriend(String user) {
 		outLink.delete(user);
-	}
-
-	public void setContactList() {
-		outLink.friendlist();
 	}
 
 	// end: Friends list stuff
