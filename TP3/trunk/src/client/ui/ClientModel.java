@@ -130,7 +130,7 @@ public class ClientModel {
 		outLink.logout();
 		
 		// maybe should not be here...
-		outLink.setConnected(false);
+		//outLink.setConnected(false);
 	}
 
 	public void quit() {
