@@ -326,13 +326,17 @@ public class User implements Serializable {
 	public void login(Worker w) {
 		this.setOnline(true);
 		this.setWorker(w);
-		this.sendToAll(new Command("UPDATE", "FRIENDLIST"));
 	}
 
 	/**
 	 * Leave any rooms that the user is currently in and logout.
 	 */
 	public void logout() {
+		for(Room room : this.getRooms()) {
+			System.out.println("Leaving room: " + room.getId());
+			room.leave(this);
+		}
+		
 		setOnline(false);
 	}
 

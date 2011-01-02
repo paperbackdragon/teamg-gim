@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Date;
+import java.util.concurrent.BrokenBarrierException;
 
 import server.User.Status;
 import util.Command;
@@ -29,6 +30,7 @@ public class Worker implements Runnable {
 	private Data data = Data.getInstance();
 	private long lastCommunication;
 	private User loggedInUser;
+	private boolean dead = false;
 
 	private Command okay = new Command("OKAY");
 
@@ -120,13 +122,12 @@ public class Worker implements Runnable {
 
 			if (user != null && user.getPasswordHash().equalsIgnoreCase(dataParts[1])) {
 
-				
 				// Make sure the user ins't already logged in
 				if (user.getWorker() != null) {
 					user.getWorker().putResponse(new Command("ERROR", "LOGGED_IN_FROM_OTHER_LOCATION"));
 					user.getWorker().putCommand(new Command("QUIT"));
+					user.getWorker().waitToDie();
 				}
-				
 
 				// They provided accurate details, log them in
 				this.loggedInUser = user;
@@ -511,9 +512,6 @@ public class Worker implements Runnable {
 		if (this.loggedInUser == null)
 			return new Command("ERROR", "UNAUTHORIZED");
 
-		for (Room room : this.loggedInUser.getRooms())
-			room.leave(this.loggedInUser);
-
 		this.loggedInUser.logout();
 		this.loggedInUser.setWorker(null);
 		this.loggedInUser = null;
@@ -882,7 +880,7 @@ public class Worker implements Runnable {
 
 				if (room == null)
 					return new Command("ERROR", "ROOM_DOES_NOT_EXIST", "Room " + roomId + "does not exist.");
-				
+
 				return new Command("ROOM", room.getType(), room.getId() + " ");
 
 			}
@@ -936,6 +934,12 @@ public class Worker implements Runnable {
 		}
 
 		data.removeWorker(this);
+		this.dead = true;
+		
+		synchronized (this) {
+			notifyAll();
+		}
+		
 		System.out.println("Worker " + this.getID() + " finished.");
 
 	}
@@ -1056,9 +1060,19 @@ public class Worker implements Runnable {
 
 	/**
 	 * Check if this worker is a logged in user
+	 * 
 	 * @return True if the worker is logged in
 	 */
 	public boolean isLoggedin() {
 		return (this.loggedInUser != null);
+	}
+
+	public synchronized void waitToDie() {
+		while (this.dead == false) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+			}
+		}
 	}
 }

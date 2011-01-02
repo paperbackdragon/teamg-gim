@@ -64,14 +64,15 @@ public class Room {
 		else
 			this.invited.remove(joined.getId());
 
-		this.users.put(joined.getId(), joined);
-		joined.addRoom(this);
-
 		// Notify other users that they're joining
 		Command j = new Command("ROOM", "JOINED", this.getId() + " " + Command.encode(joined.getId()));
 		for (User user : getUsers()) {
-				user.getWorker().putResponse(j);
+				Worker w = user.getWorker();
+				w.putResponse(j);
 		}
+		
+		this.users.put(joined.getId(), joined);
+		joined.addRoom(this);
 
 		return true;
 	}
