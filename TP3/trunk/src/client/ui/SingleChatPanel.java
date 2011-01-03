@@ -67,6 +67,7 @@ public class SingleChatPanel extends ChatPanel {
 	}
 
 	public void setNickname(String name) {
+		System.out.println("fuu");
 		info.setNickname(name);
 	}
 
@@ -117,13 +118,13 @@ public class SingleChatPanel extends ChatPanel {
 		}
 
 		public void setNickname(String name) {
+			System.out.println("i'm attempting to change the nickname label");
 			this.name.setText(name);
 
 		}
 
 		public void setStatus(String status) {
 			this.status.setText(status);
-			System.out.println("i'm attempting to change the status label");
 		}
 
 		public void setMessage(String message) {
