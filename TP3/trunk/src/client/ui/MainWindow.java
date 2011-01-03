@@ -105,16 +105,22 @@ public class MainWindow extends JFrame {
 					if (!options.getNicknameText().equals( GimClient.getClient().getOwnNickname())) {
 						GimClient.getClient().setOwnNickname(options.getNicknameText());
 						GimClient.getClient().setNickname(options.getNicknameText());
+						// for when user is not their own friend...
+						GimClient.getClient().getNickName(GimClient.getClient().getOwnUserName());
 					}
 					
 					if (!options.getStatusText().equals( GimClient.getClient().getOwnStatus())) {
 						GimClient.getClient().setOwnStatus(options.getStatusText());
 						GimClient.getClient().setStatus(options.getStatusText());
+						// for when user is not their own friend...
+						GimClient.getClient().getStatus(GimClient.getClient().getOwnStatus());
 					}
 					
 					if (!options.getPersonalMessageText().equals( GimClient.getClient().getOwnPersonalMessage())) {
 						GimClient.getClient().setOwnPersonalMessage(options.getPersonalMessageText());
 						GimClient.getClient().setPersonalMessage(options.getPersonalMessageText());
+						// for when user is not their own friend...
+						GimClient.getClient().getStatus(GimClient.getClient().getOwnPersonalMessage());
 					}
 				}
 			}
