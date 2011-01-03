@@ -2,6 +2,7 @@ package client.ui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 import java.util.LinkedList;
 
 import javax.swing.*;
@@ -138,10 +139,12 @@ public class ChatPanel extends JPanel {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				final StyledDocument doc = messages.getStyledDocument();
+				String msg = message;
 
 				// Load the default style and add it as the "regular" text
 				Style def = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
 				Style regular = doc.addStyle("regular", def);
+
 				// Create an italic style
 				Style italic = doc.addStyle("italic", regular);
 				StyleConstants.setItalic(italic, true);
@@ -149,6 +152,14 @@ public class ChatPanel extends JPanel {
 				// Create a bold style
 				Style bold = doc.addStyle("bold", regular);
 				StyleConstants.setBold(bold, true);
+
+				Style happySmiley = doc.addStyle("happySmiley", null);
+				StyleConstants.setIcon(happySmiley, new ImageIcon(
+						"smiles/Happy_smiley.png"));
+
+				Style sadSmiley = doc.addStyle("sadSmiley", null);
+				StyleConstants.setIcon(sadSmiley, new ImageIcon(
+						"smiles/Sad_smiley.png"));
 
 				String from = "";
 				if (!sender.equals("Me")) {
@@ -166,7 +177,43 @@ public class ChatPanel extends JPanel {
 
 				try {
 					doc.insertString(doc.getLength(), from + "\n", bold);
-					doc.insertString(doc.getLength(), message + "\n", regular);
+
+					int position = 0;
+					int tmp, size = 0;
+					Style style = null;
+
+					// Parse the message...
+					while (position != -1) {
+						position = -1;
+
+						if (msg.contains(":)")) {
+							tmp = msg.indexOf(":)");
+							if (position == -1 || tmp < position) {
+								position = tmp;
+								size = 2;
+								style = happySmiley;
+							}
+						}
+
+						if (msg.contains(":(")) {
+							tmp = msg.indexOf(":(");
+							if (position == -1 || tmp < position) {
+								position = tmp;
+								size = 2;
+								style = sadSmiley;
+							}
+						}
+
+						if (position >= 0) {
+							doc.insertString(doc.getLength(), msg.substring(0, position), regular);
+							doc.insertString(doc.getLength(), msg.substring(position, position + size - 1), style);
+							msg = msg.substring(position + size);
+						}
+
+					}
+
+					doc.insertString(doc.getLength(), msg + "\n", regular);
+
 				} catch (BadLocationException e) {
 				}
 
@@ -203,7 +250,8 @@ public class ChatPanel extends JPanel {
 		public void keyTyped(KeyEvent e) {
 			if (e.getKeyChar() == KeyEvent.VK_ENTER) {
 				String text = chatBox.getText();
-				chatBox.setText(text.substring(0, chatBox.getCaretPosition()-1) + text.substring(chatBox.getCaretPosition()));
+				chatBox.setText(text.substring(0, chatBox.getCaretPosition() - 1)
+						+ text.substring(chatBox.getCaretPosition()));
 				sendMessage();
 				chatBox.setText("");
 			}
