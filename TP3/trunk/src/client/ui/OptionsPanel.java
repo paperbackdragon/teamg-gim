@@ -2,6 +2,7 @@ package client.ui;
 
 import java.awt.GridLayout;
 
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -19,7 +20,7 @@ public class OptionsPanel extends JPanel{
 	
 	private JTextArea nicknametext;
 	private JTextArea personalmessagetext;
-	private JTextArea statustext;
+	private JComboBox statusbox;
 	
 	public OptionsPanel() {
 		this.personalMessage = GimClient.getClient().getOwnPersonalMessage();
@@ -42,8 +43,9 @@ public class OptionsPanel extends JPanel{
 		add(personalmessagetext);
 		
 		add(new JLabel("Status"));
-		statustext = new JTextArea(status);
-		add(statustext);
+		String[] options = {"Online", "Busy", "Away", "Offline"};
+		statusbox = new JComboBox(options);
+		add(statusbox);
 		
 	}
 	
@@ -56,7 +58,7 @@ public class OptionsPanel extends JPanel{
 	}
 
 	public String getStatusText() {
-		return statustext.getText();
+		return (String) statusbox.getSelectedItem();
 	}
 
 	public String getDisplayPictureText() {
