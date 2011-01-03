@@ -2,13 +2,11 @@ package client.net;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import client.GimClient;
 import client.ui.LoginPanel;
 
 import util.Command;
-import util.CommandBuffer;
 
 public class networkReader implements Runnable {
 

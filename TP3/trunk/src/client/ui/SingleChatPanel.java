@@ -3,8 +3,6 @@ package client.ui;
 import java.awt.*;
 import javax.swing.*;
 
-import client.GimClient;
-
 /**
  * Specific class for a chat panel used for a conversation between two people.
  * 
@@ -21,7 +19,6 @@ public class SingleChatPanel extends ChatPanel {
 		setLayout(new BorderLayout());
 
 		messages = new JTextPane();
-		messages.setContentType("text/html");
 		messages.setEditable(false);
 		// messages.setLineWrap(true);
 		// messages.setWrapStyleWord(true);

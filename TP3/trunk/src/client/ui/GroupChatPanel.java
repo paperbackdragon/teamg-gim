@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import javax.swing.*;
 
 import client.GimClient;
-import client.ui.ChatPanel.SendListener;
 
 /**
  * Specific class for a chat panel used for a conversation between more than two
