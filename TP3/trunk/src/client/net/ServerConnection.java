@@ -55,9 +55,14 @@ public class ServerConnection implements NetworkingIn {
 		for (int i = 0; i < onlinelist.length; i++) {
 			if (GimClient.getClient().getUser(onlinelist[i]) == null) {
 				GimClient.getClient().addUser(onlinelist[i]);
-				GimClient.getClient().getUser(onlinelist[i])
-						.setStatus("Online");
+				//GimClient.getClient().getUser(onlinelist[i])
+					//	.setStatus("Online");
+				
+				GimClient.getClient().getStatus(onlinelist[i]);
+				GimClient.getClient().getPersonalMessage(onlinelist[i]);
+				GimClient.getClient().getNickName(onlinelist[i]);
 			}
+			
 		}
 		GimClient.getContactPanel().createNodes(onlinelist, offlinelist);
 

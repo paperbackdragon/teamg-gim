@@ -3,6 +3,8 @@ package client.ui;
 import java.awt.*;
 import javax.swing.*;
 
+import client.GimClient;
+
 /**
  * Specific class for a chat panel used for a conversation between two people.
  * 
@@ -81,7 +83,7 @@ public class SingleChatPanel extends ChatPanel {
 		class TextField extends JPanel {
 			public TextField() {
 				setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-				name = new JLabel("<html><b>Contact Nickname</b></html>");
+				name = new JLabel("sdsdf... woops. sort.");
 				message = new JLabel("Personal Message");
 				status = new JLabel(
 						"<html><font size=\"3\">Status: Online</font></html>");
