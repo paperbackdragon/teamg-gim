@@ -198,7 +198,7 @@ public class ServerConnection implements NetworkingIn {
 	public void updateNickname(String user, String nickname) {
 		if (!user.equals(GimClient.getClient().getOwnUserName())) {
 
-			User l = GimClient.getClient().getUser(nickname);
+			User l = GimClient.getClient().getUser(user);
 			if (l != null) {
 				l.setNickname(nickname);
 

@@ -118,7 +118,7 @@ public class SingleChatPanel extends ChatPanel {
 		}
 
 		public void setNickname(String name) {
-			System.out.println("i'm attempting to change the nickname label");
+			System.out.println("i'm attempting to change the nickname label to " + name);
 			this.name.setText(name);
 
 		}
