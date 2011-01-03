@@ -65,7 +65,7 @@ public class MainWindow extends JFrame {
 		main = newPanel;
 		setContentPane(main);
 		pack();
-		setVisible(true);
+		//setVisible(true);
 	}
 	
 	public JPanel getMainPanel() {
