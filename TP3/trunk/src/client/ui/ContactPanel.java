@@ -28,11 +28,11 @@ public class ContactPanel extends JPanel {
 
 		contacts = new DefaultMutableTreeNode("Contacts");
 		
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		setLayout(new BorderLayout());
 		info = new PersonalInfo();
-		add(info);
-		add(new ContactList());
-		add(new ButtonPanel());
+		add(info, BorderLayout.NORTH);
+		add(new JScrollPane(new ContactList()), BorderLayout.CENTER);
+		add(new ButtonPanel(), BorderLayout.SOUTH);
 	}
 
 	

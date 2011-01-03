@@ -27,8 +27,6 @@ public class GroupChatPanel extends ChatPanel {
 		
 		setLayout(new BorderLayout());
 
-		messages = new JTextPane();
-		messages.setEditable(false);
 		// messages.setLineWrap(true);
 		// messages.setWrapStyleWord(true);
 		JScrollPane messagePane = new JScrollPane(messages);
@@ -38,6 +36,7 @@ public class GroupChatPanel extends ChatPanel {
 		guests.setLineWrap(true);
 		guests.setWrapStyleWord(true);
 		JScrollPane guestPane = new JScrollPane(guests);
+		guestPane.setPreferredSize(new Dimension(100, 100));
 
 		// BOTTOM PANEL
 		JPanel chatPanel = new JPanel();
@@ -65,12 +64,11 @@ public class GroupChatPanel extends ChatPanel {
 		send.addActionListener(sendListener);
 
 		chatPanel.setPreferredSize(new Dimension(0, 50));
-		chatPanel.add(chatPane, BorderLayout.WEST);
-		chatPanel.add(invite);
+		chatPanel.add(chatPane, BorderLayout.CENTER);
+		chatPanel.add(invite, BorderLayout.EAST);
 		chatPanel.add(send, BorderLayout.EAST);
 		// END BOTTOM PANEL
 
-		add(new ContactManage(), BorderLayout.NORTH);
 		add(guestPane, BorderLayout.EAST);
 		add(messagePane, BorderLayout.CENTER);
 		add(chatPanel, BorderLayout.SOUTH);

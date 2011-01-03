@@ -18,8 +18,7 @@ public class SingleChatPanel extends ChatPanel {
 		super(roomID);
 		setLayout(new BorderLayout());
 
-		messages = new JTextPane();
-		messages.setEditable(false);
+
 		// messages.setLineWrap(true);
 		// messages.setWrapStyleWord(true);
 		JScrollPane messagePane = new JScrollPane(messages);
@@ -44,7 +43,7 @@ public class SingleChatPanel extends ChatPanel {
 		send.addActionListener(sendListener);
 
 		chatPanel.setPreferredSize(new Dimension(0, 50));
-		chatPanel.add(chatPane, BorderLayout.WEST);
+		chatPanel.add(chatPane, BorderLayout.CENTER);
 		chatPanel.add(send, BorderLayout.EAST);
 		// END BOTTOM PANEL
 
@@ -115,7 +114,7 @@ public class SingleChatPanel extends ChatPanel {
 		}
 
 		public void setNickname(String name) {
-			this.name.setText(name);
+			this.name.setText("<html><b>" + name + "</b></html>");
 
 		}
 

@@ -2,7 +2,6 @@ package client.ui;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
 import java.util.LinkedList;
 
 import javax.swing.*;
@@ -27,16 +26,14 @@ public class ChatPanel extends JPanel {
 	protected JTextArea chatBox;
 	protected JTextPane messages;
 	protected JButton send;
-	
+	private StyledDocument doc;
+	private Style regular, bold, italic, self;
+
 	private Smiley[] smilies = { new Smiley(":)", "smiles/Happy_smiley.png"),
-			new Smiley(":-)", "smiles/Happy_smiley.png"),
-			new Smiley(":(", "smiles/Sad_smiley.png"),
-			new Smiley(":-(", "smiles/Sad_smiley.png"),
-			new Smiley(":P", "smiles/Tonque_out_smiley.png"),
-			new Smiley(":-P", "smiles/Tonque_out_smiley.png"),
-			new Smiley(";(", "smiles/Crying_smiley.png"),
-			new Smiley(";-(", "smiles/Crying_smiley.png"),
-			new Smiley("(@)", "smiles/Cat.png")};
+			new Smiley(":-)", "smiles/Happy_smiley.png"), new Smiley(":(", "smiles/Sad_smiley.png"),
+			new Smiley(":-(", "smiles/Sad_smiley.png"), new Smiley(":P", "smiles/Tonque_out_smiley.png"),
+			new Smiley(":-P", "smiles/Tonque_out_smiley.png"), new Smiley(";(", "smiles/Crying_smiley.png"),
+			new Smiley(";-(", "smiles/Crying_smiley.png"), new Smiley("(@)", "smiles/Cat.png") };
 
 	// TODO (heather): make sure window scrolls down when chatting
 
@@ -97,12 +94,43 @@ public class ChatPanel extends JPanel {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
-			System.out.println("Something went wrong!");
-			System.exit(0);
 		}
 
 		id = roomID;
 		messageQueue = new LinkedList<String>();
+
+		messages = new JTextPane();
+		messages.setEditable(false);
+
+		doc = messages.getStyledDocument();
+
+		// Load the default style and add it as the "regular" text
+		Style def = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
+		StyleConstants.setAlignment(def, StyleConstants.ALIGN_LEFT);
+		StyleConstants.setFontFamily(def, UIManager.getDefaults().getFont("TabbedPane.font").getFontName());
+		StyleConstants.setSpaceAbove(def, 4f);
+		regular = doc.addStyle("regular", def);
+
+		// Create an italic style
+		italic = doc.addStyle("italic", regular);
+		StyleConstants.setItalic(italic, true);
+
+		// Create a bold style
+		bold = doc.addStyle("bold", regular);
+		StyleConstants.setBold(bold, true);
+
+		// Style for the current users name
+		self = doc.addStyle("self", bold);
+		StyleConstants.setForeground(self, Color.RED);
+		
+		doc.setParagraphAttributes(0, 0, regular, true);
+
+		for (Smiley s : smilies) {
+			Style style = doc.addStyle(s.getText(), null);
+			StyleConstants.setIcon(style, new ImageIcon(s.getIcon()));
+			s.setStyle(style);
+		}
+
 	}
 
 	// HELPER METHODS
@@ -148,43 +176,27 @@ public class ChatPanel extends JPanel {
 	public void receiveMessage(final String sender, final String message) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				final StyledDocument doc = messages.getStyledDocument();
+
 				String msg = message;
-
-				// Load the default style and add it as the "regular" text
-				Style def = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
-				Style regular = doc.addStyle("regular", def);
-
-				// Create an italic style
-				Style italic = doc.addStyle("italic", regular);
-				StyleConstants.setItalic(italic, true);
-
-				// Create a bold style
-				Style bold = doc.addStyle("bold", regular);
-				StyleConstants.setBold(bold, true);
-				
-				for(Smiley s : smilies) {
-					Style style = doc.addStyle(s.getText(), null);
-					StyleConstants.setIcon(style, new ImageIcon(s.getIcon()));
-					s.setStyle(style);
-				}
-
 				String from = "";
+				Style nameStyle = bold;
+
 				if (!sender.equals("Me")) {
-
 					User user = GimClient.getClient().getUser(sender);
-					if (user == null) {
+					
+					if (user == null)
 						from = sender;
-					} else {
+					else
 						from = user.getNickname();
-					}
 
+					nameStyle = bold;
 				} else {
 					from = sender;
+					nameStyle = self;
 				}
 
 				try {
-					doc.insertString(doc.getLength(), from + "\n", bold);
+					doc.insertString(doc.getLength(), from + ": ", nameStyle);
 
 					int position = 0;
 					int tmp;
@@ -204,12 +216,9 @@ public class ChatPanel extends JPanel {
 						}
 
 						if (position >= 0 && smiley != null) {
-							System.out.println(smiley.getText() + " " + smiley.getText().length());
 							doc.insertString(doc.getLength(), msg.substring(0, position), regular);
-							
 							doc.insertString(doc.getLength(), msg.substring(position, position
 									+ smiley.getText().length()), smiley.getStyle());
-							
 							msg = msg.substring(position + smiley.getText().length());
 						}
 
