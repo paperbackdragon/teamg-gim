@@ -398,6 +398,17 @@ public class ServerConnection implements NetworkingIn {
 					}
 
 				}
+				
+				else { //they joined a group chat
+					if (GimClient.getClient().getUser(user) == null) {
+						GimClient.getClient().addUser(user);
+						
+						GimClient.getClient().getNickName(user);
+						GimClient.getClient().getStatus(user);
+						GimClient.getClient().getPersonalMessage(user);
+						
+					}
+				}
 
 			}
 		});
