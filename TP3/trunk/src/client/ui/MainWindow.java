@@ -100,6 +100,23 @@ public class MainWindow extends JFrame {
 				Object[] buttons = {"Confirm", "Cancel"};
 				int n = JOptionPane.showOptionDialog(null, options, "Select options",
 						JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
+				
+				if (n == 0) { // "confirm"
+					if (!options.getNicknameText().equals( GimClient.getClient().getOwnNickname())) {
+						GimClient.getClient().setOwnNickname(options.getNicknameText());
+						GimClient.getClient().setNickname(options.getNicknameText());
+					}
+					
+					if (!options.getStatusText().equals( GimClient.getClient().getOwnStatus())) {
+						GimClient.getClient().setOwnStatus(options.getStatusText());
+						GimClient.getClient().setStatus(options.getStatusText());
+					}
+					
+					if (!options.getPersonalMessageText().equals( GimClient.getClient().getOwnPersonalMessage())) {
+						GimClient.getClient().setOwnNickname(options.getPersonalMessageText());
+						GimClient.getClient().setNickname(options.getPersonalMessageText());
+					}
+				}
 			}
 		}
 	}

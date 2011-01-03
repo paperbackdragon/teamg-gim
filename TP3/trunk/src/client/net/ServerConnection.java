@@ -16,13 +16,14 @@ public class ServerConnection implements NetworkingIn {
 
 		// Do this properly later...
 		// may want to sign in appearing offline
+		//GimClient.getClient().getOwnUserName()
 
 		GimClient.getClient().setStatus("ONLINE");
 
-/*		GimClient.getClient().getNickName(
+		GimClient.getClient().getNickName(
 				GimClient.getClient().getOwnUserName());
 		GimClient.getClient().getPersonalMessage(
-				GimClient.getClient().getOwnUserName());*/
+				GimClient.getClient().getOwnUserName());
 
 	}
 

@@ -273,6 +273,14 @@ public class ClientModel {
 		outLink.setStatus(status);
 
 	}
+	
+	public void setPersonalMessage(String personalmessage) {
+		outLink.setPersonalMessage(personalmessage);
+	}
+	
+	public void setNickname(String nickname) {
+		outLink.setNickname(nickname);
+	}
 
 	public void setConnected(boolean b) {
 		outLink.setConnected(false);
