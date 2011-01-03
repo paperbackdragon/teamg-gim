@@ -40,7 +40,6 @@ public class ClientModel {
 	
 	public void setOwnPersonalMessage(String personalMessage) {
 		outLink.setPersonalMessage(personalMessage);
-		this.personalMessage = personalMessage;
 	}
 	
 	public String getOwnPersonalMessage() {
@@ -62,7 +61,6 @@ public class ClientModel {
 	
 	public void setOwnNickname(String nickname) {
 		this.nickname = nickname;
-		outLink.setNickname(nickname);
 	}
 
 	/**
