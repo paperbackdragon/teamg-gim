@@ -161,6 +161,10 @@ public class ChatPanel extends JPanel {
 				StyleConstants.setIcon(sadSmiley, new ImageIcon(
 						"smiles/Sad_smiley.png"));
 
+				Style tongueSmiley = doc.addStyle("tongueSmiley", null);
+				StyleConstants.setIcon(tongueSmiley, new ImageIcon(
+						"smiles/Tonque_out_smiley.png"));
+				
 				String from = "";
 				if (!sender.equals("Me")) {
 
@@ -201,6 +205,15 @@ public class ChatPanel extends JPanel {
 								position = tmp;
 								size = 2;
 								style = sadSmiley;
+							}
+						}
+						
+						if (msg.contains(":P")) {
+							tmp = msg.indexOf(":P");
+							if (position == -1 || tmp < position) {
+								position = tmp;
+								size = 2;
+								style = tongueSmiley;
 							}
 						}
 
