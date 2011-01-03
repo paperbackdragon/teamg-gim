@@ -113,8 +113,8 @@ public class MainWindow extends JFrame {
 					}
 					
 					if (!options.getPersonalMessageText().equals( GimClient.getClient().getOwnPersonalMessage())) {
-						GimClient.getClient().setOwnNickname(options.getPersonalMessageText());
-						GimClient.getClient().setNickname(options.getPersonalMessageText());
+						GimClient.getClient().setOwnPersonalMessage(options.getPersonalMessageText());
+						GimClient.getClient().setPersonalMessage(options.getPersonalMessageText());
 					}
 				}
 			}
