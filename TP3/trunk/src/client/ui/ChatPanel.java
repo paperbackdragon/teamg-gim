@@ -27,6 +27,16 @@ public class ChatPanel extends JPanel {
 	protected JTextArea chatBox;
 	protected JTextPane messages;
 	protected JButton send;
+	
+	private Smiley[] smilies = { new Smiley(":)", "smiles/Happy_smiley.png"),
+			new Smiley(":-)", "smiles/Happy_smiley.png"),
+			new Smiley(":(", "smiles/Sad_smiley.png"),
+			new Smiley(":-(", "smiles/Sad_smiley.png"),
+			new Smiley(":P", "smiles/Tonque_out_smiley.png"),
+			new Smiley(":-P", "smiles/Tonque_out_smiley.png"),
+			new Smiley(";(", "smiles/Crying_smiley.png"),
+			new Smiley(";-(", "smiles/Crying_smiley.png"),
+			new Smiley("(@)", "smiles/Cat.png")};
 
 	// TODO (heather): make sure window scrolls down when chatting
 
@@ -152,19 +162,13 @@ public class ChatPanel extends JPanel {
 				// Create a bold style
 				Style bold = doc.addStyle("bold", regular);
 				StyleConstants.setBold(bold, true);
-
-				Style happySmiley = doc.addStyle("happySmiley", null);
-				StyleConstants.setIcon(happySmiley, new ImageIcon(
-						"smiles/Happy_smiley.png"));
-
-				Style sadSmiley = doc.addStyle("sadSmiley", null);
-				StyleConstants.setIcon(sadSmiley, new ImageIcon(
-						"smiles/Sad_smiley.png"));
-
-				Style tongueSmiley = doc.addStyle("tongueSmiley", null);
-				StyleConstants.setIcon(tongueSmiley, new ImageIcon(
-						"smiles/Tonque_out_smiley.png"));
 				
+				for(Smiley s : smilies) {
+					Style style = doc.addStyle(s.getText(), null);
+					StyleConstants.setIcon(style, new ImageIcon(s.getIcon()));
+					s.setStyle(style);
+				}
+
 				String from = "";
 				if (!sender.equals("Me")) {
 
@@ -183,44 +187,30 @@ public class ChatPanel extends JPanel {
 					doc.insertString(doc.getLength(), from + "\n", bold);
 
 					int position = 0;
-					int tmp, size = 0;
-					Style style = null;
+					int tmp;
+					Smiley smiley = null;
 
 					// Parse the message...
 					while (position != -1) {
 						position = -1;
 
-						if (msg.contains(":)")) {
-							tmp = msg.indexOf(":)");
-							if (position == -1 || tmp < position) {
+						for (Smiley s : smilies) {
+							tmp = msg.toUpperCase().indexOf(s.getText());
+							if (tmp > -1 && (position == -1 || tmp < position)) {
+								System.out.println("Found " + s.getText());
 								position = tmp;
-								size = 2;
-								style = happySmiley;
+								smiley = s;
 							}
 						}
 
-						if (msg.contains(":(")) {
-							tmp = msg.indexOf(":(");
-							if (position == -1 || tmp < position) {
-								position = tmp;
-								size = 2;
-								style = sadSmiley;
-							}
-						}
-						
-						if (msg.contains(":P")) {
-							tmp = msg.indexOf(":P");
-							if (position == -1 || tmp < position) {
-								position = tmp;
-								size = 2;
-								style = tongueSmiley;
-							}
-						}
-
-						if (position >= 0) {
+						if (position >= 0 && smiley != null) {
+							System.out.println(smiley.getText() + " " + smiley.getText().length());
 							doc.insertString(doc.getLength(), msg.substring(0, position), regular);
-							doc.insertString(doc.getLength(), msg.substring(position, position + size - 1), style);
-							msg = msg.substring(position + size);
+							
+							doc.insertString(doc.getLength(), msg.substring(position, position
+									+ smiley.getText().length()), smiley.getStyle());
+							
+							msg = msg.substring(position + smiley.getText().length());
 						}
 
 					}
