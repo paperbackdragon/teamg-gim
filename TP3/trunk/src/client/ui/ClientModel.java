@@ -14,6 +14,8 @@ public class ClientModel {
 	private LinkedList<String[]> newRoomList = new LinkedList<String[]>();
 	private LinkedList<String> invitationsList = new LinkedList<String>();
 	private LinkedList<Boolean> typeList = new LinkedList<Boolean>();
+	
+	private ConcurrentHashMap<String, User> users = new ConcurrentHashMap<String, User>();
 
 	// buddy list
 	private String[] onlinefriends;
@@ -26,6 +28,7 @@ public class ClientModel {
 	private String status;
 	private String nickname;
 	private String displayPicture;
+	private String username;
 	
 	public void setOwnUserName(String username) {
 		this.username = username;	
@@ -61,9 +64,6 @@ public class ClientModel {
 		this.nickname = nickname;
 		outLink.setNickname(nickname);
 	}
-
-	private ConcurrentHashMap<String, User> users = new ConcurrentHashMap<String, User>();
-	private String username;
 
 	/**
 	 * Do nothing, just here to beat default constructor
