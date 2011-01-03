@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Date;
-import java.util.concurrent.BrokenBarrierException;
 
 import server.User.Status;
 import util.Command;
@@ -20,18 +19,19 @@ import util.ResponseWriter;
  */
 public class Worker implements Runnable {
 
-	private CommandBuffer<Command> commandBuffer;
-	private CommandBuffer<Command> responseBuffer;
+	private CommandBuffer<Command> commandBuffer = new CommandBuffer<Command>();
+	private CommandBuffer<Command> responseBuffer = new CommandBuffer<Command>();
 	private Socket socket = null;
 	private BufferedReader in;
 	private PrintWriter out;
 	private int clientID;
 
 	private Data data = Data.getInstance();
-	private long lastCommunication;
-	private User loggedInUser;
+	private User loggedInUser = null;
 	private boolean dead = false;
+	private long lastCommunication = System.currentTimeMillis();
 
+	// We use it a lot. Save some time and memory.
 	private Command okay = new Command("OKAY");
 
 	private ResponseWriter responseWriter;
@@ -39,12 +39,16 @@ public class Worker implements Runnable {
 	private Thread responseWriterThread;
 	private Thread commandReaderThread;
 
+	/**
+	 * Default constructor
+	 * 
+	 * @param clientID
+	 *            The ID of the client
+	 * @param socket
+	 *            The socket the connection is made over
+	 */
 	public Worker(int clientID, Socket socket) {
 		this.socket = socket;
-		this.commandBuffer = new CommandBuffer<Command>();
-		this.responseBuffer = new CommandBuffer<Command>();
-		this.lastCommunication = System.currentTimeMillis();
-		this.loggedInUser = null;
 		this.clientID = clientID;
 	}
 
@@ -328,6 +332,7 @@ public class Worker implements Runnable {
 				return new Command("ERROR", "NOT_IN_FRIENDLIST");
 
 			this.loggedInUser.removeFriend(user);
+			
 			return this.okay;
 
 		}
@@ -413,7 +418,7 @@ public class Worker implements Runnable {
 
 			// Stop them from getting access about people who aren't in their
 			// freindlist
-			if (!this.loggedInUser.isFriendsWith(user) && this.loggedInUser.inRoomWith(user)
+			if (!this.loggedInUser.isFriendsWith(user) && !this.loggedInUser.inRoomWith(user)
 					&& this.loggedInUser != user)
 				return new Command("ERROR", "NOT_AUTHORIZED");
 
@@ -478,17 +483,10 @@ public class Worker implements Runnable {
 
 		try {
 			responseWriterThread.join();
-		} catch (InterruptedException e1) {
-		}
-
-		try {
 			socket.close();
-		} catch (IOException e) {
-		}
-
-		try {
 			commandReaderThread.join();
 		} catch (InterruptedException e) {
+		} catch(IOException e) {
 		}
 
 		Thread.currentThread().interrupt();
@@ -924,22 +922,22 @@ public class Worker implements Runnable {
 			Command cmd = commandBuffer.getCommand();
 			Command rsp = processCommand(cmd);
 
-			if (rsp != null) {
+			if (rsp != null)
 				this.responseBuffer.putCommand(rsp);
-			}
 
-			if (Thread.currentThread().isInterrupted())
+			if (Thread.currentThread().isInterrupted()) 
 				break;
 
 		}
 
+		// Clean up
 		data.removeWorker(this);
 		this.dead = true;
-		
+
 		synchronized (this) {
 			notifyAll();
 		}
-		
+
 		System.out.println("Worker " + this.getID() + " finished.");
 
 	}
@@ -1067,6 +1065,9 @@ public class Worker implements Runnable {
 		return (this.loggedInUser != null);
 	}
 
+	/**
+	 * Pause the thread and wait till this worker has died
+	 */
 	public synchronized void waitToDie() {
 		while (this.dead == false) {
 			try {

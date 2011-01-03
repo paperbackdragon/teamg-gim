@@ -27,8 +27,8 @@ public class ChatPanel extends JPanel {
 	protected JTextPane messages;
 	protected JButton send;
 
-	//TODO (heather): make sure window scrolls down when chatting
-	
+	// TODO (heather): make sure window scrolls down when chatting
+
 	/*
 	 * Gordon: proposed. On adding message to messages JTextArea if messageCount
 	 * == 0, make window visible
@@ -80,7 +80,7 @@ public class ChatPanel extends JPanel {
 	}
 
 	/**
-	 * Constructor for a chatbox
+	 * Constructor for a chat box
 	 */
 	public ChatPanel(String roomID) {
 		try {
@@ -152,21 +152,18 @@ public class ChatPanel extends JPanel {
 
 				String from = "";
 				if (!sender.equals("Me")) {
-					
+
 					User user = GimClient.getClient().getUser(sender);
-					if (user == null) { // safe programming: display username instead
+					if (user == null) {
 						from = sender;
-					}
-					else {
+					} else {
 						from = user.getNickname();
 					}
-					
-					
-				}
-				else {
+
+				} else {
 					from = sender;
 				}
-				
+
 				try {
 					doc.insertString(doc.getLength(), from + "\n", bold);
 					doc.insertString(doc.getLength(), message + "\n", regular);
@@ -206,7 +203,7 @@ public class ChatPanel extends JPanel {
 		public void keyTyped(KeyEvent e) {
 			if (e.getKeyChar() == KeyEvent.VK_ENTER) {
 				String text = chatBox.getText();
-				chatBox.setText(text.substring(0, text.length() - 1));
+				chatBox.setText(text.substring(0, chatBox.getCaretPosition()-1) + text.substring(chatBox.getCaretPosition()));
 				sendMessage();
 				chatBox.setText("");
 			}
