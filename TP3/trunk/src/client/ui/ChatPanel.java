@@ -150,8 +150,25 @@ public class ChatPanel extends JPanel {
 				Style bold = doc.addStyle("bold", regular);
 				StyleConstants.setBold(bold, true);
 
+				String from = "";
+				if (!sender.equals("Me")) {
+					
+					User user = GimClient.getClient().getUser(sender);
+					if (user == null) { // safe programming: display username instead
+						from = sender;
+					}
+					else {
+						from = user.getNickname();
+					}
+					
+					
+				}
+				else {
+					from = sender;
+				}
+				
 				try {
-					doc.insertString(doc.getLength(), sender + "\n", bold);
+					doc.insertString(doc.getLength(), from + "\n", bold);
 					doc.insertString(doc.getLength(), message + "\n", regular);
 				} catch (BadLocationException e) {
 				}
