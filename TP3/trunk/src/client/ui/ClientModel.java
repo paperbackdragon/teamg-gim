@@ -39,7 +39,7 @@ public class ClientModel {
 	}
 	
 	public void setOwnPersonalMessage(String personalMessage) {
-		outLink.setPersonalMessage(personalMessage);
+		this.personalMessage = personalMessage;
 	}
 	
 	public String getOwnPersonalMessage() {
@@ -47,7 +47,6 @@ public class ClientModel {
 	}
 	
 	public void setOwnStatus(String status) {
-		outLink.setStatus(status);
 		this.status = status;
 	}
 	

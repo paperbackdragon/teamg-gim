@@ -16,7 +16,7 @@ public class ServerConnection implements NetworkingIn {
 
 		// Do this properly later...
 		// may want to sign in appearing offline
-		//GimClient.getClient().getOwnUserName()
+		// GimClient.getClient().getOwnUserName()
 
 		GimClient.getClient().setStatus("ONLINE");
 
@@ -55,14 +55,14 @@ public class ServerConnection implements NetworkingIn {
 		for (int i = 0; i < onlinelist.length; i++) {
 			if (GimClient.getClient().getUser(onlinelist[i]) == null) {
 				GimClient.getClient().addUser(onlinelist[i]);
-				//GimClient.getClient().getUser(onlinelist[i])
-					//	.setStatus("Online");
-				
+				// GimClient.getClient().getUser(onlinelist[i])
+				// .setStatus("Online");
+
 				GimClient.getClient().getStatus(onlinelist[i]);
 				GimClient.getClient().getPersonalMessage(onlinelist[i]);
 				GimClient.getClient().getNickName(onlinelist[i]);
 			}
-			
+
 		}
 		GimClient.getContactPanel().createNodes(onlinelist, offlinelist);
 
@@ -241,16 +241,22 @@ public class ServerConnection implements NetworkingIn {
 	}
 
 	public void updateStatus(String user, String status) {
-		User l = GimClient.getClient().getUser(user);
-		if (l != null) {
-			l.setStatus(status);
+		if (!user.equals(GimClient.getClient().getOwnUserName())) {
 
-			chatWindowIdentifier s = GimClient
-					.getWindowIdentifierFromUser(user);
+			User l = GimClient.getClient().getUser(user);
+			if (l != null) {
+				l.setStatus(status);
 
-			if (s != null) {
-				((SingleChatPanel) s.getCp()).setStatus(status);
+				chatWindowIdentifier s = GimClient
+						.getWindowIdentifierFromUser(user);
+
+				if (s != null) {
+					((SingleChatPanel) s.getCp()).setStatus(status);
+				}
 			}
+		} else {
+			GimClient.getContactPanel().setMyStatus(status);
+
 		}
 
 	}
@@ -400,15 +406,15 @@ public class ServerConnection implements NetworkingIn {
 					}
 
 				}
-				
-				else { //they joined a group chat
+
+				else { // they joined a group chat
 					if (GimClient.getClient().getUser(user) == null) {
 						GimClient.getClient().addUser(user);
-						
+
 						GimClient.getClient().getNickName(user);
 						GimClient.getClient().getStatus(user);
 						GimClient.getClient().getPersonalMessage(user);
-						
+
 					}
 				}
 
@@ -458,7 +464,7 @@ public class ServerConnection implements NetworkingIn {
 						+ ". Would you like to accept?",
 				"Group chat invitation", JOptionPane.YES_NO_OPTION,
 				JOptionPane.QUESTION_MESSAGE, null, options, // the titles of
-																// buttons
+				// buttons
 				options[0]); // default button title
 
 		if (n == 0) {
