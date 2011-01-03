@@ -15,6 +15,7 @@ public class ContactPanel extends JPanel {
 	private JTree contactTree;
 	private DefaultMutableTreeNode contacts;
 	private ClientModel model = ClientModel.getInstance();
+	private PersonalInfo info;
 
 	// private chatListener;
 
@@ -28,21 +29,26 @@ public class ContactPanel extends JPanel {
 		contacts = new DefaultMutableTreeNode("Contacts");
 		
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		add(new PersonalInfo());
+		info = new PersonalInfo();
+		add(info);
 		add(new ContactList());
 		add(new ButtonPanel());
 	}
 
+	
 	// PANELS
-	class PersonalInfo extends JPanel {
-
+	private class PersonalInfo extends JPanel {
+		private JLabel name; 
+		private JLabel message;
+		private JLabel status;
+		
 		class TextField extends JPanel {
 
 			public TextField() {
 				setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-				JLabel name = new JLabel("<html><b>" + model.getUser("cyblob@gmail.com") + "</b></html>");
-				JLabel message = new JLabel("Personal Message");
-				JLabel status = new JLabel("<html><font size=\"3\">Status: Online</font></html>");
+				name = new JLabel("<html><b>" + model.getUser("cyblob@gmail.com") + "</b></html>");
+				message = new JLabel("Personal Message");
+				status = new JLabel("<html><font size=\"3\">Status: Online</font></html>");
 				add(name);
 				add(message);
 				add(status);
@@ -68,7 +74,33 @@ public class ContactPanel extends JPanel {
 				return null;
 			}
 		}
+		
+		public void setNickname(String name) {
+			this.name.setText(name);
+
+		}
+
+		public void setStatus(String status) {
+			this.status.setText(status);
+		}
+
+		public void setPersonalMessage(String message) {
+			this.message.setText(message);
+		}
 	}
+	
+	public void setMyNickname(String name) {
+		info.setNickname(name);
+	}
+	
+	public void setMyPersonalMessage(String message) {
+		info.setPersonalMessage(message);
+	}
+	
+	public void setMyStatus(String status) {
+		info.setStatus(status);
+	}
+
 
 	class ContactList extends JPanel {
 		public ContactList() {
@@ -155,6 +187,8 @@ public class ContactPanel extends JPanel {
 		}
 		return contacts;
 	}
+	
+
 
 	// ACTION LISTENERS
 	private class ButtonListener implements ActionListener {

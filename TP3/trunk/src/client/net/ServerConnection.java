@@ -214,6 +214,7 @@ public class ServerConnection implements NetworkingIn {
 
 		else {
 			GimClient.getClient().setOwnNickname(nickname);
+			GimClient.getContactPanel().setMyNickname(nickname);
 		}
 
 	}
@@ -235,6 +236,7 @@ public class ServerConnection implements NetworkingIn {
 			}
 		} else {
 			GimClient.getClient().setOwnPersonalMessage(personalmessage);
+			GimClient.getContactPanel().setMyPersonalMessage(personalmessage);
 		}
 	}
 
