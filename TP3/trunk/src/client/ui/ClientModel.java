@@ -294,6 +294,7 @@ public class ClientModel {
 	}
 	
 	public void setLatestPerson(String latest) {
+		//SET FOR SIGN IN / OUT / MESSAGE ALERTS
 		this.latestperson = latest;
 	}
 

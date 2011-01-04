@@ -206,6 +206,7 @@ public class GimClient {
 	                TrayIcon.MessageType.INFO);*/
 	        	
 	        	if (e.getSource() == trayIcon) {
+	        		// Bring window to front. NEED TO WORK OUT HOW TO DO THIS
 	        		GimClient.getWindowIdentifierFromId(GimClient.getClient().getLatestPerson()).getWindow().setVisible(true);
 	        	}
 	            
