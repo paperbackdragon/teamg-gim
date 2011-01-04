@@ -245,7 +245,7 @@ public class ChatPanel extends JPanel {
 					
 					
 					if (isFocused == false) {
-						//timer.start();
+						GimClient.getTrayIcon().displayMessage("fsd", "Messaged received from " + sender, TrayIcon.MessageType.INFO);
 					}
 
 				} catch (BadLocationException e) {
