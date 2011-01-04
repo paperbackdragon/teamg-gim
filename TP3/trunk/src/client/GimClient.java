@@ -206,7 +206,7 @@ public class GimClient {
 	                TrayIcon.MessageType.INFO);*/
 	        	
 	        	if (e.getSource() == trayIcon) {
-	        		GimClient.getWindowIdentifierFromId(GimClient.getClient().getLatestPerson()).getWindow().toFront();
+	        		GimClient.getWindowIdentifierFromId(GimClient.getClient().getLatestPerson()).getWindow().setVisible(true);
 	        	}
 	            
 	           
