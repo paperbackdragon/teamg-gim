@@ -99,14 +99,14 @@ public class networkReader implements Runnable {
 
 		// TODO: Clean up
 		System.out.println("CommandReader stopped.");
-		
+
 		LoginPanel panel = new LoginPanel();
 		panel.setParent(GimClient.getMainWindow());
 		GimClient.getClient().setConnected(false);
 		gui.connectionDroppedError();
-		
+
 		GimClient.getMainWindow().setMainPanel(panel);
-		
+
 		gui.connectionDroppedError();
 
 	}
@@ -147,11 +147,9 @@ public class networkReader implements Runnable {
 
 			if (cmd.getArgumentsAsString().equalsIgnoreCase("LOGGEDIN")) {
 				gui.authorised();
-			} else if (cmd.getArgumentsAsString().equalsIgnoreCase(
-					"UNAUTHORIZED")) {
+			} else if (cmd.getArgumentsAsString().equalsIgnoreCase("UNAUTHORIZED")) {
 				gui.unauthorised();
-			} else if (cmd.getArgumentsAsString()
-					.equalsIgnoreCase("REGISTERED")) {
+			} else if (cmd.getArgumentsAsString().equalsIgnoreCase("REGISTERED")) {
 				gui.registered();
 			}
 		}
@@ -196,7 +194,7 @@ public class networkReader implements Runnable {
 
 				String roomid = Command.decode(parts[0]);
 
-				String[] users = new String[parts.length -1];
+				String[] users = new String[parts.length - 1];
 				for (int i = 1; i < parts.length; i++) {
 					users[i - 1] = Command.decode(parts[i]);
 				}
@@ -257,8 +255,7 @@ public class networkReader implements Runnable {
 			String data = cmd.getData();
 			String[] parts = data.split(" ");
 
-			gui.friendrequest(Command.decode(parts[0]), Command
-					.decode(parts[1]));
+			gui.friendrequest(Command.decode(parts[0]), Command.decode(parts[1]));
 		}
 
 		else if (cmd.getCommand().equalsIgnoreCase("UPDATE")) {
@@ -275,8 +272,7 @@ public class networkReader implements Runnable {
 				gui.notifyStatus(Command.decode(cmd.getData()));
 			}
 
-			else if (cmd.getArgumentsAsString().equalsIgnoreCase(
-					"PERSONAL_MESSAGE")) {
+			else if (cmd.getArgumentsAsString().equalsIgnoreCase("PERSONAL_MESSAGE")) {
 				gui.notifyPersonalMessage(Command.decode(cmd.getData()));
 			}
 
@@ -300,36 +296,32 @@ public class networkReader implements Runnable {
 			String currentusername = parts[0];
 			while (i < parts.length) {
 
-				if (count != 0) {
-					// note to self: lol.. eh... do this better. this probably won't work for
+				if (count > 0) {
+					// note to self: lol.. eh... do this better. this probably
+					// won't work for
 					// multiple madness
 					count--;
 
 					if (arguments[count].equalsIgnoreCase("NICKNAME")) {
 
-						gui.updateNickname(currentusername,Command.decode(parts[i])
-								);
+						gui.updateNickname(currentusername, Command.decode(parts[i]));
 
 					}
 
 					else if (arguments[count].equalsIgnoreCase("STATUS")) {
-						gui.updateStatus(currentusername, Command.decode(parts[i])
-								);
-						
+						gui.updateStatus(currentusername, Command.decode(parts[i]));
+
 						System.out.println("got where i wanted");
 
 					}
 
-					else if (arguments[count]
-							.equalsIgnoreCase("PERSONAL_MESSAGE")) {
-						gui.updatePersonalMessage(currentusername, Command.decode(parts[i])
-								);
+					else if (arguments[count].equalsIgnoreCase("PERSONAL_MESSAGE")) {
+						gui.updatePersonalMessage(currentusername, Command.decode(parts[i]));
 
 					}
 
 					else if (arguments[count].equalsIgnoreCase("DISPLAY_PIC")) {
-						gui.updateDisplayPicture(currentusername,Command.decode(parts[i])
-								);
+						gui.updateDisplayPicture(currentusername, Command.decode(parts[i]));
 					}
 
 				}
@@ -359,62 +351,51 @@ public class networkReader implements Runnable {
 
 			}
 
-			else if (cmd.getArgumentsAsString().equalsIgnoreCase(
-					"INVALID_EMAIL")) {
+			else if (cmd.getArgumentsAsString().equalsIgnoreCase("INVALID_EMAIL")) {
 				gui.invalidEmailError(Command.decode(cmd.getData()));
 			}
 
-			else if (cmd.getArgumentsAsString().equalsIgnoreCase(
-					"EMAIL_ALREADY_IN_USE")) {
+			else if (cmd.getArgumentsAsString().equalsIgnoreCase("EMAIL_ALREADY_IN_USE")) {
 				gui.emailInuseError(Command.decode(cmd.getData()));
 			}
 
-			else if (cmd.getArgumentsAsString().equalsIgnoreCase(
-					"PASSWORD_TOO_SHORT")) {
+			else if (cmd.getArgumentsAsString().equalsIgnoreCase("PASSWORD_TOO_SHORT")) {
 				gui.passwordTooShortError(Command.decode(cmd.getData()));
 			}
 
-			else if (cmd.getArgumentsAsString().equalsIgnoreCase(
-					"MISSING_ARGUMENTS")) {
+			else if (cmd.getArgumentsAsString().equalsIgnoreCase("MISSING_ARGUMENTS")) {
 				gui.missingArgumentsError(Command.decode(cmd.getData()));
 			}
 
-			else if (cmd.getArgumentsAsString().equalsIgnoreCase(
-					"TOO_MANY_ARGUMENTS")) {
+			else if (cmd.getArgumentsAsString().equalsIgnoreCase("TOO_MANY_ARGUMENTS")) {
 				gui.tooManyArgumentsError(Command.decode(cmd.getData()));
 			}
 
-			else if (cmd.getArgumentsAsString().equalsIgnoreCase(
-					"INVALID_ARGUMENT")) {
+			else if (cmd.getArgumentsAsString().equalsIgnoreCase("INVALID_ARGUMENT")) {
 				gui.invalidArgumentError(Command.decode(cmd.getData()));
 
 			}
 
-			else if (cmd.getArgumentsAsString().equalsIgnoreCase(
-					"LOGGED_IN_FROM_OTHER_LOCATION")) {
-				gui.loggedInFromAnotherLocationError(Command.decode(cmd
-						.getData()));
+			else if (cmd.getArgumentsAsString().equalsIgnoreCase("LOGGED_IN_FROM_OTHER_LOCATION")) {
+				gui.loggedInFromAnotherLocationError(Command.decode(cmd.getData()));
 			}
 
-			else if (cmd.getArgumentsAsString().equalsIgnoreCase(
-					"USER_DOES_NOT_EXIST")) {
+			else if (cmd.getArgumentsAsString().equalsIgnoreCase("USER_DOES_NOT_EXIST")) {
 				gui.userDoesNotExistError(Command.decode(cmd.getData()));
 			}
 
-			else if (cmd.getArgumentsAsString().equalsIgnoreCase(
-					"LOGIN_DETAILS_INCORRECT")) {
+			else if (cmd.getArgumentsAsString().equalsIgnoreCase("LOGIN_DETAILS_INCORRECT")) {
 				gui.logInDetailsIncorrectError(Command.decode(cmd.getData()));
 			}
 
-			else if (cmd.getArgumentsAsString().equalsIgnoreCase(
-					"INVALID_USER_SUPPLIED")) {
+			else if (cmd.getArgumentsAsString().equalsIgnoreCase("INVALID_USER_SUPPLIED")) {
 				gui.invalidUserError(Command.decode(cmd.getData()));
 			}
-			
+
 			else if (cmd.getArgumentsAsString().equalsIgnoreCase("USER_OFFLINE")) {
 				gui.userOfflineError(Command.decode(cmd.getData()));
 			}
-			
+
 			else if (cmd.getArgumentsAsString().equalsIgnoreCase("ALREADY_IN_FRIENDLIST")) {
 				gui.userAlreadyinFriendlistError(Command.decode(cmd.getData()));
 			}

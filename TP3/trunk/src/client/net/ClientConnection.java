@@ -81,7 +81,7 @@ public class ClientConnection implements NetworkingOut, Runnable {
 
 	public Boolean connect() {
 		try {
-			serverConnection = new Socket("62.56.118.210", 4444);
+			serverConnection = new Socket("rooster.dyndns.info", 4444);
 			readandwrite();
 			this.connected = true;
 		} catch (UnknownHostException e) {
