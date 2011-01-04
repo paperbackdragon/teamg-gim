@@ -21,6 +21,8 @@ import client.GimClient;
 @SuppressWarnings("serial")
 public class ChatPanel extends JPanel {
 	private LinkedList<String> messageQueue;
+	
+	private Timer timer=null;
 
 	protected String id;
 	protected JTextArea chatBox;
@@ -54,6 +56,8 @@ public class ChatPanel extends JPanel {
 	// </proposed>
 
 	private Boolean inProgress = false;
+
+	private boolean isFocused;
 
 	public Boolean getInProgress() {
 		return inProgress;
@@ -130,9 +134,22 @@ public class ChatPanel extends JPanel {
 			StyleConstants.setIcon(style, new ImageIcon(s.getIcon()));
 			s.setStyle(style);
 		}
-
+		
+		
+		
+		//timer = new Timer(500,new FlashwindowListener(GimClient.getWindowIdentifierFromId(id).getWindow()));
+		isFocused = false;
+		
 	}
-
+	
+	public void setIsFocused(Boolean focused) {
+		this.isFocused = focused;
+	}
+	
+	public Boolean getIsFocused(){
+		return isFocused;
+	}
+	
 	// HELPER METHODS
 	public Dimension getPreferredSize() {
 		return new Dimension(300, 400);
@@ -225,6 +242,11 @@ public class ChatPanel extends JPanel {
 					}
 
 					doc.insertString(doc.getLength(), msg + "\n", regular);
+					
+					
+					if (isFocused == false) {
+						//timer.start();
+					}
 
 				} catch (BadLocationException e) {
 				}
@@ -273,6 +295,22 @@ public class ChatPanel extends JPanel {
 		}
 
 		public void keyReleased(KeyEvent e) {
+		}
+	}
+	
+	class FlashwindowListener implements ActionListener
+	{
+		private Window chatwindow;
+		private final native void flashWindow(Window chatwindow);
+
+		public FlashwindowListener(Window window)
+		{
+			this.chatwindow = window;
+		}
+
+		public void actionPerformed(ActionEvent ae)
+		{
+			flashWindow(chatwindow);
 		}
 	}
 
