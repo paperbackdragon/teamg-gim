@@ -29,6 +29,7 @@ public class ClientModel {
 	private String nickname;
 	private String displayPicture;
 	private String username;
+	private String latestperson;
 	
 	public void setOwnUserName(String username) {
 		this.username = username;	
@@ -285,6 +286,15 @@ public class ClientModel {
 	
 	public void endNetworkWriter() {
 		outLink.endNetworkWriter();
+	}
+
+	public String getLatestPerson() {
+		return latestperson;
+		// TODO Auto-generated method stub
+	}
+	
+	public void setLatestPerson(String latest) {
+		this.latestperson = latest;
 	}
 
 }

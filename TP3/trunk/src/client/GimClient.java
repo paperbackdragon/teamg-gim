@@ -94,7 +94,7 @@ public class GimClient {
 			System.out.println("found the room");
 			if (windows.get(i).getCp().getID().equals(roomid)) {
 				windows.get(i).getCp().receiveMessage(sender, message);
-
+				GimClient.getClient().setLatestPerson(roomid);
 				break;
 			}
 		}
@@ -165,7 +165,7 @@ public class GimClient {
 	    MouseListener mouseListener = new MouseListener() {
 	                
 	        public void mouseClicked(MouseEvent e) {
-	            System.out.println("Tray Icon - Mouse clicked!");                 
+	            System.out.println("Tray Icon - Mouse clicked!");   
 	        }
 
 	        public void mouseEntered(MouseEvent e) {
@@ -201,9 +201,15 @@ public class GimClient {
 
 	    ActionListener actionListener = new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
-	            trayIcon.displayMessage("Action Event", 
+	            /*trayIcon.displayMessage("Action Event", 
 	                "An Action Event Has Been Performed!",
-	                TrayIcon.MessageType.INFO);
+	                TrayIcon.MessageType.INFO);*/
+	        	
+	        	if (e.getSource() == trayIcon) {
+	        		GimClient.getWindowIdentifierFromId(GimClient.getClient().getLatestPerson()).getWindow().toFront();
+	        	}
+	            
+	           
 	        }
 	    };
 	            
