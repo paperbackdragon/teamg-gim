@@ -2,6 +2,7 @@ package client.ui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.net.URISyntaxException;
 import java.util.LinkedList;
 
 import javax.swing.*;
@@ -15,14 +16,12 @@ import client.GimClient;
 
 /**
  * General class for a chat panel.
- * 
- * @author Heather
  */
 @SuppressWarnings("serial")
 public class ChatPanel extends JPanel {
 	private LinkedList<String> messageQueue;
-	
-	private Timer timer=null;
+
+	private Timer timer = null;
 
 	protected String id;
 	protected JTextArea chatBox;
@@ -31,13 +30,10 @@ public class ChatPanel extends JPanel {
 	private StyledDocument doc;
 	private Style regular, bold, italic, self;
 
-	private Smiley[] smilies = { new Smiley(":)", "smiles/Happy_smiley.png"),
-			new Smiley(":-)", "smiles/Happy_smiley.png"), new Smiley(":(", "smiles/Sad_smiley.png"),
-			new Smiley(":-(", "smiles/Sad_smiley.png"), new Smiley(":P", "smiles/Tonque_out_smiley.png"),
-			new Smiley(":-P", "smiles/Tonque_out_smiley.png"), new Smiley(";(", "smiles/Crying_smiley.png"),
-			new Smiley(";-(", "smiles/Crying_smiley.png"), new Smiley("(@)", "smiles/Cat.png") };
-
-	// TODO (heather): make sure window scrolls down when chatting
+	private Smiley[] smilies = { new Smiley(":)", "Happy_smiley.png"), new Smiley(":-)", "Happy_smiley.png"),
+			new Smiley(":(", "Sad_smiley.png"), new Smiley(":-(", "Sad_smiley.png"),
+			new Smiley(":P", "Tonque_out_smiley.png"), new Smiley(":-P", "Tonque_out_smiley.png"),
+			new Smiley(";(", "Crying_smiley.png"), new Smiley(";-(", "Crying_smiley.png"), new Smiley("(@)", "Cat.png") };
 
 	/*
 	 * Gordon: proposed. On adding message to messages JTextArea if messageCount
@@ -72,7 +68,7 @@ public class ChatPanel extends JPanel {
 	}
 
 	/*
-	 * Case where the other user has closed their window. Don't want to cocern
+	 * Case where the other user has closed their window. Don't want to concern
 	 * the user with having to wait for room creation
 	 */
 	private void sendMessageQueue() {
@@ -92,7 +88,8 @@ public class ChatPanel extends JPanel {
 	}
 
 	/**
-	 * Constructor for a chat box
+	 * Constructor for a chat box. Creates styles, smiles and everything else we
+	 * need
 	 */
 	public ChatPanel(String roomID) {
 		try {
@@ -103,14 +100,25 @@ public class ChatPanel extends JPanel {
 		id = roomID;
 		messageQueue = new LinkedList<String>();
 
+		// Try and get the path to wherever this is running from
+		String smileyPath = "";
+		try {
+			smileyPath = GimClient.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+		} catch (URISyntaxException e) {
+		}
+		smileyPath = smileyPath.substring(0, smileyPath.lastIndexOf("/")) + "/smiles/";
+
+		// Create a new document for the messages
 		messages = new JTextPane();
 		messages.setEditable(false);
-
 		doc = messages.getStyledDocument();
 
 		// Load the default style and add it as the "regular" text
 		Style def = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
 		StyleConstants.setAlignment(def, StyleConstants.ALIGN_LEFT);
+
+		// This apparently sets the font to be the default system font. What the
+		// hell TabbedPane.font means I have no idea
 		StyleConstants.setFontFamily(def, UIManager.getDefaults().getFont("TabbedPane.font").getFontName());
 		StyleConstants.setSpaceAbove(def, 4f);
 		regular = doc.addStyle("regular", def);
@@ -126,30 +134,30 @@ public class ChatPanel extends JPanel {
 		// Style for the current users name
 		self = doc.addStyle("self", bold);
 		StyleConstants.setForeground(self, Color.RED);
-		
+
+		// This line here. Yes, this one. It can die and go to Hell.
 		doc.setParagraphAttributes(0, 0, regular, true);
 
 		for (Smiley s : smilies) {
 			Style style = doc.addStyle(s.getText(), null);
-			StyleConstants.setIcon(style, new ImageIcon(s.getIcon()));
+			StyleConstants.setIcon(style, new ImageIcon(smileyPath + s.getIcon()));
 			s.setStyle(style);
 		}
-		
-		
-		
-		//timer = new Timer(500,new FlashwindowListener(GimClient.getWindowIdentifierFromId(id).getWindow()));
+
+		// timer = new Timer(500,new
+		// FlashwindowListener(GimClient.getWindowIdentifierFromId(id).getWindow()));
 		isFocused = false;
-		
+
 	}
-	
+
 	public void setIsFocused(Boolean focused) {
 		this.isFocused = focused;
 	}
-	
-	public Boolean getIsFocused(){
+
+	public Boolean getIsFocused() {
 		return isFocused;
 	}
-	
+
 	// HELPER METHODS
 	public Dimension getPreferredSize() {
 		return new Dimension(300, 400);
@@ -164,7 +172,7 @@ public class ChatPanel extends JPanel {
 	}
 
 	/**
-	 * Method to set the focus of the mouse to the input text box
+	 * Set the focus of the mouse to the input text box
 	 */
 	public void setFocus() {
 		chatBox.requestFocusInWindow();
@@ -189,6 +197,11 @@ public class ChatPanel extends JPanel {
 
 	/**
 	 * Sends a received message to the message log
+	 * 
+	 * @param sender
+	 *            The id of the person who sent the message
+	 * @param message
+	 *            The message itself
 	 */
 	public void receiveMessage(final String sender, final String message) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
@@ -198,14 +211,13 @@ public class ChatPanel extends JPanel {
 				String from = "";
 				Style nameStyle = bold;
 
+				// Assign correct styles and names to the sender
 				if (!sender.equals("Me")) {
 					User user = GimClient.getClient().getUser(sender);
-					
 					if (user == null)
 						from = sender;
 					else
 						from = user.getNickname();
-
 					nameStyle = bold;
 				} else {
 					from = sender;
@@ -213,6 +225,7 @@ public class ChatPanel extends JPanel {
 				}
 
 				try {
+					// Add the name of the sender to the chat
 					doc.insertString(doc.getLength(), from + ": ", nameStyle);
 
 					int position = 0;
@@ -223,6 +236,7 @@ public class ChatPanel extends JPanel {
 					while (position != -1) {
 						position = -1;
 
+						// Check for the smiley closest to the start of the text
 						for (Smiley s : smilies) {
 							tmp = msg.toUpperCase().indexOf(s.getText());
 							if (tmp > -1 && (position == -1 || tmp < position)) {
@@ -232,25 +246,33 @@ public class ChatPanel extends JPanel {
 							}
 						}
 
+						// Check that we've found a smiley
 						if (position >= 0 && smiley != null) {
+							// Add the message before the smiley and the smiley
+							// itself to the chat
 							doc.insertString(doc.getLength(), msg.substring(0, position), regular);
 							doc.insertString(doc.getLength(), msg.substring(position, position
 									+ smiley.getText().length()), smiley.getStyle());
+
+							// Chop everything before and including the smiley
+							// off
 							msg = msg.substring(position + smiley.getText().length());
 						}
 
 					}
 
+					// Insert any remaining text into the chat
 					doc.insertString(doc.getLength(), msg + "\n", regular);
-					
-					
+
 					if (isFocused == false) {
-						GimClient.getTrayIcon().displayMessage("fsd", "Messaged received from " + sender, TrayIcon.MessageType.INFO);
+						GimClient.getTrayIcon().displayMessage("fsd", "Messaged received from " + sender,
+								TrayIcon.MessageType.INFO);
 					}
 
 				} catch (BadLocationException e) {
 				}
 
+				// Scroll to the end of the chat
 				messages.setCaretPosition(doc.getLength());
 
 				messageCount += 1;
@@ -262,12 +284,16 @@ public class ChatPanel extends JPanel {
 
 	}
 
-	/* method to display the chat only a message has been received */
+	/**
+	 * Show the chat window
+	 */
 	private void showChat() {
 		GimClient.getWindowIdentifierFromId(id).getWindow().setVisible(true);
 	}
 
-	// ACTION LISTENERS
+	/**
+	 * Action listeners
+	 */
 	public class SendListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			sendMessage();
@@ -297,19 +323,17 @@ public class ChatPanel extends JPanel {
 		public void keyReleased(KeyEvent e) {
 		}
 	}
-	
-	class FlashwindowListener implements ActionListener
-	{
+
+	class FlashwindowListener implements ActionListener {
 		private Window chatwindow;
+
 		private final native void flashWindow(Window chatwindow);
 
-		public FlashwindowListener(Window window)
-		{
+		public FlashwindowListener(Window window) {
 			this.chatwindow = window;
 		}
 
-		public void actionPerformed(ActionEvent ae)
-		{
+		public void actionPerformed(ActionEvent ae) {
 			flashWindow(chatwindow);
 		}
 	}

@@ -21,7 +21,7 @@ public class ClientConnection implements NetworkingOut, Runnable {
 
 	private networkReader reader;
 	private networkWriter writer;
-	private CommandBuffer<String> buffer;
+	private CommandBuffer<Command> buffer;
 
 	private Thread readerthread;
 	private Thread writerthread;
@@ -29,7 +29,7 @@ public class ClientConnection implements NetworkingOut, Runnable {
 	private ServerConnection gui;
 	private Thread thread;
 
-	boolean connected;
+	boolean connected = false;
 
 	/**
 	 * Creates a connection to the server. Allows the GUI to perform action on
@@ -41,9 +41,7 @@ public class ClientConnection implements NetworkingOut, Runnable {
 	 */
 	public ClientConnection(ServerConnection gui) {
 		this.gui = gui;
-
 		connect();
-
 	}
 
 	public boolean isConnected() {
@@ -56,20 +54,17 @@ public class ClientConnection implements NetworkingOut, Runnable {
 
 	private void readandwrite() {
 		try {
-			bufferedreader = new BufferedReader(new InputStreamReader(
-					serverConnection.getInputStream()));
-			printwriter = new PrintWriter(serverConnection.getOutputStream(),
-					true);
+			bufferedreader = new BufferedReader(new InputStreamReader(serverConnection.getInputStream()));
+			printwriter = new PrintWriter(serverConnection.getOutputStream(), true);
 		} catch (IOException e) {
-			System.out
-					.println("aye... what the hell do we do if this happens :|.");
+			System.out.println("aye... what the hell do we do if this happens :|.");
 
 			bufferedreader = null;
 			printwriter = null;
 		}
 
 		// get the reader and writer, and buffer on the go... ;x
-		this.buffer = new CommandBuffer<String>();
+		this.buffer = new CommandBuffer<Command>();
 		this.reader = new networkReader(bufferedreader, gui);
 		this.writer = new networkWriter(printwriter, buffer);
 
@@ -94,8 +89,7 @@ public class ClientConnection implements NetworkingOut, Runnable {
 			// tell the GUI
 
 		} catch (IOException e) {
-			System.out
-					.println("uhm... handle this somehow... what is it anyway");
+			System.out.println("uhm... handle this somehow... what is it anyway");
 
 			serverConnection = null;
 			this.connected = false;
@@ -104,20 +98,20 @@ public class ClientConnection implements NetworkingOut, Runnable {
 		return true;
 	}
 
+	/**
+	 * Run the thread.
+	 */
 	public void run() {
 		// heart beat
 		// NO IDEA IF THIS IS SENSIBLE, OR EVEN THE WAY TO DO IT
 
-		while (true) {
-			if (connected == true) {
-				try {
-					Thread.currentThread();
-					Thread.sleep(12000);
-					ping();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					System.out.println("Oh noes!");
-				}
+		while (connected) {
+			try {
+				Thread.currentThread();
+				Thread.sleep(12000);
+				ping();
+			} catch (InterruptedException e) {
+				break;
 			}
 		}
 
@@ -125,137 +119,111 @@ public class ClientConnection implements NetworkingOut, Runnable {
 
 	@Override
 	public void ping() {
-		buffer.putCommand(":PING:;");
+		buffer.putCommand(new Command("PING"));
 	}
 
-	@Override
 	public void authenticate(String emailaddress, char[] password) {
-		// TODO Auto-generated method stub
 		// :AUTH { LOGIN | REGISTER }: <email address> <password>;
-
-		if (connected == true) {
-			buffer.putCommand(":AUTH LOGIN: " + Command.encode(emailaddress)
-					+ " " + Command.encode(new String(password)) + ";");
-		} else {
-			if (connect() != true) { // couldn't connect
-				JOptionPane
-						.showMessageDialog(null,
-								"Server is down. Contact us... Or try logging in again.");
-			} else { // returned true. was able to establish connection
-				buffer.putCommand(":AUTH LOGIN: "
-						+ Command.encode(emailaddress) + " "
-						+ Command.encode(new String(password)) + ";");
-			}
+		if (connected == false && connect() != true) {
+			JOptionPane.showMessageDialog(null, "Server is down.");
+			return;
 		}
+
+		buffer.putCommand(new Command("AUTH", "LOGIN", Command.encode(emailaddress) + " "
+				+ Command.encode(new String(password))));
 
 	}
 
 	@Override
 	public void quit() {
 		// :QUIT:;
-		buffer.putCommand(":QUIT:;");
+		buffer.putCommand(new Command("QUIT"));
 	}
 
 	@Override
 	public void register(String emailaddress, char[] password) {
-
 		// :AUTH { LOGIN | REGISTER }: <email address> <password>;
-
-		buffer.putCommand(":AUTH REGISTER: " + Command.encode(emailaddress)
-				+ " " + Command.encode(new String(password)) + ";");
-
+		buffer.putCommand(new Command("AUTH", "REGISTER", Command.encode(emailaddress) + " "
+				+ Command.encode(new String(password))));
 	}
 
 	@Override
 	public void friendlist() {
 		// :FRIENDLIST:;
-		buffer.putCommand(":FRIENDLIST:;");
-
+		buffer.putCommand(new Command("FRIENDLIST"));
 	}
 
 	@Override
 	public void message(String roomid, String message) {
 		// :MESSAGE: <roomid> <message>;
-		buffer.putCommand(":MESSAGE: " + Command.encode(roomid) + " "
-				+ Command.encode(message) + ";");
-
+		buffer.putCommand(new Command("MESSAGE", null, Command.encode(roomid) + " " + Command.encode(message)));
 	}
 
 	@Override
 	public void logout() {
 		// :LOGOUT:;
-		buffer.putCommand(":LOGOUT:;");
+		buffer.putCommand(new Command("LOGOUT"));
 	}
 
 	@Override
 	public void serverTime() {
 		// :SERVERSTATUS { USERS | TIME | UPTIME }:;
-		buffer.putCommand(":SERVERSTATUS TIME:;");
+		buffer.putCommand(new Command("SERVERSTATUS", "TIME"));
 	}
 
 	@Override
 	public void serverUptime() {
 		// :SERVERSTATUS { USERS | TIME | UPTIME }:;
-		buffer.putCommand(":SERVERSTATUS UPTIME:;");
-
+		buffer.putCommand(new Command("SERVERSTATUS", "UPTIME"));
 	}
 
 	@Override
 	public void servernumberofusers() {
 		// :SERVERSTATUS { USERS | TIME | UPTIME }:;
-		buffer.putCommand(":SERVERSTATUS USERS:;");
+		buffer.putCommand(new Command("SERVERSTATUS", "USERS"));
 	}
 
 	@Override
 	public void serverstatus() {
 		// :SERVERSTATUS { USERS | TIME | UPTIME }:;
-		buffer.putCommand(":SERVERSTATUS:;");
+		buffer.putCommand(new Command("SERVERSTATUS"));
 	}
 
 	@Override
 	public void setDisplayPicture(String displayPicture) {
 		// :SET [ NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC ]: <value>;
-		buffer.putCommand(":SET DISPLAY_PIC: " + Command.encode(displayPicture)
-				+ ";");
+		buffer.putCommand(new Command("SET", "DISPLAY_PIC", Command.encode(displayPicture)));
 	}
 
 	@Override
 	public void setNickname(String nickname) {
 		// :SET [ NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC ]: <value>;
-		buffer.putCommand(":SET NICKNAME: " + Command.encode(nickname) + ";");
-
+		buffer.putCommand(new Command("SET", "NICKNAME", Command.encode(nickname)));
 	}
 
 	@Override
 	public void setPersonalMessage(String personalmessage) {
 		// :SET [ NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC ]: <value>;
-		buffer.putCommand(":SET PERSONAL_MESSAGE: "
-				+ Command.encode(personalmessage) + ";");
-
+		buffer.putCommand(new Command("SET", "PERSONAL_MESSAGE", Command.encode(personalmessage)));
 	}
 
 	@Override
 	public void setStatus(String status) {
 		// :SET [ NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC ]: <value>;
-		buffer.putCommand(":SET STATUS: " + Command.encode(status) + ";");
-
+		buffer.putCommand(new Command("SET", "STATUS", Command.encode(status)));
 	}
 
 	@Override
 	public void getDisplayPicture(String userList) {
 		// :GET { NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC }:
 		// <user>{ <user>};
-		String[] data = userList.split(" ");
+
+		// Encode the names
 		String userListString = "";
+		for (String user : userList.split(" "))
+			userListString += Command.encode(user) + " ";
 
-		for (int i = 0; i < data.length; i++) {
-			Command.encode(data[i]);
-			userListString += data[i];
-
-			if (i < data.length)
-				userListString += " ";
-		}
-		buffer.putCommand(":GET DISPLAY_PIC: " + userListString + ";");
+		buffer.putCommand(new Command("GET", "DISPLAY_PIC", userListString));
 	}
 
 	@Override
@@ -263,156 +231,124 @@ public class ClientConnection implements NetworkingOut, Runnable {
 		// :GET { NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC }:
 		// <user>{ <user>};
 
-		String[] data = userList.split(" ");
+		// Encode the names
 		String userListString = "";
+		for (String user : userList.split(" "))
+			userListString += Command.encode(user) + " ";
 
-		for (int i = 0; i < data.length; i++) {
-			Command.encode(data[i]);
-			userListString += data[i];
-
-			if (i < data.length)
-				userListString += " ";
-		}
-		buffer.putCommand(":GET NICKNAME: " + userListString + ";");
-
+		buffer.putCommand(new Command("GET", "NICKNAME", userListString));
 	}
 
 	@Override
 	public void getPersonalMessage(String userList) {
 		// :GET { NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC }:
 		// <user>{ <user>};
-		String[] data = userList.split(" ");
+
+		// Encode the names
 		String userListString = "";
+		for (String user : userList.split(" "))
+			userListString += Command.encode(user) + " ";
 
-		for (int i = 0; i < data.length; i++) {
-			Command.encode(data[i]);
-			userListString += data[i];
-
-			if (i < data.length)
-				userListString += " ";
-		}
-
-		buffer.putCommand(":GET PERSONAL_MESSAGE: " + userListString + ";");
-
+		buffer.putCommand(new Command("GET", "PERSONAL_MESSAGE", userListString));
 	}
 
 	@Override
 	public void getStatus(String userList) {
 		// :GET { NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC }:
 		// <user>{ <user>};
-		String[] data = userList.split(" ");
+
+		// Encode the names
 		String userListString = "";
+		for (String user : userList.split(" "))
+			userListString += Command.encode(user) + " ";
 
-		for (int i = 0; i < data.length; i++) {
-			Command.encode(data[i]);
-			userListString += data[i];
-
-			if (i < data.length)
-				userListString += " ";
-		}
-
-		buffer.putCommand(":GET STATUS: " + userListString + ";");
+		buffer.putCommand(new Command("GET", "STATUS", userListString));
 	}
 
 	@Override
 	public void invite(String roomid, String user) {
 		// :ROOM [ CREATE {GROUP} | INVITE | JOIN | LEAVE | USERS ]: {<roomid> |
 		// <user>};
-		buffer.putCommand(":ROOM INVITE: " + Command.encode(roomid) + " "
-				+ Command.encode(user) + ";");
+		buffer.putCommand(new Command("ROOM", "INVITE", Command.encode(roomid) + " " + Command.encode(user)));
 	}
 
 	@Override
 	public void join(String roomid) {
 		// :ROOM [ CREATE {GROUP} | INVITE | JOIN | LEAVE | USERS ]: {<roomid> |
 		// <user>};
-		buffer.putCommand(":ROOM JOIN: " + Command.encode(roomid) + ";");
+		buffer.putCommand(new Command("ROOM", "JOIN", Command.encode(roomid)));
 	}
 
 	@Override
 	public void leave(String roomid) {
 		// :ROOM [ CREATE {GROUP} | INVITE | JOIN | LEAVE | USERS ]: {<roomid> |
 		// <user>};
-		buffer.putCommand(":ROOM LEAVE: " + Command.encode(roomid) + ";");
+		buffer.putCommand(new Command("ROOM", "LEAVE", Command.encode(roomid)));
 	}
 
 	@Override
 	public void roomusers(String roomid) {
 		// :ROOM [ CREATE {GROUP} | INVITE | JOIN | LEAVE | USERS ]: {<roomid> |
 		// <user>};
-		buffer.putCommand(":ROOM USERS: " + Command.encode(roomid) + ";");
+		buffer.putCommand(new Command("ROOM", "USERS", Command.encode(roomid)));
 	}
 
 	@Override
 	public void accept(String friend) {
 		// :FRIEND [ ADD | BLOCK | UNBLOCK | ACCEPT | DECLINE | DELETE ]:
 		// <target>;
-		buffer.putCommand(":FRIEND ACCEPT: " + Command.encode(friend) + ";");
+		buffer.putCommand(new Command("FRIEND", "ACCEPT", Command.encode(friend)));
 	}
 
 	@Override
 	public void add(String friend) {
 		// :FRIEND [ ADD | BLOCK | UNBLOCK | ACCEPT | DECLINE | DELETE ]:
 		// <target>;
-		buffer.putCommand(":FRIEND ADD: " + Command.encode(friend) + ";");
+		buffer.putCommand(new Command("FRIEND", "ADD", Command.encode(friend)));
 	}
 
 	@Override
 	public void block(String friend) {
 		// :FRIEND [ ADD | BLOCK | UNBLOCK | ACCEPT | DECLINE | DELETE ]:
 		// <target>;
-		buffer.putCommand(":FRIEND BLOCK: " + Command.encode(friend) + ";");
+		buffer.putCommand(new Command("FRIEND", "BLOCK", Command.encode(friend)));
 	}
 
 	@Override
 	public void decline(String friend) {
 		// :FRIEND [ ADD | BLOCK | UNBLOCK | ACCEPT | DECLINE | DELETE ]:
 		// <target>;
-		buffer.putCommand(":FRIEND DECLINE: " + Command.encode(friend) + ";");
+		buffer.putCommand(new Command("FRIEND", "DECLINE", Command.encode(friend)));
 	}
 
 	@Override
 	public void delete(String friend) {
 		// :FRIEND [ ADD | BLOCK | UNBLOCK | ACCEPT | DECLINE | DELETE ]:
 		// <target>;
-		buffer.putCommand(":FRIEND DELETE: " + Command.encode(friend) + ";");
+		buffer.putCommand(new Command("FRIEND", "DELETE", Command.encode(friend)));
 	}
 
 	@Override
 	public void unblock(String friend) {
 		// :FRIEND [ ADD | BLOCK | UNBLOCK | ACCEPT | DECLINE | DELETE ]:
 		// <target>;
-		buffer.putCommand(":FRIEND UNBLOCK: " + Command.encode(friend) + ";");
+		buffer.putCommand(new Command("FRIEND", "UNBLOCK", Command.encode(friend)));
 	}
 
 	@Override
-	public void getAttributes(ArrayList<String> attributes,
-			ArrayList<String> users) {
+	public void getAttributes(ArrayList<String> attributes, ArrayList<String> users) {
 		// :GET { NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC }:
 		// <user>{,<user>};
 
 		String attributesstring = "";
-		for (int i = 0; i < attributes.size(); i++) {
-			attributesstring += attributes.get(i);
+		for (String attribute : attributes)
+			attributesstring += attribute + " ";
 
-			if (i < attributes.size()) {
-				attributesstring += " ";
-			}
-		}
+		String userList = "";
+		for (String user : users)
+			userList += Command.encode(user) + " ";
 
-		String usersstring = "";
-		for (int j = 0; j < users.size(); j++) {
-			usersstring += Command.encode(users.get(j));
-
-			if (j < users.size()) {
-				usersstring += " ";
-			}
-
-		}
-
-		buffer.putCommand(":GET: " + attributesstring + ":" + " " + usersstring
-				+ ";");
-
+		buffer.putCommand(new Command("GET", attributesstring, userList));
 	}
 
 	@Override
@@ -421,7 +357,7 @@ public class ClientConnection implements NetworkingOut, Runnable {
 		// {<roomid> |
 		// <user>};
 
-		buffer.putCommand(":ROOM CREATE GROUP:;");
+		buffer.putCommand(new Command("ROOM", "CREATE GROUP"));
 	}
 
 	@Override
@@ -431,16 +367,19 @@ public class ClientConnection implements NetworkingOut, Runnable {
 		// <user>};
 
 		System.out.println("got to create single chat");
-		buffer.putCommand(":ROOM CREATE: " + Command.encode(user) + ";");
+		buffer.putCommand(new Command("ROOM", "CREATE", Command.encode(user)));
 	}
 
 	@Override
 	public void type(String roomid) {
-		buffer.putCommand(":ROOM TYPE: " + Command.encode(roomid) + ";");
+		buffer.putCommand(new Command("ROOM", "TYPE", Command.encode(roomid)));
 	}
 
 	public void endNetworkWriter() {
-		buffer.putCommand("STOP");
+		try {
+			serverConnection.close();
+		} catch (IOException e) {
+		}
 	}
 
 }

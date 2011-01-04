@@ -38,7 +38,7 @@ public class ContactPanel extends JPanel {
 	
 	// PANELS
 	private class PersonalInfo extends JPanel {
-		private JLabel name; 
+		private JButton name; 
 		private JLabel message;
 		private JLabel status;
 		
@@ -46,7 +46,7 @@ public class ContactPanel extends JPanel {
 
 			public TextField() {
 				setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-				name = new JLabel("<html><b>" + model.getUser("cyblob@gmail.com") + "</b></html>");
+				name = new JButton();
 				message = new JLabel("Personal Message");
 				status = new JLabel("<html><font size=\"3\">Status: Online</font></html>");
 				add(name);
@@ -59,7 +59,7 @@ public class ContactPanel extends JPanel {
 			setLayout(new FlowLayout(FlowLayout.LEFT));
 			ImageIcon icon = createImageIcon("icon1.jpg", "Icon");
 			JLabel iconLabel = new JLabel(icon);
-			iconLabel.setPreferredSize(new Dimension(50, 50));
+			iconLabel.setPreferredSize(new Dimension(64, 64));
 			iconLabel.setBorder(BorderFactory.createLineBorder(Color.black));
 			add(iconLabel);
 			add(new TextField());
