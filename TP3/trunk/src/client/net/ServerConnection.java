@@ -69,7 +69,20 @@ public class ServerConnection implements NetworkingIn {
 	}
 
 	public void friendrequest(String user, String nickname) {
+		Object[] options = { "Accept", "Decline", };
+		int n = JOptionPane
+				.showOptionDialog(
+						null,
+						"You have received a friend request from "
+								+ user
+								+ "(nickname :" + nickname + ".) Would you like to accept?",
+						"Freind Request", JOptionPane.YES_NO_CANCEL_OPTION,
+						JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
 
+		if (n == 0) {
+			GimClient.getClient().acceptRequest(user);
+		}
+		
 	}
 
 	public void invalidArgumentError(String message) {

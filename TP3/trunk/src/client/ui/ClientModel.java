@@ -298,4 +298,9 @@ public class ClientModel {
 		this.latestperson = latest;
 	}
 
+	public void acceptRequest(String user) {
+		outLink.accept(user);
+		
+	}
+
 }
