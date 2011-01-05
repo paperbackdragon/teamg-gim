@@ -5,15 +5,12 @@ import java.awt.event.*;
 import javax.swing.*;
 
 import client.GimClient;
-import client.ui.LoginPanel.LoginListener;
-
-
 
 public class FindPopup extends JPanel {
 	
+	private static final long serialVersionUID = 1L;
 	JTextField email, username ;
 	JButton find;
-	private MainWindow parent;
 
 	public FindPopup(){
 	FindListener findListener = new FindListener();

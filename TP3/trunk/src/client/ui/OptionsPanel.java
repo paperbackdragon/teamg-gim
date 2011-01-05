@@ -13,6 +13,7 @@ public class OptionsPanel extends JPanel{
 	
 	// feel free to make this prettier, i'm just doing it to test the backend :P
 	
+	private static final long serialVersionUID = 7546695950230803593L;
 	private String personalMessage;
 	private String status;
 	private String displayPicture;

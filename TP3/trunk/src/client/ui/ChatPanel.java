@@ -17,8 +17,9 @@ import client.GimClient;
 /**
  * General class for a chat panel.
  */
-@SuppressWarnings("serial")
 public class ChatPanel extends JPanel {
+	private static final long serialVersionUID = 1L;
+
 	private LinkedList<String> messageQueue;
 
 	private Timer timer = null;

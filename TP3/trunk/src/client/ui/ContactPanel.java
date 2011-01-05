@@ -7,9 +7,9 @@ import javax.swing.tree.*;
 
 import client.GimClient;
 
-@SuppressWarnings("serial")
 public class ContactPanel extends JPanel {
 
+	private static final long serialVersionUID = 1L;
 	private MainWindow parent;
 	private JButton add, del, chat, group;
 	private JTree contactTree;

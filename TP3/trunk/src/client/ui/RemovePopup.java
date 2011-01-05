@@ -9,6 +9,8 @@ import javax.swing.*;
 
 public class RemovePopup extends JPanel {
 	
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Constructor for a remove dialog box used to delete a contact
 	 * 

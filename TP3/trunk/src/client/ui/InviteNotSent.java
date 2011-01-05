@@ -7,6 +7,8 @@ import javax.swing.UIManager;
 
 public class InviteNotSent extends JPanel {
 
+	private static final long serialVersionUID = 1L;
+
 	public InviteNotSent() {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

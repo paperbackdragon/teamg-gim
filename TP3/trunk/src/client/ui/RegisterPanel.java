@@ -7,7 +7,6 @@ import java.awt.event.*;
 import javax.swing.*;
 
 import client.GimClient;
-import client.ui.LoginPanel.EnterListener;
 
 @SuppressWarnings("serial")
 public class RegisterPanel extends JPanel {

@@ -15,8 +15,9 @@ import client.GimClient;
  * 
  * @author Heather
  */
-@SuppressWarnings("serial")
 public class GroupChatPanel extends ChatPanel {
+
+	private static final long serialVersionUID = 1L;
 	private JTextArea guests;
 	private JButton invite;
 	private String[] participants;
@@ -81,7 +82,10 @@ public class GroupChatPanel extends ChatPanel {
 
 	// PANELS
 	class ContactManage extends JPanel {
+		private static final long serialVersionUID = 1L;
+
 		class TextField extends JPanel {
+			private static final long serialVersionUID = 1L;
 			public JButton addContact = new JButton("Invite Contact");
 
 			public TextField() {

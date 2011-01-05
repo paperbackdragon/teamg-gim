@@ -4,12 +4,13 @@ import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 
 public class InviteSent extends JPanel {
+
+	private static final long serialVersionUID = 1L;
 
 	public InviteSent() {
 		try {

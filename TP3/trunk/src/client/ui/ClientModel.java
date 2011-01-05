@@ -14,14 +14,14 @@ public class ClientModel {
 	private LinkedList<String[]> newRoomList = new LinkedList<String[]>();
 	private LinkedList<String> invitationsList = new LinkedList<String>();
 	private LinkedList<Boolean> typeList = new LinkedList<Boolean>();
-	
+
 	private ConcurrentHashMap<String, User> users = new ConcurrentHashMap<String, User>();
 
 	// buddy list
 	private String[] onlinefriends;
 	private String[] offlinefriends;
 	private String[] blockedfriends;
-	
+
 	// options
 	private String personalMessage;
 	private String status;
@@ -29,38 +29,6 @@ public class ClientModel {
 	private String displayPicture;
 	private String username;
 	private String latestperson;
-	
-	public void setOwnUserName(String username) {
-		this.username = username;	
-	}
-	
-	public String getOwnUserName() {
-		return username;
-	}
-	
-	public void setOwnPersonalMessage(String personalMessage) {
-		this.personalMessage = personalMessage;
-	}
-	
-	public String getOwnPersonalMessage() {
-		return personalMessage;
-	}
-	
-	public void setOwnStatus(String status) {
-		this.status = status;
-	}
-	
-	public String getOwnStatus() {
-		return status;
-	}
-	
-	public String getOwnNickname() {
-		return nickname;
-	}
-	
-	public void setOwnNickname(String nickname) {
-		this.nickname = nickname;
-	}
 
 	/**
 	 * Do nothing, just here to beat default constructor
@@ -82,6 +50,38 @@ public class ClientModel {
 	 */
 	public static ClientModel getInstance() {
 		return SingeltonHolder.INSTANCE;
+	}
+
+	public void setOwnUserName(String username) {
+		this.username = username;
+	}
+
+	public String getOwnUserName() {
+		return username;
+	}
+
+	public void setOwnPersonalMessage(String personalMessage) {
+		this.personalMessage = personalMessage;
+	}
+
+	public String getOwnPersonalMessage() {
+		return personalMessage;
+	}
+
+	public void setOwnStatus(String status) {
+		this.status = status;
+	}
+
+	public String getOwnStatus() {
+		return status;
+	}
+
+	public String getOwnNickname() {
+		return nickname;
+	}
+
+	public void setOwnNickname(String nickname) {
+		this.nickname = nickname;
 	}
 
 	// ACCESSORS
@@ -270,11 +270,11 @@ public class ClientModel {
 		outLink.setStatus(status);
 
 	}
-	
+
 	public void setPersonalMessage(String personalmessage) {
 		outLink.setPersonalMessage(personalmessage);
 	}
-	
+
 	public void setNickname(String nickname) {
 		outLink.setNickname(nickname);
 	}
@@ -282,7 +282,7 @@ public class ClientModel {
 	public void setConnected(boolean b) {
 		outLink.setConnected(false);
 	}
-	
+
 	public void endNetworkWriter() {
 		outLink.endNetworkWriter();
 	}
@@ -291,15 +291,15 @@ public class ClientModel {
 		return latestperson;
 		// TODO Auto-generated method stub
 	}
-	
+
 	public void setLatestPerson(String latest) {
-		//SET FOR SIGN IN / OUT / MESSAGE ALERTS
+		// SET FOR SIGN IN / OUT / MESSAGE ALERTS
 		this.latestperson = latest;
 	}
 
 	public void acceptRequest(String user) {
 		outLink.accept(user);
-		
+
 	}
 
 }
