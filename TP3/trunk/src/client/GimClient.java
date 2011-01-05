@@ -165,7 +165,9 @@ public class GimClient {
 	    MouseListener mouseListener = new MouseListener() {
 	                
 	        public void mouseClicked(MouseEvent e) {
-	            System.out.println("Tray Icon - Mouse clicked!");   
+	            System.out.println("Tray Icon - Mouse clicked!");
+	            
+	            GimClient.getMainWindow().setVisible(true);
 	        }
 
 	        public void mouseEntered(MouseEvent e) {

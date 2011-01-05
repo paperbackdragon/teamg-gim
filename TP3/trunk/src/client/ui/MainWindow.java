@@ -152,7 +152,7 @@ public class MainWindow extends JFrame {
 			}
 
 			else {
-				System.exit(0);
+				GimClient.getMainWindow().setVisible(false);
 			}
 
 		}
