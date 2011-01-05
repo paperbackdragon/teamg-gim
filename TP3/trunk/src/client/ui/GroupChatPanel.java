@@ -102,8 +102,16 @@ public class GroupChatPanel extends ChatPanel {
 	public void updateUserList(String[] participants) {
 		this.participants = participants;
 		String theString = "";
+		String current = "";
 		for (int i = 0; i < participants.length; i++) {
-			theString += participants[i] + "\n";
+			if (GimClient.getClient().getUser(participants[i]) != null) {
+				current = GimClient.getClient().getUser(participants[i]).getNickname() + " (" + participants[i] + ")";
+			}
+			else {
+				current = participants[i];
+			}
+			
+			theString += current + "\n";
 			System.out.println("adding " + participants[i] + " to guest list");
 		}
 		guests.setText(theString);
