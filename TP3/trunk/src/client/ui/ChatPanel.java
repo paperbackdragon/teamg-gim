@@ -33,26 +33,13 @@ public class ChatPanel extends JPanel {
 	private Smiley[] smilies = { new Smiley(":)", "Happy_smiley.png"), new Smiley(":-)", "Happy_smiley.png"),
 			new Smiley(":(", "Sad_smiley.png"), new Smiley(":-(", "Sad_smiley.png"),
 			new Smiley(":P", "Tonque_out_smiley.png"), new Smiley(":-P", "Tonque_out_smiley.png"),
-			new Smiley(";(", "Crying_smiley.png"), new Smiley(";-(", "Crying_smiley.png"), new Smiley("(@)", "Cat.png") };
+			new Smiley(";(", "Crying_smiley.png"), new Smiley(";-(", "Crying_smiley.png"),
+			new Smiley("(@)", "Cat.png"), new Smiley("CALEF13", "calef13.png") };
 
-	/*
-	 * Gordon: proposed. On adding message to messages JTextArea if messageCount
-	 * == 0, make window visible
-	 */
 	private int messageCount;
-	// </proposed>
-
-	/*
-	 * Gordon: proposed. If someone else opened the chat, grab the username from
-	 * the invitations list in the model. (see personal(final String roomid) in
-	 * ServerConnection
-	 */
 	private String chatWith;
 
-	// </proposed>
-
 	private Boolean inProgress = false;
-
 	private boolean isFocused;
 
 	public Boolean getInProgress() {
@@ -265,8 +252,7 @@ public class ChatPanel extends JPanel {
 					doc.insertString(doc.getLength(), msg + "\n", regular);
 
 					if (isFocused == false) {
-						GimClient.getTrayIcon().displayMessage(from + " says: ", message,
-								TrayIcon.MessageType.INFO);
+						GimClient.getTrayIcon().displayMessage(from + " says: ", message, TrayIcon.MessageType.INFO);
 					}
 
 				} catch (BadLocationException e) {

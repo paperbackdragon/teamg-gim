@@ -33,7 +33,7 @@ public class Smiley {
 	}
 
 	public Smiley(String text, String icon) {
-		this.text = text;
+		this.text = text.toUpperCase();
 		this.icon = icon;
 	}
 	

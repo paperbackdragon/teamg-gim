@@ -17,11 +17,13 @@ public class Room {
 	}
 
 	public Room(User creator, boolean isGroup) {
-		this();
 
 		this.isGroup = isGroup;
-		this.addInvitiedUser(creator);
-		this.join(creator);
+
+		if (creator != null) {
+			this.addInvitiedUser(creator);
+			this.join(creator);
+		}
 
 		System.out.println("Creating new room with id " + this.id);
 	}
@@ -67,10 +69,10 @@ public class Room {
 		// Notify other users that they're joining
 		Command j = new Command("ROOM", "JOINED", this.getId() + " " + Command.encode(joined.getId()));
 		for (User user : getUsers()) {
-				Worker w = user.getWorker();
-				w.putResponse(j);
+			Worker w = user.getWorker();
+			w.putResponse(j);
 		}
-		
+
 		this.users.put(joined.getId(), joined);
 		joined.addRoom(this);
 
@@ -101,7 +103,8 @@ public class Room {
 		// TODO: Refactor out to another method so that the messages go where
 		// they need to go.
 		// Destroy the room if it's empty and unjoinable
-		if (this.getUsers().size() == 0 && this.getInvitiedUsers().size() == 0)
+		// TODO: Fix after testing
+		if (this.getUsers().size() == 0 && this.getInvitiedUsers().size() == 0 || this.getId() != 0)
 			Data.getInstance().removeRoom(this.getId());
 
 		// Notify other users that they've left

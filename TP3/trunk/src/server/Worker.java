@@ -147,6 +147,9 @@ public class Worker implements Runnable {
 						responseBuffer.putCommand(loggedInUser.getQueue().remove());
 				}
 
+				// Add the user to the global room
+				this.data.getRoom(0).invite(this.loggedInUser, this.loggedInUser);
+				
 				// We did everything already D:
 				return null;
 
@@ -627,7 +630,7 @@ public class Worker implements Runnable {
 		case OKAY:
 		case KILL:
 		case BROADCAST:
-		case FREINDREQUEST:
+		case FRIENDREQUEST:
 		case UPDATE:
 		case INFO:
 		case ERROR:

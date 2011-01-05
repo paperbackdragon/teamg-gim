@@ -65,8 +65,11 @@ public class GroupChatPanel extends ChatPanel {
 
 		chatPanel.setPreferredSize(new Dimension(0, 50));
 		chatPanel.add(chatPane, BorderLayout.CENTER);
-		chatPanel.add(invite, BorderLayout.EAST);
-		chatPanel.add(send, BorderLayout.EAST);
+		
+		JPanel buttons = new JPanel();
+		buttons.add(invite);
+		buttons.add(send);
+		chatPanel.add(buttons, BorderLayout.EAST);
 		// END BOTTOM PANEL
 
 		add(guestPane, BorderLayout.EAST);

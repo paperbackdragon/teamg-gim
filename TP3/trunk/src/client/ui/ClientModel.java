@@ -23,7 +23,6 @@ public class ClientModel {
 	private String[] blockedfriends;
 	
 	// options
-	
 	private String personalMessage;
 	private String status;
 	private String nickname;
