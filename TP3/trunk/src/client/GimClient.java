@@ -17,23 +17,23 @@ import javax.swing.SwingUtilities;
 import client.ui.*;
 
 public class GimClient {
-	
+
 	private static MainWindow mainWindow;
 	private static ClientModel client;
 	private static ContactPanel contactPanel;
 	// private static ArrayList<ChatPanel> rooms;
 	private static ArrayList<chatWindowIdentifier> windows;
-	
+
 	private static SystemTray tray;
 	static TrayIcon trayIcon;
 
 	public static void main(String[] args) {
 		client = ClientModel.getInstance();
-		
+
 		// rooms = new ArrayList<ChatPanel>();
 		windows = new ArrayList<chatWindowIdentifier>();
 		contactPanel = new ContactPanel();
-		
+
 		setUpTray();
 
 		SwingUtilities.invokeLater(new Runnable() {
@@ -145,99 +145,106 @@ public class GimClient {
 		}
 		return null;
 	}
-	
+
 	public static SystemTray getTray() {
 		return tray;
 	}
-	
+
 	public static TrayIcon getTrayIcon() {
 		return trayIcon;
 	}
-	
+
 	public static void setUpTray() {
-	
 
-	if (SystemTray.isSupported()) {
+		if (SystemTray.isSupported()) {
 
-	    tray = SystemTray.getSystemTray();
-	    Image image = Toolkit.getDefaultToolkit().getImage("smiles/Happy_smiley.png");
+			tray = SystemTray.getSystemTray();
+			Image image = Toolkit.getDefaultToolkit().getImage(
+					"smiles/Happy_smiley.png");
 
-	    MouseListener mouseListener = new MouseListener() {
-	                
-	        public void mouseClicked(MouseEvent e) {
-	            System.out.println("Tray Icon - Mouse clicked!");
-	            
-	            GimClient.getMainWindow().setVisible(true);
-	        }
+			MouseListener mouseListener = new MouseListener() {
 
-	        public void mouseEntered(MouseEvent e) {
-	            System.out.println("Tray Icon - Mouse entered!");                 
-	        }
+				public void mouseClicked(MouseEvent e) {
+					System.out.println("Tray Icon - Mouse clicked!");
 
-	        public void mouseExited(MouseEvent e) {
-	            System.out.println("Tray Icon - Mouse exited!");                 
-	        }
+					GimClient.getMainWindow().setVisible(true);
+				}
 
-	        public void mousePressed(MouseEvent e) {
-	            System.out.println("Tray Icon - Mouse pressed!");                 
-	        }
+				public void mouseEntered(MouseEvent e) {
+					System.out.println("Tray Icon - Mouse entered!");
+				}
 
-	        public void mouseReleased(MouseEvent e) {
-	            System.out.println("Tray Icon - Mouse released!");                 
-	        }
-	    };
+				public void mouseExited(MouseEvent e) {
+					System.out.println("Tray Icon - Mouse exited!");
+				}
 
-	    ActionListener exitListener = new ActionListener() {
-	        public void actionPerformed(ActionEvent e) {
-	            System.out.println("Exiting...");
-	            System.exit(0);
-	        }
-	    };
-	            
-	    PopupMenu popup = new PopupMenu();
-	    MenuItem defaultItem = new MenuItem("Exit");
-	    defaultItem.addActionListener(exitListener);
-	    popup.add(defaultItem);
+				public void mousePressed(MouseEvent e) {
+					System.out.println("Tray Icon - Mouse pressed!");
+				}
 
-	    trayIcon = new TrayIcon(image, "Tray Demo", popup);
+				public void mouseReleased(MouseEvent e) {
+					System.out.println("Tray Icon - Mouse released!");
+				}
+			};
 
-	    ActionListener actionListener = new ActionListener() {
-	        public void actionPerformed(ActionEvent e) {
-	            /*trayIcon.displayMessage("Action Event", 
-	                "An Action Event Has Been Performed!",
-	                TrayIcon.MessageType.INFO);*/
-	        	
-	        	if (e.getSource() == trayIcon) {
-	        		// Bring window to front. NEED TO WORK OUT HOW TO DO THIS
-	        		GimClient.getWindowIdentifierFromId(GimClient.getClient().getLatestPerson()).getWindow().setVisible(true);
-	        	}
-	            
-	           
-	        }
-	    };
-	            
-	    trayIcon.setImageAutoSize(true);
-	    trayIcon.addActionListener(actionListener);
-	    trayIcon.addMouseListener(mouseListener);
+			ActionListener exitListener = new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					System.out.println("Exiting...");
+					System.exit(0);
+				}
+			};
 
-	    try {
-	        tray.add(trayIcon);
-	    } catch (AWTException e) {
-	        System.err.println("TrayIcon could not be added.");
-	    }
+			PopupMenu popup = new PopupMenu();
+			MenuItem defaultItem = new MenuItem("Exit");
+			defaultItem.addActionListener(exitListener);
+			popup.add(defaultItem);
 
-	} else {
+			trayIcon = new TrayIcon(image, "Tray Demo", popup);
 
-	    //  System Tray is not supported
+			ActionListener actionListener = new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					/*
+					 * trayIcon.displayMessage("Action Event",
+					 * "An Action Event Has Been Performed!",
+					 * TrayIcon.MessageType.INFO);
+					 */
 
-	}
+					if (e.getSource() == trayIcon) {
+						// Bring window to front. NEED TO WORK OUT HOW TO DO
+						// THIS
 
-	// redundant... i think. i'm not certain, yet!
-	/*
-	 * public static void removeWindowIdentifier(String roomid) {
-	 * 
-	 * for (int i =0; i < windows.size(); i ++) { if
-	 * (windows.get(i).getId().equals(roomid)) { windows.remove(i); } } }
-	 */
+						if (GimClient.getClient().getLatestPerson() != null) {
+							GimClient.getWindowIdentifierFromId(
+									GimClient.getClient().getLatestPerson())
+									.getWindow().setVisible(true);
+						}
+					}
+
+				}
+			};
+
+			trayIcon.setImageAutoSize(true);
+			trayIcon.addActionListener(actionListener);
+			trayIcon.addMouseListener(mouseListener);
+
+			try {
+				tray.add(trayIcon);
+			} catch (AWTException e) {
+				System.err.println("TrayIcon could not be added.");
+			}
+
+		} else {
+
+			// System Tray is not supported
+
+		}
+
+		// redundant... i think. i'm not certain, yet!
+		/*
+		 * public static void removeWindowIdentifier(String roomid) {
+		 * 
+		 * for (int i =0; i < windows.size(); i ++) { if
+		 * (windows.get(i).getId().equals(roomid)) { windows.remove(i); } } }
+		 */
 	}
 }
