@@ -265,7 +265,7 @@ public class ChatPanel extends JPanel {
 					doc.insertString(doc.getLength(), msg + "\n", regular);
 
 					if (isFocused == false) {
-						GimClient.getTrayIcon().displayMessage("fsd", "Messaged received from " + sender,
+						GimClient.getTrayIcon().displayMessage(from + " says: ", message,
 								TrayIcon.MessageType.INFO);
 					}
 
