@@ -5,18 +5,21 @@ import javax.swing.*;
 
 /**
  * Specific class for a chat panel used for a conversation between two people.
- * 
- * @author Heather
  */
-@SuppressWarnings("serial")
 public class SingleChatPanel extends ChatPanel {
 
+	private static final long serialVersionUID = 1L;
 	private ContactInfo info;
 
-	// CONSTRUCTOR
+	/**
+	 * Constructor
+	 * 
+	 * @param roomID
+	 *            The ID of the room
+	 */
 	public SingleChatPanel(String roomID) {
 		super(roomID);
-		
+
 		setLayout(new BorderLayout(5, 5));
 
 		// messages.setLineWrap(true);
@@ -103,7 +106,7 @@ public class SingleChatPanel extends ChatPanel {
 
 		protected ImageIcon createImageIcon(String path, String description) {
 			java.net.URL imgURL = getClass().getResource(path);
-			
+
 			if (imgURL != null) {
 				return new ImageIcon(imgURL, description);
 			}

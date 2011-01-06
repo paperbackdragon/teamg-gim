@@ -149,7 +149,7 @@ public class Worker implements Runnable {
 
 				// TODO: Remove
 				// Add the user to the global room
-				this.data.getRoom(0).invite(this.loggedInUser, this.loggedInUser);
+				//this.data.getRoom(0).invite(this.loggedInUser, this.loggedInUser);
 				
 				// We did everything already D:
 				return null;

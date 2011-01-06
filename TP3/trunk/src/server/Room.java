@@ -103,8 +103,7 @@ public class Room {
 		// TODO: Refactor out to another method so that the messages go where
 		// they need to go.
 		// Destroy the room if it's empty and unjoinable
-		// TODO: Fix after testing
-		if (this.getUsers().size() == 0 && this.getInvitiedUsers().size() == 0 && this.getId() != 0) {
+		if (this.getUsers().size() == 0 && this.getInvitiedUsers().size() == 0) {
 			Data.getInstance().removeRoom(this.getId());
 			return true;
 		}

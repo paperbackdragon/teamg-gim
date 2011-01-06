@@ -9,8 +9,6 @@ import javax.swing.plaf.basic.BasicTreeUI;
 import javax.swing.tree.AbstractLayoutCache;
 
 public class ContactTreeUI extends BasicTreeUI {
-	
-	
 
 	@Override
 	protected void installListeners() {

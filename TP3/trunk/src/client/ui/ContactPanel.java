@@ -17,6 +17,7 @@ public class ContactPanel extends JPanel {
 	private MainWindow parent;
 	private JButton add, del, chat, group;
 	private JTree contactTree;
+	protected JScrollPane  scrollPane;
 	private DefaultMutableTreeNode contacts;
 	private ClientModel model = ClientModel.getInstance();
 	private PersonalInfo info;
@@ -35,7 +36,8 @@ public class ContactPanel extends JPanel {
 		setLayout(new BorderLayout());
 		info = new PersonalInfo();
 		add(info, BorderLayout.NORTH);
-		add(new JScrollPane(new ContactList()), BorderLayout.CENTER);
+		scrollPane = new JScrollPane(new ContactList());
+		add(scrollPane, BorderLayout.CENTER);
 		add(new ButtonPanel(), BorderLayout.SOUTH);
 	}
 
@@ -118,16 +120,15 @@ public class ContactPanel extends JPanel {
 
 			contactTree = new JTree(contacts);
 			contactTree.setCellRenderer(new CellRenderer());
-			contactTree.setUI(new ContactTreeUI());
 			contactTree.setLargeModel(true);
-			
-			contactTree.addMouseListener(new SingleChatListener());
 			contactTree.setRootVisible(false);
 			contactTree.setShowsRootHandles(true);
+			contactTree.addMouseListener(new SingleChatListener());
 
 			add(contactTree, BorderLayout.CENTER);
 		}
 	}
+	
 
 	class ButtonPanel extends JPanel {
 
@@ -153,6 +154,20 @@ public class ContactPanel extends JPanel {
 		}
 	}
 
+	private class JTreeWide extends JTree {
+
+		private static final long serialVersionUID = 1L;
+
+		public JTreeWide(DefaultMutableTreeNode contacts) {
+			super(contacts);
+		}
+
+		@Override
+		public void updateUI() {
+			setUI(new ContactTreeUI());
+		}
+	}
+
 	/**
 	 * Contact List Cell Renderer
 	 * 
@@ -163,16 +178,18 @@ public class ContactPanel extends JPanel {
 
 		private JPanel contact;
 
-		CellRenderer() {
-		}
-
+		@Override
 		public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded,
 				boolean leaf, int row, boolean hasFocus) {
+			
+			contact = new JPanel(new BorderLayout(5, 0));
+			contact.setOpaque(false);
+			
+			// Don't show empty cells
+			if(value.toString().length() == 0)
+				return new JLabel();
 
 			if (leaf) {
-
-				contact = new JPanel(new BorderLayout(5, 0));
-				contact.setOpaque(false);
 
 				ImageIcon displayPictureIcon = new ImageIcon("/home/james/Projects/GimTrunk/bin/icon1.jpg", "Icon");
 				JLabel displayPicture = new JLabel(displayPictureIcon);
@@ -194,11 +211,16 @@ public class ContactPanel extends JPanel {
 				contact.add(userInfo, BorderLayout.CENTER);
 				contact.add(statusIconLabel, BorderLayout.EAST);
 				contact.add(Box.createVerticalStrut(2), BorderLayout.SOUTH);
+				
+				System.out.println(contact.getBounds().x);
+				
+				//contact.setPreferredSize(new Dimension(250, conta));
 
 				return contact;
 
 			} else {
-				return new JLabel("<html><b>" + value.toString() + "</b><html>");
+				contact.add(new JLabel("<html><b>" + value.toString() + "</b><html>"));
+				return contact;
 			}
 
 		}
