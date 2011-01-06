@@ -193,11 +193,11 @@ public class ContactPanel extends JPanel {
 
 				ImageIcon displayPictureIcon = new ImageIcon(model.getPath() + "icon1.jpg", "Icon");
 				JLabel displayPicture = new JLabel(displayPictureIcon);
-				displayPicture.setPreferredSize(new Dimension(28, 28));
+				displayPicture.setPreferredSize(new Dimension(48, 48));
 
 				ImageIcon statusIcon = new ImageIcon(model.getPath() + "online.png", "Icon");
 				JLabel statusIconLabel = new JLabel(statusIcon);
-				statusIconLabel.setPreferredSize(new Dimension(16, 16));
+				statusIconLabel.setPreferredSize(new Dimension(32, 32));
 				
 				JPanel userInfo = new JPanel(new GridLayout(2, 1));
 				userInfo.setOpaque(false);
