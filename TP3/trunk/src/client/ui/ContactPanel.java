@@ -6,6 +6,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.*;
+import javax.swing.border.EtchedBorder;
 import javax.swing.plaf.basic.BasicTreeUI;
 import javax.swing.tree.*;
 
@@ -17,7 +18,7 @@ public class ContactPanel extends JPanel {
 	private MainWindow parent;
 	private JButton add, del, chat, group;
 	private JTree contactTree;
-	protected JScrollPane  scrollPane;
+	protected JScrollPane scrollPane;
 	private DefaultMutableTreeNode contacts;
 	private ClientModel model = ClientModel.getInstance();
 	private PersonalInfo info;
@@ -37,6 +38,7 @@ public class ContactPanel extends JPanel {
 		info = new PersonalInfo();
 		add(info, BorderLayout.NORTH);
 		scrollPane = new JScrollPane(new ContactList());
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		add(scrollPane, BorderLayout.CENTER);
 		add(new ButtonPanel(), BorderLayout.SOUTH);
 	}
@@ -70,7 +72,7 @@ public class ContactPanel extends JPanel {
 			ImageIcon icon = createImageIcon("icon1.jpg", "Icon");
 			JLabel iconLabel = new JLabel(icon);
 			iconLabel.setPreferredSize(new Dimension(64, 64));
-			iconLabel.setBorder(BorderFactory.createLineBorder(Color.black));
+			iconLabel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 			add(iconLabel);
 			add(new TextField());
 		}
@@ -119,7 +121,15 @@ public class ContactPanel extends JPanel {
 			setLayout(new BorderLayout());
 
 			contactTree = new JTree(contacts);
-			contactTree.setCellRenderer(new CellRenderer());
+
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					contactTree.setCellRenderer(new CellRenderer());
+				}
+			});
+
+			contactTree.putClientProperty("JTree.lineStyle", "None");
+			
 			contactTree.setLargeModel(true);
 			contactTree.setRootVisible(false);
 			contactTree.setShowsRootHandles(true);
@@ -128,7 +138,6 @@ public class ContactPanel extends JPanel {
 			add(contactTree, BorderLayout.CENTER);
 		}
 	}
-	
 
 	class ButtonPanel extends JPanel {
 
@@ -154,20 +163,6 @@ public class ContactPanel extends JPanel {
 		}
 	}
 
-	private class JTreeWide extends JTree {
-
-		private static final long serialVersionUID = 1L;
-
-		public JTreeWide(DefaultMutableTreeNode contacts) {
-			super(contacts);
-		}
-
-		@Override
-		public void updateUI() {
-			setUI(new ContactTreeUI());
-		}
-	}
-
 	/**
 	 * Contact List Cell Renderer
 	 * 
@@ -181,28 +176,33 @@ public class ContactPanel extends JPanel {
 		@Override
 		public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded,
 				boolean leaf, int row, boolean hasFocus) {
-			
+
 			contact = new JPanel(new BorderLayout(5, 0));
 			contact.setOpaque(false);
-			
+
 			// Don't show empty cells
-			if(value.toString().length() == 0)
+			if (value.toString().length() == 0)
 				return new JLabel();
 
 			if (leaf) {
+				
+				if(selected) {
+					contact.setBackground(UIManager.getColor("Tree.selectionBackground"));
+					contact.setOpaque(true);
+				}
 
-				ImageIcon displayPictureIcon = new ImageIcon("/home/james/Projects/GimTrunk/bin/icon1.jpg", "Icon");
+				ImageIcon displayPictureIcon = new ImageIcon(model.getPath() + "icon1.jpg", "Icon");
 				JLabel displayPicture = new JLabel(displayPictureIcon);
 				displayPicture.setPreferredSize(new Dimension(28, 28));
 
-				ImageIcon statusIcon = new ImageIcon("/home/james/Projects/GimTrunk/bin/online.png", "Icon");
+				ImageIcon statusIcon = new ImageIcon(model.getPath() + "online.png", "Icon");
 				JLabel statusIconLabel = new JLabel(statusIcon);
 				statusIconLabel.setPreferredSize(new Dimension(16, 16));
-
+				
 				JPanel userInfo = new JPanel(new GridLayout(2, 1));
 				userInfo.setOpaque(false);
 				JLabel username = new JLabel("<html>" + value.toString() + "</html>");
-				JLabel personalMessage = new JLabel("<html><i><small>Their personal message</small></i></html>");
+				JLabel personalMessage = new JLabel("<html><i><small>Their personal message.</small></i></html>");
 				userInfo.add(username);
 				userInfo.add(personalMessage);
 
@@ -212,10 +212,6 @@ public class ContactPanel extends JPanel {
 				contact.add(statusIconLabel, BorderLayout.EAST);
 				contact.add(Box.createVerticalStrut(2), BorderLayout.SOUTH);
 				
-				System.out.println(contact.getBounds().x);
-				
-				//contact.setPreferredSize(new Dimension(250, conta));
-
 				return contact;
 
 			} else {
@@ -358,9 +354,12 @@ public class ContactPanel extends JPanel {
 	}
 
 	class SingleChatListener implements MouseListener {
+		
 		public void mousePressed(MouseEvent e) {
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode) contactTree.getLastSelectedPathComponent();
+			
 			String nodeInfo = (String) node.getUserObject();
+			
 			if (e.getClickCount() == 2) {
 				if (nodeInfo != "Online" && nodeInfo != "Offline") {
 					System.out.println(nodeInfo);

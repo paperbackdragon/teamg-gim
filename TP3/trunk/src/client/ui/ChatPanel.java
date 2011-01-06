@@ -43,38 +43,6 @@ public class ChatPanel extends JPanel {
 	private Boolean inProgress = false;
 	private boolean isFocused;
 
-	public Boolean getInProgress() {
-		return inProgress;
-	}
-
-	public void setInProgress(Boolean inProgress) {
-		System.out.println("letting client talk!");
-		if (inProgress.equals(true)) {
-			sendMessageQueue();
-		}
-		this.inProgress = inProgress;
-	}
-
-	/*
-	 * Case where the other user has closed their window. Don't want to concern
-	 * the user with having to wait for room creation
-	 */
-	private void sendMessageQueue() {
-		if (!messageQueue.isEmpty()) {
-			for (int i = 0; i < messageQueue.size(); i++) {
-				GimClient.getClient().message(id, messageQueue.removeLast());
-			}
-		}
-	}
-
-	public void setChatWith(String chatWith) {
-		this.chatWith = chatWith;
-	}
-
-	public String getChatWith() {
-		return chatWith;
-	}
-
 	/**
 	 * Constructor for a chat box. Creates styles, smiles and everything else we
 	 * need
@@ -89,12 +57,7 @@ public class ChatPanel extends JPanel {
 		messageQueue = new LinkedList<String>();
 
 		// Try and get the path to wherever this is running from
-		String smileyPath = "";
-		try {
-			smileyPath = GimClient.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
-		} catch (URISyntaxException e) {
-		}
-		smileyPath = smileyPath.substring(0, smileyPath.lastIndexOf("/")) + "/smiles/";
+		String smileyPath = ClientModel.getInstance().getPath() + "smiles/";
 
 		// Create a new document for the messages
 		messages = new JTextPane();
@@ -139,6 +102,38 @@ public class ChatPanel extends JPanel {
 		// FlashwindowListener(GimClient.getWindowIdentifierFromId(id).getWindow()));
 		isFocused = false;
 
+	}
+	
+	public Boolean getInProgress() {
+		return inProgress;
+	}
+
+	public void setInProgress(Boolean inProgress) {
+		System.out.println("letting client talk!");
+		if (inProgress.equals(true)) {
+			sendMessageQueue();
+		}
+		this.inProgress = inProgress;
+	}
+
+	/*
+	 * Case where the other user has closed their window. Don't want to concern
+	 * the user with having to wait for room creation
+	 */
+	private void sendMessageQueue() {
+		if (!messageQueue.isEmpty()) {
+			for (int i = 0; i < messageQueue.size(); i++) {
+				GimClient.getClient().message(id, messageQueue.removeLast());
+			}
+		}
+	}
+
+	public void setChatWith(String chatWith) {
+		this.chatWith = chatWith;
+	}
+
+	public String getChatWith() {
+		return chatWith;
 	}
 
 	public void setIsFocused(Boolean focused) {

@@ -12,7 +12,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Map;
+
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 import client.ui.*;
 
@@ -44,6 +47,9 @@ public class GimClient {
 				mainWindow.setVisible(true);
 			}
 		});
+		
+		System.out.println(ClientModel.getInstance().getPath());
+		
 	}
 
 	// ACCESSORS
@@ -159,8 +165,7 @@ public class GimClient {
 		if (SystemTray.isSupported()) {
 
 			tray = SystemTray.getSystemTray();
-			Image image = Toolkit.getDefaultToolkit().getImage(
-					"smiles/Happy_smiley.png");
+			Image image = Toolkit.getDefaultToolkit().getImage("smiles/Happy_smiley.png");
 
 			MouseListener mouseListener = new MouseListener() {
 
@@ -214,9 +219,8 @@ public class GimClient {
 						// THIS
 
 						if (GimClient.getClient().getLatestPerson() != null) {
-							GimClient.getWindowIdentifierFromId(
-									GimClient.getClient().getLatestPerson())
-									.getWindow().setVisible(true);
+							GimClient.getWindowIdentifierFromId(GimClient.getClient().getLatestPerson()).getWindow()
+									.setVisible(true);
 						}
 					}
 

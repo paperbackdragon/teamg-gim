@@ -1,8 +1,10 @@
 package client.ui;
 
+import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 
+import client.GimClient;
 import client.net.ClientConnection;
 import client.net.ServerConnection;
 
@@ -16,6 +18,8 @@ public class ClientModel {
 	private LinkedList<Boolean> typeList = new LinkedList<Boolean>();
 
 	private ConcurrentHashMap<String, User> users = new ConcurrentHashMap<String, User>();
+
+	private String path = null;
 
 	// buddy list
 	private String[] onlinefriends;
@@ -41,6 +45,22 @@ public class ClientModel {
 	 */
 	private static class SingeltonHolder {
 		public static final ClientModel INSTANCE = new ClientModel();
+	}
+
+	/**
+	 * Get the path to the current directory
+	 * 
+	 * @return The path, ending with a /
+	 */
+	public String getPath() {
+		if (this.path == null) {
+			try {
+				path = ClientModel.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+			} catch (URISyntaxException e) {
+			}
+			path = path.substring(0, path.lastIndexOf("/") + 1);
+		}
+		return this.path;
 	}
 
 	/**
