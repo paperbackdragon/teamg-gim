@@ -2,7 +2,11 @@ package client.ui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicTreeUI;
 import javax.swing.tree.*;
 
 import client.GimClient;
@@ -27,7 +31,7 @@ public class ContactPanel extends JPanel {
 		}
 
 		contacts = new DefaultMutableTreeNode("Contacts");
-		
+
 		setLayout(new BorderLayout());
 		info = new PersonalInfo();
 		add(info, BorderLayout.NORTH);
@@ -35,14 +39,18 @@ public class ContactPanel extends JPanel {
 		add(new ButtonPanel(), BorderLayout.SOUTH);
 	}
 
-	
 	// PANELS
 	private class PersonalInfo extends JPanel {
-		private JButton name; 
+
+		private static final long serialVersionUID = 1L;
+
+		private JButton name;
 		private JLabel message;
 		private JLabel status;
-		
+
 		class TextField extends JPanel {
+
+			private static final long serialVersionUID = 1L;
 
 			public TextField() {
 				setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -74,7 +82,7 @@ public class ContactPanel extends JPanel {
 				return null;
 			}
 		}
-		
+
 		public void setNickname(String name) {
 			this.name.setText(name);
 
@@ -88,25 +96,31 @@ public class ContactPanel extends JPanel {
 			this.message.setText(message);
 		}
 	}
-	
+
 	public void setMyNickname(String name) {
 		info.setNickname(name);
 	}
-	
+
 	public void setMyPersonalMessage(String message) {
 		info.setPersonalMessage(message);
 	}
-	
+
 	public void setMyStatus(String status) {
 		info.setStatus(status);
 	}
 
-
 	class ContactList extends JPanel {
+
+		private static final long serialVersionUID = 1L;
+
 		public ContactList() {
 			setLayout(new BorderLayout());
 
 			contactTree = new JTree(contacts);
+			contactTree.setCellRenderer(new CellRenderer());
+			contactTree.setUI(new ContactTreeUI());
+			contactTree.setLargeModel(true);
+			
 			contactTree.addMouseListener(new SingleChatListener());
 			contactTree.setRootVisible(false);
 			contactTree.setShowsRootHandles(true);
@@ -116,6 +130,9 @@ public class ContactPanel extends JPanel {
 	}
 
 	class ButtonPanel extends JPanel {
+
+		private static final long serialVersionUID = 1L;
+
 		public ButtonPanel() {
 			setLayout(new GridLayout(1, 4, 5, 5));
 			add = new JButton("ADD");
@@ -136,6 +153,58 @@ public class ContactPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Contact List Cell Renderer
+	 * 
+	 * @author James McMinn
+	 * 
+	 */
+	private class CellRenderer implements TreeCellRenderer {
+
+		private JPanel contact;
+
+		CellRenderer() {
+		}
+
+		public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded,
+				boolean leaf, int row, boolean hasFocus) {
+
+			if (leaf) {
+
+				contact = new JPanel(new BorderLayout(5, 0));
+				contact.setOpaque(false);
+
+				ImageIcon displayPictureIcon = new ImageIcon("/home/james/Projects/GimTrunk/bin/icon1.jpg", "Icon");
+				JLabel displayPicture = new JLabel(displayPictureIcon);
+				displayPicture.setPreferredSize(new Dimension(28, 28));
+
+				ImageIcon statusIcon = new ImageIcon("/home/james/Projects/GimTrunk/bin/online.png", "Icon");
+				JLabel statusIconLabel = new JLabel(statusIcon);
+				statusIconLabel.setPreferredSize(new Dimension(16, 16));
+
+				JPanel userInfo = new JPanel(new GridLayout(2, 1));
+				userInfo.setOpaque(false);
+				JLabel username = new JLabel("<html>" + value.toString() + "</html>");
+				JLabel personalMessage = new JLabel("<html><i><small>Their personal message</small></i></html>");
+				userInfo.add(username);
+				userInfo.add(personalMessage);
+
+				contact.add(Box.createVerticalStrut(2), BorderLayout.NORTH);
+				contact.add(displayPicture, BorderLayout.WEST);
+				contact.add(userInfo, BorderLayout.CENTER);
+				contact.add(statusIconLabel, BorderLayout.EAST);
+				contact.add(Box.createVerticalStrut(2), BorderLayout.SOUTH);
+
+				return contact;
+
+			} else {
+				return new JLabel("<html><b>" + value.toString() + "</b><html>");
+			}
+
+		}
+
+	}
+
 	// HELPER METHODS
 	public Dimension getPreferredSize() {
 		return new Dimension(300, 400);
@@ -145,35 +214,31 @@ public class ContactPanel extends JPanel {
 		parent = (MainWindow) frame;
 	}
 
-	public void createNodes(String[] online, String[] offline) {
-		// TODO (heather): change node icons (see java tutorial)
+	public void createNodes(String[] onlineContacts, String[] offlineContacts) {
 
 		contacts.removeAllChildren();
 
-		DefaultMutableTreeNode status = null;
-		DefaultMutableTreeNode contact = null;
+		DefaultMutableTreeNode online = new DefaultMutableTreeNode("Online Contacts");
+		DefaultMutableTreeNode offline = new DefaultMutableTreeNode("Offline Contacts");
 
-		status = new DefaultMutableTreeNode("Online");
-		contacts.add(status);
+		// Add online contacts
+		for (String str : onlineContacts)
+			online.add(new DefaultMutableTreeNode(str));
 
-		// set online contacts
-		for (String str : online) {
-			contact = new DefaultMutableTreeNode(str);
-			status.add(contact);
-		}
+		// Add offline contacts
+		for (String str : offlineContacts)
+			offline.add(new DefaultMutableTreeNode(str));
 
-		status = new DefaultMutableTreeNode("Offline");
-		contacts.add(status);
+		contacts.add(online);
+		contacts.add(offline);
 
-		// set offline contacts
-		for (String str : offline) {
-			contact = new DefaultMutableTreeNode(str);
-			status.add(contact);
-		}
-
+		// Reload the updated model
 		((DefaultTreeModel) contactTree.getModel()).reload();
+
+		// Expand all of the tree nodes
 		for (int i = 0; i < contactTree.getRowCount(); i++)
 			contactTree.expandRow(i);
+
 	}
 
 	private String[] getSelectedContacts() {
@@ -187,8 +252,6 @@ public class ContactPanel extends JPanel {
 		}
 		return contacts;
 	}
-	
-
 
 	// ACTION LISTENERS
 	private class ButtonListener implements ActionListener {
@@ -203,7 +266,6 @@ public class ContactPanel extends JPanel {
 						 * window
 						 */
 
-						Object[] possibilities = null;
 						String s = (String) JOptionPane.showInputDialog(null,
 								"Input the user name of the person you wish to add to your contacts", "Add afriend",
 								JOptionPane.PLAIN_MESSAGE, null, null, "ham");

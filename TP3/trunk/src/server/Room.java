@@ -9,7 +9,7 @@ public class Room {
 
 	private ConcurrentHashMap<String, User> users = new ConcurrentHashMap<String, User>();
 	private ConcurrentHashMap<String, User> invited = new ConcurrentHashMap<String, User>();
-	private boolean isGroup;
+	private boolean isGroup = true;
 	private int id;
 
 	public Room() {
@@ -104,14 +104,15 @@ public class Room {
 		// they need to go.
 		// Destroy the room if it's empty and unjoinable
 		// TODO: Fix after testing
-		if (this.getUsers().size() == 0 && this.getInvitiedUsers().size() == 0 || this.getId() != 0)
+		if (this.getUsers().size() == 0 && this.getInvitiedUsers().size() == 0 && this.getId() != 0) {
 			Data.getInstance().removeRoom(this.getId());
+			return true;
+		}
 
 		// Notify other users that they've left
 		Command l = new Command("ROOM", "LEFT", this.getId() + " " + Command.encode(left.getId()));
-		for (User user : users.values()) {
+		for (User user : users.values()) 
 			user.getWorker().putResponse(l);
-		}
 
 		return true;
 	}

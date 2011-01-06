@@ -18,18 +18,22 @@ import client.GimClient;
 public class GroupChatPanel extends ChatPanel {
 
 	private static final long serialVersionUID = 1L;
+
 	private JTextArea guests;
 	private JButton invite;
 	private String[] participants;
 
-	// CONSTRUCTOR
+	/**
+	 * Constructor
+	 * 
+	 * @param roomID
+	 *            The ID of the room used for identication
+	 */
 	public GroupChatPanel(String roomID) {
 		super(roomID);
-		
+
 		setLayout(new BorderLayout());
 
-		// messages.setLineWrap(true);
-		// messages.setWrapStyleWord(true);
 		JScrollPane messagePane = new JScrollPane(messages);
 
 		guests = new JTextArea(" ");
@@ -37,7 +41,7 @@ public class GroupChatPanel extends ChatPanel {
 		guests.setLineWrap(true);
 		guests.setWrapStyleWord(true);
 		JScrollPane guestPane = new JScrollPane(guests);
-		guestPane.setPreferredSize(new Dimension(100, 100));
+		guestPane.setPreferredSize(new Dimension(150, 100));
 
 		// BOTTOM PANEL
 		JPanel chatPanel = new JPanel();
@@ -49,8 +53,7 @@ public class GroupChatPanel extends ChatPanel {
 		EnterListener enterListener = new EnterListener();
 		chatBox.addKeyListener(enterListener);
 		JScrollPane chatPane = new JScrollPane(chatBox);
-		chatPane
-				.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		chatPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		chatPane.setPreferredSize(new Dimension(235, 50));
 
 		send = new JButton("Send");
@@ -66,10 +69,10 @@ public class GroupChatPanel extends ChatPanel {
 
 		chatPanel.setPreferredSize(new Dimension(0, 50));
 		chatPanel.add(chatPane, BorderLayout.CENTER);
-		
-		JPanel buttons = new JPanel();
-		buttons.add(invite);
-		buttons.add(send);
+
+		JPanel buttons = new JPanel(new BorderLayout(0, 0));
+		buttons.add(invite, BorderLayout.WEST);
+		buttons.add(send, BorderLayout.EAST);
 		chatPanel.add(buttons, BorderLayout.EAST);
 		// END BOTTOM PANEL
 
@@ -90,8 +93,6 @@ public class GroupChatPanel extends ChatPanel {
 
 			public TextField() {
 				setLayout(new GridLayout(2, 2));
-				JLabel name = new JLabel("<html><b>Room Name</b></html>");
-				JLabel message = new JLabel("Room topic");
 				// add(name);
 				// add(addContact);
 				// add(message);
@@ -113,11 +114,10 @@ public class GroupChatPanel extends ChatPanel {
 		for (int i = 0; i < participants.length; i++) {
 			if (GimClient.getClient().getUser(participants[i]) != null) {
 				current = GimClient.getClient().getUser(participants[i]).getNickname() + " (" + participants[i] + ")";
-			}
-			else {
+			} else {
 				current = participants[i];
 			}
-			
+
 			theString += current + "\n";
 			System.out.println("adding " + participants[i] + " to guest list");
 		}
@@ -129,28 +129,24 @@ public class GroupChatPanel extends ChatPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			String[] temp = {" "};
+			String[] temp = { " " };
 			if (participants == null) {
 				participants = temp;
 			}
-			
-			SelectContactsPanel inputs = new SelectContactsPanel(GimClient
-					.getClient().getOnlinefriends(), participants);
 
-			JOptionPane.showMessageDialog(null, inputs, "Select contacts to invite",
-					JOptionPane.PLAIN_MESSAGE);
-			
+			SelectContactsPanel inputs = new SelectContactsPanel(GimClient.getClient().getOnlinefriends(), participants);
+
+			JOptionPane.showMessageDialog(null, inputs, "Select contacts to invite", JOptionPane.PLAIN_MESSAGE);
+
 			ArrayList<JCheckBox> blah = inputs.getBoxes();
-			
-			for (int i = 0; i < blah.size(); i ++) {
+
+			for (int i = 0; i < blah.size(); i++) {
 				if (blah.get(i).isSelected() == true) {
 					GimClient.getClient().invite(id, blah.get(i).getText());
 				}
 			}
-			
+
 		}
-		
-		
 
 	}
 }

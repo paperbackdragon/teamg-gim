@@ -26,7 +26,7 @@ public class ResponseWriter implements Runnable {
 			Command response = responseBuffer.getCommand();
 			out.println(response.toString());
 
-			System.out.println(response.toString());
+			System.out.println(">>" + response.toString());
 
 			// Check we didn't just kill the connection
 			if (response.getCommandAsEnum() == COMMANDS.KILL)

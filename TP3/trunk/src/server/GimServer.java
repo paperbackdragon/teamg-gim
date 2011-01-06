@@ -20,7 +20,7 @@ public class GimServer {
 	public static void main(String[] args) {
 		
 		Data data = Data.getInstance();
-		
+
 		System.out.println("Loading users...");
 		
 		// Load the users from the "db"

@@ -6,6 +6,8 @@ import client.*;
 import client.ui.*;
 
 public class ServerConnection implements NetworkingIn {
+	
+	ClientModel model = ClientModel.getInstance();
 
 	public void authorised() {
 		ContactPanel panel = GimClient.getContactPanel();
@@ -17,7 +19,7 @@ public class ServerConnection implements NetworkingIn {
 		// Do this properly later...
 		// may want to sign in appearing offline
 		// GimClient.getClient().getOwnUserName()
-
+		
 		GimClient.getClient().setStatus("ONLINE");
 
 		GimClient.getClient().getNickName(
@@ -46,6 +48,7 @@ public class ServerConnection implements NetworkingIn {
 
 	public void friendlist(String[] onlinelist, String[] offlinelist,
 			String[] blockedlist) {
+		
 		GimClient.getClient().setOnlinefriends(onlinelist);
 		GimClient.getClient().setOfflinefriends(offlinelist);
 		GimClient.getClient().setBlockedfriends(blockedlist);
@@ -215,7 +218,7 @@ public class ServerConnection implements NetworkingIn {
 			if (l != null) {
 				l.setNickname(nickname);
 
-				chatWindowIdentifier s = GimClient
+				ChatWindowIdentifier s = GimClient
 						.getWindowIdentifierFromUser(user);
 
 				if (s != null) {
@@ -239,7 +242,7 @@ public class ServerConnection implements NetworkingIn {
 			if (l != null) {
 				l.setPersonalMessage(personalmessage);
 
-				chatWindowIdentifier s = GimClient
+				ChatWindowIdentifier s = GimClient
 						.getWindowIdentifierFromUser(user);
 
 				if (s != null) {
@@ -260,7 +263,7 @@ public class ServerConnection implements NetworkingIn {
 			if (l != null) {
 				l.setStatus(status);
 
-				chatWindowIdentifier s = GimClient
+				ChatWindowIdentifier s = GimClient
 						.getWindowIdentifierFromUser(user);
 
 				if (s != null) {
@@ -338,7 +341,7 @@ public class ServerConnection implements NetworkingIn {
 		} else {
 
 			// if we already have a window...
-			chatWindowIdentifier l = GimClient
+			ChatWindowIdentifier l = GimClient
 					.getWindowIdentifierFromUser(contacts[0]);
 			if (l != null) {
 				l.getCp().setId(roomid);
@@ -403,7 +406,7 @@ public class ServerConnection implements NetworkingIn {
 			@Override
 			public void run() {
 				System.out.println("got to the joined method");
-				chatWindowIdentifier l = GimClient
+				ChatWindowIdentifier l = GimClient
 						.getWindowIdentifierFromId(roomid);
 
 				// The other person has joined the personal chat, it is safe to
@@ -440,7 +443,7 @@ public class ServerConnection implements NetworkingIn {
 		// this used to be FromUser... this change shouldn't screw anything up
 		// as far as i know
 		// but this is a reminder to myself...
-		chatWindowIdentifier l = GimClient.getWindowIdentifierFromId(roomid);
+		ChatWindowIdentifier l = GimClient.getWindowIdentifierFromId(roomid);
 		if (l != null) {
 			if (l.getCp() instanceof SingleChatPanel) {
 				l.getCp().setInProgress(false);
@@ -516,7 +519,7 @@ public class ServerConnection implements NetworkingIn {
 
 		GimClient.getClient().join(roomid);
 
-		chatWindowIdentifier l = GimClient
+		ChatWindowIdentifier l = GimClient
 				.getWindowIdentifierFromUser(invitedBy);
 		if (l != null) {
 			l.getCp().setId(roomid);

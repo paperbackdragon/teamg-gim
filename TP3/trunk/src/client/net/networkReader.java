@@ -220,7 +220,7 @@ public class networkReader implements Runnable {
 
 			String online = data.split("OFFLINE")[0];
 			online = online.replaceFirst("ONLINE ", "");
-			String[] onlinelist = online.split(" ");
+			String[] onlinelist = online.trim().split(" ");
 
 			System.out.println("ONLINE: ");
 			for (int i = 0; i < onlinelist.length; i++) {
@@ -230,7 +230,7 @@ public class networkReader implements Runnable {
 
 			String offline = data.split("OFFLINE")[1].split("BLOCKED")[0];
 			offline = offline.replaceFirst(" ", "");
-			String[] offlinelist = offline.split(" ");
+			String[] offlinelist = offline.trim().split(" ");
 
 			System.out.println("OFFLINE: ");
 			for (int j = 0; j < offlinelist.length; j++) {

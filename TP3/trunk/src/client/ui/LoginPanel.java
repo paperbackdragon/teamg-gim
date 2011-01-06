@@ -19,6 +19,7 @@ public class LoginPanel extends JPanel {
 
 	// CONSTRUCTOR
 	public LoginPanel() {
+
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
@@ -26,6 +27,9 @@ public class LoginPanel extends JPanel {
 
 		EnterListener enterlistener = new EnterListener();
 		LoginListener loginListener = new LoginListener();
+
+		JPanel frame = new JPanel(new BorderLayout());
+		frame.setPreferredSize(new Dimension(265, 575));
 
 		// Main JPanel
 		JPanel loginFrame = new JPanel();
@@ -50,7 +54,7 @@ public class LoginPanel extends JPanel {
 		// Panel containing account options
 		JPanel options = new JPanel();
 		options.setLayout(new GridLayout(3, 1));
-		autoLogin = new JCheckBox("Log me in automiatically");
+		autoLogin = new JCheckBox("Log me in automatically");
 		savePassword = new JCheckBox("Save my password");
 		rememberUser = new JCheckBox("Remember me");
 		options.add(autoLogin);
@@ -91,15 +95,17 @@ public class LoginPanel extends JPanel {
 		// Add the bordered panel to the window
 		loginFrame.add(Box.createVerticalStrut(10));
 		loginFrame.add(borderedArea);
-		add(Box.createVerticalStrut(5));
+		frame.add(Box.createVerticalStrut(5));
 		loginFrame.add(l);
 
-		setLayout(new BorderLayout(15, 15));
-		setPreferredSize(new Dimension(235, 500));
+		setLayout(new BorderLayout());
 
-		add(loginFrame, BorderLayout.NORTH);
-		add(registerPanel, BorderLayout.SOUTH);
+		frame.add(loginFrame, BorderLayout.NORTH);
+		frame.add(registerPanel, BorderLayout.SOUTH);
 
+		add(Box.createHorizontalStrut(5), BorderLayout.EAST);
+		add(frame, BorderLayout.CENTER);
+		add(Box.createHorizontalStrut(5), BorderLayout.WEST);
 	}
 
 	public void setParent(JFrame frame) {
@@ -108,9 +114,7 @@ public class LoginPanel extends JPanel {
 	}
 
 	private void login() {
-		System.out.println(GimClient.getClient().toString());
 		GimClient.getClient().authenticate(email.getText(), pwd.getPassword());
-		
 		GimClient.getClient().setOwnUserName(email.getText());
 	}
 
@@ -139,4 +143,5 @@ public class LoginPanel extends JPanel {
 		public void keyReleased(KeyEvent e) {
 		}
 	}
+	
 }

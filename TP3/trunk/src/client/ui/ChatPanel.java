@@ -22,14 +22,14 @@ public class ChatPanel extends JPanel {
 
 	private LinkedList<String> messageQueue;
 
-	private Timer timer = null;
+	// private Timer timer = null;
 
 	protected String id;
 	protected JTextArea chatBox;
 	protected JTextPane messages;
 	protected JButton send;
 	private StyledDocument doc;
-	private Style regular, bold, italic, self;
+	private Style regular, bold, italic, ownMessages, otherMessages;
 
 	private Smiley[] smilies = { new Smiley(":)", "Happy_smiley.png"), new Smiley(":-)", "Happy_smiley.png"),
 			new Smiley(":(", "Sad_smiley.png"), new Smiley(":-(", "Sad_smiley.png"),
@@ -120,8 +120,11 @@ public class ChatPanel extends JPanel {
 		StyleConstants.setBold(bold, true);
 
 		// Style for the current users name
-		self = doc.addStyle("self", bold);
-		StyleConstants.setForeground(self, Color.RED);
+		ownMessages = doc.addStyle("ownMessages", bold);
+
+		// Everyone elses's messages
+		otherMessages = doc.addStyle("otherMessages", ownMessages);
+		StyleConstants.setForeground(otherMessages, Color.RED);
 
 		// This line here. Yes, this one. It can die and go to Hell.
 		doc.setParagraphAttributes(0, 0, regular, true);
@@ -206,10 +209,10 @@ public class ChatPanel extends JPanel {
 						from = sender;
 					else
 						from = user.getNickname();
-					nameStyle = bold;
+					nameStyle = otherMessages;
 				} else {
 					from = sender;
-					nameStyle = self;
+					nameStyle = ownMessages;
 				}
 
 				try {
@@ -228,7 +231,6 @@ public class ChatPanel extends JPanel {
 						for (Smiley s : smilies) {
 							tmp = msg.toUpperCase().indexOf(s.getText());
 							if (tmp > -1 && (position == -1 || tmp < position)) {
-								System.out.println("Found " + s.getText());
 								position = tmp;
 								smiley = s;
 							}

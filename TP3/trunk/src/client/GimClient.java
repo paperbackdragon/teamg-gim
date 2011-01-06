@@ -22,7 +22,7 @@ public class GimClient {
 	private static ClientModel client;
 	private static ContactPanel contactPanel;
 	// private static ArrayList<ChatPanel> rooms;
-	private static ArrayList<chatWindowIdentifier> windows;
+	private static ArrayList<ChatWindowIdentifier> windows;
 
 	private static SystemTray tray;
 	static TrayIcon trayIcon;
@@ -31,7 +31,7 @@ public class GimClient {
 		client = ClientModel.getInstance();
 
 		// rooms = new ArrayList<ChatPanel>();
-		windows = new ArrayList<chatWindowIdentifier>();
+		windows = new ArrayList<ChatWindowIdentifier>();
 		contactPanel = new ContactPanel();
 
 		setUpTray();
@@ -102,7 +102,7 @@ public class GimClient {
 	}
 
 	public static void addWindow(String user, MainWindow ui, ChatPanel cp) {
-		windows.add(new chatWindowIdentifier(user, ui, cp));
+		windows.add(new ChatWindowIdentifier(user, ui, cp));
 	}
 
 	public static MainWindow getWindow(String user) {
@@ -124,7 +124,7 @@ public class GimClient {
 		return null;
 	}
 
-	public static chatWindowIdentifier getWindowIdentifierFromUser(String user) {
+	public static ChatWindowIdentifier getWindowIdentifierFromUser(String user) {
 		for (int i = 0; i < windows.size(); i++) {
 			if (windows.get(i).getCp() instanceof SingleChatPanel) {
 				if (windows.get(i).getCp().getChatWith().equals(user)) {
@@ -137,7 +137,7 @@ public class GimClient {
 
 	}
 
-	public static chatWindowIdentifier getWindowIdentifierFromId(String roomid) {
+	public static ChatWindowIdentifier getWindowIdentifierFromId(String roomid) {
 		for (int i = 0; i < windows.size(); i++) {
 			if (windows.get(i).getCp().getID().equals(roomid)) {
 				return windows.get(i);

@@ -3,7 +3,6 @@ package util;
 import java.io.BufferedReader;
 import java.io.IOException;
 
-
 /**
  * The command reader reads in commands from a BufferedReader and put them into
  * a CommandBuffer
@@ -12,7 +11,6 @@ public class CommandReader implements Runnable {
 
 	private BufferedReader in;
 	private CommandBuffer<Command> commandBuffer;
-
 
 	/**
 	 * The constructor, 'cos constructing is cool.
@@ -26,7 +24,6 @@ public class CommandReader implements Runnable {
 		this.in = in;
 		this.commandBuffer = commandBuffer;
 	}
-
 
 	/**
 	 * Read commands from the input stream and put them into the command buffer
@@ -85,13 +82,13 @@ public class CommandReader implements Runnable {
 				} else if (dataParts.length >= 2) {
 					// End of a command
 					data += "\n" + dataParts[0];
-					
+
 					// Create the command and put it in the buffer
 					Command cmd = new Command(command, args, data.trim());
 					commandBuffer.putCommand(cmd);
 
 					// Remove or comment out if not debugging
-					System.out.println(cmd);
+					System.out.println("<< " + cmd);
 
 					// Reset variables for the next command
 					command = null;
@@ -101,9 +98,9 @@ public class CommandReader implements Runnable {
 			}
 
 		}
-		
+
 		// Cleaup
 		commandBuffer.putCommand(new Command("QUIT"));
-		
+
 	}
 }

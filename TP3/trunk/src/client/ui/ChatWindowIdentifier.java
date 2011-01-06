@@ -1,13 +1,13 @@
 package client.ui;
 
-public class chatWindowIdentifier {
+public class ChatWindowIdentifier {
 	
 	//String id;
 	String user;
 	MainWindow window;
 	ChatPanel cp;
 	
-	public chatWindowIdentifier(String user, MainWindow window, ChatPanel cp) {
+	public ChatWindowIdentifier(String user, MainWindow window, ChatPanel cp) {
 		this.user = user;
 		this.window = window;
 		this.cp = cp;

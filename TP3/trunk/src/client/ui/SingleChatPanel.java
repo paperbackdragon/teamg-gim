@@ -16,8 +16,8 @@ public class SingleChatPanel extends ChatPanel {
 	// CONSTRUCTOR
 	public SingleChatPanel(String roomID) {
 		super(roomID);
-		setLayout(new BorderLayout());
-
+		
+		setLayout(new BorderLayout(5, 5));
 
 		// messages.setLineWrap(true);
 		// messages.setWrapStyleWord(true);
@@ -30,11 +30,11 @@ public class SingleChatPanel extends ChatPanel {
 		chatBox.setEditable(true);
 		chatBox.setLineWrap(true);
 		chatBox.setWrapStyleWord(true);
+
 		EnterListener enterListener = new EnterListener();
 		chatBox.addKeyListener(enterListener);
 		JScrollPane chatPane = new JScrollPane(chatBox);
-		chatPane
-				.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		chatPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		chatPane.setPreferredSize(new Dimension(235, 50));
 
 		send = new JButton("Send");
@@ -57,8 +57,7 @@ public class SingleChatPanel extends ChatPanel {
 	}
 
 	public void setStatus(String status) {
-		System.out
-				.println("i'm attempting to call the method to update the status label");
+		System.out.println("i'm attempting to call the method to update the status label");
 		info.setStatus(status);
 	}
 
@@ -82,8 +81,7 @@ public class SingleChatPanel extends ChatPanel {
 				setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 				name = new JLabel("sdsdf... woops. sort.");
 				message = new JLabel("Personal Message");
-				status = new JLabel(
-						"<html><font size=\"3\">Status: Online</font></html>");
+				status = new JLabel("<html><font size=\"3\">Status: Online</font></html>");
 				add(name);
 				add(message);
 				add(status);
@@ -105,17 +103,17 @@ public class SingleChatPanel extends ChatPanel {
 
 		protected ImageIcon createImageIcon(String path, String description) {
 			java.net.URL imgURL = getClass().getResource(path);
+			
 			if (imgURL != null) {
 				return new ImageIcon(imgURL, description);
-			} else {
-				System.err.println("Couldn't find file: " + path);
-				return null;
 			}
+
+			System.err.println("Couldn't find file: " + path);
+			return null;
 		}
 
 		public void setNickname(String name) {
 			this.name.setText("<html><b>" + name + "</b></html>");
-
 		}
 
 		public void setStatus(String status) {

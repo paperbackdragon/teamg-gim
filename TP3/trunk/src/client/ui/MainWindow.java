@@ -6,9 +6,10 @@ import javax.swing.*;
 
 import client.GimClient;
 
-@SuppressWarnings("serial")
 public class MainWindow extends JFrame {
 
+	private static final long serialVersionUID = 1L;
+	
 	private JMenuItem logout, quit, setOptions;
 	private JPanel main;
 
