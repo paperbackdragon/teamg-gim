@@ -151,6 +151,14 @@ public class GimClient {
 		}
 		return null;
 	}
+	
+	public static void updateGroupChatLists() {
+		for (int i = 0; i < windows.size(); i++) {
+			if (windows.get(i).getCp() instanceof GroupChatPanel) {
+				((GroupChatPanel) windows.get(i).getCp()).updateUserList(GimClient.getClient().getOnlinefriends());
+			}
+		}
+	}
 
 	public static SystemTray getTray() {
 		return tray;

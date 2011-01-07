@@ -232,6 +232,9 @@ public class ServerConnection implements NetworkingIn {
 			GimClient.getClient().setOwnNickname(nickname);
 			GimClient.getContactPanel().setMyNickname(nickname);
 		}
+		
+		// update in any group chats
+		GimClient.updateGroupChatLists();
 
 	}
 
@@ -254,6 +257,9 @@ public class ServerConnection implements NetworkingIn {
 			GimClient.getClient().setOwnPersonalMessage(personalmessage);
 			GimClient.getContactPanel().setMyPersonalMessage(personalmessage);
 		}
+		
+		// update in any group chats
+		GimClient.updateGroupChatLists();
 	}
 
 	public void updateStatus(String user, String status) {
@@ -274,6 +280,9 @@ public class ServerConnection implements NetworkingIn {
 			GimClient.getContactPanel().setMyStatus(status);
 
 		}
+		
+		// update in any group chats
+		GimClient.updateGroupChatLists();
 
 	}
 
