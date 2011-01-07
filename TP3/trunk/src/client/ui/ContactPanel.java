@@ -23,7 +23,6 @@ public class ContactPanel extends JPanel {
 	private ClientModel model = ClientModel.getInstance();
 	private PersonalInfo info;
 	private HoveringJPanel hlPanel;
-	private HoverListener hl = new HoverListener();
 	private JTextField nameInput;
 
 	// private chatListener;
@@ -61,6 +60,8 @@ public class ContactPanel extends JPanel {
 
 			public TextField() {
 				setLayout(new GridLayout(3, 1, 0, 0));
+				
+				NameListener hl = new NameListener();
 
 				name = new JLabel();
 				JPanel namePanel = new JPanel(new GridLayout(1, 1));
@@ -68,8 +69,9 @@ public class ContactPanel extends JPanel {
 
 				nameInput = new JTextField(name.getText());
 				nameInput.addMouseListener(hl);
-				nameInput.addKeyListener(new KeyListenerEnter());
-				
+				nameInput.addKeyListener(hl);
+				nameInput.addFocusListener(hl);
+
 				JPanel inputPanel = new JPanel(new GridLayout(1, 1));
 
 				inputPanel.add(nameInput);
@@ -410,72 +412,72 @@ public class ContactPanel extends JPanel {
 		}
 	}
 
-	private class HoverListener implements MouseListener {
+	public class NameListener implements MouseListener, KeyListener, FocusListener {
 
-		private boolean clicked = false;
-		
-		public void takeFocus() {
-			this.clicked = true;
+		boolean clicked = false;
+		String oldValue;
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			clicked = true;
+			oldValue = nameInput.getText();
 		}
-		
-		public void releaseFocus() {
+
+		public void release() {
 			this.clicked = false;
 		}
 
 		@Override
-		public void mouseClicked(MouseEvent e) {
-			this.clicked = true;
-		}
-
-		@Override
 		public void mouseEntered(MouseEvent e) {
-			System.out.println("hover");
 			hlPanel.setHoverState(true);
 		}
 
 		@Override
 		public void mouseExited(MouseEvent e) {
-			if (!clicked) {
+			if (!clicked)
 				hlPanel.setHoverState(false);
-			}
-
 		}
 
 		@Override
-		public void mousePressed(MouseEvent e) {
-			System.out.println("Pressed!");
+		public void focusLost(FocusEvent arg0) {
+			setMyNickname(nameInput.getText());
+			release();
+			mouseExited(null);
 		}
-
-		@Override
-		public void mouseReleased(MouseEvent e) {
-			System.out.println("Released!");
-		}
-
-	}
-	
-	class KeyListenerEnter implements KeyListener {
-
-		@Override
-		public void keyPressed(KeyEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void keyReleased(KeyEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-
+		
 		@Override
 		public void keyTyped(KeyEvent e) {
 			if (e.getKeyChar() == KeyEvent.VK_ENTER) {
 				setMyNickname(nameInput.getText());
-				hl.releaseFocus();
-				hl.mouseExited(null);
+				release();
+				mouseExited(null);
+			} else if (e.getKeyChar() == KeyEvent.VK_ESCAPE) {
+				release();
+				mouseExited(null);
+				setMyNickname(oldValue);
 			}
 		}
 		
+		@Override
+		public void mousePressed(MouseEvent e) {
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+		}
+
+		@Override
+		public void keyPressed(KeyEvent arg0) {
+		}
+
+		@Override
+		public void keyReleased(KeyEvent arg0) {
+		}
+
+		@Override
+		public void focusGained(FocusEvent arg0) {
+		}
+
 	}
 
 }
