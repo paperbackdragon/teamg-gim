@@ -18,6 +18,8 @@ public class Room {
 
 	public Room(User creator, boolean isGroup) {
 
+		this();
+		
 		this.isGroup = isGroup;
 
 		if (creator != null) {
@@ -103,7 +105,8 @@ public class Room {
 		// TODO: Refactor out to another method so that the messages go where
 		// they need to go.
 		// Destroy the room if it's empty and unjoinable
-		if (this.getUsers().size() == 0 && this.getInvitiedUsers().size() == 0) {
+		// TODO: Update after testing
+		if (this.getUsers().size() == 0 && this.getInvitiedUsers().size() == 0 && this.getId() != 0) {
 			Data.getInstance().removeRoom(this.getId());
 			return true;
 		}

@@ -149,8 +149,8 @@ public class Worker implements Runnable {
 
 				// TODO: Remove
 				// Add the user to the global room
-				//this.data.getRoom(0).invite(this.loggedInUser, this.loggedInUser);
-				
+				this.data.getRoom(0).invite(this.loggedInUser, this.loggedInUser);
+
 				// We did everything already D:
 				return null;
 
@@ -336,7 +336,7 @@ public class Worker implements Runnable {
 				return new Command("ERROR", "NOT_IN_FRIENDLIST");
 
 			this.loggedInUser.removeFriend(user);
-			
+
 			return this.okay;
 
 		}
@@ -490,7 +490,7 @@ public class Worker implements Runnable {
 			socket.close();
 			commandReaderThread.join();
 		} catch (InterruptedException e) {
-		} catch(IOException e) {
+		} catch (IOException e) {
 		}
 
 		Thread.currentThread().interrupt();
@@ -929,7 +929,7 @@ public class Worker implements Runnable {
 			if (rsp != null)
 				this.responseBuffer.putCommand(rsp);
 
-			if (Thread.currentThread().isInterrupted()) 
+			if (Thread.currentThread().isInterrupted())
 				break;
 
 		}

@@ -449,6 +449,7 @@ public class ContactPanel extends JPanel {
 		public void keyTyped(KeyEvent e) {
 			if (e.getKeyChar() == KeyEvent.VK_ENTER) {
 				setMyNickname(nameInput.getText());
+				GimClient.getClient().setNickname(nameInput.getText());
 				release();
 				mouseExited(null);
 			} else if (e.getKeyChar() == KeyEvent.VK_ESCAPE) {

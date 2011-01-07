@@ -59,8 +59,8 @@ public class GimServer {
 		
 		System.out.println(users.size() + " users loaded.");
 		
-		//Room room = new Room(null, true);
-		//data.addRoom(room);
+		Room room = new Room(null, true);
+		data.addRoom(room);
 
 		// Create a socket for the client to connect to
 		ServerSocket serverSocket = null;
