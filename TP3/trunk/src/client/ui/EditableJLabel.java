@@ -72,12 +72,10 @@ public class EditableJLabel extends JPanel {
 	 *            The text to start with
 	 */
 	public void setText(String text) {
-		this.label.setText(text);
-		this.textField.setText(text);
 
-		for (ValueChangedListener v : listeners) {
-			v.valueChanged(text, this);
-		}
+			this.label.setText(text);
+			this.textField.setText(text);
+		
 	}
 
 	/**
@@ -180,6 +178,9 @@ public class EditableJLabel extends JPanel {
 		@Override
 		public void focusLost(FocusEvent e) {
 			setText(textField.getText());
+			for (ValueChangedListener v : listeners) {
+				v.valueChanged(textField.getText(), EditableJLabel.this);
+			}
 			release();
 			mouseExited(null);
 		}
@@ -192,6 +193,9 @@ public class EditableJLabel extends JPanel {
 		public void keyTyped(KeyEvent e) {
 			if (e.getKeyChar() == KeyEvent.VK_ENTER) {
 				setText(textField.getText());
+				for (ValueChangedListener v : listeners) {
+					v.valueChanged(textField.getText(), EditableJLabel.this);
+				}
 				release();
 				mouseExited(null);
 			} else if (e.getKeyChar() == KeyEvent.VK_ESCAPE) {
@@ -229,9 +233,11 @@ public class EditableJLabel extends JPanel {
 }
 
 /**
- * A listener for the EditableJLabel. Called when the value of the JLabel is updated.
+ * A listener for the EditableJLabel. Called when the value of the JLabel is
+ * updated.
+ * 
  * @author James McMinn
- *
+ * 
  */
 interface ValueChangedListener {
 	public void valueChanged(String value, JComponent source);
