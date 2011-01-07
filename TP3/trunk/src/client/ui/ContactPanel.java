@@ -2,12 +2,9 @@ package client.ui;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
-import javax.swing.plaf.basic.BasicTreeUI;
 import javax.swing.tree.*;
 
 import client.GimClient;
@@ -22,8 +19,6 @@ public class ContactPanel extends JPanel {
 	private DefaultMutableTreeNode contacts;
 	private ClientModel model = ClientModel.getInstance();
 	private PersonalInfo info;
-	private HoveringJPanel hlPanel;
-	private JTextField nameInput;
 
 	// private chatListener;
 
@@ -50,8 +45,7 @@ public class ContactPanel extends JPanel {
 
 		private static final long serialVersionUID = 1L;
 
-		private JLabel name = new JLabel();
-		private JLabel message;
+		private EditableJLabel name, message;
 		private JLabel status;
 
 		class TextField extends JPanel {
@@ -59,35 +53,30 @@ public class ContactPanel extends JPanel {
 			private static final long serialVersionUID = 1L;
 
 			public TextField() {
+				
 				setLayout(new GridLayout(3, 1, 0, 0));
 				
-				NameListener hl = new NameListener();
+				name = new EditableJLabel("");
+				message = new EditableJLabel("");
+				
+				// Create a listener for the editableJLabels
+				ValueChangedListener valueListener = new ValueChangedListener() {
+					@Override
+					public void valueChanged(String value, JComponent source) {
+						if(source.equals(name)) {
+							GimClient.getClient().setNickname(value);
+						} else if(source.equals(message)) {
+							GimClient.getClient().setPersonalMessage(value);
+						}
+					}
+				};
+				
+				name.addValueChangedListener(valueListener);
+				message.addValueChangedListener(valueListener);
 
-				name = new JLabel();
-				JPanel namePanel = new JPanel(new GridLayout(1, 1));
-				namePanel.add(name);
-
-				nameInput = new JTextField(name.getText());
-				nameInput.addMouseListener(hl);
-				nameInput.addKeyListener(hl);
-				nameInput.addFocusListener(hl);
-
-				JPanel inputPanel = new JPanel(new GridLayout(1, 1));
-
-				inputPanel.add(nameInput);
-
-				HoveringJPanel nameSwitch = new HoveringJPanel();
-				hlPanel = nameSwitch;
-
-				namePanel.addMouseListener(hl);
-				inputPanel.addMouseListener(hl);
-				nameSwitch.setNormal(namePanel);
-				nameSwitch.setHover(inputPanel);
-
-				message = new JLabel("Personal Message");
 				status = new JLabel("<html><font size=\"3\">Status: Online</font></html>");
 
-				add(nameSwitch);
+				add(name);
 				add(message);
 				add(status);
 			}
@@ -115,7 +104,6 @@ public class ContactPanel extends JPanel {
 
 		public void setNickname(String name) {
 			this.name.setText(name);
-			nameInput.setText(name);
 		}
 
 		public void setStatus(String status) {
@@ -410,75 +398,6 @@ public class ContactPanel extends JPanel {
 
 		public void mouseReleased(MouseEvent e) {
 		}
-	}
-
-	public class NameListener implements MouseListener, KeyListener, FocusListener {
-
-		boolean clicked = false;
-		String oldValue;
-
-		@Override
-		public void mouseClicked(MouseEvent e) {
-			clicked = true;
-			oldValue = nameInput.getText();
-		}
-
-		public void release() {
-			this.clicked = false;
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent e) {
-			hlPanel.setHoverState(true);
-		}
-
-		@Override
-		public void mouseExited(MouseEvent e) {
-			if (!clicked)
-				hlPanel.setHoverState(false);
-		}
-
-		@Override
-		public void focusLost(FocusEvent arg0) {
-			setMyNickname(nameInput.getText());
-			release();
-			mouseExited(null);
-		}
-		
-		@Override
-		public void keyTyped(KeyEvent e) {
-			if (e.getKeyChar() == KeyEvent.VK_ENTER) {
-				setMyNickname(nameInput.getText());
-				GimClient.getClient().setNickname(nameInput.getText());
-				release();
-				mouseExited(null);
-			} else if (e.getKeyChar() == KeyEvent.VK_ESCAPE) {
-				release();
-				mouseExited(null);
-				setMyNickname(oldValue);
-			}
-		}
-		
-		@Override
-		public void mousePressed(MouseEvent e) {
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent e) {
-		}
-
-		@Override
-		public void keyPressed(KeyEvent arg0) {
-		}
-
-		@Override
-		public void keyReleased(KeyEvent arg0) {
-		}
-
-		@Override
-		public void focusGained(FocusEvent arg0) {
-		}
-
 	}
 
 }

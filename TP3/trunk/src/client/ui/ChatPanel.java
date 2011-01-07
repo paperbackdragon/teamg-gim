@@ -2,7 +2,6 @@ package client.ui;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.net.URISyntaxException;
 import java.util.LinkedList;
 
 import javax.swing.*;
