@@ -22,6 +22,9 @@ public class ContactPanel extends JPanel {
 	private DefaultMutableTreeNode contacts;
 	private ClientModel model = ClientModel.getInstance();
 	private PersonalInfo info;
+	private HoveringJPanel hlPanel;
+	private HoverListener hl = new HoverListener();
+	private JTextField nameInput;
 
 	// private chatListener;
 
@@ -48,7 +51,7 @@ public class ContactPanel extends JPanel {
 
 		private static final long serialVersionUID = 1L;
 
-		private JButton name;
+		private JLabel name = new JLabel();
 		private JLabel message;
 		private JLabel status;
 
@@ -57,24 +60,45 @@ public class ContactPanel extends JPanel {
 			private static final long serialVersionUID = 1L;
 
 			public TextField() {
-				setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-				name = new JButton();
+				setLayout(new GridLayout(3, 1, 0, 0));
+
+				name = new JLabel();
+				JPanel namePanel = new JPanel(new GridLayout(1, 1));
+				namePanel.add(name);
+
+				nameInput = new JTextField(name.getText());
+				nameInput.addMouseListener(hl);
+				nameInput.addKeyListener(new KeyListenerEnter());
+				
+				JPanel inputPanel = new JPanel(new GridLayout(1, 1));
+
+				inputPanel.add(nameInput);
+
+				HoveringJPanel nameSwitch = new HoveringJPanel();
+				hlPanel = nameSwitch;
+
+				namePanel.addMouseListener(hl);
+				inputPanel.addMouseListener(hl);
+				nameSwitch.setNormal(namePanel);
+				nameSwitch.setHover(inputPanel);
+
 				message = new JLabel("Personal Message");
 				status = new JLabel("<html><font size=\"3\">Status: Online</font></html>");
-				add(name);
+
+				add(nameSwitch);
 				add(message);
 				add(status);
 			}
 		}
 
 		public PersonalInfo() {
-			setLayout(new FlowLayout(FlowLayout.LEFT));
+			setLayout(new BorderLayout(5, 5));
 			ImageIcon icon = createImageIcon("icon1.jpg", "Icon");
 			JLabel iconLabel = new JLabel(icon);
 			iconLabel.setPreferredSize(new Dimension(64, 64));
 			iconLabel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
-			add(iconLabel);
-			add(new TextField());
+			add(iconLabel, BorderLayout.WEST);
+			add(new TextField(), BorderLayout.CENTER);
 		}
 
 		protected ImageIcon createImageIcon(String path, String description) {
@@ -89,7 +113,7 @@ public class ContactPanel extends JPanel {
 
 		public void setNickname(String name) {
 			this.name.setText(name);
-
+			nameInput.setText(name);
 		}
 
 		public void setStatus(String status) {
@@ -129,7 +153,7 @@ public class ContactPanel extends JPanel {
 			});
 
 			contactTree.putClientProperty("JTree.lineStyle", "None");
-			
+
 			contactTree.setLargeModel(true);
 			contactTree.setRootVisible(false);
 			contactTree.setShowsRootHandles(true);
@@ -185,20 +209,20 @@ public class ContactPanel extends JPanel {
 				return new JLabel();
 
 			if (leaf) {
-				
-				if(selected) {
+
+				if (selected) {
 					contact.setBackground(UIManager.getColor("Tree.selectionBackground"));
 					contact.setOpaque(true);
 				}
 
 				ImageIcon displayPictureIcon = new ImageIcon(model.getPath() + "icon1.jpg", "Icon");
 				JLabel displayPicture = new JLabel(displayPictureIcon);
-				displayPicture.setPreferredSize(new Dimension(48, 48));
+				displayPicture.setPreferredSize(new Dimension(32, 32));
 
 				ImageIcon statusIcon = new ImageIcon(model.getPath() + "online.png", "Icon");
 				JLabel statusIconLabel = new JLabel(statusIcon);
-				statusIconLabel.setPreferredSize(new Dimension(32, 32));
-				
+				statusIconLabel.setPreferredSize(new Dimension(16, 16));
+
 				JPanel userInfo = new JPanel(new GridLayout(2, 1));
 				userInfo.setOpaque(false);
 				JLabel username = new JLabel("<html>" + value.toString() + "</html>");
@@ -211,7 +235,7 @@ public class ContactPanel extends JPanel {
 				contact.add(userInfo, BorderLayout.CENTER);
 				contact.add(statusIconLabel, BorderLayout.EAST);
 				contact.add(Box.createVerticalStrut(2), BorderLayout.SOUTH);
-				
+
 				return contact;
 
 			} else {
@@ -354,12 +378,12 @@ public class ContactPanel extends JPanel {
 	}
 
 	class SingleChatListener implements MouseListener {
-		
+
 		public void mousePressed(MouseEvent e) {
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode) contactTree.getLastSelectedPathComponent();
-			
+
 			String nodeInfo = (String) node.getUserObject();
-			
+
 			if (e.getClickCount() == 2) {
 				if (nodeInfo != "Online" && nodeInfo != "Offline") {
 					System.out.println(nodeInfo);
@@ -385,4 +409,73 @@ public class ContactPanel extends JPanel {
 		public void mouseReleased(MouseEvent e) {
 		}
 	}
+
+	private class HoverListener implements MouseListener {
+
+		private boolean clicked = false;
+		
+		public void takeFocus() {
+			this.clicked = true;
+		}
+		
+		public void releaseFocus() {
+			this.clicked = false;
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			this.clicked = true;
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			System.out.println("hover");
+			hlPanel.setHoverState(true);
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			if (!clicked) {
+				hlPanel.setHoverState(false);
+			}
+
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			System.out.println("Pressed!");
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			System.out.println("Released!");
+		}
+
+	}
+	
+	class KeyListenerEnter implements KeyListener {
+
+		@Override
+		public void keyPressed(KeyEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void keyReleased(KeyEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void keyTyped(KeyEvent e) {
+			if (e.getKeyChar() == KeyEvent.VK_ENTER) {
+				setMyNickname(nameInput.getText());
+				hl.releaseFocus();
+				hl.mouseExited(null);
+			}
+		}
+		
+	}
+
 }
