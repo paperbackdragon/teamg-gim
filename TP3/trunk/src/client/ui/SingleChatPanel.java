@@ -75,11 +75,17 @@ public class SingleChatPanel extends ChatPanel {
 
 	// PANELS
 	class ContactInfo extends JPanel {
+
+		private static final long serialVersionUID = 1L;
+
 		private JLabel name;
 		private JLabel message;
 		private JLabel status;
 
 		class TextField extends JPanel {
+
+			private static final long serialVersionUID = 1L;
+
 			public TextField() {
 				setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 				name = new JLabel("sdsdf... woops. sort.");

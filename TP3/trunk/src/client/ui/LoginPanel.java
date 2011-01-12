@@ -6,16 +6,16 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
-import client.GimClient;
-
-@SuppressWarnings("serial")
 public class LoginPanel extends JPanel {
+
+	private static final long serialVersionUID = 1L;
 
 	private MainWindow parent;
 	private JTextField email;
 	private JPasswordField pwd;
 	private JButton loginButton, register;
 	private JCheckBox autoLogin, savePassword, rememberUser;
+	private static ClientModel model = ClientModel.getInstance();
 
 	// CONSTRUCTOR
 	public LoginPanel() {
@@ -114,8 +114,8 @@ public class LoginPanel extends JPanel {
 	}
 
 	private void login() {
-		GimClient.getClient().authenticate(email.getText(), pwd.getPassword());
-		GimClient.getClient().setOwnUserName(email.getText());
+		model.authenticate(email.getText(), pwd.getPassword());
+		model.setOwnUserName(email.getText());
 	}
 
 	// ACTION LISTENERS
@@ -143,5 +143,5 @@ public class LoginPanel extends JPanel {
 		public void keyReleased(KeyEvent e) {
 		}
 	}
-	
+
 }

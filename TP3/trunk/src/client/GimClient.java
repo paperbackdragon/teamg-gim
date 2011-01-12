@@ -12,26 +12,21 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
-import java.util.Map;
 
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 
 import client.ui.*;
 
 public class GimClient {
 
 	private static MainWindow mainWindow;
-	private static ClientModel client;
 	private static ContactPanel contactPanel;
-	// private static ArrayList<ChatPanel> rooms;
 	private static ArrayList<ChatWindowIdentifier> windows;
 
 	private static SystemTray tray;
 	static TrayIcon trayIcon;
 
 	public static void main(String[] args) {
-		client = ClientModel.getInstance();
 
 		// rooms = new ArrayList<ChatPanel>();
 		windows = new ArrayList<ChatWindowIdentifier>();
@@ -47,18 +42,14 @@ public class GimClient {
 				mainWindow.setVisible(true);
 			}
 		});
-		
+
 		System.out.println(ClientModel.getInstance().getPath());
-		
+
 	}
 
 	// ACCESSORS
 	public static MainWindow getMainWindow() {
 		return mainWindow;
-	}
-
-	public static ClientModel getClient() {
-		return client;
 	}
 
 	public static ContactPanel getContactPanel() {
@@ -74,7 +65,6 @@ public class GimClient {
 		for (int i = 0; i < windows.size(); i++) {
 			if (windows.get(i).getCp().getID().equals(panel.getID())) {
 				windows.remove(i);
-				// TODO (heather): Some way to reduce memory used in this list?
 			}
 		}
 	}
@@ -100,7 +90,7 @@ public class GimClient {
 			System.out.println("found the room");
 			if (windows.get(i).getCp().getID().equals(roomid)) {
 				windows.get(i).getCp().receiveMessage(sender, message);
-				GimClient.getClient().setLatestPerson(roomid);
+				ClientModel.getInstance().setLatestPerson(roomid);
 				break;
 			}
 		}
@@ -151,11 +141,11 @@ public class GimClient {
 		}
 		return null;
 	}
-	
+
 	public static void updateGroupChatLists() {
 		for (int i = 0; i < windows.size(); i++) {
 			if (windows.get(i).getCp() instanceof GroupChatPanel) {
-				((GroupChatPanel) windows.get(i).getCp()).updateUserList(GimClient.getClient().getOnlinefriends());
+				((GroupChatPanel) windows.get(i).getCp()).updateUserList(ClientModel.getInstance().getOnlinefriends());
 			}
 		}
 	}
@@ -226,8 +216,8 @@ public class GimClient {
 						// Bring window to front. NEED TO WORK OUT HOW TO DO
 						// THIS
 
-						if (GimClient.getClient().getLatestPerson() != null) {
-							GimClient.getWindowIdentifierFromId(GimClient.getClient().getLatestPerson()).getWindow()
+						if (ClientModel.getInstance().getLatestPerson() != null) {
+							GimClient.getWindowIdentifierFromId(ClientModel.getInstance().getLatestPerson()).getWindow()
 									.setVisible(true);
 						}
 					}

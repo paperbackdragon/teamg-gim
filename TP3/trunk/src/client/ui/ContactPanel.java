@@ -12,7 +12,6 @@ import client.GimClient;
 public class ContactPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private MainWindow parent;
 	private JButton add, del, chat, group;
 	private JTree contactTree;
 	protected JScrollPane scrollPane;
@@ -53,24 +52,24 @@ public class ContactPanel extends JPanel {
 			private static final long serialVersionUID = 1L;
 
 			public TextField() {
-				
+
 				setLayout(new GridLayout(3, 1, 0, 0));
-				
+
 				name = new EditableJLabel("");
 				message = new EditableJLabel("");
-				
+
 				// Create a listener for the editableJLabels
 				ValueChangedListener valueListener = new ValueChangedListener() {
 					@Override
 					public void valueChanged(String value, JComponent source) {
-						if(source.equals(name)) {
-							GimClient.getClient().setNickname(value);
-						} else if(source.equals(message)) {
-							GimClient.getClient().setPersonalMessage(value);
+						if (source.equals(name)) {
+							model.setNickname(value);
+						} else if (source.equals(message)) {
+							model.setPersonalMessage(value);
 						}
 					}
 				};
-				
+
 				name.addValueChangedListener(valueListener);
 				message.addValueChangedListener(valueListener);
 
@@ -242,10 +241,6 @@ public class ContactPanel extends JPanel {
 		return new Dimension(300, 400);
 	}
 
-	public void setParent(JFrame frame) {
-		parent = (MainWindow) frame;
-	}
-
 	public void createNodes(String[] onlineContacts, String[] offlineContacts) {
 
 		contacts.removeAllChildren();
@@ -303,10 +298,10 @@ public class ContactPanel extends JPanel {
 								JOptionPane.PLAIN_MESSAGE, null, null, "ham");
 
 						if (s != null) {
-							GimClient.getClient().addfriend(s);
+							model.addfriend(s);
 						}
 
-						GimClient.getClient().getFriendList();
+						model.getFriendList();
 
 					}
 				});
@@ -345,7 +340,7 @@ public class ContactPanel extends JPanel {
 							}
 
 							// update friendslist
-							GimClient.getClient().getFriendList();
+							model.getFriendList();
 
 						}
 					}
@@ -357,12 +352,12 @@ public class ContactPanel extends JPanel {
 				// Check if there's already a chat open with this user
 				int find = GimClient.findRoom(getSelectedContacts()[0]);
 				if (find == -1) {
-					GimClient.getClient().createRoom(false, getSelectedContacts());
+					model.createRoom(false, getSelectedContacts());
 				} else {
 					GimClient.getWindow(getSelectedContacts()[0]).setVisible(true);
 				}
 			} else if (e.getSource().equals(group)) {
-				GimClient.getClient().createRoom(true, getSelectedContacts());
+				model.createRoom(true, getSelectedContacts());
 			}
 		}
 	}
@@ -372,19 +367,16 @@ public class ContactPanel extends JPanel {
 		public void mousePressed(MouseEvent e) {
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode) contactTree.getLastSelectedPathComponent();
 
-			String nodeInfo = (String) node.getUserObject();
+			if (e.getClickCount() == 2 && node.isLeaf()) {
+				int find = GimClient.findRoom(getSelectedContacts()[0]);
 
-			if (e.getClickCount() == 2) {
-				if (nodeInfo != "Online" && nodeInfo != "Offline") {
-					System.out.println(nodeInfo);
-					int find = GimClient.findRoom(getSelectedContacts()[0]);
-					if (find == -1) {
-						GimClient.getClient().createRoom(false, getSelectedContacts());
-					} else {
-						GimClient.getWindow(getSelectedContacts()[0]).setVisible(true);
-					}
-				}
+				if (find == -1)
+					model.createRoom(false, getSelectedContacts());
+				else
+					GimClient.getWindow(getSelectedContacts()[0]).setVisible(true);
+
 			}
+			
 		}
 
 		public void mouseClicked(MouseEvent e) {

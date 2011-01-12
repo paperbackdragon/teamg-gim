@@ -7,8 +7,6 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
-import client.GimClient;
-
 /**
  * Specific class for a chat panel used for a conversation between more than two
  * people.
@@ -22,6 +20,7 @@ public class GroupChatPanel extends ChatPanel {
 	private JTextArea guests;
 	private JButton invite;
 	private String[] participants;
+	private static ClientModel model = ClientModel.getInstance();
 
 	/**
 	 * Constructor
@@ -112,8 +111,8 @@ public class GroupChatPanel extends ChatPanel {
 		String theString = "";
 		String current = "";
 		for (int i = 0; i < participants.length; i++) {
-			if (GimClient.getClient().getUser(participants[i]) != null) {
-				current = GimClient.getClient().getUser(participants[i]).getNickname() + " (" + participants[i] + ")";
+			if (model.getUser(participants[i]) != null) {
+				current = model.getUser(participants[i]).getNickname() + " (" + participants[i] + ")";
 			} else {
 				current = participants[i];
 			}
@@ -134,7 +133,7 @@ public class GroupChatPanel extends ChatPanel {
 				participants = temp;
 			}
 
-			SelectContactsPanel inputs = new SelectContactsPanel(GimClient.getClient().getOnlinefriends(), participants);
+			SelectContactsPanel inputs = new SelectContactsPanel(model.getOnlinefriends(), participants);
 
 			JOptionPane.showMessageDialog(null, inputs, "Select contacts to invite", JOptionPane.PLAIN_MESSAGE);
 
@@ -142,7 +141,7 @@ public class GroupChatPanel extends ChatPanel {
 
 			for (int i = 0; i < blah.size(); i++) {
 				if (blah.get(i).isSelected() == true) {
-					GimClient.getClient().invite(id, blah.get(i).getText());
+					model.invite(id, blah.get(i).getText());
 				}
 			}
 

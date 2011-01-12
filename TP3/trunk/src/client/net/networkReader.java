@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 import client.GimClient;
+import client.ui.ClientModel;
 import client.ui.LoginPanel;
 
 import util.Command;
@@ -102,7 +103,7 @@ public class networkReader implements Runnable {
 
 		LoginPanel panel = new LoginPanel();
 		panel.setParent(GimClient.getMainWindow());
-		GimClient.getClient().setConnected(false);
+		ClientModel.getInstance().setConnected(false);
 		gui.connectionDroppedError();
 
 		GimClient.getMainWindow().setMainPanel(panel);

@@ -2,36 +2,42 @@ package client.net;
 
 import javax.swing.*;
 
-import client.*;
-import client.ui.*;
+import client.GimClient;
+import client.ui.ChatWindowIdentifier;
+import client.ui.ClientModel;
+import client.ui.ContactPanel;
+import client.ui.GroupChatPanel;
+import client.ui.LoginPanel;
+import client.ui.MainWindow;
+import client.ui.SingleChatPanel;
+import client.ui.User;
 
 public class ServerConnection implements NetworkingIn {
-	
-	ClientModel model = ClientModel.getInstance();
+
+	private ClientModel model;
+
+	public ServerConnection(ClientModel model) {
+		this.model = model;
+	}
 
 	public void authorised() {
-		ContactPanel panel = GimClient.getContactPanel();
-		panel.setParent(GimClient.getMainWindow());
-		GimClient.getMainWindow().setMainPanel(panel);
-		GimClient.getMainWindow().canLogout(true);
-		GimClient.getClient().getFriendList();
+		model.getFriendList();
 
 		// Do this properly later...
 		// may want to sign in appearing offline
 		// GimClient.getClient().getOwnUserName()
-		
-		GimClient.getClient().setStatus("ONLINE");
 
-		GimClient.getClient().getNickName(
-				GimClient.getClient().getOwnUserName());
-		GimClient.getClient().getPersonalMessage(
-				GimClient.getClient().getOwnUserName());
+		model.setStatus("ONLINE");
 
+		model.getNickName(model.getOwnUserName());
+		model.getPersonalMessage(model.getOwnUserName());
+
+		ContactPanel panel = GimClient.getContactPanel();
+		GimClient.getMainWindow().setMainPanel(panel);
+		GimClient.getMainWindow().canLogout(true);
 	}
 
 	public void broadcast(String message) {
-		// TODO (heather): how to implement this? all chat windows or dialog
-		// box?
 	}
 
 	public void emailInuseError(String message) {
@@ -46,24 +52,23 @@ public class ServerConnection implements NetworkingIn {
 		GimClient.getMainWindow().setMainPanel(panel);
 	}
 
-	public void friendlist(String[] onlinelist, String[] offlinelist,
-			String[] blockedlist) {
-		
-		GimClient.getClient().setOnlinefriends(onlinelist);
-		GimClient.getClient().setOfflinefriends(offlinelist);
-		GimClient.getClient().setBlockedfriends(blockedlist);
+	public void friendlist(String[] onlinelist, String[] offlinelist, String[] blockedlist) {
+
+		model.setOnlinefriends(onlinelist);
+		model.setOfflinefriends(offlinelist);
+		model.setBlockedfriends(blockedlist);
 
 		// update the interface
 
 		for (int i = 0; i < onlinelist.length; i++) {
-			if (GimClient.getClient().getUser(onlinelist[i]) == null) {
-				GimClient.getClient().addUser(onlinelist[i]);
+			if (model.getUser(onlinelist[i]) == null) {
+				model.addUser(onlinelist[i]);
 				// GimClient.getClient().getUser(onlinelist[i])
 				// .setStatus("Online");
 
-				GimClient.getClient().getStatus(onlinelist[i]);
-				GimClient.getClient().getPersonalMessage(onlinelist[i]);
-				GimClient.getClient().getNickName(onlinelist[i]);
+				model.getStatus(onlinelist[i]);
+				model.getPersonalMessage(onlinelist[i]);
+				model.getNickName(onlinelist[i]);
 			}
 
 		}
@@ -73,19 +78,14 @@ public class ServerConnection implements NetworkingIn {
 
 	public void friendrequest(String user, String nickname) {
 		Object[] options = { "Accept", "Decline", };
-		int n = JOptionPane
-				.showOptionDialog(
-						null,
-						"You have received a friend request from "
-								+ user
-								+ "(nickname :" + nickname + ".) Would you like to accept?",
-						"Freind Request", JOptionPane.YES_NO_CANCEL_OPTION,
-						JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+		int n = JOptionPane.showOptionDialog(null, "You have received a friend request from " + user + "(nickname :"
+				+ nickname + ".) Would you like to accept?", "Freind Request", JOptionPane.YES_NO_CANCEL_OPTION,
+				JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
 
 		if (n == 0) {
-			GimClient.getClient().acceptRequest(user);
+			model.acceptRequest(user);
 		}
-		
+
 	}
 
 	public void invalidArgumentError(String message) {
@@ -106,8 +106,7 @@ public class ServerConnection implements NetworkingIn {
 			error += ":\n\n server reported:\n " + message;
 		}
 
-		JOptionPane.showMessageDialog(GimClient.getMainWindow(),
-				"Log in Details Incorrect." + error);
+		JOptionPane.showMessageDialog(GimClient.getMainWindow(), "Log in Details Incorrect." + error);
 	}
 
 	public void loggedInFromAnotherLocationError(String message) {
@@ -116,8 +115,7 @@ public class ServerConnection implements NetworkingIn {
 			error += ":\n\n server reported:\n " + message;
 		}
 
-		JOptionPane.showMessageDialog(GimClient.getMainWindow(),
-				"Logged in from another location." + error);
+		JOptionPane.showMessageDialog(GimClient.getMainWindow(), "Logged in from another location." + error);
 	}
 
 	public void message(String roomid, String sender, String message) {
@@ -129,17 +127,16 @@ public class ServerConnection implements NetworkingIn {
 	}
 
 	public void notifyDisplayPicture(String user) {
-		GimClient.getClient().getDisplayPicture(user);
+		model.getDisplayPicture(user);
 	}
 
 	public void notifyNickname(String user) {
-		GimClient.getClient().getNickName(user);
+		model.getNickName(user);
 
 	}
 
 	public void notifyPersonalMessage(String user) {
-		GimClient.getClient().getPersonalMessage(user);
-
+		model.getPersonalMessage(user);
 	}
 
 	public void notifyStatus(String user) {
@@ -147,10 +144,8 @@ public class ServerConnection implements NetworkingIn {
 		// to send an updated buddy list
 		// (this may change if the server sends it anyway...
 		// need to talk to james on that one)
-		GimClient.getClient().getFriendList();
-
-		GimClient.getClient().getStatus(user);
-
+		model.getFriendList();
+		model.getStatus(user);
 	}
 
 	public void okay() {
@@ -163,8 +158,7 @@ public class ServerConnection implements NetworkingIn {
 			error += ":\n\n server reported :\n " + message;
 		}
 
-		JOptionPane.showMessageDialog(GimClient.getMainWindow(),
-				"Password too short error." + error);
+		JOptionPane.showMessageDialog(GimClient.getMainWindow(), "Password too short error." + error);
 	}
 
 	public void servertime(String servertime) {
@@ -191,10 +185,10 @@ public class ServerConnection implements NetworkingIn {
 	}
 
 	public void updateDisplayPicture(String user, String displayPicture) {
-		if (!user.equals(GimClient.getClient().getOwnUserName())) {
+		if (!user.equals(model.getOwnUserName())) {
 
-			if (GimClient.getClient().getUser(user) != null) {
-				User l = GimClient.getClient().getUser(user);
+			if (model.getUser(user) != null) {
+				User l = model.getUser(user);
 				if (l != null) {
 					l.setDisplayPic(displayPicture);
 					// lul'z: dunno how to get this into an imageIcon
@@ -212,14 +206,13 @@ public class ServerConnection implements NetworkingIn {
 	}
 
 	public void updateNickname(String user, String nickname) {
-		if (!user.equals(GimClient.getClient().getOwnUserName())) {
+		if (!user.equals(model.getOwnUserName())) {
 
-			User l = GimClient.getClient().getUser(user);
+			User l = model.getUser(user);
 			if (l != null) {
 				l.setNickname(nickname);
 
-				ChatWindowIdentifier s = GimClient
-						.getWindowIdentifierFromUser(user);
+				ChatWindowIdentifier s = GimClient.getWindowIdentifierFromUser(user);
 
 				if (s != null) {
 					((SingleChatPanel) s.getCp()).setNickname(nickname);
@@ -229,48 +222,45 @@ public class ServerConnection implements NetworkingIn {
 		}
 
 		else {
-			GimClient.getClient().setOwnNickname(nickname);
+			model.setOwnNickname(nickname);
 			GimClient.getContactPanel().setMyNickname(nickname);
 		}
-		
+
 		// update in any group chats
 		GimClient.updateGroupChatLists();
 
 	}
 
 	public void updatePersonalMessage(String user, String personalmessage) {
-		if (!user.equals(GimClient.getClient().getOwnUserName())) {
+		if (!user.equals(model.getOwnUserName())) {
 
-			User l = GimClient.getClient().getUser(user);
+			User l = model.getUser(user);
 			if (l != null) {
 				l.setPersonalMessage(personalmessage);
 
-				ChatWindowIdentifier s = GimClient
-						.getWindowIdentifierFromUser(user);
+				ChatWindowIdentifier s = GimClient.getWindowIdentifierFromUser(user);
 
 				if (s != null) {
-					((SingleChatPanel) s.getCp())
-							.setPersonalMessage(personalmessage);
+					((SingleChatPanel) s.getCp()).setPersonalMessage(personalmessage);
 				}
 			}
 		} else {
-			GimClient.getClient().setOwnPersonalMessage(personalmessage);
+			model.setOwnPersonalMessage(personalmessage);
 			GimClient.getContactPanel().setMyPersonalMessage(personalmessage);
 		}
-		
+
 		// update in any group chats
 		GimClient.updateGroupChatLists();
 	}
 
 	public void updateStatus(String user, String status) {
-		if (!user.equals(GimClient.getClient().getOwnUserName())) {
+		if (!user.equals(model.getOwnUserName())) {
 
-			User l = GimClient.getClient().getUser(user);
+			User l = model.getUser(user);
 			if (l != null) {
 				l.setStatus(status);
 
-				ChatWindowIdentifier s = GimClient
-						.getWindowIdentifierFromUser(user);
+				ChatWindowIdentifier s = GimClient.getWindowIdentifierFromUser(user);
 
 				if (s != null) {
 					((SingleChatPanel) s.getCp()).setStatus(status);
@@ -280,7 +270,7 @@ public class ServerConnection implements NetworkingIn {
 			GimClient.getContactPanel().setMyStatus(status);
 
 		}
-		
+
 		// update in any group chats
 		GimClient.updateGroupChatLists();
 
@@ -296,8 +286,7 @@ public class ServerConnection implements NetworkingIn {
 			error += ":\n\n server reported :\n " + message;
 		}
 
-		JOptionPane.showMessageDialog(GimClient.getMainWindow(),
-				"User does not exist error. " + error);
+		JOptionPane.showMessageDialog(GimClient.getMainWindow(), "User does not exist error. " + error);
 	}
 
 	public void userAlreadyinFriendlistError(String message) {
@@ -306,8 +295,7 @@ public class ServerConnection implements NetworkingIn {
 			error += ":\n\n server reported :\n " + message;
 		}
 
-		JOptionPane.showMessageDialog(GimClient.getMainWindow(),
-				"User already in friendslist. " + error);
+		JOptionPane.showMessageDialog(GimClient.getMainWindow(), "User already in friendslist. " + error);
 
 	}
 
@@ -318,8 +306,8 @@ public class ServerConnection implements NetworkingIn {
 	public void created(final String roomid) {
 		// get next list of users
 
-		final String[] contacts = GimClient.getClient().getNextRoom();
-		final Boolean isGroup = GimClient.getClient().getNextType();
+		final String[] contacts = model.getNextRoom();
+		final Boolean isGroup = model.getNextType();
 
 		// TODO (heather): this if/else will not work! (presumably) gordon: why
 		// not? :S
@@ -342,7 +330,7 @@ public class ServerConnection implements NetworkingIn {
 					GimClient.addWindow(" ", ui, gcp);
 
 					ui.setLocationRelativeTo(null);// center new chat window
-					GimClient.getClient().users(roomid);
+					model.users(roomid);
 					ui.setVisible(true);
 				}
 			});
@@ -350,8 +338,7 @@ public class ServerConnection implements NetworkingIn {
 		} else {
 
 			// if we already have a window...
-			ChatWindowIdentifier l = GimClient
-					.getWindowIdentifierFromUser(contacts[0]);
+			ChatWindowIdentifier l = GimClient.getWindowIdentifierFromUser(contacts[0]);
 			if (l != null) {
 				l.getCp().setId(roomid);
 				// l.getCp().setInProgress(true); // find a better way
@@ -369,15 +356,14 @@ public class ServerConnection implements NetworkingIn {
 						// GimClient.addRoom(scp);
 
 						// get contact info
-						User l = GimClient.getClient().getUser(contacts[0]);
+						User l = model.getUser(contacts[0]);
 						if (l != null) {
 							scp.setNickname(l.getNickname());
 							scp.setStatus(l.getStatus());
 							scp.setPersonalMessage(l.getPersonalMessage());
 						}
 
-						MainWindow ui = new MainWindow("GIM - Chat with "
-								+ contacts[0], scp);
+						MainWindow ui = new MainWindow("GIM - Chat with " + contacts[0], scp);
 						GimClient.addWindow(contacts[0], ui, scp);
 
 						ui.setLocationRelativeTo(null);// center new chat window
@@ -390,17 +376,17 @@ public class ServerConnection implements NetworkingIn {
 
 		// invite contacts
 		for (String s : contacts) {
-			GimClient.getClient().invite(roomid, s);
+			model.invite(roomid, s);
 		}
 
 	}
 
 	public void invited(String user, String roomid) {
-		GimClient.getClient().type(roomid);
+		model.type(roomid);
 
 		// Store who gave the invitation, for when we ask the user if they want
 		// to join
-		GimClient.getClient().addInvitation(user);
+		model.addInvitation(user);
 
 		/*
 		 * Gordon: it could be possible to display the list of users already in
@@ -415,8 +401,7 @@ public class ServerConnection implements NetworkingIn {
 			@Override
 			public void run() {
 				System.out.println("got to the joined method");
-				ChatWindowIdentifier l = GimClient
-						.getWindowIdentifierFromId(roomid);
+				ChatWindowIdentifier l = GimClient.getWindowIdentifierFromId(roomid);
 
 				// The other person has joined the personal chat, it is safe to
 				// send messages
@@ -424,22 +409,20 @@ public class ServerConnection implements NetworkingIn {
 					if (l.getCp() instanceof SingleChatPanel) {
 						l.getCp().setInProgress(true);
 					} else { // group chat
-						GimClient.getClient().users(roomid);
-						l.getCp().receiveMessage("",
-								user + " has joined the chat\n");
+						model.users(roomid);
+						l.getCp().receiveMessage("", user + " has joined the chat\n");
 
 					}
 
 				}
 
 				else { // they joined a group chat
-					if (GimClient.getClient().getUser(user) == null) {
-						GimClient.getClient().addUser(user);
+					if (model.getUser(user) == null) {
+						model.addUser(user);
 
-						GimClient.getClient().getNickName(user);
-						GimClient.getClient().getStatus(user);
-						GimClient.getClient().getPersonalMessage(user);
-
+						model.getNickName(user);
+						model.getStatus(user);
+						model.getPersonalMessage(user);
 					}
 				}
 
@@ -457,12 +440,11 @@ public class ServerConnection implements NetworkingIn {
 			if (l.getCp() instanceof SingleChatPanel) {
 				l.getCp().setInProgress(false);
 				l.getCp().setId("-1");
-				GimClient.getClient().leave(roomid);
+				model.leave(roomid);
 			} else if (l.getCp() instanceof GroupChatPanel) {
 				// do this later...
-				GimClient.getWindowIdentifierFromId(roomid).getCp()
-						.receiveMessage("", user + " has left the chat\n");
-				GimClient.getClient().users(roomid);
+				GimClient.getWindowIdentifierFromId(roomid).getCp().receiveMessage("", user + " has left the chat\n");
+				model.users(roomid);
 			}
 
 		}
@@ -472,28 +454,25 @@ public class ServerConnection implements NetworkingIn {
 	public void users(String[] users, String roomid) {
 		// could work out their nickname... but screw it, do it later
 
-		((GroupChatPanel) GimClient.getWindowIdentifierFromId(roomid).getCp())
-				.updateUserList(users);
+		((GroupChatPanel) GimClient.getWindowIdentifierFromId(roomid).getCp()).updateUserList(users);
 
 	}
 
 	public void group(final String roomid) {
-		String invitedBy = GimClient.getClient().getNextInvitation();
+		String invitedBy = model.getNextInvitation();
 
 		// spawn a new window notifying the user they've been invited to a group
 		// chat
 
 		Object[] options = { "Accept", "Decline" };
-		int n = JOptionPane.showOptionDialog(GimClient.getMainWindow(),
-				"You have been invited to a group chat by " + invitedBy
-						+ ". Would you like to accept?",
-				"Group chat invitation", JOptionPane.YES_NO_OPTION,
+		int n = JOptionPane.showOptionDialog(GimClient.getMainWindow(), "You have been invited to a group chat by "
+				+ invitedBy + ". Would you like to accept?", "Group chat invitation", JOptionPane.YES_NO_OPTION,
 				JOptionPane.QUESTION_MESSAGE, null, options, // the titles of
 				// buttons
 				options[0]); // default button title
 
 		if (n == 0) {
-			GimClient.getClient().join(roomid);
+			model.join(roomid);
 
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
@@ -506,7 +485,7 @@ public class ServerConnection implements NetworkingIn {
 					gcp.setInProgress(true);
 
 					ui.setLocationRelativeTo(null);// center new chat window
-					GimClient.getClient().users(roomid);
+					model.users(roomid);
 				}
 			});
 		}
@@ -524,12 +503,11 @@ public class ServerConnection implements NetworkingIn {
 		 * handler class. Like, when the "write message to window" method is
 		 * invoked, if messagecount == 0, spawn a window...
 		 */
-		final String invitedBy = GimClient.getClient().getNextInvitation();
+		final String invitedBy = model.getNextInvitation();
 
-		GimClient.getClient().join(roomid);
+		model.join(roomid);
 
-		ChatWindowIdentifier l = GimClient
-				.getWindowIdentifierFromUser(invitedBy);
+		ChatWindowIdentifier l = GimClient.getWindowIdentifierFromUser(invitedBy);
 		if (l != null) {
 			l.getCp().setId(roomid);
 			l.getCp().setInProgress(true); // find a better way later
@@ -543,7 +521,7 @@ public class ServerConnection implements NetworkingIn {
 
 					// set contact info
 
-					User l = GimClient.getClient().getUser(invitedBy);
+					User l = model.getUser(invitedBy);
 					if (l != null) {
 						scp.setNickname(l.getNickname());
 						scp.setStatus(l.getStatus());
@@ -551,8 +529,7 @@ public class ServerConnection implements NetworkingIn {
 					}
 					// </gordon>
 					// GimClient.addRoom(scp);
-					MainWindow ui = new MainWindow("GIM - Chat with "
-							+ invitedBy, scp);
+					MainWindow ui = new MainWindow("GIM - Chat with " + invitedBy, scp);
 					GimClient.addWindow(invitedBy, ui, scp);
 					ui.setLocationRelativeTo(null);// center new chat window
 				}
@@ -561,7 +538,7 @@ public class ServerConnection implements NetworkingIn {
 	}
 
 	public void notifyFriendsList() {
-		GimClient.getClient().getFriendList();
+		model.getFriendList();
 	}
 
 	@Override
@@ -570,7 +547,7 @@ public class ServerConnection implements NetworkingIn {
 		// USER HAS DOUBLE CLICKED 'ONLINE' on buddy list
 
 		// the invitatiation we queued up was invalid
-		GimClient.getClient().getNextRoom();
+		model.getNextRoom();
 
 	}
 
@@ -579,14 +556,13 @@ public class ServerConnection implements NetworkingIn {
 		// FIX THIS LATER TO PARSE FOR CONTEXT. FOR NOW, ASSUME
 		// USER HAS DOUBLE CLICKED AN OFFLINE USER on buddy list
 
-		// the invitatiation we queued up was invalid
-		GimClient.getClient().getNextRoom();
+		// the invitation we queued up was invalid
+		model.getNextRoom();
 	}
 
 	public void connectionDroppedError() {
 
-		JOptionPane.showMessageDialog(GimClient.getMainWindow(),
-				"Connection to server lost. Try logging in again. ");
+		JOptionPane.showMessageDialog(GimClient.getMainWindow(), "Connection to server lost. Try logging in again. ");
 
 	}
 

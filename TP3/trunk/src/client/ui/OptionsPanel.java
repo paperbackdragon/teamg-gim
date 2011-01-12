@@ -7,15 +7,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
-import client.GimClient;
-
 public class OptionsPanel extends JPanel{
 	
 	// feel free to make this prettier, i'm just doing it to test the backend :P
 	
-	private static final long serialVersionUID = 7546695950230803593L;
+	private static final long serialVersionUID = 1L;
+	private static ClientModel model = ClientModel.getInstance();
+	
 	private String personalMessage;
-	private String status;
 	private String displayPicture;
 	private String nickname;
 	
@@ -24,9 +23,8 @@ public class OptionsPanel extends JPanel{
 	private JComboBox statusbox;
 	
 	public OptionsPanel() {
-		this.personalMessage = GimClient.getClient().getOwnPersonalMessage();
-		this.status = GimClient.getClient().getOwnStatus();
-		this.nickname = GimClient.getClient().getOwnNickname();
+		this.personalMessage = model.getOwnPersonalMessage();
+		this.nickname = model.getOwnNickname();
 		
 		draw();
 	}

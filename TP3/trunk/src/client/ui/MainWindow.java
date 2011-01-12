@@ -9,9 +9,10 @@ import client.GimClient;
 public class MainWindow extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private JMenuItem logout, quit, setOptions;
 	private JPanel main;
+	private static ClientModel model = ClientModel.getInstance();
 
 	// CONSTRUCTOR
 	public MainWindow(String title, JPanel panel) {
@@ -65,7 +66,7 @@ public class MainWindow extends JFrame {
 		main = newPanel;
 		setContentPane(main);
 		pack();
-		//setVisible(true);
+		// setVisible(true);
 	}
 
 	public JPanel getMainPanel() {
@@ -80,7 +81,7 @@ public class MainWindow extends JFrame {
 	class MenuListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource().equals(logout)) {
-				GimClient.getClient().logout();
+				model.logout();
 
 				// TODO (heather): should below be moved to ServerConnection,
 				// after successful logout?
@@ -89,7 +90,7 @@ public class MainWindow extends JFrame {
 				panel.setParent(GimClient.getMainWindow());
 				GimClient.getMainWindow().setMainPanel(panel);
 			} else if (e.getSource().equals(quit)) {
-				GimClient.getClient().quit();
+				model.quit();
 			} else if (e.getSource().equals(setOptions)) {
 				System.out.println("setOptions clicked.");
 				// TODO (heather): create options panel
@@ -101,25 +102,25 @@ public class MainWindow extends JFrame {
 						JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
 
 				if (n == 0) { // "confirm"
-					if (!options.getNicknameText().equals(GimClient.getClient().getOwnNickname())) {
-						GimClient.getClient().setOwnNickname(options.getNicknameText());
-						GimClient.getClient().setNickname(options.getNicknameText());
+					if (!options.getNicknameText().equals(model.getOwnNickname())) {
+						model.setOwnNickname(options.getNicknameText());
+						model.setNickname(options.getNicknameText());
 						// for when user is not their own friend...
-						GimClient.getClient().getNickName(GimClient.getClient().getOwnUserName());
+						model.getNickName(model.getOwnUserName());
 					}
 
-					if (!options.getStatusText().equals(GimClient.getClient().getOwnStatus())) {
-						GimClient.getClient().setOwnStatus(options.getStatusText());
-						GimClient.getClient().setStatus(options.getStatusText());
+					if (!options.getStatusText().equals(model.getOwnStatus())) {
+						model.setOwnStatus(options.getStatusText());
+						model.setStatus(options.getStatusText());
 						// for when user is not their own friend...
-						GimClient.getClient().getStatus(GimClient.getClient().getOwnStatus());
+						model.getStatus(model.getOwnStatus());
 					}
 
-					if (!options.getPersonalMessageText().equals(GimClient.getClient().getOwnPersonalMessage())) {
-						GimClient.getClient().setOwnPersonalMessage(options.getPersonalMessageText());
-						GimClient.getClient().setPersonalMessage(options.getPersonalMessageText());
+					if (!options.getPersonalMessageText().equals(model.getOwnPersonalMessage())) {
+						model.setOwnPersonalMessage(options.getPersonalMessageText());
+						model.setPersonalMessage(options.getPersonalMessageText());
 						// for when user is not their own friend...
-						GimClient.getClient().getStatus(GimClient.getClient().getOwnPersonalMessage());
+						model.getStatus(model.getOwnPersonalMessage());
 					}
 				}
 			}
@@ -144,7 +145,7 @@ public class MainWindow extends JFrame {
 				String roomid = ((ChatPanel) main).getID();
 
 				// tell the server to leave the room
-				GimClient.getClient().leave(roomid);
+				model.leave(roomid);
 
 				// remove from the window list
 				// GimUI toDispose = GimClient.getWindowRoom(roomid);
@@ -167,7 +168,7 @@ public class MainWindow extends JFrame {
 			if (main instanceof ChatPanel) {
 				((ChatPanel) main).setIsFocused(false);
 			}
-			
+
 		}
 
 		@Override

@@ -23,6 +23,8 @@ public class ChatPanel extends JPanel {
 
 	// private Timer timer = null;
 
+	protected ClientModel model = ClientModel.getInstance();
+	
 	protected String id;
 	protected JTextArea chatBox;
 	protected JTextPane messages;
@@ -122,7 +124,7 @@ public class ChatPanel extends JPanel {
 	private void sendMessageQueue() {
 		if (!messageQueue.isEmpty()) {
 			for (int i = 0; i < messageQueue.size(); i++) {
-				GimClient.getClient().message(id, messageQueue.removeLast());
+				model.message(id, messageQueue.removeLast());
 			}
 		}
 	}
@@ -171,11 +173,11 @@ public class ChatPanel extends JPanel {
 			receiveMessage("Me", chatBox.getText());
 
 			if (getInProgress()) {
-				GimClient.getClient().message(id, chatBox.getText());
+				model.message(id, chatBox.getText());
 			} else {
 				messageQueue.push(chatBox.getText());
 				if (id.equals("-1"))
-					GimClient.getClient().createRoom(false, new String[] { chatWith });
+					model.createRoom(false, new String[] { chatWith });
 			}
 		}
 	}
@@ -198,7 +200,7 @@ public class ChatPanel extends JPanel {
 
 				// Assign correct styles and names to the sender
 				if (!sender.equals("Me")) {
-					User user = GimClient.getClient().getUser(sender);
+					User user = model.getUser(sender);
 					if (user == null)
 						from = sender;
 					else
