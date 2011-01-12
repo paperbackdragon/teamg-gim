@@ -1,6 +1,7 @@
 package client.net;
 
-import javax.swing.*;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import client.GimClient;
 import client.ui.ChatWindowIdentifier;
@@ -80,7 +81,7 @@ public class ServerConnection implements NetworkingIn {
 		Object[] options = { "Accept", "Decline", };
 		int n = JOptionPane.showOptionDialog(null, "You have received a friend request from " + user + "(nickname :"
 				+ nickname + ".) Would you like to accept?", "Freind Request", JOptionPane.YES_NO_CANCEL_OPTION,
-				JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+				JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 
 		if (n == 0) {
 			model.acceptRequest(user);
@@ -89,15 +90,12 @@ public class ServerConnection implements NetworkingIn {
 	}
 
 	public void invalidArgumentError(String message) {
-
 	}
 
 	public void invalidEmailError(String message) {
-
 	}
 
 	public void kill(String message) {
-
 	}
 
 	public void logInDetailsIncorrectError(String message) {
@@ -149,7 +147,6 @@ public class ServerConnection implements NetworkingIn {
 	}
 
 	public void okay() {
-
 	}
 
 	public void passwordTooShortError(String message) {
@@ -308,14 +305,6 @@ public class ServerConnection implements NetworkingIn {
 
 		final String[] contacts = model.getNextRoom();
 		final Boolean isGroup = model.getNextType();
-
-		// TODO (heather): this if/else will not work! (presumably) gordon: why
-		// not? :S
-
-		// heather: what if there is a group with only 1 person? it will make
-		// the wrong kind of chat box.
-
-		// Gordon: good point, i should've sorted that now...
 
 		// open new chat window
 		if (isGroup) {
@@ -561,9 +550,7 @@ public class ServerConnection implements NetworkingIn {
 	}
 
 	public void connectionDroppedError() {
-
 		JOptionPane.showMessageDialog(GimClient.getMainWindow(), "Connection to server lost. Try logging in again. ");
-
 	}
 
 }

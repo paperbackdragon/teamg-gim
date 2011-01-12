@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 
 import client.net.ClientConnection;
-import client.net.ServerConnection;
 
 public class ClientModel {
 
@@ -15,6 +14,7 @@ public class ClientModel {
 	private static class SingeltonHolder {
 		public static final ClientModel INSTANCE = new ClientModel();
 	}
+
 	/**
 	 * Return the current instance of the data class.
 	 * 
@@ -22,36 +22,33 @@ public class ClientModel {
 	 */
 	public static ClientModel getInstance() {
 		try {
-		SingeltonHolder.INSTANCE.toString();
-		} catch(Exception e) {
+			SingeltonHolder.INSTANCE.toString();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return SingeltonHolder.INSTANCE;
 	}
 
-	private ServerConnection inLink = new ServerConnection(this);
-	private ClientConnection outLink = new ClientConnection(inLink);
+	private ClientConnection outLink;
+
 	private LinkedList<String[]> newRoomList = new LinkedList<String[]>();
-
 	private LinkedList<String> invitationsList = new LinkedList<String>();
-
 	private LinkedList<Boolean> typeList = new LinkedList<Boolean>();
 
-	private ConcurrentHashMap<String, User> users = new ConcurrentHashMap<String, User>();
 	private String path = null;
+	
 	// buddy list
+	private ConcurrentHashMap<String, User> users = new ConcurrentHashMap<String, User>();
 	private String[] onlinefriends;
-
 	private String[] offlinefriends;
 	private String[] blockedfriends;
+	
 	// options
 	private String personalMessage;
 	private String status;
 	private String nickname;
-
 	private String username;
-
 	private String latestperson;
 
 	/**
@@ -112,15 +109,15 @@ public class ClientModel {
 		outLink.endNetworkWriter();
 	}
 
+	public String[] getBlockedfriends() {
+		return blockedfriends;
+	}
+
 	// ACCESSORS
 
 	// public LinkedList<String[]> getRoomList() {
 	// return newRoomList;
 	// }
-
-	public String[] getBlockedfriends() {
-		return blockedfriends;
-	}
 
 	public void getDisplayPicture(String user) {
 		outLink.getDisplayPicture(user);
@@ -173,13 +170,13 @@ public class ClientModel {
 		return status;
 	}
 
-	// MESSAGES TO SERVER
-
-	// Connection stuff
-
 	public String getOwnUserName() {
 		return username;
 	}
+
+	// MESSAGES TO SERVER
+
+	// Connection stuff
 
 	/**
 	 * Get the path to the current directory
@@ -216,13 +213,13 @@ public class ClientModel {
 		return this.users.get(user);
 	}
 
-	// End: connection stuff
-
-	// ROOM stuff
-
 	public void invite(String roomid, String user) {
 		outLink.invite(roomid, user);
 	}
+
+	// End: connection stuff
+
+	// ROOM stuff
 
 	public void join(String roomid) {
 		outLink.join(roomid);
@@ -249,13 +246,13 @@ public class ClientModel {
 		System.exit(0);
 	}
 
-	// end: ROOM stuff
-
-	// Friends list stuff
-
 	public void register(String email, char[] pwd) {
 		outLink.register(email, pwd);
 	}
+
+	// end: ROOM stuff
+
+	// Friends list stuff
 
 	public void removefriend(String user) {
 		outLink.delete(user);
@@ -269,14 +266,14 @@ public class ClientModel {
 		outLink.setConnected(false);
 	}
 
-	// end: Friends list stuff
-
-	// GET stuff (when something has been updated)
-
 	public void setLatestPerson(String latest) {
 		// SET FOR SIGN IN / OUT / MESSAGE ALERTS
 		this.latestperson = latest;
 	}
+
+	// end: Friends list stuff
+
+	// GET stuff (when something has been updated)
 
 	public void setNickname(String nickname) {
 		outLink.setNickname(nickname);
@@ -288,6 +285,10 @@ public class ClientModel {
 
 	public void setOnlinefriends(String[] onlinefriends) {
 		this.onlinefriends = onlinefriends;
+	}
+
+	public void setOutLink(ClientConnection o) {
+		this.outLink = o;
 	}
 
 	public void setOwnNickname(String nickname) {

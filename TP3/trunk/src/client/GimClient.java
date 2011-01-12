@@ -15,6 +15,8 @@ import java.util.ArrayList;
 
 import javax.swing.SwingUtilities;
 
+import client.net.ClientConnection;
+import client.net.ServerConnection;
 import client.ui.*;
 
 public class GimClient {
@@ -22,15 +24,20 @@ public class GimClient {
 	private static MainWindow mainWindow;
 	private static ContactPanel contactPanel;
 	private static ArrayList<ChatWindowIdentifier> windows;
+	private static ClientModel model = ClientModel.getInstance();
+	
+	private static ServerConnection inLink = new ServerConnection(model);
+	private static ClientConnection outLink = new ClientConnection(inLink);
 
 	private static SystemTray tray;
 	static TrayIcon trayIcon;
 
 	public static void main(String[] args) {
 
+		model.setOutLink(outLink);
+		
 		// rooms = new ArrayList<ChatPanel>();
 		windows = new ArrayList<ChatWindowIdentifier>();
-		contactPanel = new ContactPanel();
 
 		setUpTray();
 
@@ -53,6 +60,8 @@ public class GimClient {
 	}
 
 	public static ContactPanel getContactPanel() {
+		if(contactPanel == null)
+			contactPanel = new ContactPanel();
 		return contactPanel;
 	}
 

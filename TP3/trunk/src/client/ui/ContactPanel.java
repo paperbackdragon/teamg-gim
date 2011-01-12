@@ -1,11 +1,30 @@
 package client.ui;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
-import javax.swing.*;
-import javax.swing.border.EtchedBorder;
-import javax.swing.tree.*;
+import javax.swing.Box;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTree;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeCellRenderer;
+import javax.swing.tree.TreePath;
 
 import client.GimClient;
 
@@ -19,10 +38,12 @@ public class ContactPanel extends JPanel {
 	private ClientModel model = ClientModel.getInstance();
 	private PersonalInfo info;
 
-	// private chatListener;
 
-	// CONSTRUCTOR
+	/**
+	 * Default constructor
+	 */
 	public ContactPanel() {
+		
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
@@ -62,11 +83,8 @@ public class ContactPanel extends JPanel {
 				ValueChangedListener valueListener = new ValueChangedListener() {
 					@Override
 					public void valueChanged(String value, JComponent source) {
-						if (source.equals(name)) {
-							model.setNickname(value);
-						} else if (source.equals(message)) {
-							model.setPersonalMessage(value);
-						}
+						// TODO Auto-generated method stub
+
 					}
 				};
 
@@ -83,10 +101,9 @@ public class ContactPanel extends JPanel {
 
 		public PersonalInfo() {
 			setLayout(new BorderLayout(5, 5));
-			ImageIcon icon = createImageIcon("icon1.jpg", "Icon");
+			ImageIcon icon = createImageIcon(model.getPath() + "icon1.jpg", "Icon");
 			JLabel iconLabel = new JLabel(icon);
 			iconLabel.setPreferredSize(new Dimension(64, 64));
-			iconLabel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 			add(iconLabel, BorderLayout.WEST);
 			add(new TextField(), BorderLayout.CENTER);
 		}
@@ -137,7 +154,7 @@ public class ContactPanel extends JPanel {
 
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
-					contactTree.setCellRenderer(new CellRenderer());
+					contactTree.setCellRenderer((TreeCellRenderer) new CellRenderer());
 				}
 			});
 
@@ -376,7 +393,7 @@ public class ContactPanel extends JPanel {
 					GimClient.getWindow(getSelectedContacts()[0]).setVisible(true);
 
 			}
-			
+
 		}
 
 		public void mouseClicked(MouseEvent e) {
