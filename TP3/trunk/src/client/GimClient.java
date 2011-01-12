@@ -152,11 +152,22 @@ public class GimClient {
 	}
 
 	public static void updateGroupChatLists() {
+		// this is a very lazy way for the moment. When someone changes their
+		// nickname (etc) who is in a group chat
+		// the client asks the server for the group chat user list
+		// and then the user list is built again with the new nickname.
+		// could be done through parsing the string instead, ( would give
+		// parameters to this method)
+		// and would create a new method in group cp..., and editting as needed
+
+		// or we could implement the group chat as a JList and change the model
+		// or something...
+
 		for (int i = 0; i < windows.size(); i++) {
 			if (windows.get(i).getCp() instanceof GroupChatPanel) {
-				((GroupChatPanel) windows.get(i).getCp())
-						.updateUserList(ClientModel.getInstance()
-								.getOnlinefriends());
+				String id = windows.get(i).getCp().getID();
+				model.users(id);
+
 			}
 		}
 	}
