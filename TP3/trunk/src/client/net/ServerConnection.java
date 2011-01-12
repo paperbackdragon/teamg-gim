@@ -311,16 +311,35 @@ public class ServerConnection implements NetworkingIn {
 
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
-					GroupChatPanel gcp = new GroupChatPanel(roomid);
-					// GimClient.addRoom(gcp);
-					gcp.setInProgress(true);
+					
+					ChatWindowIdentifier l = GimClient.getWindowIdentifierFromId(roomid);
+					if (l == null) {
+						
+						GroupChatPanel gcp = new GroupChatPanel(roomid);
+						// GimClient.addRoom(gcp);
+						gcp.setInProgress(true);
 
-					MainWindow ui = new MainWindow("GIM - Group Chat", gcp);
-					GimClient.addWindow(" ", ui, gcp);
+						MainWindow ui = new MainWindow("GIM - Group Chat", gcp);
+						GimClient.addWindow(" ", ui, gcp);
 
-					ui.setLocationRelativeTo(null);// center new chat window
-					model.users(roomid);
-					ui.setVisible(true);
+						ui.setLocationRelativeTo(null);// center new chat window
+						model.users(roomid);
+						ui.setVisible(true);
+						
+					}
+					
+					else { // uhmm, this isn't meant to happen (should always have a different room id)
+						// this would mean that we've got a window open that earlier had this id,
+						// but this should never happen because the roomid is reset when chat is over
+						// (personal chat: someone leaves, group chat...
+						// hmm, this reminds me. i don't think i've handled the user logging out,
+						// and keeping windows open. hence odd behaviour when logs back in.
+						// if you're reading this, i've probably sorted it!
+						// </monologue>
+						
+					}
+					
+				
 				}
 			});
 
