@@ -25,7 +25,7 @@ public class GimClient {
 	private static ContactPanel contactPanel;
 	private static ArrayList<ChatWindowIdentifier> windows;
 	private static ClientModel model = ClientModel.getInstance();
-	
+
 	private static ServerConnection inLink = new ServerConnection(model);
 	private static ClientConnection outLink = new ClientConnection(inLink);
 
@@ -35,7 +35,7 @@ public class GimClient {
 	public static void main(String[] args) {
 
 		model.setOutLink(outLink);
-		
+
 		// rooms = new ArrayList<ChatPanel>();
 		windows = new ArrayList<ChatWindowIdentifier>();
 
@@ -60,7 +60,7 @@ public class GimClient {
 	}
 
 	public static ContactPanel getContactPanel() {
-		if(contactPanel == null)
+		if (contactPanel == null)
 			contactPanel = new ContactPanel();
 		return contactPanel;
 	}
@@ -154,7 +154,22 @@ public class GimClient {
 	public static void updateGroupChatLists() {
 		for (int i = 0; i < windows.size(); i++) {
 			if (windows.get(i).getCp() instanceof GroupChatPanel) {
-				((GroupChatPanel) windows.get(i).getCp()).updateUserList(ClientModel.getInstance().getOnlinefriends());
+				((GroupChatPanel) windows.get(i).getCp())
+						.updateUserList(ClientModel.getInstance()
+								.getOnlinefriends());
+			}
+		}
+	}
+
+	// called when user has logged out / loses connection , but still has
+	// windows open...
+	// if they logged back in, this could cause strange behaviour otherwise
+	public static void resetRoomIds() {
+
+		if (windows.size() > 0) {
+			// look at me, using this shorthand for the first time :D
+			for (ChatWindowIdentifier window : windows) {
+				window.getCp().setId("-1");
 			}
 		}
 	}
@@ -172,7 +187,8 @@ public class GimClient {
 		if (SystemTray.isSupported()) {
 
 			tray = SystemTray.getSystemTray();
-			Image image = Toolkit.getDefaultToolkit().getImage("smiles/Happy_smiley.png");
+			Image image = Toolkit.getDefaultToolkit().getImage(
+					"smiles/Happy_smiley.png");
 
 			MouseListener mouseListener = new MouseListener() {
 
@@ -226,8 +242,11 @@ public class GimClient {
 						// THIS
 
 						if (ClientModel.getInstance().getLatestPerson() != null) {
-							GimClient.getWindowIdentifierFromId(ClientModel.getInstance().getLatestPerson()).getWindow()
-									.setVisible(true);
+							GimClient
+									.getWindowIdentifierFromId(
+											ClientModel.getInstance()
+													.getLatestPerson())
+									.getWindow().setVisible(true);
 						}
 					}
 

@@ -86,9 +86,16 @@ public class MainWindow extends JFrame {
 				// TODO (heather): should below be moved to ServerConnection,
 				// after successful logout?
 				// TODO (heather): close all open windows except main window
+				
+				// gordon: do we want to close all open windows except main window,
+				// or just disable the chatbox on them?
+				
 				LoginPanel panel = new LoginPanel();
 				panel.setParent(GimClient.getMainWindow());
 				GimClient.getMainWindow().setMainPanel(panel);
+				
+				// reset the roomids
+				GimClient.resetRoomIds();
 			} else if (e.getSource().equals(quit)) {
 				model.quit();
 			} else if (e.getSource().equals(setOptions)) {

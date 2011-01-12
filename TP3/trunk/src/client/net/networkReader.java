@@ -104,11 +104,11 @@ public class networkReader implements Runnable {
 		LoginPanel panel = new LoginPanel();
 		panel.setParent(GimClient.getMainWindow());
 		ClientModel.getInstance().setConnected(false);
-		gui.connectionDroppedError();
 
 		GimClient.getMainWindow().setMainPanel(panel);
 
 		gui.connectionDroppedError();
+		GimClient.resetRoomIds();
 
 	}
 
