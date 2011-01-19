@@ -150,7 +150,7 @@ public class Worker implements Runnable {
 						responseBuffer.putCommand(loggedInUser.getQueue().remove());
 				}
 
-				// TODO: Remove
+				// TODO: Remove after testing
 				// Add the user to the global room
 				this.data.getRoom(0).invite(this.loggedInUser, this.loggedInUser);
 

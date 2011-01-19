@@ -20,11 +20,6 @@ import client.User;
  * General class for a chat panel.
  */
 public class ChatPanel extends JPanel {
-	private static final long serialVersionUID = 1L;
-
-	private LinkedList<String> messageQueue;
-
-	// private Timer timer = null;
 
 	protected Model model = Model.getInstance();
 	
@@ -32,9 +27,13 @@ public class ChatPanel extends JPanel {
 	protected JTextArea chatBox;
 	protected JTextPane messages;
 	protected JButton send;
+	
+	private static final long serialVersionUID = 1L;
+	private LinkedList<String> messageQueue;
+	
 	private StyledDocument doc;
 	private Style regular, bold, italic, ownMessages, otherMessages;
-
+	
 	private Smiley[] smilies = { 
 			
 			new Smiley(":)", 	"Happy_smiley.png"), 

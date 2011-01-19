@@ -23,17 +23,16 @@ public class Data {
 	public static Data getInstance() {
 		return SingeltonHolder.INSTANCE;
 	}
-
-	private volatile int clientID = 0;
-	private volatile int roomID = 0;
 	
 	public volatile int usersOnline = 0;
 	public volatile int online = 0;
 	public String uptime = "";
 	public ServerSocket serverSocket = null;
 
-	// TODO: Change back to private after testing
-	public ConcurrentHashMap<String, User> users = new ConcurrentHashMap<String, User>();
+	private volatile int clientID = 0;
+	private volatile int roomID = 0;
+	
+	private ConcurrentHashMap<String, User> users = new ConcurrentHashMap<String, User>();
 	private ConcurrentHashMap<Integer, Room> rooms = new ConcurrentHashMap<Integer, Room>();
 	private ConcurrentHashMap<Integer, Worker> workers = new ConcurrentHashMap<Integer, Worker>();
 
