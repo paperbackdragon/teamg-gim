@@ -11,6 +11,7 @@ public class CommandReader implements Runnable {
 
 	private BufferedReader in;
 	private CommandBuffer<Command> commandBuffer;
+	private final int limit = 8192;
 
 	/**
 	 * The constructor, 'cos constructing is cool.
@@ -32,6 +33,7 @@ public class CommandReader implements Runnable {
 	public void run() {
 		String command = null, args = null, data = "", line = "";
 		String[] parts, cmdParts, dataParts;
+		int length = 0;
 
 		while (true) {
 
@@ -41,12 +43,14 @@ public class CommandReader implements Runnable {
 				break;
 			}
 
-			if (line == null) {
+			if (line == null)
 				break;
-			}
+
+			// Get the length of the data before we process it
+			length += line.length();
 
 			if (command == null) {
-				parts = line.split(":");
+				parts = line.split(":", 3);
 
 				// parts[0]: Junk data before the first :, we can throw it away
 				// parts[1]: The command name and its arguments
@@ -71,6 +75,16 @@ public class CommandReader implements Runnable {
 
 			}
 
+			if (length > limit) {
+				// Make sure its not within special limits for the :set display_pic: command
+				if (command == null
+						|| args == null
+						|| !(command.equalsIgnoreCase("SET") && args.equalsIgnoreCase("DISPLAY_PIC") && length <= (limit * 4))) {
+					this.commandBuffer.putCommand(new Command(("QUIT")));
+					break;
+				}
+			}
+
 			// Don't proceed if we didn't find a command in the last line
 			if (command != null) {
 				// Look for the end of a command
@@ -87,6 +101,9 @@ public class CommandReader implements Runnable {
 					Command cmd = new Command(command, args, data.trim());
 					commandBuffer.putCommand(cmd);
 
+					// Reset the length counter
+					length = 0;
+
 					// Remove or comment out if not debugging
 					System.out.println("<< " + cmd);
 
@@ -99,7 +116,7 @@ public class CommandReader implements Runnable {
 
 		}
 
-		// Cleaup
+		// Cleanup
 		commandBuffer.putCommand(new Command("QUIT"));
 
 	}

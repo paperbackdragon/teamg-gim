@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.regex.Pattern;
 
 import util.Command;
 
@@ -15,17 +16,24 @@ public class User implements Serializable {
 	public static enum Status {
 		OFFLINE, ONLINE, BUSY, AWAY
 	}
+	
+	/**
+	 * Taken from: http://stackoverflow.com/questions/153716/verify-email-in-java
+	 * I hope it works correctly...
+	 */
+	private static final Pattern rfc2822 = Pattern.compile(
+	        "^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$"
+	);
 
 	/**
 	 * Check if the ID is a valid one
 	 * 
 	 * @param id
 	 * @return True if the user id is valid, false otherwise
-	 * 
-	 *         TODO: Make this work.
 	 */
 	public static boolean validID(String id) {
-		return true;
+		System.out.println(id);
+		return rfc2822.matcher(id).matches();
 	}
 
 	private String id;
@@ -118,7 +126,12 @@ public class User implements Serializable {
 	 */
 	public void addFriend(User user) {
 		this.friendList.put(user.getId(), user);
-		this.getWorker().putResponse(new Command("UPDATE", "FRIENDLIST", Command.encode(this.getId())));
+		this.friendRequests.remove(user.getId());
+		
+		Worker w = this.getWorker();
+		if(w != null)
+			w.putResponse(new Command("UPDATE", "FRIENDLIST", Command.encode(this.getId())));
+		
 		user.addToInFriendList(this);
 	}
 

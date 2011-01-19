@@ -33,6 +33,9 @@ public class Worker implements Runnable {
 
 	// We use it a lot. Save some time and memory.
 	private Command okay = new Command("OKAY");
+	
+	private long[] commandTimes = new long[100];
+	private int commandLimit = 0;
 
 	private ResponseWriter responseWriter;
 	private CommandReader commandReader;
@@ -180,7 +183,7 @@ public class Worker implements Runnable {
 						"You cannot register a new account while already logged in.");
 
 			// The email address isn't valid
-			if (!User.validID(dataParts[1]))
+			if (!User.validID(dataParts[0]))
 				return new Command("ERROR", "INVALID_EMAIL", "Invalid email address.");
 
 			// The email address is already registered
@@ -1058,6 +1061,15 @@ public class Worker implements Runnable {
 	 */
 	private void updateLastCommunication() {
 		this.lastCommunication = System.currentTimeMillis();
+		
+		// Fill the time buffer and loop round where necessary
+		long oldest = this.commandTimes[this.commandLimit];
+		if(oldest != 0 && oldest > (this.lastCommunication - 5000))
+			kill();
+		
+		this.commandTimes[this.commandLimit] = this.lastCommunication;
+		this.commandLimit = (this.commandLimit + 1) % (this.commandTimes.length - 1);
+		
 	}
 
 	/**

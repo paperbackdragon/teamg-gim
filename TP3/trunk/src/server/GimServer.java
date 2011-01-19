@@ -18,11 +18,11 @@ public class GimServer {
 	 */
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
-		
+
 		Data data = Data.getInstance();
 
 		System.out.println("Loading users...");
-		
+
 		// Load the users from the "db"
 		String filename = "users.db";
 		ArrayList<Object> users = new ArrayList<Object>();
@@ -38,27 +38,28 @@ public class GimServer {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		
+
 		// Add all the users
-		for(Object user : users) {
+		for (Object user : users) {
 			data.addUser((User) user);
 		}
-		
-		// Make the friendlists etc. work correctly...
-		for(User user : data.getUsers()) {
-			for(User friend : user.getFriendList()) {
+
+		// Make the friendlists etc. work correctly by recreating the friendlist
+		// from the list of users
+		for (User user : data.getUsers()) {
+			for (User friend : user.getFriendList()) {
 				User realUser = data.getUser(friend.getId());
 				user.addFreindRequest(realUser);
 				realUser.addToInFriendList(user);
 			}
-			
-			for(User blocked : user.getBlockedUsers()) {
+
+			for (User blocked : user.getBlockedUsers()) {
 				user.block(data.getUser(blocked.getId()));
 			}
 		}
-		
+
 		System.out.println(users.size() + " users loaded.");
-		
+
 		Room room = new Room(null, true);
 		data.addRoom(room);
 
@@ -72,12 +73,12 @@ public class GimServer {
 		}
 
 		data.serverSocket = serverSocket;
-		
+
 		// Create a new thread to check for timeouts and update system data
 		Timeout timeout = new Timeout(20);
 		Thread timeoutThread = new Thread(timeout);
 		timeoutThread.start();
-		
+
 		// Create a control thread for the entire server
 		Thread controller = new Thread(new Controller());
 		controller.start();
@@ -96,7 +97,7 @@ public class GimServer {
 				break;
 			}
 		}
-		
+
 		/**
 		 * Save the user data
 		 */
@@ -113,6 +114,6 @@ public class GimServer {
 		}
 
 		System.exit(0);
-		
+
 	}
 }
