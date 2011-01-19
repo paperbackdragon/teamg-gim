@@ -4,6 +4,7 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
+import client.Model;
 import client.GimClient;
 
 public class MainWindow extends JFrame {
@@ -12,7 +13,7 @@ public class MainWindow extends JFrame {
 
 	private JMenuItem logout, quit, setOptions;
 	private JPanel main;
-	private static ClientModel model = ClientModel.getInstance();
+	private static Model model = Model.getInstance();
 
 	// CONSTRUCTOR
 	public MainWindow(String title, JPanel panel) {

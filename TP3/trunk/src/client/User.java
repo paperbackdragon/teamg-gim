@@ -1,4 +1,4 @@
-package client.ui;
+package client;
 
 public class User {
 	

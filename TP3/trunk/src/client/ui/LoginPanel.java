@@ -6,6 +6,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
+import client.Model;
+
 public class LoginPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
@@ -15,7 +17,7 @@ public class LoginPanel extends JPanel {
 	private JPasswordField pwd;
 	private JButton loginButton, register;
 	private JCheckBox autoLogin, savePassword, rememberUser;
-	private static ClientModel model = ClientModel.getInstance();
+	private static Model model = Model.getInstance();
 
 	// CONSTRUCTOR
 	public LoginPanel() {

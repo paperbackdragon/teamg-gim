@@ -6,11 +6,13 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
+import client.Model;
+
 public class RegisterPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
-	private static ClientModel model = ClientModel.getInstance();
+	private static Model model = Model.getInstance();
 
 	private MainWindow parent;
 	private JTextField email;

@@ -26,6 +26,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 
+import client.Model;
 import client.GimClient;
 
 public class ContactPanel extends JPanel {
@@ -35,7 +36,7 @@ public class ContactPanel extends JPanel {
 	private JTree contactTree;
 	protected JScrollPane scrollPane;
 	private DefaultMutableTreeNode contacts;
-	private ClientModel model = ClientModel.getInstance();
+	private Model model = Model.getInstance();
 	private PersonalInfo info;
 
 

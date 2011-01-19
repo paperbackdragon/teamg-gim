@@ -7,6 +7,8 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
+import client.Model;
+
 /**
  * Specific class for a chat panel used for a conversation between more than two
  * people.
@@ -20,7 +22,7 @@ public class GroupChatPanel extends ChatPanel {
 	private JTextArea guests;
 	private JButton invite;
 	private String[] participants;
-	private static ClientModel model = ClientModel.getInstance();
+	private static Model model = Model.getInstance();
 
 	/**
 	 * Constructor

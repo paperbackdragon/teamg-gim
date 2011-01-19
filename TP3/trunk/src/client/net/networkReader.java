@@ -3,8 +3,8 @@ package client.net;
 import java.io.BufferedReader;
 import java.io.IOException;
 
+import client.Model;
 import client.GimClient;
-import client.ui.ClientModel;
 import client.ui.LoginPanel;
 
 import util.Command;
@@ -103,7 +103,7 @@ public class networkReader implements Runnable {
 
 		LoginPanel panel = new LoginPanel();
 		panel.setParent(GimClient.getMainWindow());
-		ClientModel.getInstance().setConnected(false);
+		Model.getInstance().setConnected(false);
 
 		GimClient.getMainWindow().setMainPanel(panel);
 

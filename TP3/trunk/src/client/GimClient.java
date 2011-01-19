@@ -24,7 +24,7 @@ public class GimClient {
 	private static MainWindow mainWindow;
 	private static ContactPanel contactPanel;
 	private static ArrayList<ChatWindowIdentifier> windows;
-	private static ClientModel model = ClientModel.getInstance();
+	private static Model model = Model.getInstance();
 
 	private static ServerConnection inLink = new ServerConnection(model);
 	private static ClientConnection outLink = new ClientConnection(inLink);
@@ -50,7 +50,7 @@ public class GimClient {
 			}
 		});
 
-		System.out.println(ClientModel.getInstance().getPath());
+		System.out.println(Model.getInstance().getPath());
 
 	}
 
@@ -99,7 +99,7 @@ public class GimClient {
 			System.out.println("found the room");
 			if (windows.get(i).getCp().getID().equals(roomid)) {
 				windows.get(i).getCp().receiveMessage(sender, message);
-				ClientModel.getInstance().setLatestPerson(roomid);
+				Model.getInstance().setLatestPerson(roomid);
 				break;
 			}
 		}
@@ -252,10 +252,10 @@ public class GimClient {
 						// Bring window to front. NEED TO WORK OUT HOW TO DO
 						// THIS
 
-						if (ClientModel.getInstance().getLatestPerson() != null) {
+						if (Model.getInstance().getLatestPerson() != null) {
 							GimClient
 									.getWindowIdentifierFromId(
-											ClientModel.getInstance()
+											Model.getInstance()
 													.getLatestPerson())
 									.getWindow().setVisible(true);
 						}

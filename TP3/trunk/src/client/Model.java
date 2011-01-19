@@ -1,4 +1,4 @@
-package client.ui;
+package client;
 
 import java.net.URISyntaxException;
 import java.util.LinkedList;
@@ -6,13 +6,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import client.net.ClientConnection;
 
-public class ClientModel {
+public class Model {
 
 	/**
 	 * Apparently doing it this way makes constructing it thread-safe...
 	 */
 	private static class SingeltonHolder {
-		public static final ClientModel INSTANCE = new ClientModel();
+		public static final Model INSTANCE = new Model();
 	}
 
 	/**
@@ -20,7 +20,7 @@ public class ClientModel {
 	 * 
 	 * @return the current instance
 	 */
-	public static ClientModel getInstance() {
+	public static Model getInstance() {
 		try {
 			SingeltonHolder.INSTANCE.toString();
 		} catch (Exception e) {
@@ -54,7 +54,7 @@ public class ClientModel {
 	/**
 	 * Do nothing, just here to beat default constructor
 	 */
-	public ClientModel() {
+	public Model() {
 		System.out.println("Creating model.");
 	}
 
@@ -186,7 +186,7 @@ public class ClientModel {
 	public String getPath() {
 		if (this.path == null) {
 			try {
-				path = ClientModel.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+				path = Model.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
 			} catch (URISyntaxException e) {
 			}
 			path = path.substring(0, path.lastIndexOf("/") + 1);

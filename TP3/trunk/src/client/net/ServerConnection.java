@@ -3,21 +3,21 @@ package client.net;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import client.Model;
 import client.GimClient;
+import client.User;
 import client.ui.ChatWindowIdentifier;
-import client.ui.ClientModel;
 import client.ui.ContactPanel;
 import client.ui.GroupChatPanel;
 import client.ui.LoginPanel;
 import client.ui.MainWindow;
 import client.ui.SingleChatPanel;
-import client.ui.User;
 
 public class ServerConnection implements NetworkingIn {
 
-	private ClientModel model;
+	private Model model;
 
-	public ServerConnection(ClientModel model) {
+	public ServerConnection(Model model) {
 		this.model = model;
 	}
 

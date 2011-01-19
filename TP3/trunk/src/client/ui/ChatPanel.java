@@ -11,7 +11,10 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 
+import client.Model;
 import client.GimClient;
+import client.Smiley;
+import client.User;
 
 /**
  * General class for a chat panel.
@@ -23,7 +26,7 @@ public class ChatPanel extends JPanel {
 
 	// private Timer timer = null;
 
-	protected ClientModel model = ClientModel.getInstance();
+	protected Model model = Model.getInstance();
 	
 	protected String id;
 	protected JTextArea chatBox;
@@ -58,7 +61,7 @@ public class ChatPanel extends JPanel {
 		messageQueue = new LinkedList<String>();
 
 		// Try and get the path to wherever this is running from
-		String smileyPath = ClientModel.getInstance().getPath() + "smiles/";
+		String smileyPath = Model.getInstance().getPath() + "smiles/";
 
 		// Create a new document for the messages
 		messages = new JTextPane();
