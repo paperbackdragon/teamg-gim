@@ -22,6 +22,7 @@ done
 zip -r gim_client.zip ./gim_client/* -x *.svn*
 
 rm -Rf ./gim_client
+rm ./bin/Gim.jar
 
 scp gim_client.zip root@rooster.dyndns.info:/home/rooster/public_html/gim_client.zip
 
