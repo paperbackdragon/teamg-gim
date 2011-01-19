@@ -16,7 +16,7 @@ public class Model {
 	}
 
 	/**
-	 * Return the current instance of the data class.
+	 * Return the current instance of the class.
 	 * 
 	 * @return the current instance
 	 */

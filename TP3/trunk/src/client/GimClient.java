@@ -198,8 +198,7 @@ public class GimClient {
 		if (SystemTray.isSupported()) {
 
 			tray = SystemTray.getSystemTray();
-			Image image = Toolkit.getDefaultToolkit().getImage(
-					"smiles/Happy_smiley.png");
+			Image image = Toolkit.getDefaultToolkit().getImage("smiles/Happy_smiley.png");
 
 			MouseListener mouseListener = new MouseListener() {
 
@@ -253,11 +252,8 @@ public class GimClient {
 						// THIS
 
 						if (Model.getInstance().getLatestPerson() != null) {
-							GimClient
-									.getWindowIdentifierFromId(
-											Model.getInstance()
-													.getLatestPerson())
-									.getWindow().setVisible(true);
+							GimClient.getWindowIdentifierFromId(Model.getInstance().getLatestPerson()).getWindow()
+									.setVisible(true);
 						}
 					}
 

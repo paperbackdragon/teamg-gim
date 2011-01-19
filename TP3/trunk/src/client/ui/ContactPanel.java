@@ -39,12 +39,11 @@ public class ContactPanel extends JPanel {
 	private Model model = Model.getInstance();
 	private PersonalInfo info;
 
-
 	/**
 	 * Default constructor
 	 */
 	public ContactPanel() {
-		
+
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
@@ -84,8 +83,11 @@ public class ContactPanel extends JPanel {
 				ValueChangedListener valueListener = new ValueChangedListener() {
 					@Override
 					public void valueChanged(String value, JComponent source) {
-						// TODO Auto-generated method stub
-
+						if (source.equals(name)) {
+							model.setNickname(value);
+						} else if (source.equals(message)) {
+							model.setPersonalMessage(value);
+						}
 					}
 				};
 

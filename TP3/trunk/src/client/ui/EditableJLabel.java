@@ -72,8 +72,8 @@ public class EditableJLabel extends JPanel {
 	 *            The text to start with
 	 */
 	public void setText(String text) {
-			this.label.setText(text);
-			this.textField.setText(text);
+		this.label.setText(text);
+		this.textField.setText(text);
 	}
 
 	/**
@@ -112,7 +112,7 @@ public class EditableJLabel extends JPanel {
 	 */
 	public void setHoverState(boolean hover) {
 		CardLayout cl = (CardLayout) (this.getLayout());
-		
+
 		if (hover)
 			cl.show(this, "HOVER");
 		else
@@ -175,9 +175,12 @@ public class EditableJLabel extends JPanel {
 		 */
 		@Override
 		public void focusLost(FocusEvent e) {
-			setText(textField.getText());
-			for (ValueChangedListener v : listeners) {
-				v.valueChanged(textField.getText(), EditableJLabel.this);
+			if (!oldValue.equals(textField.getText())) {
+				setText(textField.getText());
+				
+				for (ValueChangedListener v : listeners) {
+					v.valueChanged(textField.getText(), EditableJLabel.this);
+				}
 			}
 			release();
 			mouseExited(null);
@@ -190,9 +193,11 @@ public class EditableJLabel extends JPanel {
 		@Override
 		public void keyTyped(KeyEvent e) {
 			if (e.getKeyChar() == KeyEvent.VK_ENTER) {
-				setText(textField.getText());
-				for (ValueChangedListener v : listeners) {
-					v.valueChanged(textField.getText(), EditableJLabel.this);
+				if (!oldValue.equals(textField.getText())) {
+					setText(textField.getText());
+					for (ValueChangedListener v : listeners) {
+						v.valueChanged(textField.getText(), EditableJLabel.this);
+					}
 				}
 				release();
 				mouseExited(null);
