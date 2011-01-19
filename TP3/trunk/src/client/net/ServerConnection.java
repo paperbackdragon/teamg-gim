@@ -24,10 +24,6 @@ public class ServerConnection implements NetworkingIn {
 	public void authorised() {
 		model.getFriendList();
 
-		// Do this properly later...
-		// may want to sign in appearing offline
-		// GimClient.getClient().getOwnUserName()
-
 		model.setStatus("ONLINE");
 
 		model.getNickName(model.getOwnUserName());

@@ -1,19 +1,28 @@
 #!/bin/bash
 
-CLIENTFILES="Gim.jar smiles icon1.jpg online.png"
+CLIENTFILES="./bin/Gim.jar smiles icon1.jpg online.png"
+
+rm Gim.jar gim_client.zip
+
+cd bin
 
 # Create the Client jar file
-jar cvfm Gim.jar manifest.txt `find -name *.class`
+jar cvfm Gim.jar ../manifest.txt `find -name *.class`
 chmod +x Gim.jar
 
+cd ../
+
 # Create the zip file for the client
-mkdir gim_client_svn`svnversion`
+mkdir gim_client
 for file in $CLIENTFILES
 do
-	cp -R $file gim_client_svn`svnversion`
+	cp -R $file gim_client
 done
 
-zip -r gim_client_svn`svnversion`.zip ./gim_client_svn`svnversion`/* -x *.svn*
+zip -r gim_client.zip ./gim_client/* -x *.svn*
 
-rm -Rf ./gim_client_svn`svnversion`	
-scp gim_client_svn`svnversion`.zip root@rooster.dyndns.info:/home/rooster/public_html/gim_client_current.zip
+rm -Rf ./gim_client
+
+scp gim_client.zip root@rooster.dyndns.info:/home/rooster/public_html/gim_client.zip
+
+rm gim_client.zip

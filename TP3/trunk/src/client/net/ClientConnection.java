@@ -19,8 +19,8 @@ public class ClientConnection implements NetworkingOut, Runnable {
 	private BufferedReader bufferedreader;
 	private PrintWriter printwriter;
 
-	private networkReader reader;
-	private networkWriter writer;
+	private NetworkReader reader;
+	private NetworkWriter writer;
 	private CommandBuffer<Command> buffer;
 
 	private Thread readerthread;
@@ -65,8 +65,8 @@ public class ClientConnection implements NetworkingOut, Runnable {
 
 		// get the reader and writer, and buffer on the go... ;x
 		this.buffer = new CommandBuffer<Command>();
-		this.reader = new networkReader(bufferedreader, gui);
-		this.writer = new networkWriter(printwriter, buffer);
+		this.reader = new NetworkReader(bufferedreader, gui);
+		this.writer = new NetworkWriter(printwriter, buffer);
 
 		this.readerthread = new Thread(reader);
 		this.writerthread = new Thread(writer);

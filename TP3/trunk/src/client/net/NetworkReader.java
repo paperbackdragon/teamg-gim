@@ -9,13 +9,13 @@ import client.ui.LoginPanel;
 
 import util.Command;
 
-public class networkReader implements Runnable {
+public class NetworkReader implements Runnable {
 
 	private BufferedReader reader;
 	private ServerConnection gui;
 
 	/** Reads commands off the network and performs calls the necessary method */
-	public networkReader(BufferedReader reader, ServerConnection gui) {
+	public NetworkReader(BufferedReader reader, ServerConnection gui) {
 
 		this.gui = gui;
 		this.reader = reader;

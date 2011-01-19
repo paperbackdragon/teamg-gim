@@ -35,11 +35,37 @@ public class ChatPanel extends JPanel {
 	private StyledDocument doc;
 	private Style regular, bold, italic, ownMessages, otherMessages;
 
-	private Smiley[] smilies = { new Smiley(":)", "Happy_smiley.png"), new Smiley(":-)", "Happy_smiley.png"),
-			new Smiley(":(", "Sad_smiley.png"), new Smiley(":-(", "Sad_smiley.png"),
-			new Smiley(":P", "Tonque_out_smiley.png"), new Smiley(":-P", "Tonque_out_smiley.png"),
-			new Smiley(";(", "Crying_smiley.png"), new Smiley(";-(", "Crying_smiley.png"),
-			new Smiley("(@)", "Cat.png"), new Smiley("CALEF13", "calef13.png") };
+	private Smiley[] smilies = { 
+			
+			new Smiley(":)", 	"Happy_smiley.png"), 
+			new Smiley(":-)", 	"Happy_smiley.png"),
+			
+			new Smiley(":(", 	"Sad_smiley.png"), 
+			new Smiley(":-(", 	"Sad_smiley.png"),
+			
+			new Smiley(":P", 	"Tonque_out_smiley.png"), 
+			new Smiley(":-P", 	"Tonque_out_smiley.png"),
+			
+			new Smiley(";(", 	"Crying_smiley.png"), 
+			new Smiley(";-(", 	"Crying_smiley.png"),
+			new Smiley(":'(", 	"Crying_smiley.png"),
+			
+			new Smiley(";)", 	"Winking_smiley.png"),
+			new Smiley(";-)", 	"Winking_smiley.png"),
+			
+			new Smiley(":D", 	"Very_happy_smiley.png"),
+			new Smiley(":-D", 	"Very_happy_smiley.png"),
+			
+			new Smiley(":S", 	"Confused_smiley.png"),
+			new Smiley(":-S", 	"Confused_smiley.png"),
+			
+			new Smiley("(X)", 	"Xbox.png"),
+			
+			new Smiley("(@)", 	"Cat.png"), 
+			
+			new Smiley("CALEF13", "calef13.png") 
+			
+			};
 
 	private int messageCount;
 	private String chatWith;

@@ -11,12 +11,12 @@ import util.Command.COMMANDS;
  * CommandBuffer and sends to the server
  */
 
-public class networkWriter implements Runnable {
+public class NetworkWriter implements Runnable {
 
 	private CommandBuffer<Command> buffer;
 	private PrintWriter writer;
 
-	public networkWriter(PrintWriter writer, CommandBuffer<Command> buffer) {
+	public NetworkWriter(PrintWriter writer, CommandBuffer<Command> buffer) {
 		this.buffer = buffer;
 		this.writer = writer;
 	}
