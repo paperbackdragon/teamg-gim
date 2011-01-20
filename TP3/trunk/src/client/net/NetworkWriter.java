@@ -3,7 +3,7 @@ package client.net;
 import java.io.PrintWriter;
 
 import util.Command;
-import util.CommandBuffer;
+import util.Buffer;
 import util.Command.COMMANDS;
 
 /**
@@ -13,10 +13,10 @@ import util.Command.COMMANDS;
 
 public class NetworkWriter implements Runnable {
 
-	private CommandBuffer<Command> buffer;
+	private Buffer<Command> buffer;
 	private PrintWriter writer;
 
-	public NetworkWriter(PrintWriter writer, CommandBuffer<Command> buffer) {
+	public NetworkWriter(PrintWriter writer, Buffer<Command> buffer) {
 		this.buffer = buffer;
 		this.writer = writer;
 	}

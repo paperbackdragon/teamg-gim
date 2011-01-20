@@ -9,9 +9,7 @@ import java.util.Date;
 
 import server.User.Status;
 import util.Command;
-import util.CommandBuffer;
-import util.CommandReader;
-import util.ResponseWriter;
+import util.Buffer;
 
 /**
  * The Worker class takes a socket and data
@@ -19,8 +17,8 @@ import util.ResponseWriter;
  */
 public class Worker implements Runnable {
 
-	private CommandBuffer<Command> commandBuffer = new CommandBuffer<Command>();
-	private CommandBuffer<Command> responseBuffer = new CommandBuffer<Command>();
+	private Buffer<Command> commandBuffer = new Buffer<Command>();
+	private Buffer<Command> responseBuffer = new Buffer<Command>();
 	private Socket socket = null;
 	private BufferedReader in;
 	private PrintWriter out;

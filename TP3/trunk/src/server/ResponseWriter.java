@@ -1,7 +1,9 @@
-package util;
+package server;
 
 import java.io.PrintWriter;
 
+import util.Command;
+import util.Buffer;
 import util.Command.COMMANDS;
 
 /**
@@ -12,9 +14,9 @@ import util.Command.COMMANDS;
 public class ResponseWriter implements Runnable {
 
 	private PrintWriter out;
-	private CommandBuffer<Command> responseBuffer;
+	private Buffer<Command> responseBuffer;
 
-	public ResponseWriter(PrintWriter out, CommandBuffer<Command> cmdBuffer) {
+	public ResponseWriter(PrintWriter out, Buffer<Command> cmdBuffer) {
 		this.out = out;
 		this.responseBuffer = cmdBuffer;
 	}

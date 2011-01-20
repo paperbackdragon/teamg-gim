@@ -1,7 +1,10 @@
-package util;
+package server;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+
+import util.Command;
+import util.Buffer;
 
 /**
  * The command reader reads in commands from a BufferedReader and put them into
@@ -10,7 +13,7 @@ import java.io.IOException;
 public class CommandReader implements Runnable {
 
 	private BufferedReader in;
-	private CommandBuffer<Command> commandBuffer;
+	private Buffer<Command> commandBuffer;
 	private final int limit = 8192;
 
 	/**
@@ -21,7 +24,7 @@ public class CommandReader implements Runnable {
 	 * @param commandBuffer
 	 *            the buffer to put the commands into
 	 */
-	public CommandReader(BufferedReader in, CommandBuffer<Command> commandBuffer) {
+	public CommandReader(BufferedReader in, Buffer<Command> commandBuffer) {
 		this.in = in;
 		this.commandBuffer = commandBuffer;
 	}

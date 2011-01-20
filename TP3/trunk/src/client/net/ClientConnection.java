@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 import util.Command;
-import util.CommandBuffer;
+import util.Buffer;
 
 public class ClientConnection implements NetworkingOut, Runnable {
 
@@ -21,7 +21,7 @@ public class ClientConnection implements NetworkingOut, Runnable {
 
 	private NetworkReader reader;
 	private NetworkWriter writer;
-	private CommandBuffer<Command> buffer;
+	private Buffer<Command> buffer;
 
 	private Thread readerthread;
 	private Thread writerthread;
@@ -64,7 +64,7 @@ public class ClientConnection implements NetworkingOut, Runnable {
 		}
 
 		// get the reader and writer, and buffer on the go... ;x
-		this.buffer = new CommandBuffer<Command>();
+		this.buffer = new Buffer<Command>();
 		this.reader = new NetworkReader(bufferedreader, gui);
 		this.writer = new NetworkWriter(printwriter, buffer);
 

@@ -2,11 +2,11 @@ package util;
 
 import java.util.LinkedList;
 
-public class CommandBuffer<T> {
+public class Buffer<T> {
 
 	private LinkedList<T> commands;
 
-	public CommandBuffer() {
+	public Buffer() {
 		this.commands = new LinkedList<T>();
 	}
 
