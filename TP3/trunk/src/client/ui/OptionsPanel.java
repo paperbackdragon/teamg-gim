@@ -7,14 +7,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
-import client.Model;
-
 public class OptionsPanel extends JPanel{
 	
 	// feel free to make this prettier, i'm just doing it to test the backend :P
 	
 	private static final long serialVersionUID = 1L;
-	private static Model model = Model.getInstance();
+	//private static Model model = Model.getInstance();
 	
 	private String personalMessage;
 	private String displayPicture;
@@ -25,8 +23,9 @@ public class OptionsPanel extends JPanel{
 	private JComboBox statusbox;
 	
 	public OptionsPanel() {
-		this.personalMessage = model.getOwnPersonalMessage();
-		this.nickname = model.getOwnNickname();
+		// TODO: Fix
+		//this.personalMessage = model.getOwnPersonalMessage();
+		//this.nickname = model.getOwnNickname();
 		
 		draw();
 	}

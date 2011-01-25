@@ -109,8 +109,9 @@ public class MainWindow extends JFrame {
 				int n = JOptionPane.showOptionDialog(null, options, "Select options", JOptionPane.YES_NO_OPTION,
 						JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
 
+				/*
 				if (n == 0) { // "confirm"
-					if (!options.getNicknameText().equals(model.getOwnNickname())) {
+					if (!options.getNicknameText().equals(model.getSelf().getNickname())) {
 						model.setOwnNickname(options.getNicknameText());
 						model.setNickname(options.getNicknameText());
 						// for when user is not their own friend...
@@ -131,6 +132,8 @@ public class MainWindow extends JFrame {
 						model.getStatus(model.getOwnPersonalMessage());
 					}
 				}
+				*/
+				
 			}
 		}
 	}

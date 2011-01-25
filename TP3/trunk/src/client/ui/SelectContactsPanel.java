@@ -1,33 +1,37 @@
 package client.ui;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
+import client.User;
+
 public class SelectContactsPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	ArrayList<JCheckBox> boxes;
 	String[] roomparticipants;
 
-	public SelectContactsPanel(String[] friendlist, String[] participants) {
+	public SelectContactsPanel(Collection<User> friendlist, String[] participants) {
 
 		boxes = new ArrayList<JCheckBox>();
 		roomparticipants = participants;
 
-		for (int i = 0; i < friendlist.length; i++) {
+		for (User u : friendlist) {
+			JCheckBox checkbox = new JCheckBox(u.getNickname());
 
-			boxes.add(new JCheckBox(friendlist[i]));
-			add(boxes.get(i));
+			if (inroomparticipants(u.getEmail()))
+				checkbox.setEnabled(false);
+
+			checkbox.setVisible(true);
+			add(checkbox);
 			
-			if (inroomparticipants(friendlist[i])) {
-				boxes.get(i).setEnabled(false);
-			}
-			
-			boxes.get(i).setVisible(true);
+			boxes.add(checkbox);
 		}
+
 		this.setVisible(true);
 
 	}

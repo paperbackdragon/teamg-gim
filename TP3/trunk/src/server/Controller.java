@@ -47,7 +47,7 @@ public class Controller implements Runnable {
 				}
 
 			} else {
-				System.out.println("Unrecognised command!");
+				System.out.println("Unrecognised command");
 			}
 
 		}

@@ -29,6 +29,7 @@ public class NetworkWriter implements Runnable {
 
 			Command currentCommand = buffer.getCommand();
 			writer.println(currentCommand);
+			System.out.println(currentCommand);
 			
 			// Check if we just killed the connection
 			if (currentCommand.getCommandAsEnum() == COMMANDS.QUIT)

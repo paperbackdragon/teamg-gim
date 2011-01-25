@@ -87,7 +87,7 @@ public class NetworkReader implements Runnable {
 					// commandBuffer.putCommand(cmd);
 
 					// Remove or comment out if not debugging
-					System.out.println(cmd);
+					//System.out.println(cmd);
 
 					// Reset variables for the next command
 					command = null;
@@ -219,34 +219,26 @@ public class NetworkReader implements Runnable {
 
 			// fix case issues later
 
-			String online = data.split("OFFLINE")[0];
-			online = online.replaceFirst("ONLINE ", "");
-			String[] onlinelist = online.trim().split(" ");
+			String online = data.split("OFFLINE ")[0];
+			String[] onlinelist = online.split("ONLINE ");
 
-			System.out.println("ONLINE: ");
-			for (int i = 0; i < onlinelist.length; i++) {
-				onlinelist[i] = Command.decode(onlinelist[i]);
-				// System.out.println(onlinelist[i]);
+			for (int i = 1; i < onlinelist.length; i++) {
+				onlinelist[i] = Command.decode(onlinelist[i]).trim();
 			}
 
 			String offline = data.split("OFFLINE")[1].split("BLOCKED")[0];
-			offline = offline.replaceFirst(" ", "");
 			String[] offlinelist = offline.trim().split(" ");
 
-			System.out.println("OFFLINE: ");
 			for (int j = 0; j < offlinelist.length; j++) {
-				offlinelist[j] = Command.decode(offlinelist[j]);
-				// System.out.println(offlinelist[j]);
+				offlinelist[j] = Command.decode(offlinelist[j]).trim();
 			}
 
 			String blocked = data.split("OFFLINE")[1].split("BLOCKED")[0];
 			blocked = blocked.replaceFirst(" ", "");
 			String[] blockedlist = blocked.split(" ");
 
-			System.out.println("BLOCKED: ");
 			for (int k = 0; k < blockedlist.length; k++) {
-				blockedlist[k] = Command.decode(blockedlist[k]);
-				// System.out.println(blockedlist[k]);
+				blockedlist[k] = Command.decode(blockedlist[k]).trim();
 			}
 
 			gui.friendlist(onlinelist, offlinelist, blockedlist);
@@ -286,58 +278,27 @@ public class NetworkReader implements Runnable {
 		else if (cmd.getCommand().equalsIgnoreCase("INFO")) {
 
 			String[] arguments = cmd.getArguments();
-			int argumentcount = arguments.length;
-
-			String data = cmd.getData();
-			String[] parts = data.split("\n");
-
-			int i = 0;
+			String[] lines = cmd.splitAndDecodeData("\n");
 			int count = 0;
-
-			String currentusername = parts[0];
-			while (i < parts.length) {
-
-				if (count > 0) {
-					// note to self: lol.. eh... do this better. this probably
-					// won't work for
-					// multiple madness
-					count--;
-
-					if (arguments[count].equalsIgnoreCase("NICKNAME")) {
-
-						gui.updateNickname(currentusername, Command.decode(parts[i]));
-
-					}
-
-					else if (arguments[count].equalsIgnoreCase("STATUS")) {
-						gui.updateStatus(currentusername, Command.decode(parts[i]));
-
-						System.out.println("got where i wanted");
-
-					}
-
-					else if (arguments[count].equalsIgnoreCase("PERSONAL_MESSAGE")) {
-						gui.updatePersonalMessage(currentusername, Command.decode(parts[i]));
-
-					}
-
-					else if (arguments[count].equalsIgnoreCase("DISPLAY_PIC")) {
-						gui.updateDisplayPicture(currentusername, Command.decode(parts[i]));
-					}
-
-				}
-
-				else { // it's a username
-					currentusername = Command.decode(parts[i]);
-				}
-
-				i++;
-
-				if (count == (argumentcount + 1)) {
+			String user = "";
+			
+			for (int i = 0; i < lines.length; i++) {
+				String line = lines[i];				
+				
+				if (count == (arguments.length + 1) || user.length() == 0) {
 					count = 0;
-				} else {
-					count++;
-				}
+					user = line;
+				} else if (arguments[count - 1].equalsIgnoreCase("NICKNAME"))
+					gui.updateNickname(user, line);
+				else if (arguments[count - 1].equalsIgnoreCase("STATUS"))
+					gui.updateStatus(user, line);
+				else if (arguments[count - 1].equalsIgnoreCase("PERSONAL_MESSAGE"))
+					gui.updatePersonalMessage(user, line);
+				else if (arguments[count - 1].equalsIgnoreCase("DISPLAY_PIC"))
+					gui.updateDisplayPicture(user, line);
+
+				count++;
+				
 
 			}
 
@@ -404,5 +365,4 @@ public class NetworkReader implements Runnable {
 		}
 
 	}
-
 }

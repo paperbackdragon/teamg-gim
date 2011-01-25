@@ -26,7 +26,7 @@ public class GimClient {
 	private static ArrayList<ChatWindowIdentifier> windows;
 	private static Model model = Model.getInstance();
 
-	private static ServerConnection inLink = new ServerConnection(model);
+	private static ServerConnection inLink = new ServerConnection();
 	private static ClientConnection outLink = new ClientConnection(inLink);
 
 	private static SystemTray tray;

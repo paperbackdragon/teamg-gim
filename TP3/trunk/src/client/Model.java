@@ -1,12 +1,33 @@
 package client;
 
 import java.net.URISyntaxException;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 
 import client.net.ClientConnection;
 
 public class Model {
+
+	private ClientConnection outLink;
+	private boolean initilised = false;
+
+	private LinkedList<String[]> newRoomList = new LinkedList<String[]>();
+	private LinkedList<String> invitationsList = new LinkedList<String>();
+	private LinkedList<Boolean> typeList = new LinkedList<Boolean>();
+
+	// The file path to the current location
+	private String path = null;
+
+	/*
+	 * The ACTUAL friend list. The users list contains details of users who are
+	 * not necessarily in this users friend list
+	 */
+	private FriendList friendlist = new FriendList();
+	private ConcurrentHashMap<String, User> users = new ConcurrentHashMap<String, User>();
+	private User loggedInUser;
+	
+	private String latestperson;
 
 	/**
 	 * Apparently doing it this way makes constructing it thread-safe...
@@ -21,46 +42,25 @@ public class Model {
 	 * @return the current instance
 	 */
 	public static Model getInstance() {
-		try {
-			SingeltonHolder.INSTANCE.toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
 		return SingeltonHolder.INSTANCE;
 	}
-
-	private ClientConnection outLink;
-
-	private LinkedList<String[]> newRoomList = new LinkedList<String[]>();
-	private LinkedList<String> invitationsList = new LinkedList<String>();
-	private LinkedList<Boolean> typeList = new LinkedList<Boolean>();
-
-	private String path = null;
-	
-	// buddy list
-	private ConcurrentHashMap<String, User> users = new ConcurrentHashMap<String, User>();
-	private String[] onlinefriends;
-	private String[] offlinefriends;
-	private String[] blockedfriends;
-	
-	// options
-	private String personalMessage;
-	private String status;
-	private String nickname;
-	private String username;
-	private String latestperson;
 
 	/**
 	 * Do nothing, just here to beat default constructor
 	 */
 	public Model() {
-		System.out.println("Creating model.");
 	}
 
+	public void setInitilised(boolean i) {
+		this.initilised = i;
+	}
+	
+	public boolean isInitilised() {
+		return this.initilised;
+	}
+	
 	public void acceptRequest(String user) {
 		outLink.accept(user);
-
 	}
 
 	public void addfriend(String user) {
@@ -83,8 +83,9 @@ public class Model {
 	 * @param user
 	 *            The ID of the user to add
 	 */
-	public void addUser(String user) {
-		this.users.put(user, new User(user));
+	public void addUser(User user) {
+		if(user.getEmail().length() > 0)
+			this.users.put(user.getEmail(), user);
 	}
 
 	public void authenticate(String email, char[] pwd) {
@@ -109,27 +110,20 @@ public class Model {
 		outLink.endNetworkWriter();
 	}
 
-	public String[] getBlockedfriends() {
-		return blockedfriends;
+	public Collection<User> getBlockedfriends() {
+		return friendlist.getBlockedUsers();
 	}
-
-	// ACCESSORS
-
-	// public LinkedList<String[]> getRoomList() {
-	// return newRoomList;
-	// }
 
 	public void getDisplayPicture(String user) {
 		outLink.getDisplayPicture(user);
 	}
 
-	public void getFriendList() {
-		outLink.friendlist();
+	public FriendList getFriendList() {
+		return this.friendlist;
 	}
 
 	public String getLatestPerson() {
 		return latestperson;
-		// TODO Auto-generated method stub
 	}
 
 	public String getNextInvitation() {
@@ -146,32 +140,16 @@ public class Model {
 		return typeList.pop();
 	}
 
-	public void getNickName(String user) {
-		outLink.getNickname(user);
+	public Collection<User> getOfflinefriends() {
+		return this.friendlist.getOfflineUsers();
 	}
 
-	public String[] getOfflinefriends() {
-		return offlinefriends;
+	public Collection<User> getOnlinefriends() {
+		return this.friendlist.getOnlineUsers();
 	}
 
-	public String[] getOnlinefriends() {
-		return onlinefriends;
-	}
-
-	public String getOwnNickname() {
-		return nickname;
-	}
-
-	public String getOwnPersonalMessage() {
-		return personalMessage;
-	}
-
-	public String getOwnStatus() {
-		return status;
-	}
-
-	public String getOwnUserName() {
-		return username;
+	public User getSelf() {
+		return this.loggedInUser;
 	}
 
 	// MESSAGES TO SERVER
@@ -194,12 +172,8 @@ public class Model {
 		return this.path;
 	}
 
-	public void getPersonalMessage(String user) {
-		outLink.getPersonalMessage(user);
-	}
-
-	public void getStatus(String user) {
-		outLink.getStatus(user);
+	public ClientConnection getOutLink() {
+		return this.outLink;
 	}
 
 	/**
@@ -242,6 +216,7 @@ public class Model {
 
 	public void quit() {
 		outLink.logout();
+		
 		// TODO (heather): clean up instead of this:
 		System.exit(0);
 	}
@@ -258,10 +233,6 @@ public class Model {
 		outLink.delete(user);
 	}
 
-	public void setBlockedfriends(String[] blockedfriends) {
-		this.blockedfriends = blockedfriends;
-	}
-
 	public void setConnected(boolean b) {
 		outLink.setConnected(false);
 	}
@@ -271,49 +242,12 @@ public class Model {
 		this.latestperson = latest;
 	}
 
-	// end: Friends list stuff
-
-	// GET stuff (when something has been updated)
-
-	public void setNickname(String nickname) {
-		outLink.setNickname(nickname);
-	}
-
-	public void setOfflinefriends(String[] offlinefriends) {
-		this.offlinefriends = offlinefriends;
-	}
-
-	public void setOnlinefriends(String[] onlinefriends) {
-		this.onlinefriends = onlinefriends;
-	}
-
 	public void setOutLink(ClientConnection o) {
 		this.outLink = o;
 	}
-
-	public void setOwnNickname(String nickname) {
-		this.nickname = nickname;
-	}
-
-	public void setOwnPersonalMessage(String personalMessage) {
-		this.personalMessage = personalMessage;
-	}
-
-	public void setOwnStatus(String status) {
-		this.status = status;
-	}
-
-	public void setOwnUserName(String username) {
-		this.username = username;
-	}
-
-	public void setPersonalMessage(String personalmessage) {
-		outLink.setPersonalMessage(personalmessage);
-	}
-
-	public void setStatus(String status) {
-		outLink.setStatus(status);
-
+	
+	public void setSelf(User self) {
+		this.loggedInUser = self;
 	}
 
 	public void type(String roomid) {

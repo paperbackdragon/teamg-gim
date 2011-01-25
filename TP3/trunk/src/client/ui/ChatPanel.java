@@ -14,7 +14,6 @@ import javax.swing.text.StyledDocument;
 import client.Model;
 import client.GimClient;
 import client.Smiley;
-import client.User;
 
 /**
  * General class for a chat panel.
@@ -22,49 +21,42 @@ import client.User;
 public class ChatPanel extends JPanel {
 
 	protected Model model = Model.getInstance();
-	
+
 	protected String id;
 	protected JTextArea chatBox;
 	protected JTextPane messages;
 	protected JButton send;
-	
+
 	private static final long serialVersionUID = 1L;
 	private LinkedList<String> messageQueue;
-	
+
 	private StyledDocument doc;
 	private Style regular, bold, italic, ownMessages, otherMessages;
-	
-	private Smiley[] smilies = { 
-			
-			new Smiley(":)", 	"Happy_smiley.png"), 
-			new Smiley(":-)", 	"Happy_smiley.png"),
-			
-			new Smiley(":(", 	"Sad_smiley.png"), 
-			new Smiley(":-(", 	"Sad_smiley.png"),
-			
-			new Smiley(":P", 	"Tonque_out_smiley.png"), 
-			new Smiley(":-P", 	"Tonque_out_smiley.png"),
-			
-			new Smiley(";(", 	"Crying_smiley.png"), 
-			new Smiley(";-(", 	"Crying_smiley.png"),
-			new Smiley(":'(", 	"Crying_smiley.png"),
-			
-			new Smiley(";)", 	"Winking_smiley.png"),
-			new Smiley(";-)", 	"Winking_smiley.png"),
-			
-			new Smiley(":D", 	"Very_happy_smiley.png"),
-			new Smiley(":-D", 	"Very_happy_smiley.png"),
-			
-			new Smiley(":S", 	"Confused_smiley.png"),
-			new Smiley(":-S", 	"Confused_smiley.png"),
-			
-			new Smiley("(X)", 	"Xbox.png"),
-			
-			new Smiley("(@)", 	"Cat.png"), 
-			
-			new Smiley("CALEF13", "calef13.png") 
-			
-			};
+
+	private Smiley[] smilies = {
+
+	new Smiley(":)", "Happy_smiley.png"), new Smiley(":-)", "Happy_smiley.png"),
+
+	new Smiley(":(", "Sad_smiley.png"), new Smiley(":-(", "Sad_smiley.png"),
+
+	new Smiley(":P", "Tonque_out_smiley.png"), new Smiley(":-P", "Tonque_out_smiley.png"),
+
+	new Smiley(";(", "Crying_smiley.png"), new Smiley(";-(", "Crying_smiley.png"),
+			new Smiley(":'(", "Crying_smiley.png"),
+
+			new Smiley(";)", "Winking_smiley.png"), new Smiley(";-)", "Winking_smiley.png"),
+
+			new Smiley(":D", "Very_happy_smiley.png"), new Smiley(":-D", "Very_happy_smiley.png"),
+
+			new Smiley(":S", "Confused_smiley.png"), new Smiley(":-S", "Confused_smiley.png"),
+
+			new Smiley("(X)", "Xbox.png"),
+
+			new Smiley("(@)", "Cat.png"),
+
+			new Smiley("CALEF13", "calef13.png")
+
+	};
 
 	private int messageCount;
 	private String chatWith;
@@ -132,20 +124,19 @@ public class ChatPanel extends JPanel {
 		isFocused = false;
 
 	}
-	
+
 	public Boolean getInProgress() {
 		return inProgress;
 	}
 
 	public void setInProgress(Boolean inProgress) {
-		System.out.println("letting client talk!");
 		if (inProgress.equals(true)) {
 			sendMessageQueue();
 		}
 		this.inProgress = inProgress;
 	}
 
-	/*
+	/**
 	 * Case where the other user has closed their window. Don't want to concern
 	 * the user with having to wait for room creation
 	 */
@@ -173,7 +164,6 @@ public class ChatPanel extends JPanel {
 		return isFocused;
 	}
 
-	// HELPER METHODS
 	public Dimension getPreferredSize() {
 		return new Dimension(300, 400);
 	}
@@ -198,7 +188,7 @@ public class ChatPanel extends JPanel {
 	 */
 	private void sendMessage() {
 		if (chatBox.getText().length() > 0) {
-			receiveMessage("Me", chatBox.getText());
+			receiveMessage(model.getSelf().getEmail(), chatBox.getText());
 
 			if (getInProgress()) {
 				model.message(id, chatBox.getText());
@@ -223,21 +213,12 @@ public class ChatPanel extends JPanel {
 			public void run() {
 
 				String msg = message;
-				String from = "";
-				Style nameStyle = bold;
+				String from = model.getUser(sender).getNickname();
+				Style nameStyle = ownMessages;
 
-				// Assign correct styles and names to the sender
-				if (!sender.equals("Me")) {
-					User user = model.getUser(sender);
-					if (user == null)
-						from = sender;
-					else
-						from = user.getNickname();
+				// Assign correct styles
+				if (!sender.equals(model.getSelf().getEmail()))
 					nameStyle = otherMessages;
-				} else {
-					from = sender;
-					nameStyle = ownMessages;
-				}
 
 				try {
 					// Add the name of the sender to the chat

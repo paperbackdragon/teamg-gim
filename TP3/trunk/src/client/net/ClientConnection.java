@@ -7,8 +7,12 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.swing.JOptionPane;
+
+import client.Model;
+import client.User;
 
 import util.Command;
 import util.Buffer;
@@ -28,6 +32,8 @@ public class ClientConnection implements NetworkingOut, Runnable {
 
 	private ServerConnection gui;
 	private Thread thread;
+	
+	private Model model = Model.getInstance();
 
 	boolean connected = false;
 
@@ -41,6 +47,7 @@ public class ClientConnection implements NetworkingOut, Runnable {
 	 */
 	public ClientConnection(ServerConnection gui) {
 		this.gui = gui;
+		gui.setServer(this);
 		connect();
 	}
 
@@ -131,6 +138,10 @@ public class ClientConnection implements NetworkingOut, Runnable {
 
 		buffer.putCommand(new Command("AUTH", "LOGIN", Command.encode(emailaddress) + " "
 				+ Command.encode(new String(password))));
+		
+		User self = new User(emailaddress);
+		this.model.addUser(self);
+		this.model.setSelf(self);
 
 	}
 
@@ -380,6 +391,17 @@ public class ClientConnection implements NetworkingOut, Runnable {
 			serverConnection.close();
 		} catch (IOException e) {
 		}
+	}
+
+	public void updateAll(Collection<User> friendList) {
+		String userList = "";
+		
+		for (User user : friendList)
+			userList += user.getEmail() + " ";
+		
+		userList += model.getSelf().getEmail();
+
+		buffer.putCommand(new Command("GET", "NICKNAME STATUS PERSONAL_MESSAGE DISPLAY_PIC", userList));	
 	}
 
 }

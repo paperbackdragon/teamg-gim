@@ -28,6 +28,7 @@ import javax.swing.tree.TreePath;
 
 import client.Model;
 import client.GimClient;
+import client.User;
 
 public class ContactPanel extends JPanel {
 
@@ -38,6 +39,7 @@ public class ContactPanel extends JPanel {
 	private DefaultMutableTreeNode contacts;
 	private Model model = Model.getInstance();
 	private PersonalInfo info;
+	private User self = model.getSelf();
 
 	/**
 	 * Default constructor
@@ -81,19 +83,23 @@ public class ContactPanel extends JPanel {
 
 				// Create a listener for the editableJLabels
 				ValueChangedListener valueListener = new ValueChangedListener() {
+					
 					@Override
 					public void valueChanged(String value, JComponent source) {
-						if (source.equals(name)) {
-							model.setNickname(value);
-						} else if (source.equals(message)) {
-							model.setPersonalMessage(value);
-						}
+						
+						if (source.equals(name))
+							self.setNickname(value);
+						else if (source.equals(message))
+							self.setPersonalMessage(value);
+						
 					}
+					
 				};
 
 				name.addValueChangedListener(valueListener);
 				message.addValueChangedListener(valueListener);
 
+				// Todo: Make this work
 				status = new JLabel("<html><font size=\"3\">Status: Online</font></html>");
 
 				add(name);
@@ -104,21 +110,11 @@ public class ContactPanel extends JPanel {
 
 		public PersonalInfo() {
 			setLayout(new BorderLayout(5, 5));
-			ImageIcon icon = createImageIcon(model.getPath() + "icon1.jpg", "Icon");
+			ImageIcon icon = new ImageIcon(model.getPath() + "icon1.jpg", "Icon");
 			JLabel iconLabel = new JLabel(icon);
 			iconLabel.setPreferredSize(new Dimension(64, 64));
 			add(iconLabel, BorderLayout.WEST);
 			add(new TextField(), BorderLayout.CENTER);
-		}
-
-		protected ImageIcon createImageIcon(String path, String description) {
-			java.net.URL imgURL = getClass().getResource(path);
-			if (imgURL != null) {
-				return new ImageIcon(imgURL, description);
-			} else {
-				System.err.println("Couldn't find file: " + path);
-				return null;
-			}
 		}
 
 		public void setNickname(String name) {
@@ -320,8 +316,6 @@ public class ContactPanel extends JPanel {
 						if (s != null) {
 							model.addfriend(s);
 						}
-
-						model.getFriendList();
 
 					}
 				});
