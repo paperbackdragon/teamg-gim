@@ -550,25 +550,29 @@ public class ServerConnection {
 	}
 
 	public void group(final String roomid) {
-		String invitedBy = model.getNextInvitation();
 
-		// spawn a new window notifying the user they've been invited to a group
-		// chat
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				String invitedBy = model.getNextInvitation();
 
-		Object[] options = { "Accept", "Decline" };
-		int n = JOptionPane.showOptionDialog(GimClient.getMainWindow(),
-				"You have been invited to a group chat by " + invitedBy
-						+ ". Would you like to accept?",
-				"Group chat invitation", JOptionPane.YES_NO_OPTION,
-				JOptionPane.QUESTION_MESSAGE, null, options, // the titles of
-				// buttons
-				options[0]); // default button title
+				// spawn a new window notifying the user they've been invited to
+				// a group
+				// chat
 
-		if (n == 0) {
-			model.join(roomid);
+				Object[] options = { "Accept", "Decline" };
+				int n = JOptionPane.showOptionDialog(GimClient.getMainWindow(),
+						"You have been invited to a group chat by " + invitedBy
+								+ ". Would you like to accept?",
+						"Group chat invitation", JOptionPane.YES_NO_OPTION,
+						JOptionPane.QUESTION_MESSAGE, null, options, // the
+																		// titles
+																		// of
+						// buttons
+						options[0]); // default button title
 
-			SwingUtilities.invokeLater(new Runnable() {
-				public void run() {
+				if (n == 0) {
+					model.join(roomid);
+
 					GroupChatPanel gcp = new GroupChatPanel(roomid);
 					// GimClient.addRoom(gcp);
 
@@ -580,9 +584,8 @@ public class ServerConnection {
 					ui.setLocationRelativeTo(null);// center new chat window
 					model.users(roomid);
 				}
-			});
-		}
-
+			}
+		});
 	}
 
 	public void personal(final String roomid) {
