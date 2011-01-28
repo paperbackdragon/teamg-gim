@@ -7,7 +7,6 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Collection;
 
 import javax.swing.JOptionPane;
 
@@ -393,10 +392,10 @@ public class ClientConnection implements NetworkingOut, Runnable {
 		}
 	}
 
-	public void updateAll(Collection<User> friendList) {
+	public void updateAll() {
 		String userList = "";
 		
-		for (User user : friendList)
+		for (User user : model.getFriendList().getFriendList())
 			userList += user.getEmail() + " ";
 		
 		userList += model.getSelf().getEmail();

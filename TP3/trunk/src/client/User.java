@@ -1,5 +1,7 @@
 package client;
 
+import java.util.LinkedList;
+
 /**
  * Represents of the users and holds all of the information about that user.
  */
@@ -8,8 +10,9 @@ public class User {
 	private String email;
 	private String nickname = "";
 	private String status = "OFFLINE";
-	private String personalMessage = "";
+	private String personalMessage = "This is a personal message.";
 	private String displayPic = "";
+	private LinkedList<UserChangedListener> listeners = new LinkedList<UserChangedListener>();
 
 	/**
 	 * Constructor requiring only an email address
@@ -47,6 +50,11 @@ public class User {
 	 */
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
+		
+		for (UserChangedListener l : listeners) {
+			l.nicknameChanged();
+			l.changed();
+		}
 	}
 
 	/**
@@ -66,6 +74,11 @@ public class User {
 	 */
 	public void setStatus(String status) {
 		this.status = status;
+
+		for (UserChangedListener l : listeners) {
+			l.statusChanged();
+			l.changed();
+		}
 	}
 
 	/**
@@ -85,6 +98,11 @@ public class User {
 	 */
 	public void setPersonalMessage(String personalMessage) {
 		this.personalMessage = personalMessage;
+
+		for (UserChangedListener l : listeners) {
+			l.personalMessageChanged();
+			l.changed();
+		}
 	}
 
 	/**
@@ -104,6 +122,31 @@ public class User {
 	 */
 	public void setDisplayPic(String displayPic) {
 		this.displayPic = displayPic;
+
+		for (UserChangedListener l : listeners) {
+			l.DisplayPicChnaged();
+			l.changed();
+		}
 	}
-	
+
+	/**
+	 * Add a listener to the user
+	 * 
+	 * @param listner
+	 *            The UserChangeListner to add
+	 */
+	public void addUserChangedListener(UserChangedListener listener) {
+		this.listeners.add(listener);
+	}
+
+	/**
+	 * Remove a listener from the user
+	 * 
+	 * @param listener
+	 *            The listener to remove
+	 */
+	public void removeUserChangedListener(UserChangedListener listener) {
+		this.listeners.remove(listener);
+	}
+
 }

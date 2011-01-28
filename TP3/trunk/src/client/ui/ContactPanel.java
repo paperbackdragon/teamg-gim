@@ -10,33 +10,32 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.Box;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTree;
+import javax.swing.ListCellRenderer;
+import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeCellRenderer;
-import javax.swing.tree.TreePath;
 
 import client.Model;
 import client.GimClient;
 import client.User;
+import client.UserChangedListener;
 
 public class ContactPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JButton add, del, chat, group;
-	private JTree contactTree;
+	private JList contactList;
 	protected JScrollPane scrollPane;
-	private DefaultMutableTreeNode contacts;
 	private Model model = Model.getInstance();
 	private PersonalInfo info;
 	private User self = model.getSelf();
@@ -51,14 +50,14 @@ public class ContactPanel extends JPanel {
 		} catch (Exception e) {
 		}
 
-		contacts = new DefaultMutableTreeNode("Contacts");
-
 		setLayout(new BorderLayout());
 		info = new PersonalInfo();
 		add(info, BorderLayout.NORTH);
+
 		scrollPane = new JScrollPane(new ContactList());
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		add(scrollPane, BorderLayout.CENTER);
+
 		add(new ButtonPanel(), BorderLayout.SOUTH);
 	}
 
@@ -78,28 +77,51 @@ public class ContactPanel extends JPanel {
 
 				setLayout(new GridLayout(3, 1, 0, 0));
 
-				name = new EditableJLabel("");
-				message = new EditableJLabel("");
+				name = new EditableJLabel(self.getNickname());
+				message = new EditableJLabel(self.getPersonalMessage());
 
 				// Create a listener for the editableJLabels
 				ValueChangedListener valueListener = new ValueChangedListener() {
-					
 					@Override
 					public void valueChanged(String value, JComponent source) {
-						
-						if (source.equals(name))
+						if (source.equals(name)) {
 							self.setNickname(value);
-						else if (source.equals(message))
+							model.getOutLink().setNickname(value);
+						} else if (source.equals(message)) {
 							self.setPersonalMessage(value);
-						
+							model.getOutLink().setPersonalMessage(value);
+						}
 					}
-					
+				};
+
+				UserChangedListener selfListener = new UserChangedListener() {
+					@Override
+					public void DisplayPicChnaged() {
+					}
+
+					@Override
+					public void nicknameChanged() {
+						name.setText(self.getNickname());
+					}
+
+					@Override
+					public void personalMessageChanged() {
+						message.setText(self.getPersonalMessage());
+					}
+
+					@Override
+					public void statusChanged() {
+					}
+
+					@Override
+					public void changed() {
+					}
 				};
 
 				name.addValueChangedListener(valueListener);
 				message.addValueChangedListener(valueListener);
+				self.addUserChangedListener(selfListener);
 
-				// Todo: Make this work
 				status = new JLabel("<html><font size=\"3\">Status: Online</font></html>");
 
 				add(name);
@@ -147,24 +169,103 @@ public class ContactPanel extends JPanel {
 		private static final long serialVersionUID = 1L;
 
 		public ContactList() {
-			setLayout(new BorderLayout());
 
-			contactTree = new JTree(contacts);
+			this.setLayout(new BorderLayout());
 
-			SwingUtilities.invokeLater(new Runnable() {
-				public void run() {
-					contactTree.setCellRenderer((TreeCellRenderer) new CellRenderer());
+			DefaultListModel listModel = new DefaultListModel();
+			final JList list = new JList(listModel);
+			contactList = list;
+			
+			UserChangedListener listener = new UserChangedListener() {
+				@Override
+				public void statusChanged() {
 				}
-			});
 
-			contactTree.putClientProperty("JTree.lineStyle", "None");
+				@Override
+				public void personalMessageChanged() {
+				}
 
-			contactTree.setLargeModel(true);
-			contactTree.setRootVisible(false);
-			contactTree.setShowsRootHandles(true);
-			contactTree.addMouseListener(new SingleChatListener());
+				@Override
+				public void nicknameChanged() {
+				}
 
-			add(contactTree, BorderLayout.CENTER);
+				@Override
+				public void DisplayPicChnaged() {
+				}
+
+				@Override
+				public void changed() {
+					list.repaint();
+				}
+			};
+
+			// Create and populate the list model.
+			for (User u : model.getFriendList().getFriendList()) {
+				listModel.addElement(u);
+				u.addUserChangedListener(listener);
+			}
+
+			list.addMouseListener(new SingleChatListener());
+
+			list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+			ContactListRenderer renderer = new ContactListRenderer();
+			list.setCellRenderer(renderer);
+			list.setSelectedIndex(0);
+
+			add(list, BorderLayout.NORTH);
+		}
+	}
+
+	class ContactListRenderer extends JLabel implements ListCellRenderer {
+
+		private static final long serialVersionUID = 1L;
+
+		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
+				boolean cellHasFocus) {
+
+			User user = (User) value;
+
+			JPanel contact = new JPanel(new BorderLayout(5, 0));
+			contact.setOpaque(false);
+
+			ImageIcon displayPictureIcon = new ImageIcon(model.getPath() + "icon1.jpg", "Icon");
+			JLabel displayPicture = new JLabel(displayPictureIcon);
+			displayPicture.setPreferredSize(new Dimension(32, 32));
+			displayPicture.setIconTextGap(0);
+
+			ImageIcon statusIcon;
+			if(user.getStatus().equalsIgnoreCase("offline"))
+				statusIcon = new ImageIcon(model.getPath() + "offline.png", "Icon");
+			else
+				statusIcon = new ImageIcon(model.getPath() + "online.png", "Icon");
+			
+			JLabel statusIconLabel = new JLabel(statusIcon);
+			statusIconLabel.setPreferredSize(new Dimension(16, 16));
+
+			JPanel userInfo = new JPanel(new GridLayout(2, 1));
+			userInfo.setOpaque(false);
+			JLabel username = new JLabel("<html>" + user.getNickname() + "</html>");
+			JLabel personalMessage = new JLabel("<html><small>" + user.getPersonalMessage() + "</small></html>");
+			personalMessage.setForeground(UIManager.getColor("Tree.textForeground").brighter().brighter());
+			userInfo.add(username);
+			userInfo.add(personalMessage);
+
+			if (isSelected) {
+				contact.setBackground(UIManager.getColor("Tree.selectionBackground"));
+				contact.setOpaque(true);
+			} else {
+				// Set colours to non selected
+			}
+
+			contact.add(Box.createVerticalStrut(1), BorderLayout.NORTH);
+			contact.add(Box.createHorizontalStrut(2), BorderLayout.WEST);
+			contact.add(displayPicture, BorderLayout.WEST);
+			contact.add(userInfo, BorderLayout.CENTER);
+			contact.add(statusIconLabel, BorderLayout.EAST);
+			contact.add(Box.createVerticalStrut(1), BorderLayout.SOUTH);
+
+			return contact;
+
 		}
 	}
 
@@ -192,108 +293,18 @@ public class ContactPanel extends JPanel {
 		}
 	}
 
-	/**
-	 * Contact List Cell Renderer
-	 * 
-	 * @author James McMinn
-	 * 
-	 */
-	private class CellRenderer implements TreeCellRenderer {
-
-		private JPanel contact;
-
-		@Override
-		public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded,
-				boolean leaf, int row, boolean hasFocus) {
-
-			contact = new JPanel(new BorderLayout(5, 0));
-			contact.setOpaque(false);
-
-			// Don't show empty cells
-			if (value.toString().length() == 0)
-				return new JLabel();
-
-			if (leaf) {
-
-				if (selected) {
-					contact.setBackground(UIManager.getColor("Tree.selectionBackground"));
-					contact.setOpaque(true);
-				}
-
-				ImageIcon displayPictureIcon = new ImageIcon(model.getPath() + "icon1.jpg", "Icon");
-				JLabel displayPicture = new JLabel(displayPictureIcon);
-				displayPicture.setPreferredSize(new Dimension(32, 32));
-
-				ImageIcon statusIcon = new ImageIcon(model.getPath() + "online.png", "Icon");
-				JLabel statusIconLabel = new JLabel(statusIcon);
-				statusIconLabel.setPreferredSize(new Dimension(16, 16));
-
-				JPanel userInfo = new JPanel(new GridLayout(2, 1));
-				userInfo.setOpaque(false);
-				JLabel username = new JLabel("<html>" + value.toString() + "</html>");
-				JLabel personalMessage = new JLabel("<html><i><small>Their personal message.</small></i></html>");
-				userInfo.add(username);
-				userInfo.add(personalMessage);
-
-				contact.add(Box.createVerticalStrut(2), BorderLayout.NORTH);
-				contact.add(displayPicture, BorderLayout.WEST);
-				contact.add(userInfo, BorderLayout.CENTER);
-				contact.add(statusIconLabel, BorderLayout.EAST);
-				contact.add(Box.createVerticalStrut(2), BorderLayout.SOUTH);
-
-				return contact;
-
-			} else {
-				contact.add(new JLabel("<html><b>" + value.toString() + "</b><html>"));
-				return contact;
-			}
-
-		}
-
-	}
-
 	// HELPER METHODS
 	public Dimension getPreferredSize() {
 		return new Dimension(300, 400);
 	}
 
-	public void createNodes(String[] onlineContacts, String[] offlineContacts) {
-
-		contacts.removeAllChildren();
-
-		DefaultMutableTreeNode online = new DefaultMutableTreeNode("Online Contacts");
-		DefaultMutableTreeNode offline = new DefaultMutableTreeNode("Offline Contacts");
-
-		// Add online contacts
-		for (String str : onlineContacts)
-			online.add(new DefaultMutableTreeNode(str));
-
-		// Add offline contacts
-		for (String str : offlineContacts)
-			offline.add(new DefaultMutableTreeNode(str));
-
-		contacts.add(online);
-		contacts.add(offline);
-
-		// Reload the updated model
-		((DefaultTreeModel) contactTree.getModel()).reload();
-
-		// Expand all of the tree nodes
-		for (int i = 0; i < contactTree.getRowCount(); i++)
-			contactTree.expandRow(i);
-
-	}
-
 	private String[] getSelectedContacts() {
-		TreePath[] nodes = contactTree.getSelectionPaths();
-		DefaultMutableTreeNode node;
-		String[] contacts = new String[nodes.length];
-		for (int i = 0; i < nodes.length; i++) {
-			node = (DefaultMutableTreeNode) nodes[i].getLastPathComponent();
-			contacts[i] = (String) node.getUserObject();
-			System.out.println((String) node.getUserObject());
+		String[] contact = new String[contactList.getSelectedValues().length];
+		int i = 0;
+		for(Object u : contactList.getSelectedValues() ) {
+			contact[i++] = (String) ((User) u).getEmail();
 		}
-		return contacts;
+		return contact;
 	}
 
 	// ACTION LISTENERS
@@ -379,9 +390,8 @@ public class ContactPanel extends JPanel {
 	class SingleChatListener implements MouseListener {
 
 		public void mousePressed(MouseEvent e) {
-			DefaultMutableTreeNode node = (DefaultMutableTreeNode) contactTree.getLastSelectedPathComponent();
 
-			if (e.getClickCount() == 2 && node.isLeaf()) {
+			if (e.getClickCount() == 2 ) {
 				int find = GimClient.findRoom(getSelectedContacts()[0]);
 
 				if (find == -1)

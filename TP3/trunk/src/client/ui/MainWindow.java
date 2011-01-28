@@ -103,13 +103,14 @@ public class MainWindow extends JFrame {
 				System.out.println("setOptions clicked.");
 				// TODO (heather): create options panel
 
+				/*
 				OptionsPanel options = new OptionsPanel();
 
 				Object[] buttons = { "Confirm", "Cancel" };
 				int n = JOptionPane.showOptionDialog(null, options, "Select options", JOptionPane.YES_NO_OPTION,
 						JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
 
-				/*
+				
 				if (n == 0) { // "confirm"
 					if (!options.getNicknameText().equals(model.getSelf().getNickname())) {
 						model.setOwnNickname(options.getNicknameText());

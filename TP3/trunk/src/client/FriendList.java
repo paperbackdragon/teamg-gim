@@ -15,7 +15,8 @@ public class FriendList {
 	private ConcurrentHashMap<String, User> users = new ConcurrentHashMap<String, User>();
 	private LinkedList<User> blocked = new LinkedList<User>();
 	private boolean initilised = false;
-
+	private LinkedList<FriendListChangedListener> listeners = new LinkedList<FriendListChangedListener>();
+	
 	/**
 	 * Default constructor
 	 */
@@ -144,6 +145,9 @@ public class FriendList {
 		return this.users.containsKey(user.getEmail());
 	}
 
+	/**
+	 * Wait for the FriendList to be initilised
+	 */
 	public synchronized void waitForInitilisation() {
 		while(!isInitilised()) {
 			try {
@@ -153,4 +157,24 @@ public class FriendList {
 		}
 	}
 
+	/**
+	 * Add a listener to the list
+	 * 
+	 * @param listner
+	 *            The UserChangeListner to add
+	 */
+	public void addFriendListChangedListener(FriendListChangedListener listener) {
+		this.listeners.add(listener);
+	}
+
+	/**
+	 * Remove a listener from the list
+	 * 
+	 * @param listener
+	 *            The listener to remove
+	 */
+	public void removeFriendListChangedListener(FriendListChangedListener listener) {
+		this.listeners.remove(listener);
+	}
+	
 }

@@ -1,5 +1,7 @@
 package client.net;
 
+import java.util.LinkedList;
+
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
@@ -48,13 +50,17 @@ public class ServerConnection {
 		@Override
 		public void run() {
 			server.friendlist();
+			
 			model.getFriendList().waitForInitilisation();
 
-			server.updateAll(model.getFriendList().getFriendList());
+			server.updateAll();
+			model.waitForInitilisation();
 
 			ContactPanel panel = GimClient.getContactPanel();
 			GimClient.getMainWindow().setMainPanel(panel);
 			GimClient.getMainWindow().canLogout(true);
+			
+			server.setStatus("online");
 		}
 	}
 
@@ -89,9 +95,11 @@ public class ServerConnection {
 	 * @param blockedlist
 	 *            A list of blocked users
 	 */
-	public void friendlist(String[] onlinelist, String[] offlinelist, String[] blockedlist) {
+	public void friendlist(LinkedList<String> onlinelist, LinkedList<String> offlinelist, LinkedList<String> blockedlist) {
 
 		FriendList friendList = model.getFriendList();
+		
+		System.out.println("On: " + onlinelist.size() + " Off: " + offlinelist.size() + " Bl: " + blockedlist.size());
 
 		for (String e : onlinelist) {
 			User u = friendList.getUser(e);

@@ -2,9 +2,11 @@ package client.net;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.LinkedList;
 
 import client.Model;
 import client.GimClient;
+import client.User;
 import client.ui.LoginPanel;
 
 import util.Command;
@@ -13,6 +15,7 @@ public class NetworkReader implements Runnable {
 
 	private BufferedReader reader;
 	private ServerConnection gui;
+	private Model model = Model.getInstance();
 
 	/** Reads commands off the network and performs calls the necessary method */
 	public NetworkReader(BufferedReader reader, ServerConnection gui) {
@@ -216,32 +219,24 @@ public class NetworkReader implements Runnable {
 		else if (cmd.getCommand().equalsIgnoreCase("FRIENDLIST")) {
 
 			String data = cmd.getData();
-
-			// fix case issues later
-
-			String online = data.split("OFFLINE ")[0];
-			String[] onlinelist = online.split("ONLINE ");
-
-			for (int i = 1; i < onlinelist.length; i++) {
-				onlinelist[i] = Command.decode(onlinelist[i]).trim();
+			LinkedList<String> online = new LinkedList<String>();
+			LinkedList<String> offline = new LinkedList<String>();
+			LinkedList<String> blocked = new LinkedList<String>();
+			LinkedList<String> addTo = null;
+			
+			for(String part : data.split(" ")) {
+				if(part.equalsIgnoreCase("online")) 
+					addTo = online;
+				else if(part.equalsIgnoreCase("offline")) 
+					addTo = offline;
+				else if(part.equalsIgnoreCase("blocked")) 
+					addTo = blocked;
+				else
+					addTo.add(Command.decode(part.trim()));
 			}
 
-			String offline = data.split("OFFLINE")[1].split("BLOCKED")[0];
-			String[] offlinelist = offline.trim().split(" ");
-
-			for (int j = 0; j < offlinelist.length; j++) {
-				offlinelist[j] = Command.decode(offlinelist[j]).trim();
-			}
-
-			String blocked = data.split("OFFLINE")[1].split("BLOCKED")[0];
-			blocked = blocked.replaceFirst(" ", "");
-			String[] blockedlist = blocked.split(" ");
-
-			for (int k = 0; k < blockedlist.length; k++) {
-				blockedlist[k] = Command.decode(blockedlist[k]).trim();
-			}
-
-			gui.friendlist(onlinelist, offlinelist, blockedlist);
+			gui.friendlist(online, offline, blocked);
+			
 		}
 
 		else if (cmd.getCommand().equalsIgnoreCase("FRIENDREQUEST")) {
@@ -280,27 +275,31 @@ public class NetworkReader implements Runnable {
 			String[] arguments = cmd.getArguments();
 			String[] lines = cmd.splitAndDecodeData("\n");
 			int count = 0;
-			String user = "";
+			User user = null;
 			
 			for (int i = 0; i < lines.length; i++) {
 				String line = lines[i];				
 				
-				if (count == (arguments.length + 1) || user.length() == 0) {
+				if (count == (arguments.length + 1) || user == null) {
 					count = 0;
-					user = line;
-				} else if (arguments[count - 1].equalsIgnoreCase("NICKNAME"))
-					gui.updateNickname(user, line);
-				else if (arguments[count - 1].equalsIgnoreCase("STATUS"))
-					gui.updateStatus(user, line);
+					user = model.getUser(line);
+					System.out.println(user.getEmail());
+				} else if (arguments[count - 1].equalsIgnoreCase("NICKNAME")) {
+					user.setNickname(line);
+					System.out.println(line);
+				} else if (arguments[count - 1].equalsIgnoreCase("STATUS"))
+					user.setStatus(line);
 				else if (arguments[count - 1].equalsIgnoreCase("PERSONAL_MESSAGE"))
-					gui.updatePersonalMessage(user, line);
+					user.setPersonalMessage(line);
 				else if (arguments[count - 1].equalsIgnoreCase("DISPLAY_PIC"))
-					gui.updateDisplayPicture(user, line);
+					user.setDisplayPic(line);
 
 				count++;
-				
 
 			}
+			
+			if(!model.isInitilised())
+				model.setInitilised(true);
 
 		}
 

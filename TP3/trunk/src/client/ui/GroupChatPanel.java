@@ -135,7 +135,7 @@ public class GroupChatPanel extends ChatPanel {
 				participants = temp;
 			}
 
-			SelectContactsPanel inputs = new SelectContactsPanel(model.getOnlinefriends(), participants);
+			SelectContactsPanel inputs = new SelectContactsPanel(model.getFriendList().getOnlineUsers(), participants);
 
 			JOptionPane.showMessageDialog(null, inputs, "Select contacts to invite", JOptionPane.PLAIN_MESSAGE);
 

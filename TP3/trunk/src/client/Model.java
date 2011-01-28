@@ -26,7 +26,7 @@ public class Model {
 	private FriendList friendlist = new FriendList();
 	private ConcurrentHashMap<String, User> users = new ConcurrentHashMap<String, User>();
 	private User loggedInUser;
-	
+
 	private String latestperson;
 
 	/**
@@ -53,12 +53,29 @@ public class Model {
 
 	public void setInitilised(boolean i) {
 		this.initilised = i;
+		synchronized (this) {
+			notifyAll();
+		}
 	}
-	
+
 	public boolean isInitilised() {
 		return this.initilised;
 	}
-	
+
+	/**
+	 * Wait for the FriendList to be initilised
+	 */
+	public void waitForInitilisation() {
+		while (!isInitilised()) {
+			try {
+				synchronized (this) {
+					wait();
+				}
+			} catch (InterruptedException e) {
+			}
+		}
+	}
+
 	public void acceptRequest(String user) {
 		outLink.accept(user);
 	}
@@ -84,8 +101,7 @@ public class Model {
 	 *            The ID of the user to add
 	 */
 	public void addUser(User user) {
-		if(user.getEmail().length() > 0)
-			this.users.put(user.getEmail(), user);
+		this.users.put(user.getEmail(), user);
 	}
 
 	public void authenticate(String email, char[] pwd) {
@@ -138,14 +154,6 @@ public class Model {
 
 	public Boolean getNextType() {
 		return typeList.pop();
-	}
-
-	public Collection<User> getOfflinefriends() {
-		return this.friendlist.getOfflineUsers();
-	}
-
-	public Collection<User> getOnlinefriends() {
-		return this.friendlist.getOnlineUsers();
 	}
 
 	public User getSelf() {
@@ -215,8 +223,8 @@ public class Model {
 	}
 
 	public void quit() {
-		outLink.logout();
-		
+		logout();
+
 		// TODO (heather): clean up instead of this:
 		System.exit(0);
 	}
@@ -245,7 +253,7 @@ public class Model {
 	public void setOutLink(ClientConnection o) {
 		this.outLink = o;
 	}
-	
+
 	public void setSelf(User self) {
 		this.loggedInUser = self;
 	}
