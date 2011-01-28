@@ -76,12 +76,13 @@ public class ServerConnection {
 	public void emailInuseError(final String message) {
 		// JOptionPane.showMessageDialog(GimClient.getMainWindow(),
 		// "E-Mail is already in use.");
-		
+
 		SwingUtilities.invokeLater(new Runnable() {
 
 			@Override
 			public void run() {
-		JOptionPane.showMessageDialog(GimClient.getMainWindow(), message);
+				JOptionPane.showMessageDialog(GimClient.getMainWindow(),
+						message);
 			}
 		});
 
@@ -258,15 +259,15 @@ public class ServerConnection {
 
 			@Override
 			public void run() {
-		
-		String error = "";
-		if (!message.equals("")) {
-			error += ":\n\n server reported :\n " + message;
-		}
 
-		JOptionPane.showMessageDialog(GimClient.getMainWindow(),
-				"Password too short error." + error);
-		
+				String error = "";
+				if (!message.equals("")) {
+					error += ":\n\n server reported :\n " + message;
+				}
+
+				JOptionPane.showMessageDialog(GimClient.getMainWindow(),
+						"Password too short error." + error);
+
 			}
 		});
 	}
