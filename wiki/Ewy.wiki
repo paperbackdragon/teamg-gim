@@ -1,8 +1,9 @@
-#summary One-sentence summary of this page.
+Why Ewy is awesome
 
 = Introduction =
 
-Why Ewy is awesome
+this article will discuss the awesomeness of team member ewy
+
 
 = Details =
 
