@@ -1,0 +1,10 @@
+#summary One-sentence summary of this page.
+
+= Introduction =
+
+Why Ewy is awesome
+
+= Details =
+
+1. He doesn't afraid of anything!
+2. 
