@@ -151,19 +151,28 @@ public class ServerConnection {
 
 	}
 
-	public void friendrequest(String user, String nickname) {
-		Object[] options = { "Accept", "Decline", };
-		int n = JOptionPane.showOptionDialog(null,
-				"You have received a friend request from " + user
-						+ "(nickname :" + nickname
-						+ ".) Would you like to accept?", "Freind Request",
-				JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
-				null, options, options[0]);
+	public void friendrequest(final String user, final String nickname) {
+		SwingUtilities.invokeLater(new Runnable() {
 
-		if (n == 0) {
-			model.acceptRequest(user);
-		}
+			@Override
+			public void run() {
 
+				Object[] options = { "Accept", "Decline", };
+				int n = JOptionPane
+						.showOptionDialog(GimClient.getMainWindow(),
+								"You have received a friend request from "
+										+ user + "(nickname :" + nickname
+										+ ".) Would you like to accept?",
+								"Freind Request",
+								JOptionPane.YES_NO_CANCEL_OPTION,
+								JOptionPane.QUESTION_MESSAGE, null, options,
+								options[0]);
+
+				if (n == 0) {
+					model.acceptRequest(user);
+				}
+			}
+		});
 	}
 
 	public void invalidArgumentError(String message) {
@@ -565,8 +574,8 @@ public class ServerConnection {
 								+ ". Would you like to accept?",
 						"Group chat invitation", JOptionPane.YES_NO_OPTION,
 						JOptionPane.QUESTION_MESSAGE, null, options, // the
-																		// titles
-																		// of
+						// titles
+						// of
 						// buttons
 						options[0]); // default button title
 
