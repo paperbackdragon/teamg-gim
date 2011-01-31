@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import javax.swing.*;
 
 import client.Model;
+import client.User;
+import client.UserChangedListener;
 
 /**
  * Specific class for a chat panel used for a conversation between more than two
@@ -19,9 +21,15 @@ public class GroupChatPanel extends ChatPanel {
 
 	private static final long serialVersionUID = 1L;
 
-	private JTextArea guests;
+	private JList guests;
 	private JButton invite;
-	private String[] participants;
+	private User[] participants;
+
+	private final DefaultListModel listModel;
+
+	private final JList list;
+
+	private final UserChangedListener listener;
 	private static Model model = Model.getInstance();
 
 	/**
@@ -37,12 +45,68 @@ public class GroupChatPanel extends ChatPanel {
 
 		JScrollPane messagePane = new JScrollPane(messages);
 
-		guests = new JTextArea(" ");
+		// BEGIN MAKING GUESTS THINGY
+		
+		listModel = new DefaultListModel();
+		list = new JList(listModel);
+		guests = list;
+		
+		JScrollPane guestPane = new JScrollPane(guests);
+		
+		// The listener we'll be using to keep track of changes to people in
+		// the list
+		listener = new UserChangedListener() {
+			@Override
+			public void statusChanged() {
+			}
+
+			@Override
+			public void personalMessageChanged() {
+			}
+
+			@Override
+			public void nicknameChanged() {
+			}
+
+			@Override
+			public void displayPicChanged() {
+			}
+
+			@Override
+			public void changed() {
+				list.repaint();
+			}
+		};
+		
+		
+		
+		// Create and populate the list model.
+		participants = new User[1];
+		participants[0] = model.getSelf();
+		
+		for (User u : participants) {
+			listModel.addElement(u);
+			u.addUserChangedListener(listener);
+		}
+		
+		// Make sure the list is rendered correctly
+		list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		ContactListRenderer renderer = new ContactListRenderer();
+		list.setCellRenderer(renderer);
+		list.setSelectedIndex(0);
+		
+		
+		// ORIGINAL
+	/*	guests = new JTextArea(" ");
 		guests.setEditable(false);
 		guests.setLineWrap(true);
 		guests.setWrapStyleWord(true);
 		JScrollPane guestPane = new JScrollPane(guests);
-		guestPane.setPreferredSize(new Dimension(150, 100));
+		guestPane.setPreferredSize(new Dimension(150, 100));*/
+		
+		
+		
+		// END MAKING GUESTS THINGY
 
 		// BOTTOM PANEL
 		JPanel chatPanel = new JPanel();
@@ -108,8 +172,27 @@ public class GroupChatPanel extends ChatPanel {
 	// update the user list... this method may change. may not use a text box to
 	// display users
 	// in future :P
-	public void updateUserList(String[] participants) {
+	public void updateUserList(User[] participants) {
 		this.participants = participants;
+		
+		for (Object o : listModel.toArray()) {
+			((User) o).removeUserChangedListener(listener);
+		}
+
+		int[] indices = list.getSelectedIndices();
+		listModel.clear();
+
+		// Create and populate the list model.
+		for (User u : model.getFriendList().getOnlineUsers()) {
+			listModel.addElement(u);
+			u.addUserChangedListener(listener);
+		}
+		
+		list.setSelectedIndices(indices);
+		
+		
+		// OLD WAY: just put them all in a text box
+		/*
 		String theString = "";
 		String current = "";
 		for (int i = 0; i < participants.length; i++) {
@@ -123,6 +206,7 @@ public class GroupChatPanel extends ChatPanel {
 			System.out.println("adding " + participants[i] + " to guest list");
 		}
 		guests.setText(theString);
+		*/
 
 	}
 
@@ -130,12 +214,20 @@ public class GroupChatPanel extends ChatPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			String[] temp = { " " };
+			String[] temp = new String[participants.length];
+			
 			if (participants == null) {
-				participants = temp;
+				temp = new String[0];
+				temp[0] = "{ }";
 			}
-
-			SelectContactsPanel inputs = new SelectContactsPanel(model.getFriendList().getOnlineUsers(), participants);
+			else {
+				
+				for (int i = 0; i < participants.length; i++) {
+					temp[i] = participants[i].toString();
+				}
+			}
+			
+			SelectContactsPanel inputs = new SelectContactsPanel(model.getFriendList().getOnlineUsers(), temp);
 
 			JOptionPane.showMessageDialog(null, inputs, "Select contacts to invite", JOptionPane.PLAIN_MESSAGE);
 

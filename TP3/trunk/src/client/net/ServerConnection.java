@@ -515,13 +515,25 @@ public class ServerConnection {
 	}
 
 	public void users(String[] users, String roomid) {
+		User[] participants = new User[users.length];
+		
+		// add any new users we don't have a record of 
 		for (String user : users) {
 			if (model.getUser(user) == null) {
 				model.addUser(new User(user));
 			}
 		}
+		
+		// create the participant list of the room
+		for (int i= 0; i < users.length; i++) {
+			if (model.getUser(users[i]) != null) {
+				participants[i] = model.getUser(users[i]);
+			}
+			
+		}
 
-		((GroupChatPanel) GimClient.getWindowIdentifierFromId(roomid).getChatPanel()).updateUserList(users);
+		// update group chat list
+		((GroupChatPanel) GimClient.getWindowIdentifierFromId(roomid).getChatPanel()).updateUserList(participants);
 
 	}
 

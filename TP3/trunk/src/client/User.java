@@ -182,5 +182,10 @@ public class User {
 	public synchronized void removeUserChangedListener(UserChangedListener listener) {
 		this.listeners.remove(listener);
 	}
+	
+	public String toString() {
+		return this.email;
+	}
+	
 
 }
