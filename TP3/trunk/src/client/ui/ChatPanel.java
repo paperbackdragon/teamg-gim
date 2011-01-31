@@ -14,6 +14,7 @@ import javax.swing.text.StyledDocument;
 import client.Model;
 import client.GimClient;
 import client.Smiley;
+import client.User;
 
 /**
  * General class for a chat panel.
@@ -59,7 +60,7 @@ public class ChatPanel extends JPanel {
 	};
 
 	private int messageCount;
-	private String chatWith;
+	private User chatWith;
 
 	private Boolean inProgress = false;
 	private boolean isFocused;
@@ -148,11 +149,11 @@ public class ChatPanel extends JPanel {
 		}
 	}
 
-	public void setChatWith(String chatWith) {
+	public void setChatWith(User chatWith) {
 		this.chatWith = chatWith;
 	}
 
-	public String getChatWith() {
+	public User getChatWith() {
 		return chatWith;
 	}
 
@@ -195,7 +196,7 @@ public class ChatPanel extends JPanel {
 			} else {
 				messageQueue.push(chatBox.getText());
 				if (id.equals("-1"))
-					model.createRoom(false, new String[] { chatWith });
+					model.createRoom(chatWith);
 			}
 		}
 	}

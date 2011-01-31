@@ -72,17 +72,17 @@ public class GimClient {
 
 	public static void removeRoom(ChatPanel panel) {
 		for (int i = 0; i < windows.size(); i++) {
-			if (windows.get(i).getCp().getID().equals(panel.getID())) {
+			if (windows.get(i).getChatPanel().getID().equals(panel.getID())) {
 				windows.remove(i);
 			}
 		}
 	}
 
 	// We do this so we don't open a new chat every time the user clicks chat
-	public static int findRoom(String chatWith) {
+	public static int findRoom(User chatWith) {
 		for (int i = 0; i < windows.size(); i++) {
-			if (windows.get(i).getCp() instanceof SingleChatPanel) {
-				if (windows.get(i).getCp().getChatWith().equals(chatWith)) {
+			if (windows.get(i).getChatPanel() instanceof SingleChatPanel) {
+				if (windows.get(i).getChatPanel().getChatWith() == chatWith) {
 					// set chat to visible
 					return i;
 				}
@@ -97,8 +97,8 @@ public class GimClient {
 		System.out.println("routing message");
 		for (int i = 0; i < windows.size(); i++) {
 			System.out.println("found the room");
-			if (windows.get(i).getCp().getID().equals(roomid)) {
-				windows.get(i).getCp().receiveMessage(sender, message);
+			if (windows.get(i).getChatPanel().getID().equals(roomid)) {
+				windows.get(i).getChatPanel().receiveMessage(sender, message);
 				Model.getInstance().setLatestPerson(roomid);
 				break;
 			}
@@ -106,13 +106,13 @@ public class GimClient {
 
 	}
 
-	public static void addWindow(String user, MainWindow ui, ChatPanel cp) {
+	public static void addWindow(User user, MainWindow ui, ChatPanel cp) {
 		windows.add(new ChatWindowIdentifier(user, ui, cp));
 	}
 
-	public static MainWindow getWindow(String user) {
+	public static MainWindow getWindow(User user) {
 		for (int i = 0; i < windows.size(); i++) {
-			if (windows.get(i).getUser().equals(user)) {
+			if (windows.get(i).getUser() == user) {
 				return windows.get(i).getWindow();
 			}
 		}
@@ -122,17 +122,17 @@ public class GimClient {
 	/* Used for group chat, where "user" is not applicable */
 	public static MainWindow getWindowRoom(String id) {
 		for (int i = 0; i < windows.size(); i++) {
-			if (windows.get(i).getCp().getID().equals(id)) {
+			if (windows.get(i).getChatPanel().getID().equals(id)) {
 				return windows.get(i).getWindow();
 			}
 		}
 		return null;
 	}
 
-	public static ChatWindowIdentifier getWindowIdentifierFromUser(String user) {
+	public static ChatWindowIdentifier getWindowIdentifierFromUser(User user) {
 		for (int i = 0; i < windows.size(); i++) {
-			if (windows.get(i).getCp() instanceof SingleChatPanel) {
-				if (windows.get(i).getCp().getChatWith().equals(user)) {
+			if (windows.get(i).getChatPanel() instanceof SingleChatPanel) {
+				if (windows.get(i).getChatPanel().getChatWith() == user) {
 					return windows.get(i);
 				}
 			}
@@ -144,7 +144,7 @@ public class GimClient {
 
 	public static ChatWindowIdentifier getWindowIdentifierFromId(String roomid) {
 		for (int i = 0; i < windows.size(); i++) {
-			if (windows.get(i).getCp().getID().equals(roomid)) {
+			if (windows.get(i).getChatPanel().getID().equals(roomid)) {
 				return windows.get(i);
 			}
 		}
@@ -164,8 +164,8 @@ public class GimClient {
 		// or something...
 
 		for (int i = 0; i < windows.size(); i++) {
-			if (windows.get(i).getCp() instanceof GroupChatPanel) {
-				String id = windows.get(i).getCp().getID();
+			if (windows.get(i).getChatPanel() instanceof GroupChatPanel) {
+				String id = windows.get(i).getChatPanel().getID();
 				model.users(id);
 
 			}
@@ -180,7 +180,7 @@ public class GimClient {
 		if (windows.size() > 0) {
 			// look at me, using this shorthand for the first time :D
 			for (ChatWindowIdentifier window : windows) {
-				window.getCp().setId("-1");
+				window.getChatPanel().setId("-1");
 			}
 		}
 	}
@@ -284,4 +284,5 @@ public class GimClient {
 		 * (windows.get(i).getId().equals(roomid)) { windows.remove(i); } } }
 		 */
 	}
+
 }

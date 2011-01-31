@@ -12,8 +12,8 @@ public class Model {
 	private ClientConnection outLink;
 	private boolean initilised = false;
 
-	private LinkedList<String[]> newRoomList = new LinkedList<String[]>();
-	private LinkedList<String> invitationsList = new LinkedList<String>();
+	private LinkedList<LinkedList<User>> newRoomList = new LinkedList<LinkedList<User>>();
+	private LinkedList<User> invitationsList = new LinkedList<User>();
 	private LinkedList<Boolean> typeList = new LinkedList<Boolean>();
 
 	// The file path to the current location
@@ -84,13 +84,11 @@ public class Model {
 		outLink.add(user);
 	}
 
-	public void addInvitation(String from) {
-		// Gordon: Critical section?
+	public synchronized void addInvitation(User from) {
 		invitationsList.add(from);
 	}
 
-	public void addNextRoom(String[] userlist) {
-		// Gordon: Critical section?
+	public synchronized void addNextRoom(LinkedList<User> userlist) {
 		newRoomList.add(userlist);
 	}
 
@@ -112,14 +110,18 @@ public class Model {
 		outLink.block(user);
 	}
 
-	public void createRoom(Boolean group, String[] contacts) {
+	public void createRoom(LinkedList<User> contacts) {
 		newRoomList.add(contacts);
-		typeList.add(group);
+		typeList.add(true);
+		outLink.createGroupChat();
+	}
 
-		if (group)
-			outLink.createGroupChat();
-		else
-			outLink.createSingleChat(contacts[0]);
+	public void createRoom(User user) {
+		LinkedList<User> users = new LinkedList<User>();
+		users.add(user);
+		newRoomList.add(users);
+		typeList.add(false);
+		outLink.createSingleChat(user);
 	}
 
 	public void endNetworkWriter() {
@@ -142,13 +144,11 @@ public class Model {
 		return latestperson;
 	}
 
-	public String getNextInvitation() {
-		// Gordon: Critical section?
+	public synchronized User getNextInvitation() {
 		return invitationsList.pop();
 	}
 
-	public String[] getNextRoom() {
-		// Gordon: Critical section?
+	public synchronized LinkedList<User> getNextRoom() {
 		return newRoomList.pop();
 	}
 
@@ -159,10 +159,6 @@ public class Model {
 	public User getSelf() {
 		return this.loggedInUser;
 	}
-
-	// MESSAGES TO SERVER
-
-	// Connection stuff
 
 	/**
 	 * Get the path to the current directory
@@ -180,7 +176,12 @@ public class Model {
 		return this.path;
 	}
 
-	public ClientConnection getOutLink() {
+	/**
+	 * Get the connection to the server
+	 * 
+	 * @return The ClinetConnection connected to the server
+	 */
+	public ClientConnection getServer() {
 		return this.outLink;
 	}
 

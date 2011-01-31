@@ -1,6 +1,11 @@
 package client;
 
+import java.awt.Image;
 import java.util.LinkedList;
+
+import javax.swing.ImageIcon;
+
+import util.Base64;
 
 /**
  * Represents of the users and holds all of the information about that user.
@@ -10,8 +15,8 @@ public class User {
 	private String email;
 	private String nickname = "";
 	private String status = "OFFLINE";
-	private String personalMessage = "This is a personal message.";
-	private String displayPic = "";
+	private String personalMessage = "";
+	private ImageIcon displayPic = new ImageIcon(Model.getInstance().getPath() + "default.jpg");
 	private LinkedList<UserChangedListener> listeners = new LinkedList<UserChangedListener>();
 
 	/**
@@ -48,10 +53,9 @@ public class User {
 	 * @param nickname
 	 *            The user's nickname
 	 */
-	public void setNickname(String nickname) {
+	public synchronized void setNickname(String nickname) {
 		this.nickname = nickname;
-		
-		for (UserChangedListener l : listeners) {
+		for (UserChangedListener l : this.listeners.toArray(new UserChangedListener[0])) {
 			l.nicknameChanged();
 			l.changed();
 		}
@@ -72,10 +76,13 @@ public class User {
 	 * @param status
 	 *            The status of the user
 	 */
-	public void setStatus(String status) {
+	public synchronized void setStatus(String status) {
 		this.status = status;
 
-		for (UserChangedListener l : listeners) {
+		// This shit is wack. Apparently if this isn't converted to an array
+		// then
+		// it throws ConcurrentModificationException
+		for (UserChangedListener l : this.listeners.toArray(new UserChangedListener[0])) {
 			l.statusChanged();
 			l.changed();
 		}
@@ -96,10 +103,10 @@ public class User {
 	 * @param personalMessage
 	 *            The personal message of the user
 	 */
-	public void setPersonalMessage(String personalMessage) {
+	public synchronized void setPersonalMessage(String personalMessage) {
 		this.personalMessage = personalMessage;
 
-		for (UserChangedListener l : listeners) {
+		for (UserChangedListener l : this.listeners.toArray(new UserChangedListener[0])) {
 			l.personalMessageChanged();
 			l.changed();
 		}
@@ -110,23 +117,41 @@ public class User {
 	 * 
 	 * @return The display picture of the user as a base 64 encoded string
 	 */
-	public String getDisplayPic() {
+	public ImageIcon getDisplayPic() {
 		return displayPic;
 	}
 
 	/**
-	 * Set the display picture of the user
+	 * Get the display pic at a certain size
+	 * 
+	 * @param width
+	 *            The width of the image
+	 * @param height
+	 *            The height of the image
+	 * @return The new ImageIcon at the specified size
+	 */
+	public ImageIcon getDisplayPic(int width, int height) {
+		return new ImageIcon(this.getDisplayPic().getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH));
+	}
+
+	/**
+	 * Set the display picture of the user c
 	 * 
 	 * @param displayPic
 	 *            The display picture of the user as a base 64 encoded string
 	 */
-	public void setDisplayPic(String displayPic) {
-		this.displayPic = displayPic;
+	public synchronized void setDisplayPic(String displayPic) {
 
-		for (UserChangedListener l : listeners) {
-			l.DisplayPicChnaged();
+		this.displayPic = new ImageIcon(Base64.decode(displayPic));
+		
+		if(this.displayPic.getIconWidth() == 0) 
+			this.displayPic = new ImageIcon(Model.getInstance().getPath() + "default.jpg");
+
+		for (UserChangedListener l : this.listeners.toArray(new UserChangedListener[0])) {
+			l.displayPicChanged();
 			l.changed();
 		}
+
 	}
 
 	/**
@@ -135,7 +160,7 @@ public class User {
 	 * @param listner
 	 *            The UserChangeListner to add
 	 */
-	public void addUserChangedListener(UserChangedListener listener) {
+	public synchronized void addUserChangedListener(UserChangedListener listener) {
 		this.listeners.add(listener);
 	}
 
@@ -145,7 +170,7 @@ public class User {
 	 * @param listener
 	 *            The listener to remove
 	 */
-	public void removeUserChangedListener(UserChangedListener listener) {
+	public synchronized void removeUserChangedListener(UserChangedListener listener) {
 		this.listeners.remove(listener);
 	}
 

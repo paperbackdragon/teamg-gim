@@ -2,6 +2,8 @@ package client.net;
 
 import java.util.ArrayList;
 
+import client.User;
+
 /**
  * This will list all of the functions which the UI code expects the networking
  * code to implement, as part of the networking protocol. Although the server's
@@ -194,7 +196,7 @@ public interface NetworkingOut {
 	 * @param user
 	 *            The person to create the IM session with
 	 */
-	void createSingleChat(String user);
+	void createSingleChat(User user);
 
 	/**
 	 * Sends a request to the server to create a new group chat

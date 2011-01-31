@@ -81,8 +81,7 @@ public class ServerConnection {
 
 			@Override
 			public void run() {
-				JOptionPane.showMessageDialog(GimClient.getMainWindow(),
-						message);
+				JOptionPane.showMessageDialog(GimClient.getMainWindow(), message);
 			}
 		});
 
@@ -104,13 +103,11 @@ public class ServerConnection {
 	 * @param blockedlist
 	 *            A list of blocked users
 	 */
-	public void friendlist(LinkedList<String> onlinelist,
-			LinkedList<String> offlinelist, LinkedList<String> blockedlist) {
+	public void friendlist(LinkedList<String> onlinelist, LinkedList<String> offlinelist, LinkedList<String> blockedlist) {
 
 		FriendList friendList = model.getFriendList();
 
-		System.out.println("On: " + onlinelist.size() + " Off: "
-				+ offlinelist.size() + " Bl: " + blockedlist.size());
+		System.out.println("On: " + onlinelist.size() + " Off: " + offlinelist.size() + " Bl: " + blockedlist.size());
 
 		for (String e : onlinelist) {
 			User u = friendList.getUser(e);
@@ -158,15 +155,10 @@ public class ServerConnection {
 			public void run() {
 
 				Object[] options = { "Accept", "Decline", };
-				int n = JOptionPane
-						.showOptionDialog(GimClient.getMainWindow(),
-								"You have received a friend request from "
-										+ user + "(nickname :" + nickname
-										+ ".) Would you like to accept?",
-								"Freind Request",
-								JOptionPane.YES_NO_CANCEL_OPTION,
-								JOptionPane.QUESTION_MESSAGE, null, options,
-								options[0]);
+				int n = JOptionPane.showOptionDialog(GimClient.getMainWindow(),
+						"You have received a friend request from " + user + "(nickname :" + nickname
+								+ ".) Would you like to accept?", "Freind Request", JOptionPane.YES_NO_CANCEL_OPTION,
+						JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 
 				if (n == 0) {
 					model.acceptRequest(user);
@@ -207,8 +199,7 @@ public class ServerConnection {
 					error += ":\n\n server reported:\n " + message;
 				}
 
-				JOptionPane.showMessageDialog(GimClient.getMainWindow(),
-						"Log in Details Incorrect." + error);
+				JOptionPane.showMessageDialog(GimClient.getMainWindow(), "Log in Details Incorrect." + error);
 			}
 		});
 	}
@@ -223,8 +214,7 @@ public class ServerConnection {
 					error += ":\n\n server reported:\n " + message;
 				}
 
-				JOptionPane.showMessageDialog(GimClient.getMainWindow(),
-						"Logged in from another location." + error);
+				JOptionPane.showMessageDialog(GimClient.getMainWindow(), "Logged in from another location." + error);
 			}
 		});
 	}
@@ -274,8 +264,7 @@ public class ServerConnection {
 					error += ":\n\n server reported :\n " + message;
 				}
 
-				JOptionPane.showMessageDialog(GimClient.getMainWindow(),
-						"Password too short error." + error);
+				JOptionPane.showMessageDialog(GimClient.getMainWindow(), "Password too short error." + error);
 
 			}
 		});
@@ -358,8 +347,7 @@ public class ServerConnection {
 			error += ":\n\n server reported :\n " + message;
 		}
 
-		JOptionPane.showMessageDialog(GimClient.getMainWindow(),
-				"User does not exist error. " + error);
+		JOptionPane.showMessageDialog(GimClient.getMainWindow(), "User does not exist error. " + error);
 	}
 
 	public void userAlreadyinFriendlistError(String message) {
@@ -368,8 +356,7 @@ public class ServerConnection {
 			error += ":\n\n server reported :\n " + message;
 		}
 
-		JOptionPane.showMessageDialog(GimClient.getMainWindow(),
-				"User already in friendslist. " + error);
+		JOptionPane.showMessageDialog(GimClient.getMainWindow(), "User already in friendslist. " + error);
 
 	}
 
@@ -380,7 +367,7 @@ public class ServerConnection {
 	public void created(final String roomid) {
 		// get next list of users
 
-		final String[] contacts = model.getNextRoom();
+		final LinkedList<User> contacts = model.getNextRoom();
 		final Boolean isGroup = model.getNextType();
 
 		// open new chat window
@@ -389,8 +376,7 @@ public class ServerConnection {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 
-					ChatWindowIdentifier l = GimClient
-							.getWindowIdentifierFromId(roomid);
+					ChatWindowIdentifier l = GimClient.getWindowIdentifierFromId(roomid);
 					if (l == null) {
 
 						GroupChatPanel gcp = new GroupChatPanel(roomid);
@@ -398,7 +384,7 @@ public class ServerConnection {
 						gcp.setInProgress(true);
 
 						MainWindow ui = new MainWindow("GIM - Group Chat", gcp);
-						GimClient.addWindow(" ", ui, gcp);
+						GimClient.addWindow(null, ui, gcp);
 
 						ui.setLocationRelativeTo(null);// center new chat window
 						model.users(roomid);
@@ -428,35 +414,20 @@ public class ServerConnection {
 		} else {
 
 			// if we already have a window...
-			ChatWindowIdentifier l = GimClient
-					.getWindowIdentifierFromUser(contacts[0]);
+			ChatWindowIdentifier l = GimClient.getWindowIdentifierFromUser(contacts.getFirst());
 			if (l != null) {
-				l.getCp().setId(roomid);
+				l.getChatPanel().setId(roomid);
 				// l.getCp().setInProgress(true); // find a better way
 
 			} else {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						SingleChatPanel scp = new SingleChatPanel(roomid);
+						SingleChatPanel scp = new SingleChatPanel(contacts.getFirst(), roomid);
 
-						// set the chat to be with the user we invited to chat
-						scp.setChatWith(contacts[0]);
-						// scp.setInProgress(true);
-						// </Gordon>
+						scp.setChatWith(contacts.getFirst());
 
-						// GimClient.addRoom(scp);
-
-						// get contact info
-						User l = model.getUser(contacts[0]);
-						if (l != null) {
-							scp.setNickname(l.getNickname());
-							scp.setStatus(l.getStatus());
-							scp.setPersonalMessage(l.getPersonalMessage());
-						}
-
-						MainWindow ui = new MainWindow("GIM - Chat with "
-								+ contacts[0], scp);
-						GimClient.addWindow(contacts[0], ui, scp);
+						MainWindow ui = new MainWindow("GIM - Chat with2 " + contacts.getFirst().getEmail(), scp);
+						GimClient.addWindow(contacts.getFirst(), ui, scp);
 
 						ui.setLocationRelativeTo(null);// center new chat window
 						ui.setVisible(true);
@@ -467,13 +438,13 @@ public class ServerConnection {
 		}
 
 		// invite contacts
-		for (String s : contacts) {
-			model.invite(roomid, s);
+		for (User u : contacts) {
+			model.invite(roomid, u.getEmail());
 		}
 
 	}
 
-	public void invited(String user, String roomid) {
+	public void invited(User user, String roomid) {
 		model.type(roomid);
 
 		// Store who gave the invitation, for when we ask the user if they want
@@ -493,18 +464,16 @@ public class ServerConnection {
 			@Override
 			public void run() {
 
-				ChatWindowIdentifier l = GimClient
-						.getWindowIdentifierFromId(roomid);
+				ChatWindowIdentifier l = GimClient.getWindowIdentifierFromId(roomid);
 
 				// The other person has joined the personal chat, it is safe to
 				// send messages
 				if (l != null) {
-					if (l.getCp() instanceof SingleChatPanel) {
-						l.getCp().setInProgress(true);
+					if (l.getChatPanel() instanceof SingleChatPanel) {
+						l.getChatPanel().setInProgress(true);
 					} else { // group chat
 						model.users(roomid);
-						l.getCp().receiveMessage("",
-								user + " has joined the chat\n");
+						l.getChatPanel().receiveMessage("", user + " has joined the chat\n");
 
 					}
 
@@ -531,14 +500,13 @@ public class ServerConnection {
 		// but this is a reminder to myself...
 		ChatWindowIdentifier l = GimClient.getWindowIdentifierFromId(roomid);
 		if (l != null) {
-			if (l.getCp() instanceof SingleChatPanel) {
-				l.getCp().setInProgress(false);
-				l.getCp().setId("-1");
+			if (l.getChatPanel() instanceof SingleChatPanel) {
+				l.getChatPanel().setInProgress(false);
+				l.getChatPanel().setId("-1");
 				model.leave(roomid);
-			} else if (l.getCp() instanceof GroupChatPanel) {
+			} else if (l.getChatPanel() instanceof GroupChatPanel) {
 				// do this later...
-				GimClient.getWindowIdentifierFromId(roomid).getCp()
-						.receiveMessage("", user + " has left the chat\n");
+				GimClient.getWindowIdentifierFromId(roomid).getChatPanel().receiveMessage("", user + " has left the chat\n");
 				model.users(roomid);
 			}
 
@@ -553,8 +521,7 @@ public class ServerConnection {
 			}
 		}
 
-		((GroupChatPanel) GimClient.getWindowIdentifierFromId(roomid).getCp())
-				.updateUserList(users);
+		((GroupChatPanel) GimClient.getWindowIdentifierFromId(roomid).getChatPanel()).updateUserList(users);
 
 	}
 
@@ -562,31 +529,21 @@ public class ServerConnection {
 
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				String invitedBy = model.getNextInvitation();
-
-				// spawn a new window notifying the user they've been invited to
-				// a group
-				// chat
+				User invitedBy = model.getNextInvitation();
 
 				Object[] options = { "Accept", "Decline" };
 				int n = JOptionPane.showOptionDialog(GimClient.getMainWindow(),
-						"You have been invited to a group chat by " + invitedBy
-								+ ". Would you like to accept?",
-						"Group chat invitation", JOptionPane.YES_NO_OPTION,
-						JOptionPane.QUESTION_MESSAGE, null, options, // the
-						// titles
-						// of
-						// buttons
-						options[0]); // default button title
+						"You have been invited to a group chat by " + invitedBy + ". Would you like to accept?",
+						"Group chat invitation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+						options, options[0]);
 
 				if (n == 0) {
 					model.join(roomid);
 
 					GroupChatPanel gcp = new GroupChatPanel(roomid);
-					// GimClient.addRoom(gcp);
 
 					MainWindow ui = new MainWindow("GIM - Group Chat", gcp);
-					GimClient.addWindow(" ", ui, gcp);
+					GimClient.addWindow(null, ui, gcp);
 					ui.setVisible(true);
 					gcp.setInProgress(true);
 
@@ -608,37 +565,25 @@ public class ServerConnection {
 		 * handler class. Like, when the "write message to window" method is
 		 * invoked, if messagecount == 0, spawn a window...
 		 */
-		final String invitedBy = model.getNextInvitation();
+		final User invitedBy = model.getNextInvitation();
 
 		model.join(roomid);
 
-		ChatWindowIdentifier l = GimClient
-				.getWindowIdentifierFromUser(invitedBy);
+		ChatWindowIdentifier l = GimClient.getWindowIdentifierFromUser(invitedBy);
 		if (l != null) {
-			l.getCp().setId(roomid);
-			l.getCp().setInProgress(true); // find a better way later
+			l.getChatPanel().setId(roomid);
+			l.getChatPanel().setInProgress(true); // find a better way later
 		} else { // there is no window for this user
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
-					SingleChatPanel scp = new SingleChatPanel(roomid);
-					// gordon
+					SingleChatPanel scp = new SingleChatPanel(invitedBy, roomid);
+					
 					scp.setChatWith(invitedBy);
 					scp.setInProgress(true);
-
-					// set contact info
-
-					User l = model.getUser(invitedBy);
-					if (l != null) {
-						scp.setNickname(l.getNickname());
-						scp.setStatus(l.getStatus());
-						scp.setPersonalMessage(l.getPersonalMessage());
-					}
-					// </gordon>
-					// GimClient.addRoom(scp);
-					MainWindow ui = new MainWindow("GIM - Chat with "
-							+ invitedBy, scp);
+	
+					MainWindow ui = new MainWindow("GIM - Chat with " + invitedBy.getEmail(), scp);
 					GimClient.addWindow(invitedBy, ui, scp);
-					ui.setLocationRelativeTo(null);// center new chat window
+					ui.setLocationRelativeTo(null);
 				}
 			});
 		}

@@ -1,31 +1,32 @@
 package client.ui;
 
+import client.User;
+
 public class ChatWindowIdentifier {
 	
-	//String id;
-	String user;
+	User user;
 	MainWindow window;
 	ChatPanel cp;
 	
-	public ChatWindowIdentifier(String user, MainWindow window, ChatPanel cp) {
+	public ChatWindowIdentifier(User user, MainWindow window, ChatPanel cp) {
 		this.user = user;
 		this.window = window;
 		this.cp = cp;
 	}
 
-	public String getUser() {
+	public User getUser() {
 		return user;
 	}
 
-	public void setUser(String user) {
+	public void setUser(User user) {
 		this.user = user;
 	}
 
-	public ChatPanel getCp() {
+	public ChatPanel getChatPanel() {
 		return cp;
 	}
 
-	public void setGcp(ChatPanel cp) {
+	public void setChatPanel(ChatPanel cp) {
 		this.cp = cp;
 	}
 

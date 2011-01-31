@@ -16,11 +16,34 @@ public class FriendList {
 	private LinkedList<User> blocked = new LinkedList<User>();
 	private boolean initilised = false;
 	private LinkedList<FriendListChangedListener> listeners = new LinkedList<FriendListChangedListener>();
-	
+	private UserChangedListener userChangedListener;
+
 	/**
 	 * Default constructor
 	 */
 	public FriendList() {
+		this.userChangedListener = new UserChangedListener() {
+			@Override
+			public void statusChanged() {
+				FriendList.this.stateChanged();
+			}
+			
+			@Override
+			public void personalMessageChanged() {
+			}
+			
+			@Override
+			public void nicknameChanged() {
+			}
+			
+			@Override
+			public void displayPicChanged() {
+			}
+			
+			@Override
+			public void changed() {
+			}
+		};
 	}
 
 	public synchronized void setInitilised(boolean i) {
@@ -60,6 +83,13 @@ public class FriendList {
 	 */
 	public void addUser(User user) {
 		users.put(user.getEmail(), user);
+		
+		user.addUserChangedListener(this.userChangedListener);
+		
+		for(FriendListChangedListener l : this.listeners) {
+			l.friendAdded(user);
+			l.stateChanged();
+		}
 	}
 
 	/**
@@ -70,6 +100,11 @@ public class FriendList {
 	 */
 	public void removeUser(User user) {
 		users.remove(user.getEmail());
+		user.removeUserChangedListener(this.userChangedListener);
+		for (FriendListChangedListener l : this.listeners) {
+			l.friendRemove(user);
+			l.stateChanged();
+		}
 	}
 
 	/**
@@ -145,11 +180,17 @@ public class FriendList {
 		return this.users.containsKey(user.getEmail());
 	}
 
+	private void stateChanged() {
+		for (FriendListChangedListener l : this.listeners) {
+			l.stateChanged();
+		}
+	}
+
 	/**
 	 * Wait for the FriendList to be initilised
 	 */
 	public synchronized void waitForInitilisation() {
-		while(!isInitilised()) {
+		while (!isInitilised()) {
 			try {
 				wait();
 			} catch (InterruptedException e) {
@@ -176,5 +217,5 @@ public class FriendList {
 	public void removeFriendListChangedListener(FriendListChangedListener listener) {
 		this.listeners.remove(listener);
 	}
-	
+
 }

@@ -188,7 +188,7 @@ public class NetworkReader implements Runnable {
 			else if (cmd.getArgumentsAsString().equalsIgnoreCase("INVITED")) {
 				String data = cmd.getData();
 				String[] parts = data.split(" ");
-				gui.invited(Command.decode(parts[1]), Command.decode(parts[0]));
+				gui.invited(model.getUser(Command.decode(parts[1])), Command.decode(parts[0]));
 			}
 
 			else if (cmd.getArgumentsAsString().equalsIgnoreCase("USERS")) {

@@ -371,13 +371,12 @@ public class ClientConnection implements NetworkingOut, Runnable {
 	}
 
 	@Override
-	public void createSingleChat(String user) {
+	public void createSingleChat(User user) {
 		// :ROOM [ CREATE {GROUP} | INVITE | JOIN | LEAVE | USERS | TYPE ]:
 		// {<roomid> |
 		// <user>};
 
-		System.out.println("got to create single chat");
-		buffer.putCommand(new Command("ROOM", "CREATE", Command.encode(user)));
+		buffer.putCommand(new Command("ROOM", "CREATE", Command.encode(user.getEmail())));
 	}
 
 	@Override
