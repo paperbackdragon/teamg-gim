@@ -29,6 +29,7 @@ import client.Model;
 import client.GimClient;
 import client.User;
 import client.UserChangedListener;
+import client.ValueChangedListener;
 
 public class ContactPanel extends JPanel {
 
@@ -66,7 +67,7 @@ public class ContactPanel extends JPanel {
 		private static final long serialVersionUID = 1L;
 
 		private EditableJLabel name, message;
-		private JLabel status;
+		private ListJLabel status;
 
 		class OwnInformation extends JPanel {
 
@@ -78,6 +79,7 @@ public class ContactPanel extends JPanel {
 
 				name = new EditableJLabel(self.getNickname());
 				message = new EditableJLabel(self.getPersonalMessage());
+				status = new ListJLabel(new String[] {"Online", "Away", "Busy"}, 0);
 
 				// Create a listener for the editableJLabels
 				ValueChangedListener valueListener = new ValueChangedListener() {
@@ -89,6 +91,8 @@ public class ContactPanel extends JPanel {
 						} else if (source.equals(message)) {
 							self.setPersonalMessage(value);
 							model.getServer().setPersonalMessage(value);
+						} else if(source.equals(status)) {
+							model.getServer().setStatus(status.getValue());
 						}
 					}
 				};
@@ -120,8 +124,7 @@ public class ContactPanel extends JPanel {
 				name.addValueChangedListener(valueListener);
 				message.addValueChangedListener(valueListener);
 				self.addUserChangedListener(selfListener);
-
-				status = new JLabel("<html>Status: Online</html>");
+				status.addValueChangedListener(valueListener);
 
 				add(name);
 				add(message);
@@ -198,12 +201,14 @@ public class ContactPanel extends JPanel {
 			}
 
 			model.getFriendList().addFriendListChangedListener(new FriendListChangedListener() {
+				
 				@Override
 				public void stateChanged() {
 					for (Object o : listModel.toArray()) {
 						((User) o).removeUserChangedListener(listener);
 					}
 
+					int[] indices = list.getSelectedIndices();
 					listModel.clear();
 
 					// Create and populate the list model.
@@ -211,6 +216,8 @@ public class ContactPanel extends JPanel {
 						listModel.addElement(u);
 						u.addUserChangedListener(listener);
 					}
+					
+					list.setSelectedIndices(indices);
 
 					onlineLabel.setText("<html><b>Online Contacts (" + model.getFriendList().getOnlineUsers().size()
 							+ "/" + model.getFriendList().getFriendList().size() + ")</b></html>");

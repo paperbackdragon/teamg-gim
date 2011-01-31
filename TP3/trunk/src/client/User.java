@@ -11,10 +11,14 @@ import util.Base64;
  * Represents of the users and holds all of the information about that user.
  */
 public class User {
+	
+	public static enum Status {
+		OFFLINE, ONLINE, BUSY, AWAY
+	}
 
 	private String email;
 	private String nickname = "";
-	private String status = "OFFLINE";
+	private Status status = Status.OFFLINE;
 	private String personalMessage = "";
 	private ImageIcon displayPic = new ImageIcon(Model.getInstance().getPath() + "default.jpg");
 	private LinkedList<UserChangedListener> listeners = new LinkedList<UserChangedListener>();
@@ -67,7 +71,7 @@ public class User {
 	 * @return The status of the user
 	 */
 	public String getStatus() {
-		return status;
+		return status.toString().toLowerCase();
 	}
 
 	/**
@@ -77,7 +81,12 @@ public class User {
 	 *            The status of the user
 	 */
 	public synchronized void setStatus(String status) {
-		this.status = status;
+		
+		try {
+			this.status = Status.valueOf(status.toUpperCase());
+		} catch (IllegalArgumentException e) {
+			this.status = Status.ONLINE;
+		}
 
 		// This shit is wack. Apparently if this isn't converted to an array
 		// then

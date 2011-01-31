@@ -1,19 +1,33 @@
 package client;
 
 import java.awt.AWTException;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
+import java.awt.Rectangle;
+import java.awt.Shape;
 import java.awt.SystemTray;
 import java.awt.Toolkit;
 import java.awt.TrayIcon;
+import java.awt.TrayIcon.MessageType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
+import java.text.AttributedCharacterIterator;
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 import client.net.ClientConnection;
 import client.net.ServerConnection;
@@ -43,6 +57,12 @@ public class GimClient {
 
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
+				
+				try {
+					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+				} catch (Exception e) {
+				}
+				
 				LoginPanel lp = new LoginPanel();
 				mainWindow = new MainWindow("GIM", lp);
 				lp.setParent(mainWindow);
@@ -198,7 +218,7 @@ public class GimClient {
 		if (SystemTray.isSupported()) {
 
 			tray = SystemTray.getSystemTray();
-			Image image = Toolkit.getDefaultToolkit().getImage("smiles/Happy_smiley.png");
+			Image image = new ImageIcon(model.getPath() + "status/offline.png").getImage();
 
 			MouseListener mouseListener = new MouseListener() {
 
@@ -236,8 +256,9 @@ public class GimClient {
 			MenuItem defaultItem = new MenuItem("Exit");
 			defaultItem.addActionListener(exitListener);
 			popup.add(defaultItem);
-
-			trayIcon = new TrayIcon(image, "Tray Demo", popup);
+			
+			image = image.getScaledInstance((int) tray.getTrayIconSize().getWidth(), (int) tray.getTrayIconSize().getHeight(), Image.SCALE_SMOOTH);
+			trayIcon = new TrayIcon(image, "GIM", popup);
 
 			ActionListener actionListener = new ActionListener() {
 				public void actionPerformed(ActionEvent e) {

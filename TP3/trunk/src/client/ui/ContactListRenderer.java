@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.util.HashMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -16,12 +17,21 @@ import javax.swing.UIManager;
 import util.Html;
 import client.Model;
 import client.User;
+import client.User.Status;
 
 public class ContactListRenderer extends JLabel implements ListCellRenderer {
 
 	private static final long serialVersionUID = 1L;
+	public HashMap<String, ImageIcon> icons = new HashMap<String, ImageIcon>();
 
 	Model model = Model.getInstance();
+	
+	public ContactListRenderer() {
+		for(Status s : Status.values()) {
+			ImageIcon statusIcon = new ImageIcon(model.getPath() + "status/" + s.toString().toLowerCase() + ".png", "Icon");
+			icons.put(s.toString().toLowerCase(), statusIcon);
+		}
+	}
 
 	public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
 			boolean cellHasFocus) {
@@ -42,11 +52,7 @@ public class ContactListRenderer extends JLabel implements ListCellRenderer {
 		displayPicture.setPreferredSize(new Dimension(32, 32));
 		displayPicture.setIconTextGap(0);
 
-		ImageIcon statusIcon;
-		if (user.getStatus().equalsIgnoreCase("offline"))
-			statusIcon = new ImageIcon(model.getPath() + "offline.png", "Icon");
-		else
-			statusIcon = new ImageIcon(model.getPath() + "online.png", "Icon");
+		ImageIcon statusIcon = this.icons.get(user.getStatus());
 
 		JLabel statusIconLabel = new JLabel(statusIcon);
 		statusIconLabel.setPreferredSize(new Dimension(16, 16));

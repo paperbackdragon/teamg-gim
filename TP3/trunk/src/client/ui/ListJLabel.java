@@ -2,6 +2,8 @@ package client.ui;
 
 import java.awt.CardLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
@@ -10,6 +12,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.LinkedList;
 
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -22,11 +25,11 @@ import client.ValueChangedListener;
  * @author James McMinn
  * 
  */
-public class EditableJLabel extends JPanel {
+public class ListJLabel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JLabel label;
-	private JTextField textField;
+	private JComboBox combo;
 	private LinkedList<ValueChangedListener> listeners = new LinkedList<ValueChangedListener>();
 
 	/**
@@ -35,7 +38,7 @@ public class EditableJLabel extends JPanel {
 	 * @param startText
 	 *            The starting text
 	 */
-	EditableJLabel(String startText) {
+	ListJLabel(String[] options, int selected) {
 		super();
 
 		// Create the listener and the layout
@@ -45,18 +48,24 @@ public class EditableJLabel extends JPanel {
 
 		// Create the JPanel for the "normal" state
 		JPanel labelPanel = new JPanel(new GridLayout(1, 1));
-		label = new JLabel(startText);
+		label = new JLabel(options[selected]);
+
 		labelPanel.add(label);
 
 		// Create the JPanel for the "hover state"
 		JPanel inputPanel = new JPanel(new GridLayout(1, 1));
-		textField = new JTextField(startText);
-		textField.addMouseListener(hl);
-		textField.addKeyListener(hl);
-		textField.addFocusListener(hl);
-		inputPanel.add(textField);
+
+		combo = new JComboBox(options);
+		combo.setSelectedIndex(selected);
+
+		combo.addActionListener(hl);
+		combo.addMouseListener(hl);
+		combo.addKeyListener(hl);
+		combo.addFocusListener(hl);
+
+		label.setBorder(new JTextField().getBorder());
 		
-		label.setBorder(textField.getBorder());
+		inputPanel.add(combo);
 
 		this.addMouseListener(hl);
 
@@ -69,32 +78,17 @@ public class EditableJLabel extends JPanel {
 	}
 
 	/**
-	 * Set the text of the component
-	 * 
-	 * @param text
-	 *            The text to start with
-	 */
-	public void setText(String text) {
-		this.label.setText(text);
-		this.textField.setText(text);
-	}
-
-	/**
 	 * Get the text from the label
 	 * 
 	 * @return The text from the label
 	 */
-	public String getText() {
+	public String getValue() {
 		return this.label.getText();
 	}
 
-	/**
-	 * Get the text field
-	 * 
-	 * @return the text field component
-	 */
-	public JTextField getTextField() {
-		return textField;
+	public void setValue(int index) {
+		this.combo.setSelectedIndex(index);
+		this.label.setText((String) this.combo.getItemAt(index));
 	}
 
 	/**
@@ -125,27 +119,26 @@ public class EditableJLabel extends JPanel {
 	/**
 	 * Add a value changed listener to this EditableJLabel
 	 * 
-	 * @param l
+	 * @param valueListener
 	 */
-	public void addValueChangedListener(ValueChangedListener l) {
-		this.listeners.add(l);
+	public void addValueChangedListener(ValueChangedListener valueListener) {
+		this.listeners.add(valueListener);
 	}
 
 	/**
 	 * Listen for nearly everything happening
 	 */
-	public class EditableListener implements MouseListener, KeyListener, FocusListener {
+	public class EditableListener implements ActionListener, MouseListener, KeyListener, FocusListener {
 
 		boolean locked = false;
-		String oldValue;
+		int oldValue;
 
 		/**
 		 * Lock to the text field while we have focus
 		 */
 		@Override
 		public void focusGained(FocusEvent arg0) {
-			locked = true;
-			oldValue = textField.getText();
+			oldValue = combo.getSelectedIndex();
 		}
 
 		/**
@@ -169,7 +162,7 @@ public class EditableJLabel extends JPanel {
 		 */
 		@Override
 		public void mouseExited(MouseEvent e) {
-			if (!locked)
+			if (!locked && !combo.contains(e.getPoint()))
 				setHoverState(false);
 		}
 
@@ -178,15 +171,9 @@ public class EditableJLabel extends JPanel {
 		 */
 		@Override
 		public void focusLost(FocusEvent e) {
-			if (!oldValue.equals(textField.getText())) {
-				setText(textField.getText());
-				
-				for (ValueChangedListener v : listeners) {
-					v.valueChanged(textField.getText(), EditableJLabel.this);
-				}
-			}
+			setValue(combo.getSelectedIndex());
 			release();
-			mouseExited(null);
+			setHoverState(false);
 		}
 
 		/**
@@ -196,24 +183,21 @@ public class EditableJLabel extends JPanel {
 		@Override
 		public void keyTyped(KeyEvent e) {
 			if (e.getKeyChar() == KeyEvent.VK_ENTER) {
-				if (!oldValue.equals(textField.getText())) {
-					setText(textField.getText());
+				if (oldValue != combo.getSelectedIndex()) {
+					setValue(combo.getSelectedIndex());
 					for (ValueChangedListener v : listeners) {
-						v.valueChanged(textField.getText(), EditableJLabel.this);
+						v.valueChanged((String) combo.getSelectedItem(), ListJLabel.this);
 					}
 				}
 				release();
-				mouseExited(null);
+				setHoverState(false);
 			} else if (e.getKeyChar() == KeyEvent.VK_ESCAPE) {
 				release();
-				mouseExited(null);
-				setText(oldValue);
+				setHoverState(false);
+				setValue(oldValue);
 			}
 		}
 
-		/*
-		 * We don't need anything below this point in the Listener Class
-		 */
 		@Override
 		public void mousePressed(MouseEvent e) {
 		}
@@ -232,6 +216,22 @@ public class EditableJLabel extends JPanel {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
+			if (!locked)
+				locked = true;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(e.getActionCommand().equalsIgnoreCase("comboBoxChanged")) {
+				if (oldValue != combo.getSelectedIndex()) {
+					setValue(combo.getSelectedIndex());
+					for (ValueChangedListener v : listeners) {
+						v.valueChanged((String) combo.getSelectedItem(), ListJLabel.this);
+					}
+				}
+				release();
+				setHoverState(false);
+			}
 		}
 
 	}
