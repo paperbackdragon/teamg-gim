@@ -13,6 +13,7 @@ public class SelectContactsPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	ArrayList<JCheckBox> boxes;
+	
 	String[] roomparticipants;
 
 	public SelectContactsPanel(Collection<User> friendlist, String[] participants) {

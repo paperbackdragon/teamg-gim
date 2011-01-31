@@ -235,6 +235,9 @@ public class GroupChatPanel extends ChatPanel {
 
 			for (int i = 0; i < blah.size(); i++) {
 				if (blah.get(i).isSelected() == true) {
+					
+					// NOTE (gordon): at the moment, this will be wrong (it will invite by their nickname.
+					// need to work out a way to preserve the e-mail address...
 					model.invite(id, blah.get(i).getText());
 				}
 			}
