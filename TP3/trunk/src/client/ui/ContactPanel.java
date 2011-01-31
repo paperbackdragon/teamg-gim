@@ -151,7 +151,7 @@ public class ContactPanel extends JPanel {
 
 		public ContactList() {
 			this.setLayout(new BorderLayout());
-			this.setBackground(UIManager.getColor("List.background"));
+			this.setBackground(UIManager.getColor("EditorPane.background"));
 
 			// Create a Panel for the header and the online list
 			JPanel online = new JPanel(new BorderLayout());

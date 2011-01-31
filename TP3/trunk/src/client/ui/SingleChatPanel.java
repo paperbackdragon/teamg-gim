@@ -90,14 +90,13 @@ public class SingleChatPanel extends ChatPanel {
 			ImageIcon displayPictureIcon = user.getDisplayPic(48, 48);
 			final JLabel displayPicture = new JLabel(displayPictureIcon);
 			displayPicture.setPreferredSize(new Dimension(48, 48));
-			displayPicture.setBorder(BorderFactory.createLineBorder(UIManager.getColor("controlShadow")));
+			displayPicture.setBorder(BorderFactory.createLineBorder(UIManager
+					.getColor("controlShadow")));
 			displayPicture.setIconTextGap(0);
 
-			ImageIcon statusIcon;
-			if (user.getStatus().equalsIgnoreCase("offline"))
-				statusIcon = new ImageIcon(model.getPath() + "offline.png", "Icon");
-			else
-				statusIcon = new ImageIcon(model.getPath() + "online.png", "Icon");
+			final ImageIcon statusIcon = new ImageIcon(model.getPath()
+					+ "status/" + user.getStatus().toString().toLowerCase()
+					+ ".png", "Icon");
 
 			JLabel statusIconLabel = new JLabel(statusIcon);
 			statusIconLabel.setPreferredSize(new Dimension(16, 16));
@@ -105,8 +104,10 @@ public class SingleChatPanel extends ChatPanel {
 			JPanel userInfo = new JPanel(new GridLayout(2, 1));
 			userInfo.setOpaque(false);
 
-			final JLabel username = new JLabel("<html>" + Html.escape(user.getNickname()) + "</html>");
-			final JLabel personalMessage = new JLabel("<html>" + Html.escape(user.getPersonalMessage()) + "</html>");
+			final JLabel username = new JLabel("<html>"
+					+ Html.escape(user.getNickname()) + "</html>");
+			final JLabel personalMessage = new JLabel("<html>"
+					+ Html.escape(user.getPersonalMessage()) + "</html>");
 
 			userInfo.add(username);
 			userInfo.add(personalMessage);
@@ -114,32 +115,39 @@ public class SingleChatPanel extends ChatPanel {
 			add(displayPicture, BorderLayout.WEST);
 			add(userInfo, BorderLayout.CENTER);
 			add(statusIconLabel, BorderLayout.EAST);
-			
+
 			user.addUserChangedListener(new UserChangedListener() {
 				@Override
 				public void statusChanged() {
+					statusIcon.setImage(new ImageIcon(model.getPath()
+							+ "status/"
+							+ user.getStatus().toString().toLowerCase()
+							+ ".png", "Icon").getImage());
 				}
-				
+
 				@Override
 				public void personalMessageChanged() {
-					personalMessage.setText("<html>" + Html.escape(user.getPersonalMessage()) + "</html>");
+					personalMessage.setText("<html>"
+							+ Html.escape(user.getPersonalMessage())
+							+ "</html>");
 				}
-				
+
 				@Override
 				public void nicknameChanged() {
-					username.setText("<html>" + Html.escape(user.getNickname()) + "</html>");
+					username.setText("<html>" + Html.escape(user.getNickname())
+							+ "</html>");
 				}
-				
+
 				@Override
 				public void displayPicChanged() {
 					displayPicture.setIcon(user.getDisplayPic(48, 48));
 				}
-				
+
 				@Override
 				public void changed() {
 				}
 			});
-			
+
 		}
 
 	}
