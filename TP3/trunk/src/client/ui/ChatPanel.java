@@ -189,7 +189,7 @@ public class ChatPanel extends JPanel {
 	 */
 	private void sendMessage() {
 		if (chatBox.getText().length() > 0) {
-			receiveMessage(model.getSelf().getEmail(), chatBox.getText());
+			receiveMessage(model.getSelf(), chatBox.getText());
 
 			if (getInProgress()) {
 				model.message(id, chatBox.getText());
@@ -209,12 +209,12 @@ public class ChatPanel extends JPanel {
 	 * @param message
 	 *            The message itself
 	 */
-	public void receiveMessage(final String sender, final String message) {
+	public void receiveMessage(final User sender, final String message) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
 
 				String msg = message;
-				String from = model.getUser(sender).getNickname();
+				String from = sender.getNickname();
 				Style nameStyle = ownMessages;
 
 				// Assign correct styles
@@ -260,7 +260,7 @@ public class ChatPanel extends JPanel {
 					// Insert any remaining text into the chat
 					doc.insertString(doc.getLength(), msg + "\n", regular);
 
-					if (isFocused == false) {
+					if (isFocused == false && GimClient.getTrayIcon() != null) {
 						GimClient.getTrayIcon().displayMessage(from + " says: ", message, TrayIcon.MessageType.INFO);
 					}
 

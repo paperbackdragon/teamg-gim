@@ -1,28 +1,18 @@
 package client;
 
 import java.awt.AWTException;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
-import java.awt.Rectangle;
-import java.awt.Shape;
+
 import java.awt.SystemTray;
-import java.awt.Toolkit;
+
 import java.awt.TrayIcon;
-import java.awt.TrayIcon.MessageType;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
-import java.text.AttributedCharacterIterator;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
@@ -57,12 +47,13 @@ public class GimClient {
 
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				
+
 				try {
-					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+					UIManager.setLookAndFeel(UIManager
+							.getSystemLookAndFeelClassName());
 				} catch (Exception e) {
 				}
-				
+
 				LoginPanel lp = new LoginPanel();
 				mainWindow = new MainWindow("GIM", lp);
 				lp.setParent(mainWindow);
@@ -113,7 +104,7 @@ public class GimClient {
 		return -1;
 	}
 
-	public static void routeMessage(String roomid, String sender, String message) {
+	public static void routeMessage(String roomid, User sender, String message) {
 		System.out.println("routing message");
 		for (int i = 0; i < windows.size(); i++) {
 			System.out.println("found the room");
@@ -218,7 +209,8 @@ public class GimClient {
 		if (SystemTray.isSupported()) {
 
 			tray = SystemTray.getSystemTray();
-			Image image = new ImageIcon(model.getPath() + "status/offline.png").getImage();
+			Image image = new ImageIcon(model.getPath() + "status/offline.png")
+					.getImage();
 
 			MouseListener mouseListener = new MouseListener() {
 
@@ -256,8 +248,10 @@ public class GimClient {
 			MenuItem defaultItem = new MenuItem("Exit");
 			defaultItem.addActionListener(exitListener);
 			popup.add(defaultItem);
-			
-			image = image.getScaledInstance((int) tray.getTrayIconSize().getWidth(), (int) tray.getTrayIconSize().getHeight(), Image.SCALE_SMOOTH);
+
+			image = image.getScaledInstance((int) tray.getTrayIconSize()
+					.getWidth(), (int) tray.getTrayIconSize().getHeight(),
+					Image.SCALE_SMOOTH);
 			trayIcon = new TrayIcon(image, "GIM", popup);
 
 			ActionListener actionListener = new ActionListener() {
@@ -273,8 +267,11 @@ public class GimClient {
 						// THIS
 
 						if (Model.getInstance().getLatestPerson() != null) {
-							GimClient.getWindowIdentifierFromId(Model.getInstance().getLatestPerson()).getWindow()
-									.setVisible(true);
+							GimClient
+									.getWindowIdentifierFromId(
+											Model.getInstance()
+													.getLatestPerson())
+									.getWindow().setVisible(true);
 						}
 					}
 

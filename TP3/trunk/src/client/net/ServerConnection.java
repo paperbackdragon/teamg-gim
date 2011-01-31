@@ -219,7 +219,7 @@ public class ServerConnection {
 		});
 	}
 
-	public void message(String roomid, String sender, String message) {
+	public void message(String roomid, User sender, String message) {
 		GimClient.routeMessage(roomid, sender, message);
 	}
 
@@ -473,7 +473,7 @@ public class ServerConnection {
 						l.getChatPanel().setInProgress(true);
 					} else { // group chat
 						model.users(roomid);
-						l.getChatPanel().receiveMessage("", user + " has joined the chat\n");
+						l.getChatPanel().receiveMessage(null, user + " has joined the chat\n");
 
 					}
 
@@ -506,7 +506,7 @@ public class ServerConnection {
 				model.leave(roomid);
 			} else if (l.getChatPanel() instanceof GroupChatPanel) {
 				// do this later...
-				GimClient.getWindowIdentifierFromId(roomid).getChatPanel().receiveMessage("", user + " has left the chat\n");
+				GimClient.getWindowIdentifierFromId(roomid).getChatPanel().receiveMessage(null, user + " has left the chat\n");
 				model.users(roomid);
 			}
 

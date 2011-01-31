@@ -31,7 +31,7 @@ public class Worker implements Runnable {
 
 	// We use it a lot. Save some time and memory.
 	private Command okay = new Command("OKAY");
-	
+
 	private long[] commandTimes = new long[100];
 	private int commandLimit = 0;
 
@@ -67,7 +67,7 @@ public class Worker implements Runnable {
 	 * <p>
 	 * <b>LOGIN</b><br>
 	 * If the details are valid then the server should respond with an :AUTH
-	 * LOGGEDIN: command. It should set the user’s state (but not status) to
+	 * LOGGEDIN: command. It should set the users state (but not status) to
 	 * ONLINE. In the event that an error occurs the server should generate one
 	 * of the following ERROR statuses:
 	 * <ul>
@@ -109,7 +109,8 @@ public class Worker implements Runnable {
 			if (this.loggedInUser == null)
 				return new Command("AUTH", "UNAUTHORIZED");
 			else
-				return new Command("AUTH", "LOGGEDIN", Command.encode(this.loggedInUser.getNickname()));
+				return new Command("AUTH", "LOGGEDIN",
+						Command.encode(this.loggedInUser.getNickname()));
 
 			// Attempt to log the user in
 		} else if (cmd.getArguments()[0].equalsIgnoreCase("LOGIN")) {
@@ -125,11 +126,14 @@ public class Worker implements Runnable {
 			// Check the user details
 			User user = data.getUser(dataParts[0]);
 
-			if (user != null && user.getPasswordHash().equalsIgnoreCase(dataParts[1])) {
+			if (user != null
+					&& user.getPasswordHash().equalsIgnoreCase(dataParts[1])) {
 
 				// Make sure the user ins't already logged in
 				if (user.getWorker() != null) {
-					user.getWorker().putResponse(new Command("ERROR", "LOGGED_IN_FROM_OTHER_LOCATION"));
+					user.getWorker().putResponse(
+							new Command("ERROR",
+									"LOGGED_IN_FROM_OTHER_LOCATION"));
 					user.getWorker().putCommand(new Command("QUIT"));
 					user.getWorker().waitToDie();
 				}
@@ -139,18 +143,20 @@ public class Worker implements Runnable {
 				this.loggedInUser.login(this);
 
 				// Tell them that they're logged in
-				responseBuffer.putCommand(new Command("AUTH", "LOGGEDIN", Command.encode(this.loggedInUser
-						.getNickname())));
+				responseBuffer.putCommand(new Command("AUTH", "LOGGEDIN",
+						Command.encode(this.loggedInUser.getNickname())));
 
 				// Add any commands they received while offline
 				synchronized (this.loggedInUser.getQueue()) {
 					while (!loggedInUser.getQueue().isEmpty())
-						responseBuffer.putCommand(loggedInUser.getQueue().remove());
+						responseBuffer.putCommand(loggedInUser.getQueue()
+								.remove());
 				}
 
 				// TODO: Remove after testing
 				// Add the user to the global room
-				this.data.getRoom(0).invite(this.loggedInUser, this.loggedInUser);
+				this.data.getRoom(0).invite(this.loggedInUser,
+						this.loggedInUser);
 
 				// We did everything already D:
 				return null;
@@ -173,7 +179,8 @@ public class Worker implements Runnable {
 
 			// Not enough data to continue
 			if (dataParts.length < 2)
-				return new Command("ERROR", "MISSING_DATA", "Not enough data to complete the request");
+				return new Command("ERROR", "MISSING_DATA",
+						"Not enough data to complete the request");
 
 			// Make sure that they're not already logged in
 			if (this.loggedInUser != null)
@@ -182,7 +189,8 @@ public class Worker implements Runnable {
 
 			// The email address isn't valid
 			if (!User.validID(dataParts[0]))
-				return new Command("ERROR", "INVALID_EMAIL", "Invalid email address.");
+				return new Command("ERROR", "INVALID_EMAIL",
+						"Invalid email address.");
 
 			// The email address is already registered
 			if (data.getUser(dataParts[0]) != null)
@@ -191,7 +199,8 @@ public class Worker implements Runnable {
 
 			// Password too short
 			if (dataParts[1].length() < 6)
-				return new Command("ERROR", "PASSWORD_TOO_SHORT", "Your password must be at least 6 chracters long.");
+				return new Command("ERROR", "PASSWORD_TOO_SHORT",
+						"Your password must be at least 6 chracters long.");
 
 			// If we made it this far everything should be okay! :D
 			data.addUser(new User(dataParts[0], dataParts[1]));
@@ -278,7 +287,8 @@ public class Worker implements Runnable {
 
 			// Make sure they're not alread a friend
 			if (this.loggedInUser.isFriendsWith(user))
-				return new Command("ERROR", "ALREADY_IN_FRIENDLIST", Command.encode(user.getId()));
+				return new Command("ERROR", "ALREADY_IN_FRIENDLIST",
+						Command.encode(user.getId()));
 
 			user.sendFriendRequest(this.loggedInUser);
 
@@ -312,7 +322,8 @@ public class Worker implements Runnable {
 			 */
 
 			if (!user.sentFriendRequestTo(this.loggedInUser))
-				return new Command("ERROR", "CANNOT_ACCEPT_REQUEST", "This user did not send you a friend request.");
+				return new Command("ERROR", "CANNOT_ACCEPT_REQUEST",
+						"This user did not send you a friend request.");
 
 			this.loggedInUser.addFriend(user);
 			user.addFriend(this.loggedInUser);
@@ -419,11 +430,13 @@ public class Worker implements Runnable {
 			// Make sure that the user exists
 			User user = data.getUser(id);
 			if (user == null)
-				return new Command("ERROR", "USER_NOT_FOUND", Command.encode(id));
+				return new Command("ERROR", "USER_NOT_FOUND",
+						Command.encode(id));
 
 			// Stop them from getting access about people who aren't in their
 			// freindlist
-			if (!this.loggedInUser.isFriendsWith(user) && !this.loggedInUser.inRoomWith(user)
+			if (!this.loggedInUser.isFriendsWith(user)
+					&& !this.loggedInUser.inRoomWith(user)
 					&& this.loggedInUser != user)
 				return new Command("ERROR", "NOT_AUTHORIZED");
 
@@ -545,7 +558,8 @@ public class Worker implements Runnable {
 
 		// Make sure all the data we need is there
 		if (data.length < 2)
-			return new Command("ERROR", "MISSING_DATA", "The MESSAGE commange requires a room id and message.");
+			return new Command("ERROR", "MISSING_DATA",
+					"The MESSAGE commange requires a room id and message.");
 
 		// Turn the data into a usable format
 		int roomId = Integer.valueOf(data[0]);
@@ -636,12 +650,15 @@ public class Worker implements Runnable {
 		case UPDATE:
 		case INFO:
 		case ERROR:
-			response = new Command("ERROR", "COMMAND_RECOGNISED_BUT_NOT_VALID",
+			response = new Command(
+					"ERROR",
+					"COMMAND_RECOGNISED_BUT_NOT_VALID",
 					"The command was recognised by the server however the server should not recieve this command.");
 			break;
 
 		default:
-			response = new Command("ERROR", "COMMAND_ERROR", Command.encode("The Command was not recognised."));
+			response = new Command("ERROR", "COMMAND_ERROR",
+					Command.encode("The Command was not recognised."));
 		}
 
 		return response;
@@ -676,7 +693,7 @@ public class Worker implements Runnable {
 	 * <p>
 	 * The QUIT command tells the server that the users wishes to log out (if
 	 * applicable) and disconnect from the server. Once the quit command has
-	 * been received the users’ state should be changed to OFFLINE and the the
+	 * been received the users state should be changed to OFFLINE and the the
 	 * connection broken.
 	 * </p>
 	 * 
@@ -744,7 +761,8 @@ public class Worker implements Runnable {
 
 			// Do they want a group chat
 			boolean group = false;
-			if (cmd.getArguments().length == 2 && cmd.getArguments()[1].equalsIgnoreCase("GROUP"))
+			if (cmd.getArguments().length == 2
+					&& cmd.getArguments()[1].equalsIgnoreCase("GROUP"))
 				group = true;
 
 			User invite = null;
@@ -752,10 +770,12 @@ public class Worker implements Runnable {
 				invite = data.getUser(cmd.getDecodedData());
 
 				if (invite == null)
-					return new Command("ERROR", "INVALID_USER_SUPPLIED", "The user does not exist.");
+					return new Command("ERROR", "INVALID_USER_SUPPLIED",
+							"The user does not exist.");
 
 				if (!invite.isOnline())
-					return new Command("ERROR", "USER_OFFLINE", "The user is currently offline.");
+					return new Command("ERROR", "USER_OFFLINE",
+							"The user is currently offline.");
 			}
 
 			// Create the new room
@@ -775,7 +795,8 @@ public class Worker implements Runnable {
 
 				// Make sure all the data we need is there
 				if (data.length < 2)
-					return new Command("ERROR", "MISSING_DATA", "The INVITE argument requires a room id and a user id");
+					return new Command("ERROR", "MISSING_DATA",
+							"The INVITE argument requires a room id and a user id");
 
 				// Turn the data into a usable format
 				int roomId = Integer.valueOf(data[0]);
@@ -785,29 +806,31 @@ public class Worker implements Runnable {
 				User user = this.data.getUser(userId);
 
 				if (room == null)
-					return new Command("ERROR", "INVALID_ROOM_ID", "The room does not exist.");
+					return new Command("ERROR", "INVALID_ROOM_ID",
+							"The room does not exist.");
 
+				// The user doesn't exist
 				if (user == null)
-					return new Command("ERROR", "INVALID_USER_SUPPLIED", "User " + userId + " does not exist.");
-
+					return new Command("ERROR", "USER_DOES_NOT_EXIST", userId);
+				
 				// Make sure we have permissions to invite people to the room
 				if (!this.loggedInUser.inRoom(roomId))
 					return new Command("ERROR", "NOT_IN_ROOM",
 							"You cannot invite someone into a room which you are no already in.");
 
 				if (!user.isFriendsWith(this.loggedInUser))
-					return new Command("ERROR", "NOT_IN_FRIEND_LIST", user.getId() + " is not is your friend list");
-
-				// The user doesn't exist
-				if (user == null)
-					return new Command("ERROR", "USER_DOES_NOT_EXIST", userId);
+					return new Command("ERROR", "NOT_IN_FRIEND_LIST",
+							user.getId() + " is not is your friend list");
 
 				// The user they're trying to invite is offline
 				if (!user.isOnline())
-					return new Command("ERROR", "USER_IS_OFFLINE", Command.encode(user.getId()));
+					return new Command("ERROR", "USER_IS_OFFLINE",
+							Command.encode(user.getId()));
 
 				// Make sure the room isn't full.
-				if (!room.isGroup() && (room.getUsers().size() > 1 || room.getInvitiedUsers().size() > 1))
+				if (!room.isGroup()
+						&& (room.getUsers().size() > 1 || room
+								.getInvitiedUsers().size() > 1))
 					return new Command("ERROR", "ROOM_FULL", room.getId() + "");
 
 				room.invite(user, this.loggedInUser);
@@ -818,7 +841,8 @@ public class Worker implements Runnable {
 
 				// Make sure all the data we need is there
 				if (data.length < 1)
-					return new Command("ERROR", "MISSING_DATA", "The JOIN argument requires a room id.");
+					return new Command("ERROR", "MISSING_DATA",
+							"The JOIN argument requires a room id.");
 
 				// Turn the data into a usable format
 				int roomId = Integer.valueOf(data[0]);
@@ -836,7 +860,8 @@ public class Worker implements Runnable {
 
 				// Make sure all the data we need is there
 				if (data.length < 1)
-					return new Command("ERROR", "MISSING_DATA", "The LEAVE argument requires a room id.");
+					return new Command("ERROR", "MISSING_DATA",
+							"The LEAVE argument requires a room id.");
 
 				// Turn the data into a usable format
 				int roomId = Integer.valueOf(data[0]);
@@ -856,7 +881,8 @@ public class Worker implements Runnable {
 
 				// Make sure all the data we need is there
 				if (data.length < 1)
-					return new Command("ERROR", "MISSING_DATA", "The USERS argument requires a room id.");
+					return new Command("ERROR", "MISSING_DATA",
+							"The USERS argument requires a room id.");
 
 				// Turn the data into a usable format
 				int roomId = Integer.valueOf(data[0]);
@@ -875,14 +901,16 @@ public class Worker implements Runnable {
 
 				// Make sure all the data we need is there
 				if (data.length < 1)
-					return new Command("ERROR", "MISSING_DATA", "The TYPE argument requires a room id.");
+					return new Command("ERROR", "MISSING_DATA",
+							"The TYPE argument requires a room id.");
 
 				// Turn the data into a usable format
 				int roomId = Integer.valueOf(data[0]);
 				Room room = this.data.getRoom(roomId);
 
 				if (room == null)
-					return new Command("ERROR", "ROOM_DOES_NOT_EXIST", "Room " + roomId + "does not exist.");
+					return new Command("ERROR", "ROOM_DOES_NOT_EXIST", "Room "
+							+ roomId + "does not exist.");
 
 				return new Command("ROOM", room.getType(), room.getId() + " ");
 
@@ -905,7 +933,8 @@ public class Worker implements Runnable {
 
 		// Get input and output buffers from the socket
 		try {
-			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			in = new BufferedReader(new InputStreamReader(
+					socket.getInputStream()));
 			out = new PrintWriter(socket.getOutputStream(), true);
 		} catch (IOException e) {
 			System.out.println("We're fscked.");
@@ -977,14 +1006,16 @@ public class Worker implements Runnable {
 	private Command serverstatus(Command cmd) {
 
 		String time = Command.encode(new Date().toString());
-		String users = Command.encode(data.online + " Online Users, " + data.getUsers().size() + " Total");
+		String users = Command.encode(data.online + " Online Users, "
+				+ data.getUsers().size() + " Total");
 		String uptime = Command.encode(data.uptime);
 
 		String data = "";
 		String[] args = cmd.getArguments();
 
 		if (cmd.getArguments().length == 0)
-			return new Command("SERVERSTATUS", null, time + "\n" + users + "\n" + uptime);
+			return new Command("SERVERSTATUS", null, time + "\n" + users + "\n"
+					+ uptime);
 
 		for (int i = 0; i < args.length; i++) {
 			if (args[i].equalsIgnoreCase("TIME"))
@@ -1029,7 +1060,8 @@ public class Worker implements Runnable {
 			return new Command("ERROR", "UNAUTHORIZED");
 
 		if (cmd.getArguments().length != 1)
-			return new Command("ERROR", "INVALID_NUMBER_OF_ARGUMENTS", "The SET command only accept 1 argument.");
+			return new Command("ERROR", "INVALID_NUMBER_OF_ARGUMENTS",
+					"The SET command only accept 1 argument.");
 
 		String arg = cmd.getArguments()[0];
 		if (arg.equalsIgnoreCase("NICKNAME")) {
@@ -1038,7 +1070,8 @@ public class Worker implements Runnable {
 		} else if (arg.equalsIgnoreCase("STATUS")) {
 			String status = cmd.getDecodedData();
 			if (!this.loggedInUser.setStatus(status))
-				return new Command("ERROR", "INVALID_STATUS", cmd.getDecodedData());
+				return new Command("ERROR", "INVALID_STATUS",
+						cmd.getDecodedData());
 
 		} else if (arg.equalsIgnoreCase("PERSONAL_MESSAGE")) {
 			this.loggedInUser.setPersonalMessage(cmd.getDecodedData());
@@ -1059,15 +1092,16 @@ public class Worker implements Runnable {
 	 */
 	private void updateLastCommunication() {
 		this.lastCommunication = System.currentTimeMillis();
-		
+
 		// Fill the time buffer and loop round where necessary
 		long oldest = this.commandTimes[this.commandLimit];
-		if(oldest != 0 && oldest > (this.lastCommunication - 5000))
+		if (oldest != 0 && oldest > (this.lastCommunication - 5000))
 			kill();
-		
+
 		this.commandTimes[this.commandLimit] = this.lastCommunication;
-		this.commandLimit = (this.commandLimit + 1) % (this.commandTimes.length - 1);
-		
+		this.commandLimit = (this.commandLimit + 1)
+				% (this.commandTimes.length - 1);
+
 	}
 
 	/**
