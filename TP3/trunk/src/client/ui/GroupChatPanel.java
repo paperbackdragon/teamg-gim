@@ -183,7 +183,7 @@ public class GroupChatPanel extends ChatPanel {
 		listModel.clear();
 
 		// Create and populate the list model.
-		for (User u : model.getFriendList().getOnlineUsers()) {
+		for (User u : participants) {
 			listModel.addElement(u);
 			u.addUserChangedListener(listener);
 		}
