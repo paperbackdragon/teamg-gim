@@ -217,7 +217,7 @@ public class GroupChatPanel extends ChatPanel {
 			String[] temp = new String[participants.length];
 			
 			if (participants == null) {
-				temp = new String[0];
+				temp = new String[1];
 				temp[0] = "{ }";
 			}
 			else {
