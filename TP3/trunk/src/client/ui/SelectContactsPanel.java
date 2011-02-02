@@ -22,7 +22,7 @@ public class SelectContactsPanel extends JPanel {
 		roomparticipants = participants;
 
 		for (User u : friendlist) {
-			JCheckBox checkbox = new JCheckBox(u.getNickname());
+			JCheckBox checkbox = new JCheckBox(u.getEmail());
 
 			if (inroomparticipants(u.getEmail()))
 				checkbox.setEnabled(false);
