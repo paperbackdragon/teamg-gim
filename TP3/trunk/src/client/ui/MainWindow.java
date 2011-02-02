@@ -162,6 +162,9 @@ public class MainWindow extends JFrame {
 				// remove from the window list
 				// GimUI toDispose = GimClient.getWindowRoom(roomid);
 				GimClient.removeRoom((ChatPanel) main);
+				
+				
+				//TODO: DISPOSE OF CHAT WINDOWS PROPERLY WHEN CLOSED (below line causes null pointer :\)
 				// toDispose.dispose();
 			}
 
