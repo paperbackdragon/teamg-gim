@@ -3,6 +3,7 @@ package client.ui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -256,14 +257,16 @@ public class ContactPanel extends JPanel {
 		public ButtonPanel() {
 			setLayout(new GridLayout(1, 4, 5, 5));
 			add = new JButton();
-			add.setIcon(new ImageIcon(model.getPath() + "/icons/add-32.png"));
+			add.setIcon(new ImageIcon(new ImageIcon(model.getPath() + "/icons/add.png").getImage().getScaledInstance(32, 20, Image.SCALE_SMOOTH)));
 			
-			del = new JButton("DEL");
+			del = new JButton();
+			del.setIcon(new ImageIcon(new ImageIcon(model.getPath() + "/icons/remove.png").getImage().getScaledInstance(32, 20, Image.SCALE_SMOOTH)));
 			
 			chat = new JButton();
-			chat.setIcon(new ImageIcon(model.getPath() + "/icons/chat-32.png"));
+			chat.setIcon(new ImageIcon(new ImageIcon(model.getPath() + "/icons/chat.png").getImage().getScaledInstance(32, 20, Image.SCALE_SMOOTH)));
 			
-			group = new JButton("GROUP");
+			group = new JButton();
+			group.setIcon(new ImageIcon(new ImageIcon(model.getPath() + "/icons/group.png").getImage().getScaledInstance(32, 20, Image.SCALE_SMOOTH)));
 
 			ButtonListener buttonListener = new ButtonListener();
 			add.addActionListener(buttonListener);

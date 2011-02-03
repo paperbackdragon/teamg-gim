@@ -105,6 +105,8 @@ public class LoginPanel extends JPanel {
 		frame.add(loginFrame, BorderLayout.NORTH);
 		frame.add(registerPanel, BorderLayout.SOUTH);
 
+		ImageIcon logo = new ImageIcon(model.getPath() + "/icons/logo.png");
+		add(new JLabel(logo), BorderLayout.NORTH);
 		add(Box.createHorizontalStrut(5), BorderLayout.EAST);
 		add(frame, BorderLayout.CENTER);
 		add(Box.createHorizontalStrut(5), BorderLayout.WEST);
