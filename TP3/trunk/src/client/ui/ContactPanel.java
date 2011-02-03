@@ -24,6 +24,8 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import util.Html;
+
 import client.FriendListChangedListener;
 import client.Model;
 import client.GimClient;
@@ -77,8 +79,8 @@ public class ContactPanel extends JPanel {
 
 				setLayout(new GridLayout(3, 1, 0, 0));
 
-				name = new EditableJLabel(self.getNickname());
-				message = new EditableJLabel(self.getPersonalMessage());
+				name = new EditableJLabel(Html.escape(self.getNickname()));
+				message = new EditableJLabel(Html.escape(self.getPersonalMessage()));
 				status = new ListJLabel(new String[] {"Online", "Away", "Busy"}, 0);
 
 				// Create a listener for the editableJLabels
@@ -104,12 +106,12 @@ public class ContactPanel extends JPanel {
 
 					@Override
 					public void nicknameChanged() {
-						name.setText(self.getNickname());
+						name.setText(Html.escape(self.getNickname()));
 					}
 
 					@Override
 					public void personalMessageChanged() {
-						message.setText(self.getPersonalMessage());
+						message.setText(Html.escape(self.getPersonalMessage()));
 					}
 
 					@Override
@@ -253,9 +255,14 @@ public class ContactPanel extends JPanel {
 
 		public ButtonPanel() {
 			setLayout(new GridLayout(1, 4, 5, 5));
-			add = new JButton("ADD");
+			add = new JButton();
+			add.setIcon(new ImageIcon(model.getPath() + "/icons/add-32.png"));
+			
 			del = new JButton("DEL");
-			chat = new JButton("CHAT");
+			
+			chat = new JButton();
+			chat.setIcon(new ImageIcon(model.getPath() + "/icons/chat-32.png"));
+			
 			group = new JButton("GROUP");
 
 			ButtonListener buttonListener = new ButtonListener();
@@ -330,7 +337,7 @@ public class ContactPanel extends JPanel {
 					}
 				});
 
-			} else if (e.getSource().equals(chat)) {
+			} else if (e.getSource().equals(chat) && getSelectedContacts().size() > 0) {
 				
 				LinkedList<User> selectedUsers = getSelectedContacts();
 				
@@ -342,7 +349,7 @@ public class ContactPanel extends JPanel {
 				else
 					GimClient.getWindow(selectedUsers.getFirst()).setVisible(true);
 				
-			} else if (e.getSource().equals(group)) {
+			} else if (e.getSource().equals(group)  && getSelectedContacts().size() > 0 ) {
 				model.createRoom(getSelectedContacts());
 			}
 		}
