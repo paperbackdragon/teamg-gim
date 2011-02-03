@@ -225,8 +225,6 @@ public class Model {
 
 	public void quit() {
 		logout();
-
-		// TODO (heather): clean up instead of this:
 		System.exit(0);
 	}
 

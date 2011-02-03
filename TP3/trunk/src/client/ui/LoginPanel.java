@@ -117,8 +117,6 @@ public class LoginPanel extends JPanel {
 
 	private void login() {
 		model.authenticate(email.getText(), pwd.getPassword());
-		//TODO: Update this
-		// model.setOwnUserName(email.getText());
 	}
 
 	// ACTION LISTENERS

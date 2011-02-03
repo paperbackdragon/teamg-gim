@@ -259,6 +259,7 @@ public class ChatPanel extends JPanel {
 							// itself to the chat
 							doc.insertString(doc.getLength(),
 									msg.substring(0, position), regular);
+							
 							doc.insertString(
 									doc.getLength(),
 									msg.substring(position, position
