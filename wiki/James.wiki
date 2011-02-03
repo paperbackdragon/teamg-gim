@@ -1,0 +1,36 @@
+#summary James, innit
+{{{
+package people;
+import jamesx.body.*;
+import jamesx.mind.*;
+
+private class James implements human {
+
+    /**
+     * Note: private in this case is not a military rank
+     **/
+   private James() {
+      int age = 20;
+      String Othername = "Andrew";
+      Boolean coffee?;
+   }
+
+   private String doDocumentation(Subject s){
+      if (!s.documentsDone) {
+         System.out.println("Ah fuck it");
+      } 
+      else {
+          break;
+      }
+   }
+
+   private void Sleep?(time t) {
+      if (t.getTime() != "06.00"){
+          coffee? = True;
+          }
+      else {
+          System.exit(0);
+      }
+   }
+}
+}}}
