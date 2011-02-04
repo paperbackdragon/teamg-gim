@@ -303,7 +303,7 @@ public class ContactPanel extends JPanel {
 
 						String s = (String) JOptionPane.showInputDialog(null,
 								"Input the user name of the person you wish to add to your contacts", "Add friend",
-								JOptionPane.PLAIN_MESSAGE, null, null, "ham");
+								JOptionPane.PLAIN_MESSAGE, null, null, "");
 
 						if (s != null) {
 							model.addfriend(s);
@@ -317,26 +317,29 @@ public class ContactPanel extends JPanel {
 						
 						LinkedList<User> selectedUsers = getSelectedContacts();
 						
-						String theString = "";
+						String users = "";
 						for (User u : selectedUsers) {
-							theString +=  u.getEmail() + ", ";
+							users += u.getEmail() + " ";
 						}
+
 
 						Object[] options = { "Yes", "No", };
 						int n = JOptionPane
 								.showOptionDialog(
 										null,
 										"Are you sure you want to remove: "
-												+ theString
-												+ " from your contacts? (note, for current testing purposes this function is disallowed and will not work for now)",
+												+ users
+												+ " from your contacts?",
 										"remove friends", JOptionPane.YES_NO_CANCEL_OPTION,
 										JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
-
-						if (n == 0) {
-
-							// Todo: Remove users from friendlist
-
+						
+						if(n == 0) {
+							for (User u : selectedUsers) {
+								model.getServer().delete(u.getEmail());
+								model.getFriendList().removeUser(u);
+							}
 						}
+						
 					}
 				});
 
