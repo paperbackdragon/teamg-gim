@@ -11,7 +11,6 @@ import java.util.LinkedList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
@@ -127,8 +126,7 @@ public class ChatPanel extends JPanel {
 
 		for (Smiley s : smilies) {
 			Style style = doc.addStyle(s.getText(), null);
-			//StyleConstants.setIcon(style, new ImageIcon(smileyPath + s.getIcon()));
-			StyleConstants.setComponent(style, new JLabel("<html><a href='http://google.com'>Hello there</a><html>"));
+			StyleConstants.setIcon(style, new ImageIcon(smileyPath + s.getIcon()));
 			s.setStyle(style);
 		}
 
