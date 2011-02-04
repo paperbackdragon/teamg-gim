@@ -16,6 +16,7 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
@@ -117,11 +118,11 @@ public class GimClient {
 
 	}
 
-	public static void addWindow(User user, MainWindow ui, ChatPanel cp) {
+	public static void addWindow(User user, JFrame ui, ChatPanel cp) {
 		windows.add(new ChatWindowIdentifier(user, ui, cp));
 	}
 
-	public static MainWindow getWindow(User user) {
+	public static JFrame getWindow(User user) {
 		for (int i = 0; i < windows.size(); i++) {
 			if (windows.get(i).getUser() == user) {
 				return windows.get(i).getWindow();
@@ -131,7 +132,7 @@ public class GimClient {
 	}
 
 	/* Used for group chat, where "user" is not applicable */
-	public static MainWindow getWindowRoom(String id) {
+	public static JFrame getWindowRoom(String id) {
 		for (int i = 0; i < windows.size(); i++) {
 			if (windows.get(i).getChatPanel().getID().equals(id)) {
 				return windows.get(i).getWindow();

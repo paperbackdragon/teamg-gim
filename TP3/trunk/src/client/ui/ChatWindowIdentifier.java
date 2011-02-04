@@ -1,16 +1,18 @@
 package client.ui;
 
+import javax.swing.JFrame;
+
 import client.User;
 
 public class ChatWindowIdentifier {
 	
 	User user;
-	MainWindow window;
+	JFrame window;
 	ChatPanel cp;
 	
-	public ChatWindowIdentifier(User user, MainWindow window, ChatPanel cp) {
+	public ChatWindowIdentifier(User user, JFrame ui, ChatPanel cp) {
 		this.user = user;
-		this.window = window;
+		this.window = ui;
 		this.cp = cp;
 	}
 
@@ -30,7 +32,7 @@ public class ChatWindowIdentifier {
 		this.cp = cp;
 	}
 
-	public MainWindow getWindow() {
+	public JFrame getWindow() {
 		return window;
 	}
 
