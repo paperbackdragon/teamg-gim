@@ -163,7 +163,14 @@ public class GimClient {
 		return null;
 	}
 
+	// Gordon: what the hell is this?!
+	// ... what was i thinking?!
+	// is this even used?!?!?!?
+	// TODO: Ask James
+	// rofl... [ASK JAMES HOW TO SEARCH CODE TO SEE IF THIS METHOD IS EVER CALLED]
 	public static void updateGroupChatLists() {
+		// TL;DR: ignore this :S
+		
 		// this is a very lazy way for the moment. When someone changes their
 		// nickname (etc) who is in a group chat
 		// the client asks the server for the group chat user list
