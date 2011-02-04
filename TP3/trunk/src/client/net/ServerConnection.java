@@ -9,6 +9,7 @@ import client.FriendList;
 import client.Model;
 import client.GimClient;
 import client.User;
+import client.ui.ChatWindow;
 import client.ui.ChatWindowIdentifier;
 import client.ui.ContactPanel;
 import client.ui.GroupChatPanel;
@@ -59,7 +60,7 @@ public class ServerConnection {
 			ContactPanel panel = GimClient.getContactPanel();
 			GimClient.getMainWindow().setMainPanel(panel);
 			GimClient.getMainWindow().canLogout(true);
-
+			model.getSelf().setStatus("online");
 			server.setStatus("online");
 		}
 	}
@@ -554,7 +555,8 @@ public class ServerConnection {
 
 					GroupChatPanel gcp = new GroupChatPanel(roomid);
 
-					MainWindow ui = new MainWindow("GIM - Group Chat", gcp);
+					ChatWindow ui = new ChatWindow("GIM - Group Chat", gcp);
+					
 					GimClient.addWindow(null, ui, gcp);
 					ui.setVisible(true);
 					gcp.setInProgress(true);

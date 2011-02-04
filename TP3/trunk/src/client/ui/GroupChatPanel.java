@@ -42,17 +42,14 @@ public class GroupChatPanel extends ChatPanel {
 		super(roomID);
 
 		setLayout(new BorderLayout());
-
 		JScrollPane messagePane = new JScrollPane(messages);
 
-		// BEGIN MAKING GUESTS THINGY
-		
 		listModel = new DefaultListModel();
 		list = new JList(listModel);
 		guests = list;
-		
+
 		JScrollPane guestPane = new JScrollPane(guests);
-		
+
 		// The listener we'll be using to keep track of changes to people in
 		// the list
 		listener = new UserChangedListener() {
@@ -77,37 +74,22 @@ public class GroupChatPanel extends ChatPanel {
 				list.repaint();
 			}
 		};
-		
-		
-		
+
 		// Create and populate the list model.
 		participants = new User[1];
 		participants[0] = model.getSelf();
-		
+
 		for (User u : participants) {
 			listModel.addElement(u);
 			u.addUserChangedListener(listener);
 		}
-		
+
 		// Make sure the list is rendered correctly
 		list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		ContactListRenderer renderer = new ContactListRenderer();
 		list.setCellRenderer(renderer);
 		list.setSelectedIndex(0);
 		
-		
-		// ORIGINAL
-	/*	guests = new JTextArea(" ");
-		guests.setEditable(false);
-		guests.setLineWrap(true);
-		guests.setWrapStyleWord(true);
-		JScrollPane guestPane = new JScrollPane(guests);
-		guestPane.setPreferredSize(new Dimension(150, 100));*/
-		
-		
-		
-		// END MAKING GUESTS THINGY
-
 		// BOTTOM PANEL
 		JPanel chatPanel = new JPanel();
 		chatPanel.setLayout(new BorderLayout());
@@ -119,7 +101,7 @@ public class GroupChatPanel extends ChatPanel {
 		chatBox.addKeyListener(enterListener);
 		JScrollPane chatPane = new JScrollPane(chatBox);
 		chatPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		chatPane.setPreferredSize(new Dimension(235, 50));
+		chatPane.setPreferredSize(new Dimension(0, 50));
 
 		send = new JButton("Send");
 		invite = new JButton("Invite");
@@ -141,11 +123,16 @@ public class GroupChatPanel extends ChatPanel {
 		chatPanel.add(buttons, BorderLayout.EAST);
 		// END BOTTOM PANEL
 
-		add(guestPane, BorderLayout.EAST);
-		add(messagePane, BorderLayout.CENTER);
-		add(chatPanel, BorderLayout.SOUTH);
+		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, messagePane, guestPane);
+		splitPane.setOneTouchExpandable(true);
+		splitPane.setContinuousLayout(true);
 
-		// TODO (heather): DOESNT WORK: chatBox.requestFocusInWindow();
+		// Provide minimum sizes for the two components in the split pane
+		guestPane.setPreferredSize(new Dimension(150, 50));
+		messagePane.setMinimumSize(new Dimension(250, 50));
+
+		add(splitPane, BorderLayout.CENTER);
+		add(chatPanel, BorderLayout.SOUTH);
 	}
 
 	// PANELS
@@ -169,12 +156,9 @@ public class GroupChatPanel extends ChatPanel {
 		}
 	}
 
-	// update the user list... this method may change. may not use a text box to
-	// display users
-	// in future :P
 	public void updateUserList(User[] participants) {
 		this.participants = participants;
-		
+
 		for (Object o : listModel.toArray()) {
 			((User) o).removeUserChangedListener(listener);
 		}
@@ -187,27 +171,8 @@ public class GroupChatPanel extends ChatPanel {
 			listModel.addElement(u);
 			u.addUserChangedListener(listener);
 		}
-		
+
 		list.setSelectedIndices(indices);
-		
-		
-		// OLD WAY: just put them all in a text box
-		/*
-		String theString = "";
-		String current = "";
-		for (int i = 0; i < participants.length; i++) {
-			if (model.getUser(participants[i]) != null) {
-				current = model.getUser(participants[i]).getNickname() + " (" + participants[i] + ")";
-			} else {
-				current = participants[i];
-			}
-
-			theString += current + "\n";
-			System.out.println("adding " + participants[i] + " to guest list");
-		}
-		guests.setText(theString);
-		*/
-
 	}
 
 	public class InviteListener implements ActionListener {
@@ -215,18 +180,17 @@ public class GroupChatPanel extends ChatPanel {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			String[] temp = new String[participants.length];
-			
+
 			if (participants == null) {
 				temp = new String[1];
 				temp[0] = "{ }";
-			}
-			else {
-				
+			} else {
+
 				for (int i = 0; i < participants.length; i++) {
 					temp[i] = participants[i].toString();
 				}
 			}
-			
+
 			SelectContactsPanel inputs = new SelectContactsPanel(model.getFriendList().getOnlineUsers(), temp);
 
 			JOptionPane.showMessageDialog(null, inputs, "Select contacts to invite", JOptionPane.PLAIN_MESSAGE);
@@ -235,8 +199,9 @@ public class GroupChatPanel extends ChatPanel {
 
 			for (int i = 0; i < blah.size(); i++) {
 				if (blah.get(i).isSelected() == true) {
-					
-					// NOTE (gordon): at the moment, this will be wrong (it will invite by their nickname.
+
+					// NOTE (gordon): at the moment, this will be wrong (it will
+					// invite by their nickname.
 					// need to work out a way to preserve the e-mail address...
 					model.invite(id, blah.get(i).getText());
 				}

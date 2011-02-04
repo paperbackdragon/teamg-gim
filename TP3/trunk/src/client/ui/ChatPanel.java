@@ -1,10 +1,21 @@
 package client.ui;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.LinkedList;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextPane;
+import javax.swing.UIManager;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
@@ -36,27 +47,20 @@ public class ChatPanel extends JPanel {
 
 	private Smiley[] smilies = {
 
-	new Smiley(":)", "Happy_smiley.png"),
-			new Smiley(":-)", "Happy_smiley.png"),
+	new Smiley(":)", "Happy_smiley.png"), new Smiley(":-)", "Happy_smiley.png"),
 
-			new Smiley(":(", "Sad_smiley.png"),
-			new Smiley(":-(", "Sad_smiley.png"),
+	new Smiley(":(", "Sad_smiley.png"), new Smiley(":-(", "Sad_smiley.png"),
 
-			new Smiley(":P", "Tonque_out_smiley.png"),
-			new Smiley(":-P", "Tonque_out_smiley.png"),
+	new Smiley(":P", "Tonque_out_smiley.png"), new Smiley(":-P", "Tonque_out_smiley.png"),
 
-			new Smiley(";(", "Crying_smiley.png"),
-			new Smiley(";-(", "Crying_smiley.png"),
+	new Smiley(";(", "Crying_smiley.png"), new Smiley(";-(", "Crying_smiley.png"),
 			new Smiley(":'(", "Crying_smiley.png"),
 
-			new Smiley(";)", "Winking_smiley.png"),
-			new Smiley(";-)", "Winking_smiley.png"),
+			new Smiley(";)", "Winking_smiley.png"), new Smiley(";-)", "Winking_smiley.png"),
 
-			new Smiley(":D", "Very_happy_smiley.png"),
-			new Smiley(":-D", "Very_happy_smiley.png"),
+			new Smiley(":D", "Very_happy_smiley.png"), new Smiley(":-D", "Very_happy_smiley.png"),
 
-			new Smiley(":S", "Confused_smiley.png"),
-			new Smiley(":-S", "Confused_smiley.png"),
+			new Smiley(":S", "Confused_smiley.png"), new Smiley(":-S", "Confused_smiley.png"),
 
 			new Smiley("(X)", "Xbox.png"),
 
@@ -94,15 +98,12 @@ public class ChatPanel extends JPanel {
 		doc = messages.getStyledDocument();
 
 		// Load the default style and add it as the "regular" text
-		Style def = StyleContext.getDefaultStyleContext().getStyle(
-				StyleContext.DEFAULT_STYLE);
+		Style def = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
 		StyleConstants.setAlignment(def, StyleConstants.ALIGN_LEFT);
 
 		// This apparently sets the font to be the default system font. What the
 		// hell TabbedPane.font means I have no idea
-		StyleConstants.setFontFamily(def,
-				UIManager.getDefaults().getFont("TabbedPane.font")
-						.getFontName());
+		StyleConstants.setFontFamily(def, UIManager.getDefaults().getFont("TabbedPane.font").getFontName());
 		StyleConstants.setSpaceAbove(def, 4f);
 		regular = doc.addStyle("regular", def);
 
@@ -126,8 +127,8 @@ public class ChatPanel extends JPanel {
 
 		for (Smiley s : smilies) {
 			Style style = doc.addStyle(s.getText(), null);
-			StyleConstants.setIcon(style,
-					new ImageIcon(smileyPath + s.getIcon()));
+			//StyleConstants.setIcon(style, new ImageIcon(smileyPath + s.getIcon()));
+			StyleConstants.setComponent(style, new JLabel("<html><a href='http://google.com'>Hello there</a><html>"));
 			s.setStyle(style);
 		}
 
@@ -233,9 +234,10 @@ public class ChatPanel extends JPanel {
 					nameStyle = otherMessages;
 
 				try {
+					
 					// Add the name of the sender to the chat
 					doc.insertString(doc.getLength(), from + ": ", nameStyle);
-
+					
 					int position = 0;
 					int tmp;
 					Smiley smiley = null;
@@ -257,19 +259,14 @@ public class ChatPanel extends JPanel {
 						if (position >= 0 && smiley != null) {
 							// Add the message before the smiley and the smiley
 							// itself to the chat
-							doc.insertString(doc.getLength(),
-									msg.substring(0, position), regular);
-							
-							doc.insertString(
-									doc.getLength(),
-									msg.substring(position, position
-											+ smiley.getText().length()),
-									smiley.getStyle());
+							doc.insertString(doc.getLength(), msg.substring(0, position), regular);
+
+							doc.insertString(doc.getLength(), msg.substring(position, position
+									+ smiley.getText().length()), smiley.getStyle());
 
 							// Chop everything before and including the smiley
 							// off
-							msg = msg.substring(position
-									+ smiley.getText().length());
+							msg = msg.substring(position + smiley.getText().length());
 						}
 
 					}
@@ -278,9 +275,7 @@ public class ChatPanel extends JPanel {
 					doc.insertString(doc.getLength(), msg + "\n", regular);
 
 					if (isFocused == false && GimClient.getTrayIcon() != null) {
-						GimClient.getTrayIcon().displayMessage(
-								from + " says: ", message,
-								TrayIcon.MessageType.INFO);
+						//GimClient.getTrayIcon().displayMessage(from + " says: ", message, TrayIcon.MessageType.INFO);
 					}
 
 				} catch (BadLocationException e) {
@@ -324,8 +319,7 @@ public class ChatPanel extends JPanel {
 		public void keyTyped(KeyEvent e) {
 			if (e.getKeyChar() == KeyEvent.VK_ENTER) {
 				String text = chatBox.getText();
-				chatBox.setText(text.substring(0,
-						chatBox.getCaretPosition() - 1)
+				chatBox.setText(text.substring(0, chatBox.getCaretPosition() - 1)
 						+ text.substring(chatBox.getCaretPosition()));
 				sendMessage();
 				chatBox.setText("");
