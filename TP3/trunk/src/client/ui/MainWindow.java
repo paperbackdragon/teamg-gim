@@ -151,9 +151,9 @@ public class MainWindow extends JFrame {
 
 		@Override
 		public void windowActivated(WindowEvent arg0) {
-			if (main instanceof ChatPanel) {
+/*			if (main instanceof ChatPanel) {
 				((ChatPanel) main).setIsFocused(true);
-			}
+			}*/
 		}
 
 		@Override
@@ -188,9 +188,9 @@ public class MainWindow extends JFrame {
 
 		@Override
 		public void windowDeactivated(WindowEvent arg0) {
-			if (main instanceof ChatPanel) {
+/*			if (main instanceof ChatPanel) {
 				((ChatPanel) main).setIsFocused(false);
-			}
+			}*/
 
 		}
 
