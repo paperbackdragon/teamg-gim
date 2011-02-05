@@ -311,7 +311,7 @@ public class ContactPanel extends JPanel {
 
 					}
 				});
-			} else if (e.getSource().equals(del)) {
+			} else if (e.getSource().equals(del) && getSelectedContacts().size() > 0) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						
