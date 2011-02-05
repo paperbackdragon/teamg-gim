@@ -19,6 +19,7 @@ public class LoginPanel extends JPanel {
 	private JButton loginButton, register;
 	private JCheckBox autoLogin, savePassword, rememberUser;
 	private static Model model = Model.getInstance();
+	private static boolean previous = false; //Allows for user to log out with checkboxes ticked
 
 	// CONSTRUCTOR
 	public LoginPanel() {
@@ -148,15 +149,20 @@ public class LoginPanel extends JPanel {
 			options.setPassword(new String(pwd.getPassword()));
 		else
 			options.setPassword(null);
-		
-		model.authenticate(email.getText(), pwd.getPassword());
+		if (previous == false) {
+			model.authenticate(email.getText(), pwd.getPassword());
+			previous = true;
+		}
 	}
 
 	// ACTION LISTENERS
 	class LoginListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			if (e.getSource().equals(loginButton))
+			if (e.getSource().equals(loginButton)) {
+				previous = false;
 				login();
+				previous = true;
+			}
 			else if (e.getSource().equals(register)) {
 				RegisterPanel panel = new RegisterPanel();
 				panel.setParent(parent);

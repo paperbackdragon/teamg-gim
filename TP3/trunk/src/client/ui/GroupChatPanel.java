@@ -195,19 +195,18 @@ public class GroupChatPanel extends ChatPanel {
 			}
 
 			SelectContactsPanel inputs = new SelectContactsPanel(model.getFriendList().getOnlineUsers(), temp);
-
-			JOptionPane.showMessageDialog(null, inputs, "Select contacts to invite", JOptionPane.PLAIN_MESSAGE);
-
-			ArrayList<JCheckBox> blah = inputs.getBoxes();
-
-			for (int i = 0; i < blah.size(); i++) {
-				if (blah.get(i).isSelected() == true) {
+			if (inputs != null) {
+				JOptionPane.showMessageDialog(null, inputs, "Select contacts to invite", JOptionPane.PLAIN_MESSAGE);
+				ArrayList<JCheckBox> checkboxes = inputs.getBoxes();
+			for (int i = 0; i < checkboxes.size(); i++) {
+				if (checkboxes.get(i).isSelected() == true) {
 
 					// NOTE (gordon): at the moment, this will be wrong (it will
 					// invite by their nickname.
 					// need to work out a way to preserve the e-mail address...
-					model.invite(id, blah.get(i).getText());
+					model.invite(id, checkboxes.get(i).getText());
 				}
+			}
 			}
 
 		}
