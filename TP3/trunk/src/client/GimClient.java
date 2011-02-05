@@ -187,6 +187,17 @@ public class GimClient {
 	public static Boolean SystemTraySupported() {
 		return SystemTray.isSupported();
 	}
+	
+	/** Alerts the user they have received a message, in a window they are not focused on */
+	public static void alertMessage(String from, String message) {
+		
+		// Should handle null pointer in lab?
+		if (SystemTraySupported()) {
+			System.out.println("hello");
+			getTrayIcon().displayMessage(from + " says: ", message, TrayIcon.MessageType.INFO);
+		}
+		
+	}
 
 	public static void setUpTray() {
 
@@ -285,16 +296,6 @@ public class GimClient {
 		 * for (int i =0; i < windows.size(); i ++) { if
 		 * (windows.get(i).getId().equals(roomid)) { windows.remove(i); } } }
 		 */
-	}
-
-	/** Alerts the user they have received a message, in a window they are not focused on */
-	public static void alertMessage(String from, String message) {
-		
-		// Should handle null pointer in lab?
-		if (SystemTraySupported()) {
-			getTrayIcon().displayMessage(from + " says: ", message, TrayIcon.MessageType.INFO);
-		}
-		
 	}
 
 }
