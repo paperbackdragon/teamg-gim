@@ -181,6 +181,12 @@ public class GimClient {
 	public static TrayIcon getTrayIcon() {
 		return trayIcon;
 	}
+	
+	/** Called whenever a method might want to notify via a pop up from the system tray
+	 * to check this is supported. Otherwise, a null pointer would occur. */
+	public static Boolean SystemTraySupported() {
+		return SystemTray.isSupported();
+	}
 
 	public static void setUpTray() {
 
@@ -279,6 +285,16 @@ public class GimClient {
 		 * for (int i =0; i < windows.size(); i ++) { if
 		 * (windows.get(i).getId().equals(roomid)) { windows.remove(i); } } }
 		 */
+	}
+
+	/** Alerts the user they have received a message, in a window they are not focused on */
+	public static void alertMessage(String from, String message) {
+		
+		// Should handle null pointer in lab?
+		if (SystemTraySupported()) {
+			getTrayIcon().displayMessage(from + " says: ", message, TrayIcon.MessageType.INFO);
+		}
+		
 	}
 
 }
