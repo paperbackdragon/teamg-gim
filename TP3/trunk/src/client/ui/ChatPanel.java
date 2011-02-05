@@ -163,10 +163,8 @@ public class ChatPanel extends JPanel {
 	 * the user with having to wait for room creation
 	 */
 	private void sendMessageQueue() {
-		if (!messageQueue.isEmpty()) {
-			for (int i = 0; i < messageQueue.size(); i++) {
+		while (!messageQueue.isEmpty()) {
 				model.message(id, messageQueue.removeLast());
-			}
 		}
 	}
 
