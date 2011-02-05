@@ -70,8 +70,16 @@ public class ServerConnection {
 	 * 
 	 * @param message
 	 */
-	public void broadcast(String message) {
+	public void broadcast(final String message) {
 		// TODO: Display broadcasts sent by the server
+		SwingUtilities.invokeLater(new Runnable() {
+
+			@Override
+			public void run() {
+				JOptionPane.showMessageDialog(null, "Broadcast from server: " + message);
+			}
+		});
+		
 	}
 
 	public void emailInuseError(final String message) {
