@@ -314,9 +314,8 @@ public class ContactPanel extends JPanel {
 			} else if (e.getSource().equals(del) && getSelectedContacts().size() > 0) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						
+			
 						LinkedList<User> selectedUsers = getSelectedContacts();
-						
 						String users = "";
 						for (User u : selectedUsers) {
 							users += u.getEmail() + " ";

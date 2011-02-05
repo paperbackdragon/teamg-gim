@@ -11,7 +11,7 @@ public class MainWindow extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
-	private JMenuItem logout, quit, setOptions;
+	private JMenuItem logout, quit, setOptions, about;
 	private JPanel main;
 	private static Model model = Model.getInstance();
 
@@ -36,14 +36,17 @@ public class MainWindow extends JFrame {
 
 		logout = new JMenuItem("Logout");
 		quit = new JMenuItem("Quit");
+		about = new JMenuItem("About");
 
 		MenuListener menuListener = new MenuListener();
 		logout.addActionListener(menuListener);
 		quit.addActionListener(menuListener);
+		about.addActionListener(menuListener);
 		logout.setMnemonic(KeyEvent.VK_L);
 		quit.setMnemonic(KeyEvent.VK_Q);
 		fileMenu.add(logout);
 		fileMenu.add(quit);
+		helpMenu.add(about);
 
 		windowListener windowlistener = new windowListener();
 		this.addWindowListener(windowlistener);
@@ -136,7 +139,12 @@ public class MainWindow extends JFrame {
 				*/
 				
 			}
+			else if (e.getSource().equals(about)){
+				JOptionPane.showMessageDialog(null, "                Team G Instant Messenger\n 2010-2011\n Developed by: \n James McMinn\n Gordon Martin\n Heather Hoaglund-Biron\n Ewan Baird\n\n Artwork provided by Matt Roszak", 
+						"About", JOptionPane.PLAIN_MESSAGE);
+			}
 		}
+		
 	}
 
 	class windowListener implements WindowListener {
