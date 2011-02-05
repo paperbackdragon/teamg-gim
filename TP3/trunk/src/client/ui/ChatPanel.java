@@ -127,7 +127,7 @@ public class ChatPanel extends JPanel {
 		for (Smiley s : smilies) {
 			Style style = doc.addStyle(s.getText(), null);
 			StyleConstants.setIcon(style, new ImageIcon(smileyPath + s.getIcon()));
-			StyleConstants.setComponent(style, new JButton("Hallo"));
+			//StyleConstants.setComponent(style, new JButton("Hallo"));
 			s.setStyle(style);
 		}
 
