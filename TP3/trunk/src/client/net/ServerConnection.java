@@ -392,7 +392,7 @@ public class ServerConnection {
 						// GimClient.addRoom(gcp);
 						gcp.setInProgress(true);
 
-						MainWindow ui = new MainWindow("GIM - Group Chat", gcp);
+						ChatWindow ui = new ChatWindow("GIM - Group Chat", gcp);
 						GimClient.addWindow(null, ui, gcp);
 
 						ui.setLocationRelativeTo(null);// center new chat window
@@ -435,7 +435,7 @@ public class ServerConnection {
 
 						scp.setChatWith(contacts.getFirst());
 
-						MainWindow ui = new MainWindow("GIM - Chat with2 " + contacts.getFirst().getEmail(), scp);
+						ChatWindow ui = new ChatWindow("GIM - Chat with2 " + contacts.getFirst().getEmail(), scp);
 						GimClient.addWindow(contacts.getFirst(), ui, scp);
 
 						ui.setLocationRelativeTo(null);// center new chat window
@@ -603,7 +603,7 @@ public class ServerConnection {
 					scp.setChatWith(invitedBy);
 					scp.setInProgress(true);
 	
-					MainWindow ui = new MainWindow("GIM - Chat with " + invitedBy.getEmail(), scp);
+					ChatWindow ui = new ChatWindow("GIM - Chat with " + invitedBy.getEmail(), scp);
 					GimClient.addWindow(invitedBy, ui, scp);
 					ui.setLocationRelativeTo(null);
 				}

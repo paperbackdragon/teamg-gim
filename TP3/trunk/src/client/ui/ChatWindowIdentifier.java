@@ -36,7 +36,7 @@ public class ChatWindowIdentifier {
 		return window;
 	}
 
-	public void setWindow(MainWindow window) {
+	public void setWindow(ChatWindow window) {
 		this.window = window;
 	}
 
