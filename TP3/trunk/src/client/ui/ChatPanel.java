@@ -1,6 +1,7 @@
 package client.ui;
 
 import java.awt.Color;
+
 import java.awt.Dimension;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -272,9 +273,10 @@ public class ChatPanel extends JPanel {
 
 					// Insert any remaining text into the chat
 					doc.insertString(doc.getLength(), msg + "\n", regular);
-
-					if (isFocused == false && GimClient.getTrayIcon() != null) {
-						//GimClient.getTrayIcon().displayMessage(from + " says: ", message, TrayIcon.MessageType.INFO);
+					
+					// If the user is not focused on this window, alert them a message has been received.
+					if (isFocused == false) {
+						GimClient.alertMessage(from, message);						
 					}
 
 				} catch (BadLocationException e) {
