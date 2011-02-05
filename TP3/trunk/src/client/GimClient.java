@@ -298,4 +298,14 @@ public class GimClient {
 		 */
 	}
 
+	public static void setChatBoxes(Boolean b) {
+		if (windows.size() > 0) {
+			for (ChatWindowIdentifier window: windows) {
+				
+				System.out.println("hit here");
+				window.getChatPanel().chatBoxEnabled(b);
+			}
+		}
+	}
+
 }

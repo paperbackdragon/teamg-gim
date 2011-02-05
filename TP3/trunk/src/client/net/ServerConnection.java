@@ -62,6 +62,9 @@ public class ServerConnection {
 			GimClient.getMainWindow().canLogout(true);
 			model.getSelf().setStatus("online");
 			server.setStatus("online");
+			
+			//TODO: Ask James if this should be here
+			GimClient.setChatBoxes(true);
 		}
 	}
 

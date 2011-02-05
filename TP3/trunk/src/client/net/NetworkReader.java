@@ -111,7 +111,13 @@ public class NetworkReader implements Runnable {
 		GimClient.getMainWindow().setMainPanel(panel);
 
 		gui.connectionDroppedError();
+		
+		// reset room ids
 		GimClient.resetRoomIds();
+		
+		// disable chat boxes
+		
+		GimClient.setChatBoxes(false);
 
 	}
 

@@ -100,6 +100,10 @@ public class MainWindow extends JFrame {
 				
 				// reset the roomids
 				GimClient.resetRoomIds();
+				
+				// disable chat boxes
+				GimClient.setChatBoxes(false);
+				
 			} else if (e.getSource().equals(quit)) {
 				model.quit();
 			} else if (e.getSource().equals(setOptions)) {
