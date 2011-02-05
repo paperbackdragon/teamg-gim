@@ -491,6 +491,12 @@ public class ServerConnection {
 
 				}
 
+				// TODO:
+				// (ask) why would this ever be null... and if so, why would that imply it's a group chat?
+				// isn't that situation covered above. therefor, maybe the User bit needs to be shifted up.
+				// in fact, isn't the new user thing covered else where.. whenever the server gets a list
+				// of users for a chat... 
+				
 				else { // they joined a group chat
 					if (model.getUser(user) == null) {
 						User newUser = new User(user);
@@ -507,6 +513,8 @@ public class ServerConnection {
 	}
 
 	public void left(String user, String roomid) {
+		System.out.println("user " + user + " left " + roomid);
+		
 		// this used to be FromUser... this change shouldn't screw anything up
 		// as far as i know
 		// but this is a reminder to myself...
