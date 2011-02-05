@@ -118,6 +118,10 @@ public class NetworkReader implements Runnable {
 		// disable chat boxes
 		
 		GimClient.setChatBoxes(false);
+		
+		// clear group chats
+		
+		GimClient.clearGroupChats();
 
 	}
 
