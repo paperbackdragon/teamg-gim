@@ -21,7 +21,6 @@ public class GroupChatPanel extends ChatPanel {
 
 	private static final long serialVersionUID = 1L;
 
-	private JList guests;
 	private JButton invite;
 	private User[] participants;
 
@@ -36,7 +35,7 @@ public class GroupChatPanel extends ChatPanel {
 	 * Constructor
 	 * 
 	 * @param roomID
-	 *            The ID of the room used for identication
+	 *            The ID of the room used for identification
 	 */
 	public GroupChatPanel(String roomID) {
 		super(roomID);
@@ -46,9 +45,13 @@ public class GroupChatPanel extends ChatPanel {
 
 		listModel = new DefaultListModel();
 		list = new JList(listModel);
-		guests = list;
 
-		JScrollPane guestPane = new JScrollPane(guests);
+		JPanel guestList = new JPanel(new BorderLayout());
+		guestList.add(list, BorderLayout.CENTER);
+		guestList.setMaximumSize(new Dimension(150, 50));
+		
+		JScrollPane guestPane = new JScrollPane(guestList);
+		guestPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
 		// The listener we'll be using to keep track of changes to people in
 		// the list

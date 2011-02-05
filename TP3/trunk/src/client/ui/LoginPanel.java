@@ -7,6 +7,7 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
 import client.Model;
+import client.Options;
 
 public class LoginPanel extends JPanel {
 
@@ -42,6 +43,7 @@ public class LoginPanel extends JPanel {
 		emailPanel.setLayout(new GridLayout(2, 1, 15, 0));
 		email = new JTextField();
 		email.addKeyListener(enterlistener);
+		email.setText(model.getOptions().getEmail());
 		emailPanel.add(new JLabel("E-Mail Address"));
 		emailPanel.add(email);
 
@@ -50,15 +52,23 @@ public class LoginPanel extends JPanel {
 		pwdPanel.setLayout(new GridLayout(2, 1, 15, 0));
 		pwd = new JPasswordField();
 		pwd.addKeyListener(enterlistener);
+		pwd.setText(model.getOptions().getPassword());
 		pwdPanel.add(new JLabel("Password"));
 		pwdPanel.add(pwd);
 
 		// Panel containing account options
 		JPanel options = new JPanel();
 		options.setLayout(new GridLayout(3, 1));
+		
 		autoLogin = new JCheckBox("Log me in automatically");
+		autoLogin.setSelected(model.getOptions().isAutoLogin());
+		
 		savePassword = new JCheckBox("Save my password");
+		savePassword.setSelected(model.getOptions().isRememberPassword());
+	
 		rememberUser = new JCheckBox("Remember me");
+		rememberUser.setSelected(model.getOptions().isRemeberEmail());
+		
 		options.add(autoLogin);
 		options.add(savePassword);
 		options.add(rememberUser);
@@ -110,6 +120,11 @@ public class LoginPanel extends JPanel {
 		add(Box.createHorizontalStrut(5), BorderLayout.EAST);
 		add(frame, BorderLayout.CENTER);
 		add(Box.createHorizontalStrut(5), BorderLayout.WEST);
+		
+		if(model.getOptions().isAutoLogin()) {
+			login();
+		}
+		
 	}
 
 	public void setParent(JFrame frame) {
@@ -118,6 +133,22 @@ public class LoginPanel extends JPanel {
 	}
 
 	private void login() {
+		
+		Options options = model.getOptions();
+		options.setAutoLogin(autoLogin.isSelected());
+		options.setRememberPassword(savePassword.isSelected());
+		options.setRemeberEmail(rememberUser.isSelected());
+		
+		if(options.isRemeberEmail())
+			options.setEmail(email.getText());
+		else
+			options.setEmail(null);
+		
+		if(options.isRememberPassword())
+			options.setPassword(new String(pwd.getPassword()));
+		else
+			options.setPassword(null);
+		
 		model.authenticate(email.getText(), pwd.getPassword());
 	}
 

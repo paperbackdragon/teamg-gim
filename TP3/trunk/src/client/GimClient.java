@@ -62,8 +62,6 @@ public class GimClient {
 			}
 		});
 
-		System.out.println(Model.getInstance().getPath());
-
 	}
 
 	// ACCESSORS
@@ -161,34 +159,6 @@ public class GimClient {
 			}
 		}
 		return null;
-	}
-
-	// Gordon: what the hell is this?!
-	// ... what was i thinking?!
-	// is this even used?!?!?!?
-	// TODO: Ask James
-	// rofl... [ASK JAMES HOW TO SEARCH CODE TO SEE IF THIS METHOD IS EVER CALLED]
-	public static void updateGroupChatLists() {
-		// TL;DR: ignore this :S
-		
-		// this is a very lazy way for the moment. When someone changes their
-		// nickname (etc) who is in a group chat
-		// the client asks the server for the group chat user list
-		// and then the user list is built again with the new nickname.
-		// could be done through parsing the string instead, ( would give
-		// parameters to this method)
-		// and would create a new method in group cp..., and editting as needed
-
-		// or we could implement the group chat as a JList and change the model
-		// or something...
-
-		for (int i = 0; i < windows.size(); i++) {
-			if (windows.get(i).getChatPanel() instanceof GroupChatPanel) {
-				String id = windows.get(i).getChatPanel().getID();
-				model.users(id);
-
-			}
-		}
 	}
 
 	// called when user has logged out / loses connection , but still has
