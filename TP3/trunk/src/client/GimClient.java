@@ -170,6 +170,7 @@ public class GimClient {
 			// look at me, using this shorthand for the first time :D
 			for (ChatWindowIdentifier window : windows) {
 				window.getChatPanel().setId("-1");
+				window.getChatPanel().setInProgress(false);
 			}
 		}
 	}
