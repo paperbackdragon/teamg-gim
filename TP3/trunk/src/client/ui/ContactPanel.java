@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.FileFilter;
 import java.util.LinkedList;
 
 import javax.swing.BorderFactory;
@@ -25,6 +26,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import util.Html;
 
@@ -157,7 +159,10 @@ public class ContactPanel extends JPanel {
 	//TODO: Make this do useful stuff
 	class ChoosePic implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			JFileChooser chooser = new JFileChooser();
+			 FileNameExtensionFilter filter = new FileNameExtensionFilter("JPEG file", "jpg", "jpeg");
+			 JFileChooser chooser = new JFileChooser();
+			 chooser.addChoosableFileFilter(filter);
+			
 				int option = chooser.showOpenDialog(getParent());
 		        if (option == JFileChooser.APPROVE_OPTION) {
 		        	//String PicName = ...
