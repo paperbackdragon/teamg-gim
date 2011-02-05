@@ -15,6 +15,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -37,7 +38,7 @@ import client.ValueChangedListener;
 public class ContactPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private JButton add, del, chat, group;
+	private JButton add, del, chat, group, b;
 	private JList contactList;
 	protected JScrollPane scrollPane;
 	private Model model = Model.getInstance();
@@ -48,6 +49,7 @@ public class ContactPanel extends JPanel {
 	 * Default constructor
 	 */
 	public ContactPanel() {
+
 
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -136,16 +138,31 @@ public class ContactPanel extends JPanel {
 		}
 
 		public PersonalInfo() {
+			
+			ChoosePic select = new ChoosePic();
 			setLayout(new BorderLayout(5, 0));
 
 			ImageIcon icon = self.getDisplayPic(64, 64);
-			JLabel iconLabel = new JLabel(icon);
-
-			iconLabel.setPreferredSize(new Dimension(64, 64));
-			add(iconLabel, BorderLayout.WEST);
+			//JLabel iconLabel = new JLabel(icon);
+			JButton b = new JButton(icon);
+			b.addActionListener(select);
+			b.setPreferredSize(new Dimension(64, 64));
+			//iconLabel.add(b);
+			add(b, BorderLayout.WEST);
 			add(new OwnInformation(), BorderLayout.CENTER);
 		}
 
+	}
+	// User selects picture, in progess....
+	//TODO: Make this do useful stuff
+	class ChoosePic implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			JFileChooser chooser = new JFileChooser();
+				int option = chooser.showOpenDialog(getParent());
+		        if (option == JFileChooser.APPROVE_OPTION) {
+		        	System.out.println(chooser.getSelectedFile().getPath());	
+			}
+		}
 	}
 
 	class ContactList extends JPanel {
