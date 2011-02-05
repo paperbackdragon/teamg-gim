@@ -1,5 +1,10 @@
 package client;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -15,6 +20,8 @@ public class Model {
 	private LinkedList<LinkedList<User>> newRoomList = new LinkedList<LinkedList<User>>();
 	private LinkedList<User> invitationsList = new LinkedList<User>();
 	private LinkedList<Boolean> typeList = new LinkedList<Boolean>();
+	
+	private Options options;
 
 	// The file path to the current location
 	private String path = null;
@@ -225,6 +232,20 @@ public class Model {
 
 	public void quit() {
 		logout();
+		
+		String filename = "/options.db";
+		FileOutputStream fos = null;
+		ObjectOutputStream out = null;
+		try {
+			fos = new FileOutputStream(this.getPath() + filename);
+			out = new ObjectOutputStream(fos);
+			out.writeObject(this.options);
+			out.close();
+			System.out.println("Object Persisted");
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+		
 		System.exit(0);
 	}
 
@@ -267,6 +288,30 @@ public class Model {
 
 	public void users(String roomid) {
 		outLink.roomusers(roomid);
+	}
+
+	public void setOptions(Options options) {
+		this.options = options;
+	}
+	
+	public Options getOptions() {
+		
+		if(this.options == null) {
+			String filename = "/options.db";
+			FileInputStream fis = null;
+			ObjectInputStream in = null;
+			try {
+				fis = new FileInputStream(this.getPath() + filename);
+				in = new ObjectInputStream(fis);
+				this.options = (Options) in.readObject();
+				in.close();
+			} catch (IOException ex) {
+				this.options = new Options();
+			} catch (ClassNotFoundException ex) {
+			}
+		}
+		
+		return this.options;
 	}
 
 }
