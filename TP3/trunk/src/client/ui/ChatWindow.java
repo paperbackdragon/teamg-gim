@@ -76,6 +76,13 @@ public class ChatWindow extends JFrame {
 
 		@Override
 		public void windowActivated(WindowEvent arg0) {
+			
+			if (main instanceof ChatPanel) {
+				System.out.println("HIT HERE!");
+				
+				((ChatPanel) main).setIsFocused(true);
+			}
+			
 		}
 
 		@Override
@@ -98,6 +105,11 @@ public class ChatWindow extends JFrame {
 
 		@Override
 		public void windowDeactivated(WindowEvent arg0) {
+			System.out.println("HIT HERE 2!");
+			
+			if (main instanceof ChatPanel) {
+				((ChatPanel) main).setIsFocused(false);
+			}
 		}
 
 		@Override
