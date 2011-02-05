@@ -177,6 +177,22 @@ public class GroupChatPanel extends ChatPanel {
 
 		list.setSelectedIndices(indices);
 	}
+	
+	/** called when a user logs out, or is disconnected, while a group chat is open */
+	public void clearUserList() {
+		
+		if (!listModel.isEmpty()) { // already clear otherwise...
+		
+			for (Object o : listModel.toArray()) {
+				((User) o).removeUserChangedListener(listener);
+			}
+			
+			listModel.clear();
+			
+			//disable the chat box - probably should be in a method of its own, but meh
+		    chatBox.setEnabled(false);
+		}
+	}
 
 	public class InviteListener implements ActionListener {
 

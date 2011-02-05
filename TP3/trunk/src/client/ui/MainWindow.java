@@ -104,6 +104,10 @@ public class MainWindow extends JFrame {
 				// disable chat boxes
 				GimClient.setChatBoxes(false);
 				
+				// clear group chat user lists
+				
+				GimClient.clearGroupChats();
+				
 			} else if (e.getSource().equals(quit)) {
 				model.quit();
 			} else if (e.getSource().equals(setOptions)) {
