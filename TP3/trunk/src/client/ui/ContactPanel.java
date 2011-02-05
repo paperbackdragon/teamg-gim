@@ -160,7 +160,8 @@ public class ContactPanel extends JPanel {
 			JFileChooser chooser = new JFileChooser();
 				int option = chooser.showOpenDialog(getParent());
 		        if (option == JFileChooser.APPROVE_OPTION) {
-		        	System.out.println(chooser.getSelectedFile().getPath());	
+		        	//String PicName = ...
+		        	//self.setDisplayPic(PicName);	
 			}
 		}
 	}
