@@ -148,6 +148,15 @@ public class ChatPanel extends JPanel {
 		}
 		this.inProgress = inProgress;
 	}
+	
+	public void chatBoxEnabled(final Boolean b) {
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			public void run() {
+		
+		 chatBox.setEnabled(b);
+			}
+		});
+	}
 
 	/**
 	 * Case where the other user has closed their window. Don't want to concern
