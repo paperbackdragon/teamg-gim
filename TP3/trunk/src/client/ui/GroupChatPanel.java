@@ -195,7 +195,7 @@ public class GroupChatPanel extends ChatPanel {
 			}
 
 			SelectContactsPanel inputs = new SelectContactsPanel(model.getFriendList().getOnlineUsers(), temp);
-			if (inputs != null) {
+			if (inputs.getBoxes().size() != 0 ) {
 				JOptionPane.showMessageDialog(null, inputs, "Select contacts to invite", JOptionPane.PLAIN_MESSAGE);
 				ArrayList<JCheckBox> checkboxes = inputs.getBoxes();
 			for (int i = 0; i < checkboxes.size(); i++) {
@@ -207,6 +207,9 @@ public class GroupChatPanel extends ChatPanel {
 					model.invite(id, checkboxes.get(i).getText());
 				}
 			}
+			}
+			else { 
+				JOptionPane.showMessageDialog(null, "No contacts available");
 			}
 
 		}
