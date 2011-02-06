@@ -6,6 +6,8 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 public class OptionsPanel extends JPanel{
 	
@@ -18,8 +20,8 @@ public class OptionsPanel extends JPanel{
 	private String displayPicture;
 	private String nickname;
 	
-	private JTextArea nicknametext;
-	private JTextArea personalmessagetext;
+	private JTextField nicknametext;
+	private JTextField personalmessagetext;
 	private JComboBox statusbox;
 	
 	public OptionsPanel() {
@@ -35,11 +37,14 @@ public class OptionsPanel extends JPanel{
 		setLayout(new GridLayout(7,1));
 		
 		add(new JLabel("NickName"));
-		nicknametext = new JTextArea(nickname);
+		nicknametext = new JTextField(nickname);
+		nicknametext.setDocument(new JTextFieldLimit(15));
 		add(nicknametext);
 		
 		add(new JLabel("Personal Message"));
-		personalmessagetext = new JTextArea(personalMessage);
+		personalmessagetext = new JTextField(personalMessage);
+		personalmessagetext.setDocument(new JTextFieldLimit(25));
+		
 		add(personalmessagetext);
 		
 		add(new JLabel("Status"));
@@ -72,3 +77,7 @@ public class OptionsPanel extends JPanel{
 	
 
 }
+
+
+
+
