@@ -485,7 +485,7 @@ public class ServerConnection {
 						l.getChatPanel().setInProgress(true);
 					} else { // group chat
 						model.users(roomid);
-						l.getChatPanel().receiveMessage(new User("\n\nNotice"), user + " has joined the chat\n\n");
+						l.getChatPanel().receiveMessage(new User("\nNotice"), user + " has joined the chat\n");
 
 					}
 
@@ -526,7 +526,7 @@ public class ServerConnection {
 				model.leave(roomid);
 			} else if (l.getChatPanel() instanceof GroupChatPanel) {
 				// do this later...
-				GimClient.getWindowIdentifierFromId(roomid).getChatPanel().receiveMessage(new User("\n\nNotice"), user + " has left the chat\n\n");
+				GimClient.getWindowIdentifierFromId(roomid).getChatPanel().receiveMessage(new User("\nNotice"), user + " has left the chat\n");
 				model.users(roomid);
 			}
 
