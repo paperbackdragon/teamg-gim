@@ -48,7 +48,7 @@ public class GroupChatPanel extends ChatPanel {
 
 		JPanel guestList = new JPanel(new BorderLayout());
 		guestList.add(list, BorderLayout.CENTER);
-		
+
 		JScrollPane guestPane = new JScrollPane(guestList);
 		guestPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
@@ -91,7 +91,7 @@ public class GroupChatPanel extends ChatPanel {
 		ContactListRenderer renderer = new ContactListRenderer();
 		list.setCellRenderer(renderer);
 		list.setSelectedIndex(0);
-		
+
 		// BOTTOM PANEL
 		JPanel chatPanel = new JPanel();
 		chatPanel.setLayout(new BorderLayout());
@@ -127,12 +127,12 @@ public class GroupChatPanel extends ChatPanel {
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, messagePane, guestPane);
 		splitPane.setOneTouchExpandable(true);
 		splitPane.setContinuousLayout(true);
-
-		// Provide minimum sizes for the two components in the split pane
-		guestPane.setPreferredSize(new Dimension(150, 50));
+		
+		splitPane.setDividerLocation(model.getOptions().chatWindowWidth - 210);
 
 		add(splitPane, BorderLayout.CENTER);
 		add(chatPanel, BorderLayout.SOUTH);
+		
 	}
 
 	// PANELS
@@ -174,20 +174,24 @@ public class GroupChatPanel extends ChatPanel {
 
 		list.setSelectedIndices(indices);
 	}
-	
-	/** called when a user logs out, or is disconnected, while a group chat is open */
+
+	/**
+	 * called when a user logs out, or is disconnected, while a group chat is
+	 * open
+	 */
 	public void clearUserList() {
-		
+
 		if (!listModel.isEmpty()) { // already clear otherwise...
-		
+
 			for (Object o : listModel.toArray()) {
 				((User) o).removeUserChangedListener(listener);
 			}
-			
+
 			listModel.clear();
-			
-			//disable the chat box - probably should be in a method of its own, but meh
-		    chatBox.setEnabled(false);
+
+			// disable the chat box - probably should be in a method of its own,
+			// but meh
+			chatBox.setEnabled(false);
 		}
 	}
 
@@ -208,20 +212,21 @@ public class GroupChatPanel extends ChatPanel {
 			}
 
 			SelectContactsPanel inputs = new SelectContactsPanel(model.getFriendList().getOnlineUsers(), temp);
-			if (inputs.getBoxes().size() != 0 ) {
+			if (inputs.getBoxes().size() != 0) {
 				JOptionPane.showMessageDialog(null, inputs, "Select contacts to invite", JOptionPane.PLAIN_MESSAGE);
 				ArrayList<JCheckBox> checkboxes = inputs.getBoxes();
-			for (int i = 0; i < checkboxes.size(); i++) {
-				if (checkboxes.get(i).isSelected() == true) {
+				for (int i = 0; i < checkboxes.size(); i++) {
+					if (checkboxes.get(i).isSelected() == true) {
 
-					// NOTE (gordon): at the moment, this will be wrong (it will
-					// invite by their nickname.
-					// need to work out a way to preserve the e-mail address...
-					model.invite(id, checkboxes.get(i).getText());
+						// NOTE (gordon): at the moment, this will be wrong (it
+						// will
+						// invite by their nickname.
+						// need to work out a way to preserve the e-mail
+						// address...
+						model.invite(id, checkboxes.get(i).getText());
+					}
 				}
-			}
-			}
-			else { 
+			} else {
 				JOptionPane.showMessageDialog(null, "No contacts available");
 			}
 

@@ -2,7 +2,6 @@ package client.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -101,7 +100,7 @@ public class SingleChatPanel extends ChatPanel {
 			JLabel statusIconLabel = new JLabel(statusIcon);
 			statusIconLabel.setPreferredSize(new Dimension(16, 16));
 
-			JPanel userInfo = new JPanel(new GridLayout(2, 1));
+			JPanel userInfo = new JPanel(new BorderLayout());
 			userInfo.setOpaque(false);
 
 			final JLabel username = new JLabel("<html>"
@@ -109,8 +108,8 @@ public class SingleChatPanel extends ChatPanel {
 			final JLabel personalMessage = new JLabel("<html>"
 					+ Html.escape(user.getPersonalMessage()) + "</html>");
 
-			userInfo.add(username);
-			userInfo.add(personalMessage);
+			userInfo.add(username, BorderLayout.NORTH);
+			userInfo.add(personalMessage, BorderLayout.SOUTH);
 
 			add(displayPicture, BorderLayout.WEST);
 			add(userInfo, BorderLayout.CENTER);
@@ -140,7 +139,7 @@ public class SingleChatPanel extends ChatPanel {
 
 				@Override
 				public void displayPicChanged() {
-					displayPicture.setIcon(user.getDisplayPic(48, 48));
+					displayPicture.setIcon(user.getDisplayPic(displayPicture.getWidth(), displayPicture.getHeight()));
 				}
 
 				@Override

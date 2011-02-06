@@ -22,11 +22,30 @@ public class ChatWindow extends JFrame {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
 		}
-		
-		
+
 		this.main = panel;
-		
-		setPreferredSize(new Dimension(650, 500));
+		this.addComponentListener(new ComponentListener() {
+			
+			@Override
+			public void componentShown(ComponentEvent e) {
+			}
+			
+			@Override
+			public void componentResized(ComponentEvent e) {
+				model.getOptions().chatWindowWidth = e.getComponent().getWidth();
+				model.getOptions().chatWindowHeight = e.getComponent().getHeight();
+			}
+			
+			@Override
+			public void componentMoved(ComponentEvent e) {
+			}
+			
+			@Override
+			public void componentHidden(ComponentEvent e) {
+			}
+		});
+
+		setPreferredSize(new Dimension(model.getOptions().chatWindowWidth, model.getOptions().chatWindowHeight));
 
 		setTitle(title);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -68,7 +87,7 @@ public class ChatWindow extends JFrame {
 
 	class MenuListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			
+
 		}
 	}
 
@@ -76,18 +95,12 @@ public class ChatWindow extends JFrame {
 
 		@Override
 		public void windowActivated(WindowEvent arg0) {
-			
-			if (main instanceof ChatPanel) {
-				System.out.println("HIT HERE!");
-				
+			if (main instanceof ChatPanel)
 				((ChatPanel) main).setIsFocused(true);
-			}
-			
 		}
 
 		@Override
 		public void windowClosed(WindowEvent e) {
-
 			String roomid = ((ChatPanel) main).getID();
 
 			// tell the server to leave the room
@@ -105,8 +118,6 @@ public class ChatWindow extends JFrame {
 
 		@Override
 		public void windowDeactivated(WindowEvent arg0) {
-			System.out.println("HIT HERE 2!");
-			
 			if (main instanceof ChatPanel) {
 				((ChatPanel) main).setIsFocused(false);
 			}
