@@ -8,9 +8,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.LinkedList;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -28,6 +36,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import util.Base64;
 import util.Html;
 
 import client.FriendListChangedListener;
@@ -167,6 +176,33 @@ public class ContactPanel extends JPanel {
 		        if (option == JFileChooser.APPROVE_OPTION) {
 		        	//String PicName = ...
 		        	//self.setDisplayPic(PicName);	
+		        	
+		        	File file = chooser.getSelectedFile();
+		        	String path = file.getAbsolutePath();
+		        	
+		        	
+		        	/** http://www.programcreek.com/2009/02/java-convert-image-to-byte-array-convert-byte-array-to-image/ */
+		    		ByteArrayOutputStream baos=new ByteArrayOutputStream(1000);
+		    		try {
+						BufferedImage img=ImageIO.read(new File(path));
+						ImageIO.write(img, "jpg", baos);
+						baos.flush();
+						
+						String base64String=Base64.encodeToString(baos.toByteArray(), false);
+						baos.close();
+						
+						
+						// I give up... i'll let you do it, james :|
+						//self.setDisplayPic(base64String);
+						
+						
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+
+		        	
+		        	
 			}
 		}
 	}
