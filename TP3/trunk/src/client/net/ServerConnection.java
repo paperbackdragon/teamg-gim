@@ -14,7 +14,6 @@ import client.ui.ChatWindowIdentifier;
 import client.ui.ContactPanel;
 import client.ui.GroupChatPanel;
 import client.ui.LoginPanel;
-import client.ui.MainWindow;
 import client.ui.SingleChatPanel;
 
 /**
