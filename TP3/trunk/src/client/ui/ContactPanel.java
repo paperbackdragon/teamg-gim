@@ -97,6 +97,7 @@ public class ContactPanel extends JPanel {
 						if (source.equals(name)) {
 							self.setNickname(value);
 							model.getServer().setNickname(value);
+							System.out.println("Setting name in CP");
 						} else if (source.equals(message)) {
 							self.setPersonalMessage(value);
 							model.getServer().setPersonalMessage(value);
@@ -149,8 +150,8 @@ public class ContactPanel extends JPanel {
 			setLayout(new BorderLayout(5, 0));
 			ImageIcon icon = self.getDisplayPic(64, 64);
 			final JButton b = new JButton(icon);
+			b.setIconTextGap(10);
 			b.addActionListener(select);
-			b.setPreferredSize(new Dimension(64, 64));
 
 			self.addUserChangedListener(new UserChangedListener() {
 				@Override
@@ -195,7 +196,7 @@ public class ContactPanel extends JPanel {
 					File resized = new File(model.getPath() + "/display_picture.jpg");
 					BufferedImage originalImage = ImageIO.read(chooser.getSelectedFile());
 					int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
-
+					
 					BufferedImage resizedImage = new BufferedImage(128, 128, type);
 					Graphics2D g = resizedImage.createGraphics();
 					g.drawImage(originalImage, 0, 0, 128, 128, null);
@@ -285,34 +286,21 @@ public class ContactPanel extends JPanel {
 					for (Object o : listModel.toArray()) {
 						((User) o).removeUserChangedListener(listener);
 					}
-
-					LinkedList<User> selected = getSelectedContacts();
-					LinkedList<Integer> selectedIndex = new LinkedList<Integer>();
-					listModel.clear();
 					
-					int i = 0;
+					listModel.clear();
+
+					int[] indicies = list.getSelectedIndices();
+					
 					// Create and populate the list model.
 					for (User u : model.getFriendList().getOnlineUsers()) {
 						listModel.addElement(u);
 						u.addUserChangedListener(listener);
-
-						if (selected.contains(u))
-							selectedIndex.add(i);
-						
-						i++;
-					}
-					
-					int j= 0;
-					int[] indicies = new int[selectedIndex.size()];
-					for(Integer k : selectedIndex) {
-						indicies[j++] = k.intValue();
 					}
 
 					list.setSelectedIndices(indicies);
 					
 					onlineLabel.setText("<html><b>Online Contacts (" + model.getFriendList().getOnlineUsers().size()
 							+ "/" + model.getFriendList().getFriendList().size() + ")</b></html>");
-					
 				}
 
 				@Override

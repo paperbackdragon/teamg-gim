@@ -180,7 +180,7 @@ public class EditableJLabel extends JPanel {
 		public void focusLost(FocusEvent e) {
 			if (!oldValue.equals(textField.getText())) {
 				setText(textField.getText());
-				
+				oldValue = textField.getText();
 				for (ValueChangedListener v : listeners) {
 					v.valueChanged(textField.getText(), EditableJLabel.this);
 				}
@@ -198,6 +198,7 @@ public class EditableJLabel extends JPanel {
 			if (e.getKeyChar() == KeyEvent.VK_ENTER) {
 				if (!oldValue.equals(textField.getText())) {
 					setText(textField.getText());
+					oldValue = textField.getText();
 					for (ValueChangedListener v : listeners) {
 						v.valueChanged(textField.getText(), EditableJLabel.this);
 					}

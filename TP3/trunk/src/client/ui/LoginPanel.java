@@ -29,6 +29,8 @@ public class LoginPanel extends JPanel {
 		} catch (Exception e) {
 		}
 
+		model.reset();
+		
 		EnterListener enterlistener = new EnterListener();
 		LoginListener loginListener = new LoginListener();
 

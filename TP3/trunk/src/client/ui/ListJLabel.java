@@ -122,7 +122,8 @@ public class ListJLabel extends JPanel {
 	 * @param valueListener
 	 */
 	public void addValueChangedListener(ValueChangedListener valueListener) {
-		this.listeners.add(valueListener);
+		if(!this.listeners.contains(valueListener))
+			this.listeners.add(valueListener);
 	}
 
 	/**

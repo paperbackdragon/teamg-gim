@@ -57,6 +57,16 @@ public class Model {
 	 */
 	public Model() {
 	}
+	
+	public void reset() {
+		newRoomList = new LinkedList<LinkedList<User>>();
+		invitationsList = new LinkedList<User>();
+		typeList = new LinkedList<Boolean>();
+		friendlist = new FriendList();
+		users = new ConcurrentHashMap<String, User>();
+		loggedInUser = null;
+		latestperson = null;
+	}
 
 	public void setInitilised(boolean i) {
 		this.initilised = i;
