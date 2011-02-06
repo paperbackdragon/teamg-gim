@@ -196,7 +196,7 @@ public class ContactPanel extends JPanel {
 
 			if (option == JFileChooser.APPROVE_OPTION) {
 				try {
-					File resized = new File(model.getPath() + "/display_picutre.jpg");
+					File resized = new File(model.getPath() + "/display_picture.jpg");
 					BufferedImage originalImage = ImageIO.read(chooser.getSelectedFile());
 					int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
 
