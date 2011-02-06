@@ -326,12 +326,14 @@ public class ChatPanel extends JPanel {
 	 */
 	public class EnterListener implements KeyListener {
 		public void keyTyped(KeyEvent e) {
-			if (e.getKeyChar() == KeyEvent.VK_ENTER) {
+			if (e.getKeyChar() == KeyEvent.VK_ENTER && e.getModifiers() != 1) {
 				String text = chatBox.getText();
 				chatBox.setText(text.substring(0, chatBox.getCaretPosition() - 1)
 						+ text.substring(chatBox.getCaretPosition()));
 				sendMessage();
 				chatBox.setText("");
+			} else if(e.getKeyChar() == KeyEvent.VK_ENTER && e.getModifiers() == 1) {
+				chatBox.append("\n");
 			}
 		}
 
