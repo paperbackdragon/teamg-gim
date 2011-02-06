@@ -82,6 +82,9 @@ public class User {
 	 */
 	public synchronized void setStatus(String status) {
 		
+		if(status.equalsIgnoreCase(this.getStatus()))
+			return;
+		
 		try {
 			this.status = Status.valueOf(status.toUpperCase());
 		} catch (IllegalArgumentException e) {
@@ -95,6 +98,7 @@ public class User {
 			l.statusChanged();
 			l.changed();
 		}
+		
 	}
 
 	/**

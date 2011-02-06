@@ -26,7 +26,6 @@ public class FriendList {
 			@Override
 			public void statusChanged() {
 				FriendList.this.stateChanged();
-				System.out.println("State Chaanged");
 			}
 			
 			@Override
