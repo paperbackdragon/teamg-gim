@@ -75,7 +75,6 @@ public class ServerConnection {
 	public void broadcast(final String message) {
 		// TODO: Display broadcasts sent by the server
 		SwingUtilities.invokeLater(new Runnable() {
-
 			@Override
 			public void run() {
 				JOptionPane.showMessageDialog(null, "Broadcast from server: " + message);
@@ -115,19 +114,17 @@ public class ServerConnection {
 	 *            A list of blocked users
 	 */
 	public void friendlist(LinkedList<String> onlinelist, LinkedList<String> offlinelist, LinkedList<String> blockedlist) {
-
 		FriendList friendList = model.getFriendList();
 
-		System.out.println("On: " + onlinelist.size() + " Off: " + offlinelist.size() + " Bl: " + blockedlist.size());
-
 		for (String e : onlinelist) {
-			User u = friendList.getUser(e);
+			User u = model.getUser(e);
 
 			if (u == null) {
 				u = new User(e);
 				model.addUser(u);
-				friendList.addUser(u);
 			}
+			
+			friendList.addUser(u);
 
 			// We don't want to set their status to online if they're already
 			// online, otherwise we will overwrite their actual status
@@ -136,20 +133,23 @@ public class ServerConnection {
 		}
 
 		for (String e : offlinelist) {
-			User u = friendList.getUser(e);
+			User u = model.getUser(e);
 
 			if (u == null) {
 				u = new User(e);
 				model.addUser(u);
-				friendList.addUser(u);
-			}
-
+			}	
+			
+			friendList.addUser(u);
 			u.setStatus("OFFLINE");
 		}
 
 		for (String e : blockedlist) {
 			if (!friendList.isBlocked(e)) {
-				User u = new User(e);
+				User u;
+				if((u = model.getUser(e)) == null)
+					u = new User(e);
+				
 				model.addUser(u);
 				friendList.addBlockedUser(u);
 			}

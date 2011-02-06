@@ -66,12 +66,9 @@ public class ContactPanel extends JPanel {
 
 		setLayout(new BorderLayout());
 		info = new PersonalInfo();
+		
 		add(info, BorderLayout.NORTH);
-
-		scrollPane = new JScrollPane(new ContactList());
-		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		add(scrollPane, BorderLayout.CENTER);
-
+		add(new ContactList(), BorderLayout.CENTER);
 		add(new ButtonPanel(), BorderLayout.SOUTH);
 	}
 
@@ -231,6 +228,7 @@ public class ContactPanel extends JPanel {
 		private static final long serialVersionUID = 1L;
 
 		public ContactList() {
+			
 			this.setLayout(new BorderLayout());
 			this.setBackground(UIManager.getColor("EditorPane.background"));
 
@@ -242,6 +240,7 @@ public class ContactPanel extends JPanel {
 			final DefaultListModel listModel = new DefaultListModel();
 			final JList list = new JList(listModel);
 			contactList = list;
+
 
 			// Create a heading
 			final JLabel onlineLabel = new JLabel("<html><b>Online Contacts ("
@@ -324,7 +323,9 @@ public class ContactPanel extends JPanel {
 			list.setSelectedIndex(0);
 
 			online.add(list, BorderLayout.CENTER);
-			this.add(online, BorderLayout.NORTH);
+			scrollPane = new JScrollPane(online);
+			
+			this.add(scrollPane, BorderLayout.CENTER);
 		}
 	}
 
