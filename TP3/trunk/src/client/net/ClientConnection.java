@@ -271,7 +271,9 @@ public class ClientConnection implements NetworkingOut, Runnable {
 		String userListString = "";
 		for (String user : userList.split(" "))
 			userListString += Command.encode(user) + " ";
-
+		
+		System.out.println("Caling getStatus() from CC.java on " + userList);
+		
 		buffer.putCommand(new Command("GET", "STATUS", userListString));
 	}
 

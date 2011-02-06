@@ -257,7 +257,6 @@ public class ServerConnection {
 	}
 
 	public void notifyStatus(String user) {
-		server.friendlist();
 		server.getStatus(user);
 	}
 
@@ -345,6 +344,7 @@ public class ServerConnection {
 	 */
 	public void updateStatus(String user, String status) {
 		User u = model.getUser(user);
+		System.out.println("Update Status");
 		if (u != null)
 			u.setStatus(status);
 	}
@@ -512,7 +512,6 @@ public class ServerConnection {
 	}
 
 	public void left(String user, String roomid) {
-		System.out.println("user " + user + " left " + roomid);
 		
 		// this used to be FromUser... this change shouldn't screw anything up
 		// as far as i know
@@ -587,7 +586,6 @@ public class ServerConnection {
 	}
 
 	public void personal(final String roomid) {
-		System.out.println("someone invited us to a personal chat");
 
 		/*
 		 * gordon: spawn a personal chat window immediately ... oh wait, what if

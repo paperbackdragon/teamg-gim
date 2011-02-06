@@ -101,7 +101,9 @@ public class ContactPanel extends JPanel {
 							self.setPersonalMessage(value);
 							model.getServer().setPersonalMessage(value);
 						} else if (source.equals(status)) {
+							self.setStatus(status.getValue());
 							model.getServer().setStatus(status.getValue());
+							System.out.println("Setting status in CP");
 						}
 					}
 				};
@@ -310,8 +312,6 @@ public class ContactPanel extends JPanel {
 					
 					onlineLabel.setText("<html><b>Online Contacts (" + model.getFriendList().getOnlineUsers().size()
 							+ "/" + model.getFriendList().getFriendList().size() + ")</b></html>");
-
-					System.out.println("Updating");
 					
 				}
 

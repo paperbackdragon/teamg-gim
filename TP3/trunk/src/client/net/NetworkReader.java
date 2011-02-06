@@ -171,8 +171,6 @@ public class NetworkReader implements Runnable {
 		// post login
 
 		else if (cmd.getCommand().equalsIgnoreCase("MESSAGE")) {
-			System.out.println("received a message");
-
 			String[] parts = cmd.splitAndDecodeData(" ");
 			gui.message(parts[0], model.getUser(parts[1]), parts[2]);
 		}
@@ -281,7 +279,6 @@ public class NetworkReader implements Runnable {
 		}
 
 		else if (cmd.getCommand().equalsIgnoreCase("INFO")) {
-
 			String[] arguments = cmd.getArguments();
 			String[] lines = cmd.splitAndDecodeData("\n");
 			int count = 0;
@@ -293,7 +290,6 @@ public class NetworkReader implements Runnable {
 				if (count == (arguments.length + 1) || user == null) {
 					count = 0;
 					user = model.getUser(line);
-					System.out.println(user.getEmail());
 				} else if (arguments[count - 1].equalsIgnoreCase("NICKNAME")) {
 					user.setNickname(line);
 					System.out.println(line);

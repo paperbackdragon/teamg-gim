@@ -185,6 +185,7 @@ public class ListJLabel extends JPanel {
 			if (e.getKeyChar() == KeyEvent.VK_ENTER) {
 				if (oldValue != combo.getSelectedIndex()) {
 					setValue(combo.getSelectedIndex());
+					oldValue = combo.getSelectedIndex();
 					for (ValueChangedListener v : listeners) {
 						v.valueChanged((String) combo.getSelectedItem(), ListJLabel.this);
 					}
@@ -225,6 +226,7 @@ public class ListJLabel extends JPanel {
 			if(e.getActionCommand().equalsIgnoreCase("comboBoxChanged")) {
 				if (oldValue != combo.getSelectedIndex()) {
 					setValue(combo.getSelectedIndex());
+					oldValue = combo.getSelectedIndex();
 					for (ValueChangedListener v : listeners) {
 						v.valueChanged((String) combo.getSelectedItem(), ListJLabel.this);
 					}
