@@ -48,7 +48,6 @@ public class GroupChatPanel extends ChatPanel {
 
 		JPanel guestList = new JPanel(new BorderLayout());
 		guestList.add(list, BorderLayout.CENTER);
-		guestList.setMaximumSize(new Dimension(150, 50));
 		
 		JScrollPane guestPane = new JScrollPane(guestList);
 		guestPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -104,7 +103,6 @@ public class GroupChatPanel extends ChatPanel {
 		chatBox.addKeyListener(enterListener);
 		JScrollPane chatPane = new JScrollPane(chatBox);
 		chatPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		chatPane.setPreferredSize(new Dimension(0, 50));
 
 		send = new JButton("Send");
 		invite = new JButton("Invite");
@@ -132,7 +130,6 @@ public class GroupChatPanel extends ChatPanel {
 
 		// Provide minimum sizes for the two components in the split pane
 		guestPane.setPreferredSize(new Dimension(150, 50));
-		messagePane.setMinimumSize(new Dimension(250, 50));
 
 		add(splitPane, BorderLayout.CENTER);
 		add(chatPanel, BorderLayout.SOUTH);

@@ -125,7 +125,7 @@ public class Worker implements Runnable {
 
 			// Check the user details
 			User user = data.getUser(dataParts[0]);
-
+			
 			if (user != null
 					&& user.getPasswordHash().equalsIgnoreCase(dataParts[1])) {
 

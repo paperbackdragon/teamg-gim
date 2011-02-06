@@ -128,7 +128,7 @@ public class ChatPanel extends JPanel {
 		for (Smiley s : smilies) {
 			Style style = doc.addStyle(s.getText(), null);
 			StyleConstants.setIcon(style, new ImageIcon(smileyPath + s.getIcon()));
-			//StyleConstants.setComponent(style, new JButton("Hallo"));
+			// StyleConstants.setComponent(style, new JButton("Hallo"));
 			s.setStyle(style);
 		}
 
@@ -148,12 +148,12 @@ public class ChatPanel extends JPanel {
 		}
 		this.inProgress = inProgress;
 	}
-	
+
 	public void chatBoxEnabled(final Boolean b) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-		
-		 chatBox.setEnabled(b);
+
+				chatBox.setEnabled(b);
 			}
 		});
 	}
@@ -164,7 +164,7 @@ public class ChatPanel extends JPanel {
 	 */
 	private void sendMessageQueue() {
 		while (!messageQueue.isEmpty()) {
-				model.message(id, messageQueue.removeLast());
+			model.message(id, messageQueue.removeLast());
 		}
 	}
 
@@ -241,10 +241,10 @@ public class ChatPanel extends JPanel {
 					nameStyle = otherMessages;
 
 				try {
-					
+
 					// Add the name of the sender to the chat
 					doc.insertString(doc.getLength(), from + ": ", nameStyle);
-					
+
 					int position = 0;
 					int tmp;
 					Smiley smiley = null;
@@ -280,10 +280,11 @@ public class ChatPanel extends JPanel {
 
 					// Insert any remaining text into the chat
 					doc.insertString(doc.getLength(), msg + "\n", regular);
-					
-					// If the user is not focused on this window, alert them a message has been received.
+
+					// If the user is not focused on this window, alert them a
+					// message has been received.
 					if (isFocused == false) {
-						GimClient.alertMessage(from, message);						
+						GimClient.alertMessage(from, message);
 					}
 
 				} catch (BadLocationException e) {
