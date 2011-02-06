@@ -29,7 +29,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -66,7 +65,7 @@ public class ContactPanel extends JPanel {
 
 		setLayout(new BorderLayout());
 		info = new PersonalInfo();
-		
+
 		add(info, BorderLayout.NORTH);
 		add(new ContactList(), BorderLayout.CENTER);
 		add(new ButtonPanel(), BorderLayout.SOUTH);
@@ -89,7 +88,7 @@ public class ContactPanel extends JPanel {
 
 				name = new EditableJLabel(Html.escape(self.getNickname()));
 				message = new EditableJLabel(Html.escape(self.getPersonalMessage()));
-				status = new ListJLabel(new String[] { "Online", "Away", "Busy" }, 0);
+				status = new ListJLabel(new String[] { "Online", "Away", "Busy", "Offline" }, 0);
 
 				// Create a listener for the editableJLabels
 				ValueChangedListener valueListener = new ValueChangedListener() {
@@ -180,8 +179,6 @@ public class ContactPanel extends JPanel {
 
 	}
 
-	// User selects picture, in progess....
-	// TODO: Make this do useful stuff
 	class ChoosePic implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
@@ -228,7 +225,7 @@ public class ContactPanel extends JPanel {
 		private static final long serialVersionUID = 1L;
 
 		public ContactList() {
-			
+
 			this.setLayout(new BorderLayout());
 			this.setBackground(UIManager.getColor("EditorPane.background"));
 
@@ -240,7 +237,6 @@ public class ContactPanel extends JPanel {
 			final DefaultListModel listModel = new DefaultListModel();
 			final JList list = new JList(listModel);
 			contactList = list;
-
 
 			// Create a heading
 			final JLabel onlineLabel = new JLabel("<html><b>Online Contacts ("
@@ -288,20 +284,35 @@ public class ContactPanel extends JPanel {
 						((User) o).removeUserChangedListener(listener);
 					}
 
-					int[] indices = list.getSelectedIndices();
+					LinkedList<User> selected = getSelectedContacts();
+					LinkedList<Integer> selectedIndex = new LinkedList<Integer>();
 					listModel.clear();
-
+					
+					int i = 0;
 					// Create and populate the list model.
 					for (User u : model.getFriendList().getOnlineUsers()) {
 						listModel.addElement(u);
 						u.addUserChangedListener(listener);
+
+						if (selected.contains(u))
+							selectedIndex.add(i);
+						
+						i++;
+					}
+					
+					int j= 0;
+					int[] indicies = new int[selectedIndex.size()];
+					for(Integer k : selectedIndex) {
+						indicies[j++] = k.intValue();
 					}
 
-					list.setSelectedIndices(indices);
-
+					list.setSelectedIndices(indicies);
+					
 					onlineLabel.setText("<html><b>Online Contacts (" + model.getFriendList().getOnlineUsers().size()
 							+ "/" + model.getFriendList().getFriendList().size() + ")</b></html>");
 
+					System.out.println("Updating");
+					
 				}
 
 				@Override
@@ -320,11 +331,10 @@ public class ContactPanel extends JPanel {
 			list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 			ContactListRenderer renderer = new ContactListRenderer();
 			list.setCellRenderer(renderer);
-			list.setSelectedIndex(0);
 
 			online.add(list, BorderLayout.CENTER);
 			scrollPane = new JScrollPane(online);
-			
+
 			this.add(scrollPane, BorderLayout.CENTER);
 		}
 	}

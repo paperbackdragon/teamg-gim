@@ -26,6 +26,7 @@ public class FriendList {
 			@Override
 			public void statusChanged() {
 				FriendList.this.stateChanged();
+				System.out.println("State Chaanged");
 			}
 			
 			@Override
@@ -82,9 +83,10 @@ public class FriendList {
 	 *            The user to add
 	 */
 	public void addUser(User user) {
-		users.put(user.getEmail(), user);
+		if(!users.contains(user))
+			user.addUserChangedListener(this.userChangedListener);
 		
-		user.addUserChangedListener(this.userChangedListener);
+		users.put(user.getEmail(), user);
 		
 		for(FriendListChangedListener l : this.listeners) {
 			l.friendAdded(user);
