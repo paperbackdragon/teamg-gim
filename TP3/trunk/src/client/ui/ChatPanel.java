@@ -237,7 +237,7 @@ public class ChatPanel extends JPanel {
 				Style nameStyle = ownMessages;
 
 				// Assign correct styles
-				if (!sender.equals(model.getSelf().getEmail()))
+				if (sender != model.getSelf())
 					nameStyle = otherMessages;
 
 				try {
