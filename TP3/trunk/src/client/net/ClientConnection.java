@@ -7,7 +7,11 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 import javax.swing.JOptionPane;
 
 import client.Model;
@@ -31,7 +35,7 @@ public class ClientConnection implements NetworkingOut, Runnable {
 
 	private ServerConnection gui;
 	private Thread thread;
-	
+
 	private Model model = Model.getInstance();
 
 	boolean connected = false;
@@ -87,16 +91,38 @@ public class ClientConnection implements NetworkingOut, Runnable {
 
 	public Boolean connect() {
 		try {
-			serverConnection = new Socket("rooster.dyndns.info", 4444);
+			SSLSocketFactory sslFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+			serverConnection = (SSLSocket) sslFactory.createSocket("rooster.dyndns.info", 4444);
+
+			// Pick all AES algorithms of 128 bits key size
+			String patternString = "AES.*128";
+			Pattern pattern = Pattern.compile(patternString);
+			Matcher matcher;
+			boolean matchFound;
+
+			String supportedSuites[] = ((SSLSocket) serverConnection).getSupportedCipherSuites();
+			String suitePickOrder[] = new String[supportedSuites.length];
+
+			int j = 0, k = supportedSuites.length - 1;
+			for (int i = 0; i < supportedSuites.length; i++) {
+				// Determine if pattern exists in input
+				matcher = pattern.matcher(supportedSuites[i]);
+				matchFound = matcher.find();
+				if (matchFound)
+					suitePickOrder[j++] = supportedSuites[i];
+				else
+					suitePickOrder[k--] = supportedSuites[i];
+			}
+
+			((SSLSocket) serverConnection).setEnabledCipherSuites(suitePickOrder);
+
 			readandwrite();
+			
 			this.connected = true;
 		} catch (UnknownHostException e) {
 			System.out.println("Could not connect to server");
 			// tell the GUI
-
 		} catch (IOException e) {
-			System.out.println("uhm... handle this somehow... what is it anyway");
-
 			serverConnection = null;
 			this.connected = false;
 			return false;
@@ -137,7 +163,7 @@ public class ClientConnection implements NetworkingOut, Runnable {
 
 		buffer.putCommand(new Command("AUTH", "LOGIN", Command.encode(emailaddress) + " "
 				+ Command.encode(new String(password))));
-		
+
 		User self = new User(emailaddress);
 		this.model.addUser(self);
 		this.model.setSelf(self);
@@ -271,7 +297,7 @@ public class ClientConnection implements NetworkingOut, Runnable {
 		String userListString = "";
 		for (String user : userList.split(" "))
 			userListString += Command.encode(user) + " ";
-		
+
 		buffer.putCommand(new Command("GET", "STATUS", userListString));
 	}
 
@@ -393,13 +419,13 @@ public class ClientConnection implements NetworkingOut, Runnable {
 
 	public void updateAll() {
 		String userList = "";
-		
+
 		for (User user : model.getFriendList().getFriendList())
 			userList += user.getEmail() + " ";
-		
+
 		userList += model.getSelf().getEmail();
 
-		buffer.putCommand(new Command("GET", "NICKNAME STATUS PERSONAL_MESSAGE DISPLAY_PIC", userList));	
+		buffer.putCommand(new Command("GET", "NICKNAME STATUS PERSONAL_MESSAGE DISPLAY_PIC", userList));
 	}
 
 }

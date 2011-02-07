@@ -1,5 +1,6 @@
 package client.ui;
 
+import java.awt.Font;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -186,6 +187,8 @@ public class ChatPanel extends JPanel {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
 
+				Font f = (Font) UIManager.get("Label.font");
+				
 				// If the user is not focused on this window, alert them a
 				// message has been received.
 				if (isFocused == false) {
@@ -206,8 +209,8 @@ public class ChatPanel extends JPanel {
 
 				StringBuffer sb = new StringBuffer();
 				sb.append("<html><body><table cellpadding=0 cellspacing=0 border=0><tr><td valign=bottom height=22>");
-				sb.append("<b><font face='sans-serif' color=" + color + ">" + sender.getNickname()
-						+ ":</font></b> <font face='sans-serif'>" + msg);
+				sb.append("<b><font face='" + f.getFontName() + ", sans-serif' color=" + color + ">" + sender.getNickname()
+						+ ":</font></b> <font face='" + f.getFontName() + ", sans-serif'>" + msg);
 				sb.append(" </font></tr></td></table></body></html>");
 				msg = sb.toString();
 
