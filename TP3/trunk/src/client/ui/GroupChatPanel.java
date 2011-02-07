@@ -190,7 +190,7 @@ public class GroupChatPanel extends ChatPanel {
 				((User) o).removeUserChangedListener(listener);
 			}
 
-			listModel.clear();
+			list.removeAll();
 
 			// disable the chat box - probably should be in a method of its own,
 			// but meh
