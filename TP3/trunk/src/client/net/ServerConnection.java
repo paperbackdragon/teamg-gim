@@ -427,7 +427,9 @@ public class ServerConnection {
 			ChatWindowIdentifier l = GimClient.getWindowIdentifierFromUser(contacts.getFirst());
 			if (l != null) {
 				l.getChatPanel().setId(roomid);
-				// l.getCp().setInProgress(true); // find a better way
+				
+				// !!
+				l.getChatPanel().setInProgress(true); // find a better way
 
 			} else {
 				SwingUtilities.invokeLater(new Runnable() {
