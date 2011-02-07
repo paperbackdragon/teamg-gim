@@ -1,6 +1,5 @@
 package client.ui;
 
-import java.awt.Dimension;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -154,10 +153,6 @@ public class ChatPanel extends JPanel {
 
 	public Boolean getIsFocused() {
 		return isFocused;
-	}
-
-	public Dimension getPreferredSize() {
-		return new Dimension(300, 400);
 	}
 
 	public String getID() {
