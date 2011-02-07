@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class FriendList {
 
 	private ConcurrentHashMap<String, User> users = new ConcurrentHashMap<String, User>();
-	private LinkedList<User> blocked = new LinkedList<User>();
+	private ConcurrentHashMap<String, User> blocked = new ConcurrentHashMap<String, User>();
 	private boolean initilised = false;
 	private LinkedList<FriendListChangedListener> listeners = new LinkedList<FriendListChangedListener>();
 	private UserChangedListener userChangedListener;
@@ -72,7 +72,7 @@ public class FriendList {
 	 * @return The User or null if the user is not in the list
 	 */
 	public User getUser(String userId) {
-		return users.get(userId);
+		return users.get(userId.toLowerCase());
 	}
 
 	/**
@@ -100,7 +100,7 @@ public class FriendList {
 	 *            the user to remove
 	 */
 	public void removeUser(User user) {
-		users.remove(user.getEmail());
+		users.remove(user.getEmail().toLowerCase());
 		user.removeUserChangedListener(this.userChangedListener);
 		for (FriendListChangedListener l : this.listeners) {
 			l.friendRemove(user);
@@ -146,7 +146,7 @@ public class FriendList {
 	 * @return A list of users which the user has blocked
 	 */
 	public Collection<User> getBlockedUsers() {
-		return this.blocked;
+		return this.blocked.values();
 	}
 
 	/**
@@ -156,7 +156,7 @@ public class FriendList {
 	 *            The user to add to the list
 	 */
 	public void addBlockedUser(User user) {
-		this.blocked.add(user);
+		this.blocked.put(user.getEmail(), user);
 	}
 
 	/**
@@ -167,7 +167,7 @@ public class FriendList {
 	 * @return True if the use is blocked, false otherwise.
 	 */
 	public boolean isBlocked(String id) {
-		return this.blocked.contains(id);
+		return this.blocked.get(id.toLowerCase()) != null;
 	}
 
 	/**

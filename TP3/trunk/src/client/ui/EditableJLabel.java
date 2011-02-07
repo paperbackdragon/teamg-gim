@@ -35,7 +35,7 @@ public class EditableJLabel extends JPanel {
 	 * @param startText
 	 *            The starting text
 	 */
-	EditableJLabel(String startText) {
+	EditableJLabel(String startText, int limit) {
 		super();
 
 		// Create the listener and the layout
@@ -50,10 +50,16 @@ public class EditableJLabel extends JPanel {
 
 		// Create the JPanel for the "hover state"
 		JPanel inputPanel = new JPanel(new GridLayout(1, 1));
-		textField = new JTextField(startText);
+		textField = new JTextField();
+		
+		if(limit > 0)
+			textField.setDocument(new JTextFieldLimit(limit));
+		
+		textField.setText(startText);
 		textField.addMouseListener(hl);
 		textField.addKeyListener(hl);
 		textField.addFocusListener(hl);
+		
 		inputPanel.add(textField);
 		
 		label.setBorder(textField.getBorder());

@@ -28,8 +28,6 @@ public class LoginPanel extends JPanel {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
 		}
-
-		model.reset();
 		
 		EnterListener enterlistener = new EnterListener();
 		LoginListener loginListener = new LoginListener();
@@ -136,7 +134,8 @@ public class LoginPanel extends JPanel {
 	}
 
 	private void login() {
-		
+
+		model.reset();
 		Options options = model.getOptions();
 		options.setAutoLogin(autoLogin.isSelected());
 		options.setRememberPassword(savePassword.isSelected());

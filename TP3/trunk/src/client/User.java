@@ -29,7 +29,7 @@ public class User {
 	 * @param email
 	 */
 	public User(String email) {
-		this.email = email;
+		this.email = email.toLowerCase();
 		this.nickname = email;
 	}
 
