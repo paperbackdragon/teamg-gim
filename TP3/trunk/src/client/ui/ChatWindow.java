@@ -24,6 +24,8 @@ public class ChatWindow extends JFrame {
 		}
 
 		this.main = panel;
+		
+		// Listen for window resize and update the options
 		this.addComponentListener(new ComponentListener() {
 			
 			@Override
@@ -97,6 +99,7 @@ public class ChatWindow extends JFrame {
 		public void windowActivated(WindowEvent arg0) {
 			if (main instanceof ChatPanel)
 				((ChatPanel) main).setIsFocused(true);
+			
 		}
 
 		@Override

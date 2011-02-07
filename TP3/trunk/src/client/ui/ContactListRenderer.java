@@ -3,7 +3,10 @@ package client.ui;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
 import javax.swing.BorderFactory;
@@ -39,8 +42,8 @@ public class ContactListRenderer extends JLabel implements ListCellRenderer {
 
 	public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
 			boolean cellHasFocus) {
-		
-		if(this.lwidth == 0)
+
+		if (this.lwidth == 0)
 			this.lwidth = list.getWidth();
 
 		return renderContact(list, value, index, isSelected, cellHasFocus);
@@ -56,8 +59,16 @@ public class ContactListRenderer extends JLabel implements ListCellRenderer {
 		JPanel contact = new JPanel(new BorderLayout(5, 0));
 		contact.setOpaque(false);
 
-		ImageIcon displayPictureIcon = user.getDisplayPic(32, 32);
-		JLabel displayPicture = new JLabel(displayPictureIcon);
+		Image displayPictureIcon = user.getDisplayPic(32, 32).getImage();
+		if (user.getStatus().equalsIgnoreCase("offline")) {
+			Image image =  new BufferedImage(32, 32, BufferedImage.TYPE_BYTE_GRAY);
+			Graphics g = image.getGraphics();
+			g.drawImage(displayPictureIcon, 0, 0, null);
+			g.dispose();
+			displayPictureIcon = image;
+		}
+
+		JLabel displayPicture = new JLabel(new ImageIcon(displayPictureIcon));
 		displayPicture.setPreferredSize(new Dimension(32, 32));
 		displayPicture.setIconTextGap(0);
 
@@ -92,7 +103,7 @@ public class ContactListRenderer extends JLabel implements ListCellRenderer {
 			username.setForeground(UIManager.getColor("List.selectionForeground"));
 			username.setBackground(UIManager.getColor("List.selectionBackground"));
 			username.setOpaque(true);
-			
+
 			personalMessage.setForeground(UIManager.getColor("List.selectionForeground"));
 			personalMessage.setBackground(UIManager.getColor("List.selectionBackground"));
 			personalMessage.setOpaque(true);

@@ -1,7 +1,6 @@
 package client.ui;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -14,6 +13,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.LinkedList;
 
 import javax.imageio.ImageIO;
@@ -47,7 +47,7 @@ public class ContactPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JButton add, del, chat, group;
-	private JList contactList;
+	private JList list;
 	protected JScrollPane scrollPane;
 	private Model model = Model.getInstance();
 	private PersonalInfo info;
@@ -97,14 +97,12 @@ public class ContactPanel extends JPanel {
 						if (source.equals(name)) {
 							self.setNickname(value);
 							model.getServer().setNickname(value);
-							System.out.println("Setting name in CP");
 						} else if (source.equals(message)) {
 							self.setPersonalMessage(value);
 							model.getServer().setPersonalMessage(value);
 						} else if (source.equals(status)) {
 							self.setStatus(status.getValue());
 							model.getServer().setStatus(status.getValue());
-							System.out.println("Setting status in CP");
 						}
 					}
 				};
@@ -198,7 +196,7 @@ public class ContactPanel extends JPanel {
 					File resized = new File(model.getPath() + "/display_picture.jpg");
 					BufferedImage originalImage = ImageIO.read(chooser.getSelectedFile());
 					int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
-					
+
 					BufferedImage resizedImage = new BufferedImage(128, 128, type);
 					Graphics2D g = resizedImage.createGraphics();
 					g.drawImage(originalImage, 0, 0, 128, 128, null);
@@ -219,8 +217,6 @@ public class ContactPanel extends JPanel {
 					model.getServer().setDisplayPicture(displayPic);
 
 				} catch (IOException e1) {
-					System.out.println("IE Exception");
-					e1.printStackTrace();
 				}
 
 			}
@@ -242,13 +238,11 @@ public class ContactPanel extends JPanel {
 
 			// Create the list
 			final DefaultListModel listModel = new DefaultListModel();
-			final JList list = new JList(listModel);
-			contactList = list;
+			list = new JList(listModel);
 
 			// Create a heading
-			final JLabel onlineLabel = new JLabel("<html><b>Online Contacts ("
-					+ model.getFriendList().getOnlineUsers().size() + "/"
-					+ model.getFriendList().getFriendList().size() + ")</b></html>");
+			final JLabel onlineLabel = new JLabel("<html><b>Contacts (" + model.getFriendList().getOnlineUsers().size()
+					+ " Online/" + model.getFriendList().getFriendList().size() + " Offline)</b></html>");
 			onlineLabel.setBorder(BorderFactory.createMatteBorder(1, 2, 1, 2, UIManager.getColor("List.background")));
 			online.add(onlineLabel, BorderLayout.NORTH);
 
@@ -278,7 +272,13 @@ public class ContactPanel extends JPanel {
 			};
 
 			// Create and populate the list model.
-			for (User u : model.getFriendList().getOnlineUsers()) {
+			Collection<User> users;
+			if (model.getOptions().showOffline)
+				users = model.getFriendList().getFriendList();
+			else
+				users = model.getFriendList().getOnlineUsers();
+
+			for (User u : users) {
 				listModel.addElement(u);
 				u.addUserChangedListener(listener);
 			}
@@ -290,21 +290,27 @@ public class ContactPanel extends JPanel {
 					for (Object o : listModel.toArray()) {
 						((User) o).removeUserChangedListener(listener);
 					}
-					
-					listModel.clear();
 
+					Collection<User> users;
+					if (model.getOptions().showOffline)
+						users = model.getFriendList().getFriendList();
+					else
+						users = model.getFriendList().getOnlineUsers();
+
+					// TODO: This doesn't work because the list shuffles!
 					int[] indicies = list.getSelectedIndices();
 					
-					// Create and populate the list model.
-					for (User u : model.getFriendList().getOnlineUsers()) {
+					DefaultListModel listModel = new DefaultListModel();
+					for (User u : users) {
 						listModel.addElement(u);
 						u.addUserChangedListener(listener);
 					}
 
+					list.setModel(listModel);
 					list.setSelectedIndices(indicies);
-					
-					onlineLabel.setText("<html><b>Online Contacts (" + model.getFriendList().getOnlineUsers().size()
-							+ "/" + model.getFriendList().getFriendList().size() + ")</b></html>");
+
+					onlineLabel.setText("<html><b>Contacts (" + model.getFriendList().getOnlineUsers().size()
+							+ " Online / " + model.getFriendList().getFriendList().size() + " Offline)</b></html>");
 				}
 
 				@Override
@@ -313,6 +319,10 @@ public class ContactPanel extends JPanel {
 
 				@Override
 				public void friendAdded(User user) {
+					model.getServer().getNickname(user.getEmail());
+					model.getServer().getDisplayPicture(user.getEmail());
+					model.getServer().getPersonalMessage(user.getEmail());
+					model.getServer().getStatus(user.getEmail());
 				}
 			});
 
@@ -366,14 +376,10 @@ public class ContactPanel extends JPanel {
 		}
 	}
 
-	public Dimension getPreferredSize() {
-		return new Dimension(300, 500);
-	}
-
 	private LinkedList<User> getSelectedContacts() {
 		LinkedList<User> users = new LinkedList<User>();
 
-		for (Object u : contactList.getSelectedValues()) {
+		for (Object u : list.getSelectedValues()) {
 			users.add((User) u);
 		}
 

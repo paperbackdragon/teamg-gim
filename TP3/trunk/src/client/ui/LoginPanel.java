@@ -33,7 +33,6 @@ public class LoginPanel extends JPanel {
 		LoginListener loginListener = new LoginListener();
 
 		JPanel frame = new JPanel(new BorderLayout());
-		frame.setPreferredSize(new Dimension(265, 575));
 
 		// Main JPanel
 		JPanel loginFrame = new JPanel();
