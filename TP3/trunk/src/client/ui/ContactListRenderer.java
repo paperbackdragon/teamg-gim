@@ -1,7 +1,6 @@
 package client.ui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -48,7 +47,6 @@ public class ContactListRenderer extends JLabel implements ListCellRenderer {
 			this.lwidth = list.getWidth();
 
 		return renderContact(list, value, index, isSelected, cellHasFocus);
-
 	}
 
 	private Component renderContact(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -60,6 +58,7 @@ public class ContactListRenderer extends JLabel implements ListCellRenderer {
 		JPanel contact = new JPanel(new BorderLayout(5, 0));
 		contact.setOpaque(false);
 
+		// Gray out user icons when they're offline
 		Image displayPictureIcon = user.getDisplayPic(32, 32).getImage();
 		if (user.getStatus().equalsIgnoreCase("offline")) {
 			Image image =  new BufferedImage(32, 32, BufferedImage.TYPE_BYTE_GRAY);
@@ -73,8 +72,8 @@ public class ContactListRenderer extends JLabel implements ListCellRenderer {
 		displayPicture.setPreferredSize(new Dimension(32, 32));
 		displayPicture.setIconTextGap(0);
 
+		// Set their status icon
 		ImageIcon statusIcon = this.icons.get(user.getStatus());
-
 		JLabel statusIconLabel = new JLabel(statusIcon);
 		statusIconLabel.setPreferredSize(new Dimension(16, 16));
 

@@ -5,8 +5,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.ServerSocket;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLServerSocketFactory;
 
 /**
  * GimServer listen for connections and passes them off to worker threads.
@@ -63,16 +67,33 @@ public class GimServer {
 		Room room = new Room(null, true);
 		data.addRoom(room);
 
-		// Create a socket for the client to connect to
-		ServerSocket serverSocket = null;
+		SSLServerSocketFactory sslSrvFactory = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
 		try {
-			serverSocket = new ServerSocket(4444);
-		} catch (IOException e) {
+			data.serverSocket = (SSLServerSocket) sslSrvFactory.createServerSocket(4444);
+		} catch (IOException e1) {
 			System.err.println("Could not listen on port: 4444.");
 			System.exit(1);
 		}
 
-		data.serverSocket = serverSocket;
+		// Pick all AES algorithms of 128 bits key size
+		String patternString = "AES.*128";
+		Pattern pattern = Pattern.compile(patternString);
+		Matcher matcher;
+		boolean matchFound;
+
+		String supportedSuites[] = ((SSLServerSocket) data.serverSocket).getSupportedCipherSuites();
+		String suitePickOrder[] = new String[supportedSuites.length];
+
+		int j = 0, k = supportedSuites.length - 1;
+		for (int i = 0; i < supportedSuites.length; i++) {
+			matcher = pattern.matcher(supportedSuites[i]);
+			matchFound = matcher.find();
+			if (matchFound)
+				suitePickOrder[j++] = supportedSuites[i];
+			else
+				suitePickOrder[k--] = supportedSuites[i];
+		}
+		((SSLServerSocket) data.serverSocket).setEnabledCipherSuites(suitePickOrder);
 
 		// Create a new thread to check for timeouts and update system data
 		Timeout timeout = new Timeout(20);
@@ -87,7 +108,7 @@ public class GimServer {
 		while (true) {
 			try {
 				int clientID = data.getNextClientID();
-				Worker worker = new Worker(clientID, serverSocket.accept());
+				Worker worker = new Worker(clientID, data.serverSocket.accept());
 				System.out.println("Creating new worker thread width id " + clientID);
 				data.addWorker(clientID, worker);
 				Thread t = new Thread(worker);
