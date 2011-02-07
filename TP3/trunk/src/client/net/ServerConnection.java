@@ -422,15 +422,23 @@ public class ServerConnection {
 			});
 
 		} else {
+			
+		
 
 			// if we already have a window...
-			ChatWindowIdentifier l = GimClient.getWindowIdentifierFromUser(contacts.getFirst());
+			final ChatWindowIdentifier l = GimClient.getWindowIdentifierFromUser(contacts.getFirst());
 			if (l != null) {
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+				
 				l.getChatPanel().setId(roomid);
 				
 				// !! note to self: this is here because (enable on other guy joining)
 				//l.getChatPanel().setInProgress(true); // find a better way
 
+			}
+				});
+				
 			} else {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
