@@ -485,23 +485,17 @@ public class ServerConnection {
 						model.users(roomid);
 						l.getChatPanel().receiveMessage(new User("\nNotice"), user + " has joined the chat\n");
 
+						if (model.getUser(user) == null) {
+							User newUser = new User(user);
+							model.addUser(newUser);
+							
+							
+
+							// model.updateUserInfo(user);
+						}
+						
 					}
 
-				}
-
-				// TODO:
-				// (ask) why would this ever be null... and if so, why would that imply it's a group chat?
-				// isn't that situation covered above. therefor, maybe the User bit needs to be shifted up.
-				// in fact, isn't the new user thing covered else where.. whenever the server gets a list
-				// of users for a chat... 
-				
-				else { // they joined a group chat
-					if (model.getUser(user) == null) {
-						User newUser = new User(user);
-						model.addUser(newUser);
-
-						// model.updateUserInfo(user);
-					}
 				}
 
 			}
