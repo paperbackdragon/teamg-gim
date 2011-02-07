@@ -15,7 +15,6 @@ import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -227,6 +226,7 @@ public class ChatPanel extends JPanel {
 		        Pattern pattern = Pattern.compile(r, Pattern.DOTALL | Pattern.UNIX_LINES | Pattern.CASE_INSENSITIVE);
 		        Matcher matcher = pattern.matcher(msg);
 		        msg = matcher.replaceAll("<a href=\"$0\">$0</a>");
+		        msg = msg.replaceAll(Pattern.quote("<a href=\"www."), "<a href=\"http://wwww.");
 				
 				Document doc = (Document) messages.getDocument();
 				try {
