@@ -434,10 +434,43 @@ public class ContactPanel extends JPanel {
 				// Check if there's already a chat open with this user
 				int find = GimClient.findRoom(selectedUsers.getFirst());
 
-				if (find == -1)
-					model.createRoom(getSelectedContacts().getFirst());
-				else
+				if (find == -1) {
+					
+					// if they're not offline, create a room via the traditional channels
+					if (!selectedUsers.getFirst().getStatus().equalsIgnoreCase("offline")) {
+						model.createRoom(getSelectedContacts().getFirst());
+					}
+					
+					// if this screws up, removing this else should work...
+					
+					// they are offline, so create a chat window anyway
+					else { 
+						
+						/* Careful now ;x! */
+						
+						SwingUtilities.invokeLater(new Runnable() {
+							public void run() {
+								SingleChatPanel scp = new SingleChatPanel(getSelectedContacts().getFirst(), "-1");
+
+								scp.setChatWith(getSelectedContacts().getFirst());
+
+								ChatWindow ui = new ChatWindow("GIM - Chat with2 " + getSelectedContacts().getFirst().getEmail(), scp);
+								GimClient.addWindow(getSelectedContacts().getFirst(), ui, scp);
+
+								ui.setLocationRelativeTo(null);// center new chat window
+								ui.setVisible(true);
+							}
+						});
+						
+						/* hope this works */
+						
+					}
+					
+				}
+				else { // already a window open for them
 					GimClient.getWindow(selectedUsers.getFirst()).setVisible(true);
+				}
+					
 
 			} else if (e.getSource().equals(group) && getSelectedContacts().size() > 0) {
 				model.createRoom(getSelectedContacts());
