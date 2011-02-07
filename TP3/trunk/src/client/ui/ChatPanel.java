@@ -43,28 +43,14 @@ public class ChatPanel extends JPanel {
 	private LinkedList<String> messageQueue;
 
 	private Smiley[] smilies = {
-
-	new Smiley(":)", "Happy_smiley.png"), new Smiley(":-)", "Happy_smiley.png"),
-
-	new Smiley(":(", "Sad_smiley.png"), new Smiley(":-(", "Sad_smiley.png"),
-
-	new Smiley(":P", "Tonque_out_smiley.png"), new Smiley(":-P", "Tonque_out_smiley.png"),
-
-	new Smiley(";(", "Crying_smiley.png"), new Smiley(";-(", "Crying_smiley.png"),
-			new Smiley(":'(", "Crying_smiley.png"),
-
+	new Smiley(":)", "Happy_smiley.png"), new Smiley(":-)", "Happy_smiley.png"), new Smiley(":(", "Sad_smiley.png"),
+			new Smiley(":-(", "Sad_smiley.png"), new Smiley(":P", "Tonque_out_smiley.png"),
+			new Smiley(":-P", "Tonque_out_smiley.png"), new Smiley(";(", "Crying_smiley.png"),
+			new Smiley(";-(", "Crying_smiley.png"), new Smiley(":'(", "Crying_smiley.png"),
 			new Smiley(";)", "Winking_smiley.png"), new Smiley(";-)", "Winking_smiley.png"),
-
 			new Smiley(":D", "Very_happy_smiley.png"), new Smiley(":-D", "Very_happy_smiley.png"),
-
 			new Smiley(":S", "Confused_smiley.png"), new Smiley(":-S", "Confused_smiley.png"),
-
-			new Smiley("(X)", "Xbox.png"),
-
-			new Smiley("(@)", "Cat.png"),
-
-			new Smiley("CALEF13", "calef13.png")
-
+			new Smiley("(X)", "Xbox.png"), new Smiley("(@)", "Cat.png"), new Smiley("CALEF13", "calef13.png")
 	};
 
 	private int messageCount;
@@ -174,7 +160,7 @@ public class ChatPanel extends JPanel {
 	 * Sends a message to the message log
 	 */
 	private void sendMessage() {
-		
+
 		if (chatBox.getText().length() > 0) {
 			receiveMessage(model.getSelf(), chatBox.getText());
 
@@ -185,7 +171,7 @@ public class ChatPanel extends JPanel {
 				if (id.equals("-1"))
 					model.createRoom(chatWith);
 			}
-		}	
+		}
 	}
 
 	/**
@@ -212,26 +198,29 @@ public class ChatPanel extends JPanel {
 
 				String msg = new String(util.Html.escape(message));
 				for (Smiley s : smilies) {
-					msg = Pattern.compile(Pattern.quote(s.getText()),Pattern.CASE_INSENSITIVE).matcher(msg).replaceAll("<img align=bottom src=\"file:///"
-							+ model.getPath() + "smiles/" + s.getIcon() + "\" alt='" + s.getText() + "'>");
+					msg = Pattern.compile(Pattern.quote(s.getText()), Pattern.CASE_INSENSITIVE).matcher(msg)
+							.replaceAll(
+									"<img align=bottom src=\"file:///" + model.getPath() + "smiles/" + s.getIcon()
+											+ "\" alt='" + s.getText() + "'>");
 				}
 
 				StringBuffer sb = new StringBuffer();
 				sb.append("<html><body><table cellpadding=0 cellspacing=0 border=0><tr><td valign=bottom height=22>");
-				sb.append("<b><font color=" + color + ">" + sender.getNickname() + ":</font></b> " + msg);
-				sb.append(" </tr></td></table></body></html>");
+				sb.append("<b><font face='sans-serif' color=" + color + ">" + sender.getNickname()
+						+ ":</font></b> <font face='sans-serif'>" + msg);
+				sb.append(" </font></tr></td></table></body></html>");
 				msg = sb.toString();
 
-		        String r = "(?<![=\"/>])(www\\.|(http|https|ftp|news)://)(\\w+?\\.\\w+)+([a-zA-Z0-9~!@#$%^&*()_\\-=+\\/?.:;',]*)?([^.'# !])";
-		        Pattern pattern = Pattern.compile(r, Pattern.DOTALL | Pattern.UNIX_LINES | Pattern.CASE_INSENSITIVE);
-		        Matcher matcher = pattern.matcher(msg);
-		        msg = matcher.replaceAll("<a href=\"$0\">$0</a>");
-		        msg = msg.replaceAll(Pattern.quote("<a href=\"www."), "<a href=\"http://wwww.");
-				
+				String r = "(?<![=\"/>])(www\\.|(http|https|ftp|news)://)(\\w+?\\.\\w+)+([a-zA-Z0-9~!@#$%^&*()_\\-=+\\/?.:;',]*)?([^.'# !])";
+				Pattern pattern = Pattern.compile(r, Pattern.DOTALL | Pattern.UNIX_LINES | Pattern.CASE_INSENSITIVE);
+				Matcher matcher = pattern.matcher(msg);
+				msg = matcher.replaceAll("<a href=\"$0\">$0</a>");
+				msg = msg.replaceAll(Pattern.quote("<a href=\"www."), "<a href=\"http://wwww.");
+				msg = msg.replaceAll(Pattern.quote("\n"), "<br>");
+
 				Document doc = (Document) messages.getDocument();
 				try {
-					((HTMLEditorKit) messages.getEditorKit()).read(new java.io.StringReader(msg), doc, doc
-							.getLength());
+					((HTMLEditorKit) messages.getEditorKit()).read(new java.io.StringReader(msg), doc, doc.getLength());
 				} catch (IOException e) {
 				} catch (BadLocationException e) {
 				}

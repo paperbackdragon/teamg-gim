@@ -1,6 +1,7 @@
 package client.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -108,7 +109,8 @@ public class ContactListRenderer extends JLabel implements ListCellRenderer {
 			personalMessage.setBackground(UIManager.getColor("List.selectionBackground"));
 			personalMessage.setOpaque(true);
 		} else {
-			username.setForeground(UIManager.getColor("List.Foreground"));
+			username.setBackground(UIManager.getColor("List.background"));
+			personalMessage.setBackground(UIManager.getColor("List.background"));
 			contact.setBorder(BorderFactory.createMatteBorder(1, 2, 1, 2, UIManager.getColor("List.background")));
 		}
 
