@@ -488,10 +488,16 @@ public class ContactPanel extends JPanel {
 			if (e.getClickCount() == 2) {
 				int find = GimClient.findRoom(selectedUsers.getFirst());
 
-				if (find == -1)
-					model.createRoom(getSelectedContacts().getFirst());
-				else
+				if (find == -1) {
+					if (!selectedUsers.getFirst().getStatus().equalsIgnoreCase("offline")) {
+						model.createRoom(getSelectedContacts().getFirst());
+					}
+					
+				}
+				else {
 					GimClient.getWindow(selectedUsers.getFirst()).setVisible(true);
+				}
+					
 			}
 
 		}
