@@ -446,9 +446,10 @@ public class ContactPanel extends JPanel {
 					// they are offline, so create a chat window anyway
 					else { 
 						
-						/* Careful now ;x! */
+						/* Careful now ;x!
+						 * Couldn't get this working for some reason */
 						
-						SwingUtilities.invokeLater(new Runnable() {
+/*						SwingUtilities.invokeLater(new Runnable() {
 							public void run() {
 								SingleChatPanel scp = new SingleChatPanel(getSelectedContacts().getFirst(), "-1");
 
@@ -460,7 +461,7 @@ public class ContactPanel extends JPanel {
 								ui.setLocationRelativeTo(null);// center new chat window
 								ui.setVisible(true);
 							}
-						});
+						});*/
 						
 						/* hope this works */
 						
