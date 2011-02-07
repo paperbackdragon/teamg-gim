@@ -181,9 +181,11 @@ public class GroupChatPanel extends ChatPanel {
 	 * open
 	 */
 	public void clearUserList() {
+		
 
 		if (!listModel.isEmpty()) { // already clear otherwise...
-
+			System.out.println("i'm meant to be clearing the user list");
+			
 			for (Object o : listModel.toArray()) {
 				((User) o).removeUserChangedListener(listener);
 			}
