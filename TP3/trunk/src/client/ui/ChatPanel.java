@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -174,6 +175,7 @@ public class ChatPanel extends JPanel {
 	 * Sends a message to the message log
 	 */
 	private void sendMessage() {
+		
 		if (chatBox.getText().length() > 0) {
 			receiveMessage(model.getSelf(), chatBox.getText());
 
@@ -184,7 +186,7 @@ public class ChatPanel extends JPanel {
 				if (id.equals("-1"))
 					model.createRoom(chatWith);
 			}
-		}
+		}	
 	}
 
 	/**
