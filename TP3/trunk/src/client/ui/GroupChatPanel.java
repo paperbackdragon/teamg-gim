@@ -183,19 +183,20 @@ public class GroupChatPanel extends ChatPanel {
 	public void clearUserList() {
 		
 
-		if (!listModel.isEmpty()) { // already clear otherwise...
+		//if (!listModel.isEmpty()) { // already clear otherwise...
 			System.out.println("i'm meant to be clearing the user list");
 			
-			for (Object o : listModel.toArray()) {
+			/* for (Object o : listModel.toArray()) {
 				((User) o).removeUserChangedListener(listener);
-			}
+			} */
 
 			list.removeAll();
+			list.repaint();
 
 			// disable the chat box - probably should be in a method of its own,
 			// but meh
 			chatBox.setEnabled(false);
-		}
+		//}
 	}
 
 	public class InviteListener implements ActionListener {
