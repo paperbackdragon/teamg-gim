@@ -86,13 +86,6 @@ public class MainWindow extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource().equals(logout)) {
 				model.logout();
-
-				// TODO (heather): should below be moved to ServerConnection,
-				// after successful logout?
-				// TODO (heather): close all open windows except main window
-				
-				// gordon: do we want to close all open windows except main window,
-				// or just disable the chatbox on them?
 				
 				LoginPanel panel = new LoginPanel();
 				panel.setParent(GimClient.getMainWindow());
@@ -178,10 +171,6 @@ public class MainWindow extends JFrame {
 				// remove from the window list
 				// GimUI toDispose = GimClient.getWindowRoom(roomid);
 				GimClient.removeRoom((ChatPanel) main);
-				
-				
-				//TODO: DISPOSE OF CHAT WINDOWS PROPERLY WHEN CLOSED (below line causes null pointer :\)
-				// toDispose.dispose();
 			}
 
 			else {

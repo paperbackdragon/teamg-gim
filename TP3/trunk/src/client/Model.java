@@ -116,7 +116,7 @@ public class Model {
 	 *            The ID of the user to add
 	 */
 	public void addUser(User user) {
-		this.users.put(user.getEmail(), user);
+		this.users.put(user.getEmail().toLowerCase(), user);
 	}
 
 	public void authenticate(String email, char[] pwd) {
@@ -210,7 +210,7 @@ public class Model {
 	 * @return The User object or null of no user was found
 	 */
 	public User getUser(String user) {
-		return this.users.get(user);
+		return this.users.get(user.toLowerCase());
 	}
 
 	public void invite(String roomid, String user) {

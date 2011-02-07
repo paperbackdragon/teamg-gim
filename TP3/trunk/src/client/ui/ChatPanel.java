@@ -1,26 +1,27 @@
 package client.ui;
 
-import java.awt.Color;
-
 import java.awt.Dimension;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.LinkedList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import javax.swing.JTextPane;
 import javax.swing.UIManager;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyleContext;
-import javax.swing.text.StyledDocument;
+import javax.swing.text.Document;
+import javax.swing.text.html.HTMLEditorKit;
 
 import client.Model;
 import client.GimClient;
@@ -36,14 +37,11 @@ public class ChatPanel extends JPanel {
 
 	protected String id;
 	protected JTextArea chatBox;
-	protected JTextPane messages;
+	protected JEditorPane messages;
 	protected JButton send;
 
 	private static final long serialVersionUID = 1L;
 	private LinkedList<String> messageQueue;
-
-	private StyledDocument doc;
-	private Style regular, bold, italic, ownMessages, otherMessages;
 
 	private Smiley[] smilies = {
 
@@ -89,48 +87,22 @@ public class ChatPanel extends JPanel {
 		id = roomID;
 		messageQueue = new LinkedList<String>();
 
-		// Try and get the path to wherever this is running from
-		String smileyPath = Model.getInstance().getPath() + "smiles/";
-
 		// Create a new document for the messages
-		messages = new JTextPane();
+		messages = new JEditorPane();
 		messages.setEditable(false);
-		doc = messages.getStyledDocument();
-
-		// Load the default style and add it as the "regular" text
-		Style def = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
-		StyleConstants.setAlignment(def, StyleConstants.ALIGN_LEFT);
-
-		// This apparently sets the font to be the default system font. What the
-		// hell TabbedPane.font means I have no idea
-		StyleConstants.setFontFamily(def, UIManager.getDefaults().getFont("TabbedPane.font").getFontName());
-		StyleConstants.setSpaceAbove(def, 4f);
-		regular = doc.addStyle("regular", def);
-
-		// Create an italic style
-		italic = doc.addStyle("italic", regular);
-		StyleConstants.setItalic(italic, true);
-
-		// Create a bold style
-		bold = doc.addStyle("bold", regular);
-		StyleConstants.setBold(bold, true);
-
-		// Style for the current users name
-		ownMessages = doc.addStyle("ownMessages", bold);
-
-		// Everyone elses's messages
-		otherMessages = doc.addStyle("otherMessages", ownMessages);
-		StyleConstants.setForeground(otherMessages, Color.RED);
-
-		// This line here. Yes, this one. It can die and go to Hell.
-		doc.setParagraphAttributes(0, 0, regular, true);
-
-		for (Smiley s : smilies) {
-			Style style = doc.addStyle(s.getText(), null);
-			StyleConstants.setIcon(style, new ImageIcon(smileyPath + s.getIcon()));
-			// StyleConstants.setComponent(style, new JButton("Hallo"));
-			s.setStyle(style);
-		}
+		messages.setEditorKit(new HTMLEditorKit());
+		messages.addHyperlinkListener(new HyperlinkListener() {
+			@Override
+			public void hyperlinkUpdate(HyperlinkEvent evt) {
+				if (evt.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+					try {
+						java.awt.Desktop.getDesktop().browse(evt.getURL().toURI());
+					} catch (IOException e) {
+					} catch (URISyntaxException e) {
+					}
+				}
+			}
+		});
 
 		// timer = new Timer(500,new
 		// FlashwindowListener(GimClient.getWindowIdentifierFromId(id).getWindow()));
@@ -232,72 +204,49 @@ public class ChatPanel extends JPanel {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
 
-				String msg = message;
-				String from = sender.getNickname();
-				Style nameStyle = ownMessages;
-
-				// Assign correct styles
-				if (sender != model.getSelf())
-					nameStyle = otherMessages;
-
-				try {
-
-					// Add the name of the sender to the chat
-					doc.insertString(doc.getLength(), from + ": ", nameStyle);
-
-					int position = 0;
-					int tmp;
-					Smiley smiley = null;
-
-					// Parse the message...
-					while (position != -1) {
-						position = -1;
-
-						// Check for the smiley closest to the start of the text
-						for (Smiley s : smilies) {
-							tmp = msg.toUpperCase().indexOf(s.getText());
-							if (tmp > -1 && (position == -1 || tmp < position)) {
-								position = tmp;
-								smiley = s;
-							}
-						}
-
-						// Check that we've found a smiley
-						if (position >= 0 && smiley != null) {
-							// Add the message before the smiley and the smiley
-							// itself to the chat
-							doc.insertString(doc.getLength(), msg.substring(0, position), regular);
-
-							doc.insertString(doc.getLength(), msg.substring(position, position
-									+ smiley.getText().length()), smiley.getStyle());
-
-							// Chop everything before and including the smiley
-							// off
-							msg = msg.substring(position + smiley.getText().length());
-						}
-
-					}
-
-					// Insert any remaining text into the chat
-					doc.insertString(doc.getLength(), msg + "\n", regular);
-
-					// If the user is not focused on this window, alert them a
-					// message has been received.
-					if (isFocused == false) {
-						GimClient.alertMessage(from, message);
-					}
-
-				} catch (BadLocationException e) {
+				// If the user is not focused on this window, alert them a
+				// message has been received.
+				if (isFocused == false) {
+					GimClient.alertMessage(sender.getNickname(), message);
 				}
 
-				// Scroll to the end of the chat
-				messages.setCaretPosition(doc.getLength());
+				String color = "#cc0000";
+				if (sender == model.getSelf())
+					color = "#000066";
+
+				String msg = new String(util.Html.escape(message));
+				for (Smiley s : smilies) {
+					msg = Pattern.compile(Pattern.quote(s.getText()),Pattern.CASE_INSENSITIVE).matcher(msg).replaceAll("<img align=bottom src=file:///"
+							+ model.getPath() + "smiles/" + s.getIcon() + " alt='" + s.getText() + "'>");
+				}
+
+				StringBuffer sb = new StringBuffer();
+				sb.append("<html><body><table cellpadding=0 cellspacing=0 border=0><tr><td valign=bottom height=22>");
+				sb.append("<b><font color=" + color + ">" + sender.getNickname() + ":</font></b> " + msg);
+				sb.append(" </tr></td></table></body></html>");
+				msg = sb.toString();
+
+		        String r = "(?<![=\"/>])(www\\.|(http|https|ftp|news)://)(\\w+?\\.\\w+)+([a-zA-Z0-9~!@#$%^&*()_\\-=+\\/?.:;',]*)?([^.'# !])";
+		        Pattern pattern = Pattern.compile(r, Pattern.DOTALL | Pattern.UNIX_LINES | Pattern.CASE_INSENSITIVE);
+		        Matcher matcher = pattern.matcher(msg);
+		        msg = matcher.replaceAll("<a href=\"$0\">$0</a>");
+				
+				Document doc = (Document) messages.getDocument();
+				try {
+					((HTMLEditorKit) messages.getEditorKit()).read(new java.io.StringReader(msg), doc, doc
+							.getLength());
+				} catch (IOException e) {
+				} catch (BadLocationException e) {
+				}
 
 				messageCount += 1;
 				if (messageCount == 1)
 					showChat();
 
+				messages.setCaretPosition(doc.getLength());
+
 			}
+
 		});
 
 	}
@@ -332,7 +281,7 @@ public class ChatPanel extends JPanel {
 						+ text.substring(chatBox.getCaretPosition()));
 				sendMessage();
 				chatBox.setText("");
-			} else if(e.getKeyChar() == KeyEvent.VK_ENTER && e.getModifiers() == 1) {
+			} else if (e.getKeyChar() == KeyEvent.VK_ENTER && e.getModifiers() == 1) {
 				chatBox.append("\n");
 			}
 		}

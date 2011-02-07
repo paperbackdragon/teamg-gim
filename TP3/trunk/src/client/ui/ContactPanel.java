@@ -86,8 +86,8 @@ public class ContactPanel extends JPanel {
 
 				setLayout(new GridLayout(3, 1, 0, 0));
 
-				name = new EditableJLabel(Html.escape(self.getNickname()));
-				message = new EditableJLabel(Html.escape(self.getPersonalMessage()));
+				name = new EditableJLabel(Html.escape(self.getNickname()), 50);
+				message = new EditableJLabel(Html.escape(self.getPersonalMessage()), 175);
 				status = new ListJLabel(new String[] { "Online", "Away", "Busy", "Offline" }, 0);
 
 				// Create a listener for the editableJLabels
@@ -147,7 +147,7 @@ public class ContactPanel extends JPanel {
 		public PersonalInfo() {
 
 			ChoosePic select = new ChoosePic();
-			setLayout(new BorderLayout(5, 0));
+			setLayout(new BorderLayout(2, 0));
 			ImageIcon icon = self.getDisplayPic(64, 64);
 			final JButton b = new JButton(icon);
 			b.setIconTextGap(10);
@@ -185,9 +185,11 @@ public class ContactPanel extends JPanel {
 	class ChoosePic implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
-			FileNameExtensionFilter filter = new FileNameExtensionFilter("JPEG file", "jpg", "jpeg");
 			JFileChooser chooser = new JFileChooser();
-			chooser.addChoosableFileFilter(filter);
+			chooser.addChoosableFileFilter(new FileNameExtensionFilter("JPEG file", "jpg", "jpeg"));
+			chooser.addChoosableFileFilter(new FileNameExtensionFilter("PNG file", "png"));
+			chooser.addChoosableFileFilter(new FileNameExtensionFilter("BITMAP file", "bmp"));
+			chooser.addChoosableFileFilter(new FileNameExtensionFilter("GIF file", "gif"));
 
 			int option = chooser.showOpenDialog(getParent());
 
@@ -217,6 +219,8 @@ public class ContactPanel extends JPanel {
 					model.getServer().setDisplayPicture(displayPic);
 
 				} catch (IOException e1) {
+					System.out.println("IE Exception");
+					e1.printStackTrace();
 				}
 
 			}

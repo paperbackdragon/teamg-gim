@@ -73,7 +73,6 @@ public class ServerConnection {
 	 * @param message
 	 */
 	public void broadcast(final String message) {
-		// TODO: Display broadcasts sent by the server
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
