@@ -127,6 +127,7 @@ public class GroupChatPanel extends ChatPanel {
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, messagePane, guestPane);
 		splitPane.setOneTouchExpandable(true);
 		splitPane.setContinuousLayout(true);
+		splitPane.setResizeWeight(1.0);
 		
 		splitPane.setDividerLocation(model.getOptions().chatWindowWidth - 210);
 
@@ -163,16 +164,16 @@ public class GroupChatPanel extends ChatPanel {
 			((User) o).removeUserChangedListener(listener);
 		}
 
-		int[] indices = list.getSelectedIndices();
 		listModel.clear();
 
+		DefaultListModel listModel = new DefaultListModel();
 		// Create and populate the list model.
 		for (User u : participants) {
 			listModel.addElement(u);
 			u.addUserChangedListener(listener);
 		}
 
-		list.setSelectedIndices(indices);
+		list.setModel(listModel);
 	}
 
 	/**

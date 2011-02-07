@@ -27,7 +27,6 @@ import client.ui.*;
 public class GimClient {
 
 	private static MainWindow mainWindow;
-	private static ContactPanel contactPanel;
 	private static ArrayList<ChatWindowIdentifier> windows;
 	private static Model model = Model.getInstance();
 
@@ -44,11 +43,10 @@ public class GimClient {
 		// rooms = new ArrayList<ChatPanel>();
 		windows = new ArrayList<ChatWindowIdentifier>();
 
-		setUpTray();
-
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-
+				setUpTray();
+				
 				try {
 					UIManager.setLookAndFeel(UIManager
 							.getSystemLookAndFeelClassName());
@@ -67,12 +65,6 @@ public class GimClient {
 	// ACCESSORS
 	public static MainWindow getMainWindow() {
 		return mainWindow;
-	}
-
-	public static ContactPanel getContactPanel() {
-		if (contactPanel == null)
-			contactPanel = new ContactPanel();
-		return contactPanel;
 	}
 
 	// HELPER METHODS

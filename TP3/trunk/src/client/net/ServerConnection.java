@@ -56,7 +56,7 @@ public class ServerConnection {
 			server.updateAll();
 			model.waitForInitilisation();
 
-			ContactPanel panel = GimClient.getContactPanel();
+			ContactPanel panel = new ContactPanel();
 			GimClient.getMainWindow().setMainPanel(panel);
 			GimClient.getMainWindow().canLogout(true);
 			model.getSelf().setStatus("online");
