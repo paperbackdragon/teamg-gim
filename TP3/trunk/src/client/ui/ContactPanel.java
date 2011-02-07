@@ -242,7 +242,7 @@ public class ContactPanel extends JPanel {
 
 			// Create a heading
 			final JLabel onlineLabel = new JLabel("<html><b>Contacts (" + model.getFriendList().getOnlineUsers().size()
-					+ " Online/" + model.getFriendList().getFriendList().size() + " Offline)</b></html>");
+					+ " Online/" + model.getFriendList().getOfflineUsers().size() + " Offline)</b></html>");
 			onlineLabel.setBorder(BorderFactory.createMatteBorder(1, 2, 1, 2, UIManager.getColor("List.background")));
 			online.add(onlineLabel, BorderLayout.NORTH);
 
@@ -310,7 +310,7 @@ public class ContactPanel extends JPanel {
 					list.setSelectedIndices(indicies);
 
 					onlineLabel.setText("<html><b>Contacts (" + model.getFriendList().getOnlineUsers().size()
-							+ " Online / " + model.getFriendList().getFriendList().size() + " Offline)</b></html>");
+							+ " Online / " + model.getFriendList().getOfflineUsers().size() + " Offline)</b></html>");
 				}
 
 				@Override

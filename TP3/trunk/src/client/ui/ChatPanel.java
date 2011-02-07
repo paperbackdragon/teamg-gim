@@ -212,8 +212,8 @@ public class ChatPanel extends JPanel {
 
 				String msg = new String(util.Html.escape(message));
 				for (Smiley s : smilies) {
-					msg = Pattern.compile(Pattern.quote(s.getText()),Pattern.CASE_INSENSITIVE).matcher(msg).replaceAll("<img align=bottom src=file:///"
-							+ model.getPath() + "smiles/" + s.getIcon() + " alt='" + s.getText() + "'>");
+					msg = Pattern.compile(Pattern.quote(s.getText()),Pattern.CASE_INSENSITIVE).matcher(msg).replaceAll("<img align=bottom src=\"file:///"
+							+ model.getPath() + "smiles/" + s.getIcon() + "\" alt='" + s.getText() + "'>");
 				}
 
 				StringBuffer sb = new StringBuffer();
