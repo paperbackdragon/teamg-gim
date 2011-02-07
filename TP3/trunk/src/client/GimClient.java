@@ -169,6 +169,9 @@ public class GimClient {
 	
 	public static void clearGroupChats() {
 		
+	
+			
+		
 		if (windows.size() > 0) {
 			for (ChatWindowIdentifier window: windows) {
 				if (window.getChatPanel() instanceof GroupChatPanel) {
@@ -179,19 +182,28 @@ public class GimClient {
 	
 	}
 	
-	public static void setChatBoxes(Boolean b) {
+	public static void setChatBoxes(final Boolean b) {
+		
+		
 		if (windows.size() > 0) {
-			for (ChatWindowIdentifier window: windows) {
+			for (final ChatWindowIdentifier window: windows) {
 				
 				System.out.println("hit here");
 				
 				// if it's a group chat, we don't want to re-enable
-				if (! (window.getChatPanel() instanceof GroupChatPanel) && b == true ) {
+				if (! (window.getChatPanel() instanceof GroupChatPanel)) {
+							window.getChatPanel().chatBoxEnabled(b);
+					}
+				else if (b == false){
 					window.getChatPanel().chatBoxEnabled(b);
+					
+				}
+					
+					
 				}
 			}
 		}
-	}
+	
 
 	public static SystemTray getTray() {
 		return tray;
