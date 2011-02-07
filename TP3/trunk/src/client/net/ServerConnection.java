@@ -428,8 +428,8 @@ public class ServerConnection {
 			if (l != null) {
 				l.getChatPanel().setId(roomid);
 				
-				// !!
-				l.getChatPanel().setInProgress(true); // find a better way
+				// !! note to self: this is here because (enable on other guy joining)
+				//l.getChatPanel().setInProgress(true); // find a better way
 
 			} else {
 				SwingUtilities.invokeLater(new Runnable() {
