@@ -201,14 +201,19 @@ public class NetworkReader implements Runnable {
 
 			else if (cmd.getArgumentsAsString().equalsIgnoreCase("USERS")) {
 				String data = cmd.getData();
-
 				String[] parts = data.split(" ");
-
 				String roomid = Command.decode(parts[0]);
-
 				String[] users = new String[parts.length - 1];
+				
 				for (int i = 1; i < parts.length; i++) {
 					users[i - 1] = Command.decode(parts[i]);
+					if(model.getUser(users[i-1]) == null) {
+						model.addUser(new User(users[i-1]));
+						model.getServer().getDisplayPicture(users[i - 1]);
+						model.getServer().getNickname(users[i - 1]);
+						model.getServer().getPersonalMessage(users[i - 1]);
+						model.getServer().getStatus(users[i - 1]);
+					}
 				}
 
 				gui.users(users, roomid);

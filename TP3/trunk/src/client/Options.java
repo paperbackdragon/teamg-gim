@@ -10,7 +10,7 @@ import java.io.Serializable;
  */
 public class Options implements Serializable {
 
-	private static final long serialVersionUID = 2L;
+	private static final long serialVersionUID = 4L;
 	boolean remeberEmail;
 	boolean rememberPassword;
 	boolean autoLogin;
@@ -18,6 +18,9 @@ public class Options implements Serializable {
 	String password;
 	public int chatWindowWidth = 650;
 	public int chatWindowHeight = 500;
+	public int mainWindowWidth = 320;
+	public int mainWindowHeight = 500;
+	public boolean showOffline = false;
 
 	public boolean isRemeberEmail() {
 		return remeberEmail;

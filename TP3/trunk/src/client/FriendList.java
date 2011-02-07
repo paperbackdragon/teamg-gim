@@ -61,7 +61,9 @@ public class FriendList {
 	 * @return
 	 */
 	public Collection<User> getFriendList() {
-		return users.values();
+		LinkedList<User> u = new LinkedList<User>(getOnlineUsers());
+		u.addAll(getOfflineUsers());
+		return u;
 	}
 
 	/**
@@ -217,6 +219,12 @@ public class FriendList {
 	 */
 	public void removeFriendListChangedListener(FriendListChangedListener listener) {
 		this.listeners.remove(listener);
+	}
+
+	public void forceUpdate() {
+		for(FriendListChangedListener l : this.listeners) {
+			l.stateChanged();
+		}
 	}
 
 }
