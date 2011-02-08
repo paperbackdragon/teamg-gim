@@ -168,9 +168,10 @@ public class ChatPanel extends JPanel {
 			if (getInProgress()) {
 				model.message(id, chatBox.getText());
 			} else {
+				messageQueue.push(chatBox.getText());
 				
 				if (id.equals("-1")) {
-					messageQueue.push(chatBox.getText());
+					
 					model.createRoom(chatWith);
 				}
 			}

@@ -484,6 +484,8 @@ public class ServerConnection {
 	}
 
 	public void invited(User user, String roomid) {
+		System.out.println("invited to room " + roomid + "by user " + user);
+		
 		model.type(roomid);
 
 		// Store who gave the invitation, for when we ask the user if they want
@@ -615,7 +617,8 @@ public class ServerConnection {
 	}
 
 	public void personal(final String roomid) {
-
+		System.out.println("the room we were invited to is a personal chat, roomid: " + roomid);
+		
 		/*
 		 * gordon: spawn a personal chat window immediately ... oh wait, what if
 		 * no message has been sent yet... ... we might need to keep a log of
@@ -630,7 +633,7 @@ public class ServerConnection {
 
 		final ChatWindowIdentifier l = GimClient
 				.getWindowIdentifierFromUser(invitedBy);
-		if (l != null) {
+		if (l != null) { // already window open
 
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
@@ -655,7 +658,7 @@ public class ServerConnection {
 					ui.setLocationRelativeTo(null);
 					
 					scp.setInProgress(true);
-					ui.setVisible(true);
+					//ui.setVisible(true);
 				}
 			});
 		}
