@@ -98,8 +98,11 @@ public class GimClient {
 	public static void routeMessage(String roomid, User sender, String message) {
 		System.out.println("routing message");
 		for (int i = 0; i < windows.size(); i++) {
-			System.out.println("found the room");
+			
 			if (windows.get(i).getChatPanel().getID().equals(roomid)) {
+				System.out.println("found the room " + roomid);
+				
+				
 				windows.get(i).getChatPanel().receiveMessage(sender, message);
 				Model.getInstance().setLatestPerson(roomid);
 				break;

@@ -171,7 +171,13 @@ public class NetworkReader implements Runnable {
 		// post login
 
 		else if (cmd.getCommand().equalsIgnoreCase("MESSAGE")) {
+			
+			
+			
 			String[] parts = cmd.splitAndDecodeData(" ");
+			
+			System.out.printf("just recieved message, room %s, user %s\n ", parts[0], model.getUser(parts[2]));
+			
 			gui.message(parts[0], model.getUser(parts[1]), parts[2]);
 		}
 
