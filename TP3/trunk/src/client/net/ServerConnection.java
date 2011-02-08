@@ -436,6 +436,8 @@ public class ServerConnection {
 			});
 
 		} else {
+			
+			System.out.println("(created method) creating single chat win, room id " + roomid );
 
 			// if we already have a window...
 			final ChatWindowIdentifier l = GimClient
@@ -500,6 +502,7 @@ public class ServerConnection {
 
 			@Override
 			public void run() {
+				System.out.println("user: " + user + "joined " + roomid);
 
 				ChatWindowIdentifier l = GimClient
 						.getWindowIdentifierFromId(roomid);
