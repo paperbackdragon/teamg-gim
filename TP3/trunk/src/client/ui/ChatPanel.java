@@ -170,8 +170,8 @@ public class ChatPanel extends JPanel {
 			} else {
 				
 				if (id.equals("-1")) {
-					model.createRoom(chatWith);
 					messageQueue.push(chatBox.getText());
+					model.createRoom(chatWith);
 				}
 			}
 		}
