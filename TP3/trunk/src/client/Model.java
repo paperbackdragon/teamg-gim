@@ -156,6 +156,12 @@ public class Model {
 	public FriendList getFriendList() {
 		return this.friendlist;
 	}
+	
+	public void getUsers() {
+		for(User u: this.users.values()) {
+			System.out.println(u.getEmail());
+		}
+	}
 
 	public String getLatestPerson() {
 		return latestperson;

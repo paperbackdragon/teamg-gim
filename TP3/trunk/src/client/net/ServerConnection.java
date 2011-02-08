@@ -647,12 +647,15 @@ public class ServerConnection {
 					SingleChatPanel scp = new SingleChatPanel(invitedBy, roomid);
 
 					scp.setChatWith(invitedBy);
-					scp.setInProgress(true);
+					
 
 					ChatWindow ui = new ChatWindow("GIM - Chat with "
 							+ invitedBy.getEmail(), scp);
 					GimClient.addWindow(invitedBy, ui, scp);
 					ui.setLocationRelativeTo(null);
+					
+					scp.setInProgress(true);
+					ui.setVisible(true);
 				}
 			});
 		}
