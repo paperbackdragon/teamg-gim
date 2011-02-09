@@ -628,7 +628,7 @@ public class ServerConnection {
 		 * invoked, if messagecount == 0, spawn a window...
 		 */
 		final User invitedBy = model.getNextInvitation();
-
+		
 		model.join(roomid);
 
 		final ChatWindowIdentifier l = GimClient
@@ -659,6 +659,9 @@ public class ServerConnection {
 					
 					scp.setInProgress(true);
 					//ui.setVisible(true);
+					
+					System.out.println("there was no window for the personal chat. finished making it");
+					System.out.println("roomid: " + roomid + "chat with: " + invitedBy );
 				}
 			});
 		}
