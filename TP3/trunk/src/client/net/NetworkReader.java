@@ -177,7 +177,7 @@ public class NetworkReader implements Runnable {
 			String[] parts = cmd.splitAndDecodeData(" ");
 			System.out.println("parts 2: "+ parts[1]);
 			
-			System.out.printf("just recieved message, room %s, user %s\n ", parts[0], model.getUser(parts[1]));
+			System.out.printf("just recieved message, room %s, user: %s, message: %s \n", parts[0], model.getUser(parts[1]), parts[2]);
 									
 			gui.message(parts[0], model.getUser(parts[1]), parts[2]);
 		}

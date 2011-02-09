@@ -236,8 +236,21 @@ public class ServerConnection {
 		});
 	}
 
-	public void message(String roomid, User sender, String message) {
+	public void message(final String roomid, final User sender, final String message) {
+		
+		// This wasn't added to the event queue, so message was being routed before window
+		// created
+		SwingUtilities.invokeLater(new Runnable() {
+
+			@Override
+			public void run() {
+		
 		GimClient.routeMessage(roomid, sender, message);
+		
+			}
+		});
+		
+		
 	}
 
 	public void missingArgumentsError(String message) {
