@@ -9,6 +9,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -35,6 +36,8 @@ public class MainWindow extends JFrame {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
 		}
+		
+		this.setIconImage(new ImageIcon(model.getPath() + "icons/logo.png").getImage());
 		
 		// Listen for window resize and update the options
 		this.addComponentListener(new ComponentListener() {

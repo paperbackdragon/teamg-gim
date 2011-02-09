@@ -12,7 +12,7 @@ public class ChatWindow extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
-	private JMenuItem logout, quit, setOptions;
+	private JMenuItem logout, quit;
 	private JPanel main;
 	private static Model model = Model.getInstance();
 
@@ -22,8 +22,14 @@ public class ChatWindow extends JFrame {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
 		}
-
+		
 		this.main = panel;
+		
+		// Set the window icon
+		if(panel instanceof SingleChatPanel) 
+			this.setIconImage(((SingleChatPanel)panel).getUser().getDisplayPic().getImage());
+		else 
+		this.setIconImage(new ImageIcon(model.getPath() + "icons/logo.png").getImage());
 		
 		// Listen for window resize and update the options
 		this.addComponentListener(new ComponentListener() {
@@ -73,10 +79,6 @@ public class ChatWindow extends JFrame {
 
 		windowListener windowlistener = new windowListener();
 		this.addWindowListener(windowlistener);
-
-		setOptions = new JMenuItem("Set Options...");
-		setOptions.addActionListener(menuListener);
-		optionMenu.add(setOptions);
 
 		menu.add(fileMenu);
 		menu.add(optionMenu);
