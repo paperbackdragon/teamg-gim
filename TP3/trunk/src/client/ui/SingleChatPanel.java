@@ -35,7 +35,6 @@ public class SingleChatPanel extends ChatPanel {
 	public SingleChatPanel(User user, String roomID) {
 		super(roomID);
 		this.user = user;
-		System.out.println(user.getEmail());
 
 		setLayout(new BorderLayout(5, 5));
 
@@ -68,8 +67,6 @@ public class SingleChatPanel extends ChatPanel {
 		add(new ContactInfo(), BorderLayout.NORTH);
 		add(messagePane, BorderLayout.CENTER);
 		add(chatPanel, BorderLayout.SOUTH);
-
-		// TODO (heather): DOESNT WORK: chatBox.requestFocusInWindow();
 
 	}
 
@@ -149,5 +146,9 @@ public class SingleChatPanel extends ChatPanel {
 
 		}
 
+	}
+	
+	public User getUser() {
+		return this.user;
 	}
 }
