@@ -192,6 +192,8 @@ public class ClientConnection implements NetworkingOut, Runnable {
 	@Override
 	public void message(String roomid, String message) {
 		// :MESSAGE: <roomid> <message>;
+		System.out.println("sending message, roomid: " + roomid + "message: " + message);
+		
 		buffer.putCommand(new Command("MESSAGE", null, Command.encode(roomid) + " " + Command.encode(message)));
 	}
 
