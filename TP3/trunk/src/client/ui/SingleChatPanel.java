@@ -2,6 +2,7 @@ package client.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -37,6 +38,7 @@ public class SingleChatPanel extends ChatPanel {
 		this.user = user;
 
 		setLayout(new BorderLayout(5, 5));
+		setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, getBackground()));
 
 		JScrollPane messagePane = new JScrollPane(messages);
 
@@ -47,6 +49,7 @@ public class SingleChatPanel extends ChatPanel {
 		chatBox.setEditable(true);
 		chatBox.setLineWrap(true);
 		chatBox.setWrapStyleWord(true);
+		chatBox.setFont(chatPanel.getFont());
 
 		EnterListener enterListener = new EnterListener();
 		chatBox.addKeyListener(enterListener);
@@ -62,7 +65,6 @@ public class SingleChatPanel extends ChatPanel {
 		chatPanel.setPreferredSize(new Dimension(0, 50));
 		chatPanel.add(chatPane, BorderLayout.CENTER);
 		chatPanel.add(send, BorderLayout.EAST);
-		// END BOTTOM PANEL
 
 		add(new ContactInfo(), BorderLayout.NORTH);
 		add(messagePane, BorderLayout.CENTER);
@@ -86,27 +88,24 @@ public class SingleChatPanel extends ChatPanel {
 			ImageIcon displayPictureIcon = user.getDisplayPic(48, 48);
 			final JLabel displayPicture = new JLabel(displayPictureIcon);
 			displayPicture.setPreferredSize(new Dimension(48, 48));
-			displayPicture.setBorder(BorderFactory.createLineBorder(UIManager
-					.getColor("controlShadow")));
+			displayPicture.setBorder(BorderFactory.createLineBorder(UIManager.getColor("controlShadow")));
 			displayPicture.setIconTextGap(0);
 
-			final ImageIcon statusIcon = new ImageIcon(model.getPath()
-					+ "status/" + user.getStatus().toString().toLowerCase()
-					+ ".png", "Icon");
+			final ImageIcon statusIcon = new ImageIcon(model.getPath() + "status/"
+					+ user.getStatus().toString().toLowerCase() + ".png", "Icon");
 
 			JLabel statusIconLabel = new JLabel(statusIcon);
-			statusIconLabel.setPreferredSize(new Dimension(16, 16));
+			statusIconLabel.setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, getBackground()));
+			statusIconLabel.setPreferredSize(new Dimension(26, 26));
 
-			JPanel userInfo = new JPanel(new BorderLayout());
+			JPanel userInfo = new JPanel(new GridLayout(2, 1));
 			userInfo.setOpaque(false);
 
-			final JLabel username = new JLabel("<html>"
-					+ Html.escape(user.getNickname()) + "</html>");
-			final JLabel personalMessage = new JLabel("<html>"
-					+ Html.escape(user.getPersonalMessage()) + "</html>");
+			final JLabel username = new JLabel("<html>" + Html.escape(user.getNickname()) + "</html>");
+			final JLabel personalMessage = new JLabel("<html>" + Html.escape(user.getPersonalMessage()) + "</html>");
 
-			userInfo.add(username, BorderLayout.NORTH);
-			userInfo.add(personalMessage, BorderLayout.SOUTH);
+			userInfo.add(username);
+			userInfo.add(personalMessage);
 
 			add(displayPicture, BorderLayout.WEST);
 			add(userInfo, BorderLayout.CENTER);
@@ -115,23 +114,18 @@ public class SingleChatPanel extends ChatPanel {
 			user.addUserChangedListener(new UserChangedListener() {
 				@Override
 				public void statusChanged() {
-					statusIcon.setImage(new ImageIcon(model.getPath()
-							+ "status/"
-							+ user.getStatus().toString().toLowerCase()
-							+ ".png", "Icon").getImage());
+					statusIcon.setImage(new ImageIcon(model.getPath() + "status/"
+							+ user.getStatus().toString().toLowerCase() + ".png", "Icon").getImage());
 				}
 
 				@Override
 				public void personalMessageChanged() {
-					personalMessage.setText("<html>"
-							+ Html.escape(user.getPersonalMessage())
-							+ "</html>");
+					personalMessage.setText("<html>" + Html.escape(user.getPersonalMessage()) + "</html>");
 				}
 
 				@Override
 				public void nicknameChanged() {
-					username.setText("<html>" + Html.escape(user.getNickname())
-							+ "</html>");
+					username.setText("<html>" + Html.escape(user.getNickname()) + "</html>");
 				}
 
 				@Override
@@ -147,7 +141,7 @@ public class SingleChatPanel extends ChatPanel {
 		}
 
 	}
-	
+
 	public User getUser() {
 		return this.user;
 	}

@@ -11,7 +11,7 @@ import util.Base64;
  * Represents of the users and holds all of the information about that user.
  */
 public class User {
-	
+
 	public static enum Status {
 		OFFLINE, ONLINE, BUSY, AWAY
 	}
@@ -81,10 +81,10 @@ public class User {
 	 *            The status of the user
 	 */
 	public synchronized void setStatus(String status) {
-		
-		if(status.equalsIgnoreCase(this.getStatus()))
+
+		if (status.equalsIgnoreCase(this.getStatus()))
 			return;
-		
+
 		try {
 			this.status = Status.valueOf(status.toUpperCase());
 		} catch (IllegalArgumentException e) {
@@ -98,7 +98,7 @@ public class User {
 			l.statusChanged();
 			l.changed();
 		}
-		
+
 	}
 
 	/**
@@ -154,10 +154,9 @@ public class User {
 	 *            The display picture of the user as a base 64 encoded string
 	 */
 	public synchronized void setDisplayPic(String displayPic) {
-
 		this.displayPic = new ImageIcon(Base64.decode(displayPic));
-		
-		if(this.displayPic.getIconWidth() == 0) 
+
+		if (this.displayPic.getIconWidth() == 0)
 			this.displayPic = new ImageIcon(Model.getInstance().getPath() + "default.jpg");
 
 		for (UserChangedListener l : this.listeners.toArray(new UserChangedListener[0])) {
@@ -186,10 +185,9 @@ public class User {
 	public synchronized void removeUserChangedListener(UserChangedListener listener) {
 		this.listeners.remove(listener);
 	}
-	
+
 	public String toString() {
 		return this.email;
 	}
-	
 
 }

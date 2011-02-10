@@ -17,6 +17,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
 import javax.swing.UIManager;
 
 import client.Model;
@@ -26,7 +27,7 @@ public class MainWindow extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
-	private JMenuItem logout, quit, setOptions, about, viewOffline;
+	private JMenuItem logout, quit, about, viewOffline, showNotifications;
 	private JPanel main;
 	private static Model model = Model.getInstance();
 
@@ -36,30 +37,15 @@ public class MainWindow extends JFrame {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
 		}
-		
+
+		// Set the window icon
 		this.setIconImage(new ImageIcon(model.getPath() + "icons/logo.png").getImage());
-		
+
+		this.setPreferredSize(new Dimension(model.getOptions().mainWindowWidth, model.getOptions().mainWindowHeight));
+
 		// Listen for window resize and update the options
-		this.addComponentListener(new ComponentListener() {
-			
-			@Override
-			public void componentShown(ComponentEvent e) {
-			}
-			
-			@Override
-			public void componentResized(ComponentEvent e) {
-				model.getOptions().mainWindowWidth = MainWindow.this.getWidth();
-				model.getOptions().mainWindowHeight = MainWindow.this.getHeight();
-			}
-			
-			@Override
-			public void componentMoved(ComponentEvent e) {
-			}
-			
-			@Override
-			public void componentHidden(ComponentEvent e) {
-			}
-		});
+		Listener l = new Listener();
+		this.addComponentListener(l);
 
 		setTitle(title);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -76,31 +62,31 @@ public class MainWindow extends JFrame {
 
 		logout = new JMenuItem("Logout");
 		quit = new JMenuItem("Quit");
-		about = new JMenuItem("About GIM");
+		about = new JMenuItem("About GIM...");
 
-		MenuListener menuListener = new MenuListener();
-		logout.addActionListener(menuListener);
-		quit.addActionListener(menuListener);
-		about.addActionListener(menuListener);
+		logout.addActionListener(l);
+		quit.addActionListener(l);
+		about.addActionListener(l);
 
 		logout.setMnemonic(KeyEvent.VK_L);
 		quit.setMnemonic(KeyEvent.VK_Q);
 
 		fileMenu.add(logout);
+		add(new JSeparator());
 		fileMenu.add(quit);
 		helpMenu.add(about);
 
-		windowListener windowlistener = new windowListener();
-		this.addWindowListener(windowlistener);
+		this.addWindowListener(l);
 
 		viewOffline = new JCheckBoxMenuItem("Show Offline Users");
 		viewOffline.setSelected(model.getOptions().showOffline);
-		viewOffline.addActionListener(menuListener);
+		viewOffline.addActionListener(l);
 		optionMenu.add(viewOffline);
 
-		setOptions = new JMenuItem("Set Options...");
-		setOptions.addActionListener(menuListener);
-		optionMenu.add(setOptions);
+		showNotifications = new JCheckBoxMenuItem("Show Notifications");
+		showNotifications.setSelected(model.getOptions().showNotifications);
+		showNotifications.addActionListener(l);
+		optionMenu.add(showNotifications);
 
 		menu.add(fileMenu);
 		menu.add(optionMenu);
@@ -109,7 +95,7 @@ public class MainWindow extends JFrame {
 		setJMenuBar(menu);
 		setContentPane(main);
 		pack();
-		// setVisible(true);
+		setVisible(true);
 	}
 
 	// HELPER METHODS
@@ -117,7 +103,6 @@ public class MainWindow extends JFrame {
 		main = newPanel;
 		setContentPane(main);
 		pack();
-		// setVisible(true);
 	}
 
 	public JPanel getMainPanel() {
@@ -127,16 +112,31 @@ public class MainWindow extends JFrame {
 	public void canLogout(Boolean bool) {
 		logout.setEnabled(bool);
 	}
-	
-	public Dimension getPreferredSize() {
-		return new Dimension(model.getOptions().mainWindowWidth, model.getOptions().mainWindowHeight);
-	}
 
-	// ACTION LISTENERS
-	class MenuListener implements ActionListener {
+	class Listener implements WindowListener, ActionListener, ComponentListener {
+
+		@Override
+		public void componentShown(ComponentEvent e) {
+		}
+
+		@Override
+		public void componentResized(ComponentEvent e) {
+			model.getOptions().mainWindowWidth = MainWindow.this.getWidth();
+			model.getOptions().mainWindowHeight = MainWindow.this.getHeight();
+		}
+
+		@Override
+		public void componentMoved(ComponentEvent e) {
+		}
+
+		@Override
+		public void componentHidden(ComponentEvent e) {
+		}
+
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource().equals(logout)) {
-				model.logout();
+				model.getServer().logout();
 
 				LoginPanel panel = new LoginPanel();
 				panel.setParent(GimClient.getMainWindow());
@@ -149,71 +149,25 @@ public class MainWindow extends JFrame {
 				GimClient.setChatBoxes(false);
 
 				// clear group chat user lists
-
 				GimClient.clearGroupChats();
 
 			} else if (e.getSource().equals(quit)) {
 				model.quit();
+
 			} else if (e.getSource().equals(viewOffline)) {
 				model.getOptions().showOffline = viewOffline.isSelected();
 				model.getFriendList().forceUpdate();
-			} else if (e.getSource().equals(setOptions)) {
-				System.out.println("setOptions clicked.");
-				// TODO (heather): create options panel
 
-				/*
-				 * OptionsPanel options = new OptionsPanel();
-				 * 
-				 * Object[] buttons = { "Confirm", "Cancel" }; int n =
-				 * JOptionPane.showOptionDialog(null, options, "Select options",
-				 * JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
-				 * null, buttons, buttons[0]);
-				 * 
-				 * 
-				 * if (n == 0) { // "confirm" if
-				 * (!options.getNicknameText().equals
-				 * (model.getSelf().getNickname())) {
-				 * model.setOwnNickname(options.getNicknameText());
-				 * model.setNickname(options.getNicknameText()); // for when
-				 * user is not their own friend...
-				 * model.getNickName(model.getOwnUserName()); }
-				 * 
-				 * if (!options.getStatusText().equals(model.getOwnStatus())) {
-				 * model.setOwnStatus(options.getStatusText());
-				 * model.setStatus(options.getStatusText()); // for when user is
-				 * not their own friend...
-				 * model.getStatus(model.getOwnStatus()); }
-				 * 
-				 * if(!options.getPersonalMessageText().equals(model.
-				 * getOwnPersonalMessage())) {
-				 * model.setOwnPersonalMessage(options
-				 * .getPersonalMessageText());
-				 * model.setPersonalMessage(options.getPersonalMessageText());
-				 * // for when user is not their own friend...
-				 * model.getStatus(model.getOwnPersonalMessage()); } }
-				 */
+			} else if (e.getSource().equals(showNotifications)) {
+				model.getOptions().showNotifications = showNotifications.isSelected();
 
 			} else if (e.getSource().equals(about)) {
-				JOptionPane
-						.showMessageDialog(
-								null,
-								"<html><center><h2>Team G Instant Messenger</h2>" +
-								"&copy; 2010-2011</center>" +
-								"<h3>Developed by</h3>" +
-								"<ul>" +
-								"<li>James McMinn" +
-								"<li>Gordon Martin" +
-								"<li>Heather Hoaglund-Biron" +
-								"<li>Ewan Baird" +
-								"</ul>" +
-								"<h4>Artwork provided by Matt Roszak</h4>",
-								"About", JOptionPane.PLAIN_MESSAGE);
+				JOptionPane.showMessageDialog(null, "<html><center><h2>Team G Instant Messenger</h2>"
+						+ "&copy; 2010-2011</center>" + "<h3>Developed by</h3>" + "<ul>" + "<li>James McMinn"
+						+ "<li>Gordon Martin" + "<li>Heather Hoaglund-Biron" + "<li>Ewan Baird" + "</ul>"
+						+ "Artwork provided by Matt Roszak", "About", JOptionPane.PLAIN_MESSAGE);
 			}
 		}
-
-	}
-
-	class windowListener implements WindowListener {
 
 		@Override
 		public void windowActivated(WindowEvent arg0) {
@@ -225,54 +179,27 @@ public class MainWindow extends JFrame {
 
 		@Override
 		public void windowClosed(WindowEvent e) {
-
-			// if the window closed is a chat window
-			if (main instanceof ChatPanel) {
-
-				String roomid = ((ChatPanel) main).getID();
-
-				// tell the server to leave the room
-				model.leave(roomid);
-
-				// remove from the window list
-				// GimUI toDispose = GimClient.getWindowRoom(roomid);
-				GimClient.removeRoom((ChatPanel) main);
-			}
-
-			else {
-				GimClient.getMainWindow().setVisible(false);
-			}
-
+			GimClient.getMainWindow().setVisible(false);
 		}
 
 		@Override
 		public void windowClosing(WindowEvent e) {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
 		public void windowDeactivated(WindowEvent e) {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
 		public void windowDeiconified(WindowEvent e) {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
 		public void windowIconified(WindowEvent e) {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
 		public void windowOpened(WindowEvent e) {
-			// TODO Auto-generated method stub
-
 		}
 
 	}

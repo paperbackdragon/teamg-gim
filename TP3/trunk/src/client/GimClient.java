@@ -34,7 +34,7 @@ public class GimClient {
 	private static ClientConnection outLink = new ClientConnection(inLink);
 
 	private static SystemTray tray;
-	static TrayIcon trayIcon;
+	private static TrayIcon trayIcon;
 
 	public static void main(String[] args) {
 
@@ -46,10 +46,9 @@ public class GimClient {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				setUpTray();
-				
+
 				try {
-					UIManager.setLookAndFeel(UIManager
-							.getSystemLookAndFeelClassName());
+					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 				} catch (Exception e) {
 				}
 
@@ -98,11 +97,10 @@ public class GimClient {
 	public static void routeMessage(String roomid, User sender, String message) {
 		System.out.println("routing message");
 		for (int i = 0; i < windows.size(); i++) {
-			
+
 			if (windows.get(i).getChatPanel().getID().equals(roomid)) {
 				System.out.println("found the room " + roomid);
-				
-				
+
 				windows.get(i).getChatPanel().receiveMessage(sender, message);
 				Model.getInstance().setLatestPerson(roomid);
 				break;
@@ -169,44 +167,35 @@ public class GimClient {
 			}
 		}
 	}
-	
+
 	public static void clearGroupChats() {
-		
-	
-			
-		
+
 		if (windows.size() > 0) {
-			for (ChatWindowIdentifier window: windows) {
+			for (ChatWindowIdentifier window : windows) {
 				if (window.getChatPanel() instanceof GroupChatPanel) {
 					((GroupChatPanel) window.getChatPanel()).clearUserList();
 				}
 			}
 		}
-	
+
 	}
-	
+
 	public static void setChatBoxes(final Boolean b) {
-		
-		
+
 		if (windows.size() > 0) {
-			for (final ChatWindowIdentifier window: windows) {
-				
-				System.out.println("hit here");
+			for (ChatWindowIdentifier window : windows) {
 				
 				// if it's a group chat, we don't want to re-enable
-				if (! (window.getChatPanel() instanceof GroupChatPanel)) {
-							window.getChatPanel().chatBoxEnabled(b);
-					}
-				else if (b == false){
+				if (!(window.getChatPanel() instanceof GroupChatPanel)) {
 					window.getChatPanel().chatBoxEnabled(b);
-					
+				} else if (b == false) {
+					window.getChatPanel().chatBoxEnabled(b);
+
 				}
-					
-					
-				}
+
 			}
 		}
-	
+	}
 
 	public static SystemTray getTray() {
 		return tray;
@@ -215,22 +204,27 @@ public class GimClient {
 	public static TrayIcon getTrayIcon() {
 		return trayIcon;
 	}
-	
-	/** Called whenever a method might want to notify via a pop up from the system tray
-	 * to check this is supported. Otherwise, a null pointer would occur. */
+
+	/**
+	 * Called whenever a method might want to notify via a pop up from the
+	 * system tray to check this is supported. Otherwise, a null pointer would
+	 * occur.
+	 */
 	public static Boolean SystemTraySupported() {
 		return SystemTray.isSupported();
 	}
-	
-	/** Alerts the user they have received a message, in a window they are not focused on */
+
+	/**
+	 * Alerts the user they have received a message, in a window they are not
+	 * focused on
+	 */
 	public static void alertMessage(String from, String message) {
-		
+
 		// Should handle null pointer in lab?
-		if (SystemTraySupported()) {
-			System.out.println("hello");
+		if (SystemTraySupported() && model.getOptions().showNotifications) {
 			getTrayIcon().displayMessage(from + " says: ", message, TrayIcon.MessageType.INFO);
 		}
-		
+
 	}
 
 	public static void setUpTray() {
@@ -238,8 +232,7 @@ public class GimClient {
 		if (SystemTray.isSupported()) {
 
 			tray = SystemTray.getSystemTray();
-			Image image = new ImageIcon(model.getPath() + "status/offline.png")
-					.getImage();
+			Image image = new ImageIcon(model.getPath() + "status/offline.png").getImage();
 
 			MouseListener mouseListener = new MouseListener() {
 
@@ -278,9 +271,8 @@ public class GimClient {
 			defaultItem.addActionListener(exitListener);
 			popup.add(defaultItem);
 
-			image = image.getScaledInstance((int) tray.getTrayIconSize()
-					.getWidth(), (int) tray.getTrayIconSize().getHeight(),
-					Image.SCALE_SMOOTH);
+			image = image.getScaledInstance((int) tray.getTrayIconSize().getWidth(), (int) tray.getTrayIconSize()
+					.getHeight(), Image.SCALE_SMOOTH);
 			trayIcon = new TrayIcon(image, "GIM", popup);
 
 			ActionListener actionListener = new ActionListener() {
@@ -296,11 +288,8 @@ public class GimClient {
 						// THIS
 
 						if (Model.getInstance().getLatestPerson() != null) {
-							GimClient
-									.getWindowIdentifierFromId(
-											Model.getInstance()
-													.getLatestPerson())
-									.getWindow().setVisible(true);
+							GimClient.getWindowIdentifierFromId(Model.getInstance().getLatestPerson()).getWindow()
+									.setVisible(true);
 						}
 					}
 
@@ -331,7 +320,5 @@ public class GimClient {
 		 * (windows.get(i).getId().equals(roomid)) { windows.remove(i); } } }
 		 */
 	}
-
-
 
 }

@@ -1,11 +1,20 @@
 package client.ui;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTextArea;
+import javax.swing.ListSelectionModel;
+import javax.swing.ScrollPaneConstants;
 
 import client.Model;
 import client.User;
@@ -21,8 +30,7 @@ public class GroupChatPanel extends ChatPanel {
 
 	private static final long serialVersionUID = 1L;
 
-	private JButton invite;
-	private User[] participants;
+	public User[] participants;
 
 	private final DefaultListModel listModel;
 
@@ -40,7 +48,8 @@ public class GroupChatPanel extends ChatPanel {
 	public GroupChatPanel(String roomID) {
 		super(roomID);
 
-		setLayout(new BorderLayout());
+		setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, getBackground()));
+		setLayout(new BorderLayout(5, 5));
 		JScrollPane messagePane = new JScrollPane(messages);
 
 		listModel = new DefaultListModel();
@@ -80,37 +89,36 @@ public class GroupChatPanel extends ChatPanel {
 		// Create and populate the list model.
 		participants = new User[1];
 		participants[0] = model.getSelf();
-
 		for (User u : participants) {
 			listModel.addElement(u);
 			u.addUserChangedListener(listener);
 		}
 
 		// Make sure the list is rendered correctly
-		list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		ContactListRenderer renderer = new ContactListRenderer();
 		list.setCellRenderer(renderer);
-		list.setSelectedIndex(0);
 
-		// BOTTOM PANEL
+		// Add the listeners
+		list.addMouseListener(new MListener());
+
+		// Bottom Panel
 		JPanel chatPanel = new JPanel();
 		chatPanel.setLayout(new BorderLayout());
 		chatBox = new JTextArea();
 		chatBox.setEditable(true);
 		chatBox.setLineWrap(true);
 		chatBox.setWrapStyleWord(true);
+		chatBox.setFont(chatPanel.getFont());
+		
 		EnterListener enterListener = new EnterListener();
 		chatBox.addKeyListener(enterListener);
 		JScrollPane chatPane = new JScrollPane(chatBox);
 		chatPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
 		send = new JButton("Send");
-		invite = new JButton("Invite");
+	
 
-		InviteListener inviteListener = new InviteListener();
-		invite.addActionListener(inviteListener);
-
-		invite.setPreferredSize(new Dimension(65, 50));
 		send.setPreferredSize(new Dimension(65, 50));
 		SendListener sendListener = new SendListener();
 		send.addActionListener(sendListener);
@@ -119,7 +127,6 @@ public class GroupChatPanel extends ChatPanel {
 		chatPanel.add(chatPane, BorderLayout.CENTER);
 
 		JPanel buttons = new JPanel(new BorderLayout(0, 0));
-		buttons.add(invite, BorderLayout.WEST);
 		buttons.add(send, BorderLayout.EAST);
 		chatPanel.add(buttons, BorderLayout.EAST);
 		// END BOTTOM PANEL
@@ -128,46 +135,23 @@ public class GroupChatPanel extends ChatPanel {
 		splitPane.setOneTouchExpandable(true);
 		splitPane.setContinuousLayout(true);
 		splitPane.setResizeWeight(1.0);
-		
+
 		splitPane.setDividerLocation(model.getOptions().chatWindowWidth - 210);
 
 		add(splitPane, BorderLayout.CENTER);
 		add(chatPanel, BorderLayout.SOUTH);
-		
-	}
 
-	// PANELS
-	class ContactManage extends JPanel {
-		private static final long serialVersionUID = 1L;
-
-		class TextField extends JPanel {
-			private static final long serialVersionUID = 1L;
-			public JButton addContact = new JButton("Invite Contact");
-
-			public TextField() {
-				setLayout(new GridLayout(2, 2));
-				// add(name);
-				// add(addContact);
-				// add(message);
-			}
-		}
-
-		public ContactManage() {
-			add(new TextField());
-		}
 	}
 
 	public void updateUserList(User[] participants) {
-		this.participants = participants;
 
+		this.participants = participants;
 		for (Object o : listModel.toArray()) {
 			((User) o).removeUserChangedListener(listener);
 		}
 
-		listModel.clear();
-
-		DefaultListModel listModel = new DefaultListModel();
 		// Create and populate the list model.
+		DefaultListModel listModel = new DefaultListModel();
 		for (User u : participants) {
 			listModel.addElement(u);
 			u.addUserChangedListener(listener);
@@ -181,60 +165,33 @@ public class GroupChatPanel extends ChatPanel {
 	 * open
 	 */
 	public void clearUserList() {
-		
-
-		//if (!listModel.isEmpty()) { // already clear otherwise...
-			System.out.println("i'm meant to be clearing the user list");
-			
-			/* for (Object o : listModel.toArray()) {
-				((User) o).removeUserChangedListener(listener);
-			} */
-
-			list.removeAll();
-			list.repaint();
-
-			// disable the chat box - probably should be in a method of its own,
-			// but meh
-			chatBox.setEnabled(false);
-		//}
+		list.setModel(new DefaultListModel());
+		chatBox.setEnabled(false);
 	}
 
-	public class InviteListener implements ActionListener {
+	class MListener implements MouseListener {
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			String[] temp = new String[participants.length];
-
-			if (participants == null) {
-				temp = new String[1];
-				temp[0] = "{ }";
-			} else {
-
-				for (int i = 0; i < participants.length; i++) {
-					temp[i] = participants[i].toString();
-				}
+		public void mousePressed(MouseEvent e) {
+			// Look for right client events
+			JList list = ((JList) e.getComponent());
+			if (e.getButton() == MouseEvent.BUTTON3) {
+				list.setSelectedIndex(list.locationToIndex(e.getPoint()));
+				GroupChatContextMenu menu = new GroupChatContextMenu((User) list.getSelectedValue());
+				menu.show(e.getComponent(), e.getX(), e.getY());
 			}
-
-			SelectContactsPanel inputs = new SelectContactsPanel(model.getFriendList().getOnlineUsers(), temp);
-			if (inputs.getBoxes().size() != 0) {
-				JOptionPane.showMessageDialog(null, inputs, "Select contacts to invite", JOptionPane.PLAIN_MESSAGE);
-				ArrayList<JCheckBox> checkboxes = inputs.getBoxes();
-				for (int i = 0; i < checkboxes.size(); i++) {
-					if (checkboxes.get(i).isSelected() == true) {
-
-						// NOTE (gordon): at the moment, this will be wrong (it
-						// will
-						// invite by their nickname.
-						// need to work out a way to preserve the e-mail
-						// address...
-						model.invite(id, checkboxes.get(i).getText());
-					}
-				}
-			} else {
-				JOptionPane.showMessageDialog(null, "No contacts available");
-			}
-
 		}
 
+		public void mouseClicked(MouseEvent e) {
+		}
+
+		public void mouseEntered(MouseEvent e) {
+		}
+
+		public void mouseExited(MouseEvent e) {
+		}
+
+		public void mouseReleased(MouseEvent e) {
+		}
 	}
+
 }

@@ -106,7 +106,7 @@ public class NetworkReader implements Runnable {
 
 		LoginPanel panel = new LoginPanel();
 		panel.setParent(GimClient.getMainWindow());
-		Model.getInstance().setConnected(false);
+		Model.getInstance().getServer().setConnected(false);
 
 		GimClient.getMainWindow().setMainPanel(panel);
 
@@ -126,7 +126,7 @@ public class NetworkReader implements Runnable {
 	}
 
 	private void performCommand(Command cmd) {
-
+		
 		if (cmd.getCommand().equalsIgnoreCase("OKAY")) {
 			gui.okay();
 		}

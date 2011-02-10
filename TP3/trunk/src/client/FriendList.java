@@ -227,4 +227,8 @@ public class FriendList {
 		}
 	}
 
+	public void removeBlockedUser(User user) {
+		this.blocked.remove(user.getEmail());
+	}
+
 }

@@ -6,6 +6,8 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -21,6 +23,7 @@ import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -76,7 +79,7 @@ public class ContactPanel extends JPanel {
 		private static final long serialVersionUID = 1L;
 
 		private EditableJLabel name, message;
-		private ListJLabel status;
+		private JComboBox status;
 
 		class OwnInformation extends JPanel {
 
@@ -88,7 +91,7 @@ public class ContactPanel extends JPanel {
 
 				name = new EditableJLabel(Html.escape(self.getNickname()), 50);
 				message = new EditableJLabel(Html.escape(self.getPersonalMessage()), 175);
-				status = new ListJLabel(new String[] { "Online", "Away", "Busy", "Offline" }, 0);
+				status = new JComboBox(new String[] { "Online", "Away", "Busy", "Offline" });
 
 				// Create a listener for the editableJLabels
 				ValueChangedListener valueListener = new ValueChangedListener() {
@@ -100,9 +103,6 @@ public class ContactPanel extends JPanel {
 						} else if (source.equals(message)) {
 							self.setPersonalMessage(value);
 							model.getServer().setPersonalMessage(value);
-						} else if (source.equals(status)) {
-							self.setStatus(status.getValue());
-							model.getServer().setStatus(status.getValue());
 						}
 					}
 				};
@@ -134,7 +134,15 @@ public class ContactPanel extends JPanel {
 				name.addValueChangedListener(valueListener);
 				message.addValueChangedListener(valueListener);
 				self.addUserChangedListener(selfListener);
-				status.addValueChangedListener(valueListener);
+
+				// Update their status
+				status.addItemListener(new ItemListener() {
+					@Override
+					public void itemStateChanged(ItemEvent e) {
+						self.setStatus(status.getSelectedItem().toString());
+						model.getServer().setStatus(status.getSelectedItem().toString());
+					}
+				});
 
 				add(name);
 				add(message);
@@ -144,8 +152,10 @@ public class ContactPanel extends JPanel {
 
 		public PersonalInfo() {
 
-			ChoosePic select = new ChoosePic();
 			setLayout(new BorderLayout(2, 0));
+			setBorder(BorderFactory.createMatteBorder(3, 0, 3, 0, getBackground()));
+			
+			ChoosePic select = new ChoosePic();
 			ImageIcon icon = self.getDisplayPic(64, 64);
 			final JButton b = new JButton(icon);
 			b.setIconTextGap(10);
@@ -184,10 +194,8 @@ public class ContactPanel extends JPanel {
 
 		public void actionPerformed(ActionEvent e) {
 			JFileChooser chooser = new JFileChooser();
-			chooser.addChoosableFileFilter(new FileNameExtensionFilter("JPEG file", "jpg", "jpeg"));
-			chooser.addChoosableFileFilter(new FileNameExtensionFilter("PNG file", "png"));
-			chooser.addChoosableFileFilter(new FileNameExtensionFilter("BITMAP file", "bmp"));
-			chooser.addChoosableFileFilter(new FileNameExtensionFilter("GIF file", "gif"));
+			chooser.addChoosableFileFilter(new FileNameExtensionFilter("Image Files", "jpeg", "jpg", "gif", "png",
+					"bmp"));
 
 			int option = chooser.showOpenDialog(getParent());
 
@@ -217,6 +225,8 @@ public class ContactPanel extends JPanel {
 					model.getServer().setDisplayPicture(displayPic);
 
 				} catch (IOException e1) {
+					// TODO: Alert the user that we could not change their
+					// display picture
 				}
 
 			}
@@ -243,7 +253,7 @@ public class ContactPanel extends JPanel {
 			// Create a heading
 			final JLabel onlineLabel = new JLabel("<html><b>Contacts (" + model.getFriendList().getOnlineUsers().size()
 					+ " Online/" + model.getFriendList().getOfflineUsers().size() + " Offline)</b></html>");
-			onlineLabel.setBorder(BorderFactory.createMatteBorder(1, 2, 1, 2, UIManager.getColor("List.background")));
+			onlineLabel.setBorder(BorderFactory.createMatteBorder(1, 2, 1, 2, UIManager.getColor("EditorPane.background")));
 			online.add(onlineLabel, BorderLayout.NORTH);
 
 			// The listener we'll be using to keep track of changes to people in
@@ -299,7 +309,7 @@ public class ContactPanel extends JPanel {
 
 					// TODO: This doesn't work because the list shuffles!
 					int[] indicies = list.getSelectedIndices();
-					
+
 					DefaultListModel listModel = new DefaultListModel();
 					for (User u : users) {
 						listModel.addElement(u);
@@ -327,7 +337,7 @@ public class ContactPanel extends JPanel {
 			});
 
 			// Add the listeners
-			list.addMouseListener(new SingleChatListener());
+			list.addMouseListener(new MListener());
 
 			// Make sure the list is rendered correctly
 			list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -350,18 +360,22 @@ public class ContactPanel extends JPanel {
 			add = new JButton();
 			add.setIcon(new ImageIcon(new ImageIcon(model.getPath() + "/icons/add.png").getImage().getScaledInstance(
 					32, 20, Image.SCALE_SMOOTH)));
+			add.setToolTipText("Add a new contact");
 
 			del = new JButton();
 			del.setIcon(new ImageIcon(new ImageIcon(model.getPath() + "/icons/remove.png").getImage()
 					.getScaledInstance(32, 20, Image.SCALE_SMOOTH)));
+			del.setToolTipText("Remove a contact");
 
 			chat = new JButton();
 			chat.setIcon(new ImageIcon(new ImageIcon(model.getPath() + "/icons/chat.png").getImage().getScaledInstance(
 					32, 20, Image.SCALE_SMOOTH)));
+			chat.setToolTipText("Start a chat with the selected contact");
 
 			group = new JButton();
 			group.setIcon(new ImageIcon(new ImageIcon(model.getPath() + "/icons/group.png").getImage()
 					.getScaledInstance(32, 20, Image.SCALE_SMOOTH)));
+			group.setToolTipText("Start a group chat with the selected contacts");
 
 			ButtonListener buttonListener = new ButtonListener();
 			add.addActionListener(buttonListener);
@@ -397,7 +411,7 @@ public class ContactPanel extends JPanel {
 								JOptionPane.PLAIN_MESSAGE, null, null, "");
 
 						if (s != null) {
-							model.addfriend(s);
+							model.getServer().add(s);
 						}
 
 					}
@@ -435,43 +449,47 @@ public class ContactPanel extends JPanel {
 				int find = GimClient.findRoom(selectedUsers.getFirst());
 
 				if (find == -1) {
-					
-					// if they're not offline, create a room via the traditional channels
+
+					// if they're not offline, create a room via the traditional
+					// channels
 					if (!selectedUsers.getFirst().getStatus().equalsIgnoreCase("offline")) {
 						model.createRoom(getSelectedContacts().getFirst());
 					}
-					
+
 					// if this screws up, removing this else should work...
-					
+
 					// they are offline, so create a chat window anyway
-					else { 
-						
-						/* Careful now ;x!
-						 * Couldn't get this working for some reason */
-						
-/*						SwingUtilities.invokeLater(new Runnable() {
-							public void run() {
-								SingleChatPanel scp = new SingleChatPanel(getSelectedContacts().getFirst(), "-1");
+					else {
 
-								scp.setChatWith(getSelectedContacts().getFirst());
+						/*
+						 * Careful now ;x! Couldn't get this working for some
+						 * reason
+						 */
 
-								ChatWindow ui = new ChatWindow("GIM - Chat with2 " + getSelectedContacts().getFirst().getEmail(), scp);
-								GimClient.addWindow(getSelectedContacts().getFirst(), ui, scp);
+						/*
+						 * SwingUtilities.invokeLater(new Runnable() { public
+						 * void run() { SingleChatPanel scp = new
+						 * SingleChatPanel(getSelectedContacts().getFirst(),
+						 * "-1");
+						 * 
+						 * scp.setChatWith(getSelectedContacts().getFirst());
+						 * 
+						 * ChatWindow ui = new ChatWindow("GIM - Chat with2 " +
+						 * getSelectedContacts().getFirst().getEmail(), scp);
+						 * GimClient.addWindow(getSelectedContacts().getFirst(),
+						 * ui, scp);
+						 * 
+						 * ui.setLocationRelativeTo(null);// center new chat
+						 * window ui.setVisible(true); } });
+						 */
 
-								ui.setLocationRelativeTo(null);// center new chat window
-								ui.setVisible(true);
-							}
-						});*/
-						
 						/* hope this works */
-						
+
 					}
-					
-				}
-				else { // already a window open for them
+
+				} else { // already a window open for them
 					GimClient.getWindow(selectedUsers.getFirst()).setVisible(true);
 				}
-					
 
 			} else if (e.getSource().equals(group) && getSelectedContacts().size() > 0) {
 				model.createRoom(getSelectedContacts());
@@ -479,25 +497,33 @@ public class ContactPanel extends JPanel {
 		}
 	}
 
-	class SingleChatListener implements MouseListener {
+	class MListener implements MouseListener {
 
 		public void mousePressed(MouseEvent e) {
 
-			LinkedList<User> selectedUsers = getSelectedContacts();
+			JList list = ((JList) e.getComponent());
 
-			if (e.getClickCount() == 2) {
-				int find = GimClient.findRoom(selectedUsers.getFirst());
+			if (e.getButton() == MouseEvent.BUTTON3) {
+				list.setSelectedIndex(list.locationToIndex(e.getPoint()));
+				ContextMenu menu = new ContextMenu((User) list.getSelectedValue());
+				menu.show(e.getComponent(), e.getX(), e.getY());
 
-				if (find == -1) {
-					if (!selectedUsers.getFirst().getStatus().equalsIgnoreCase("offline")) {
-						model.createRoom(getSelectedContacts().getFirst());
+			} else {
+				// Open chat
+				LinkedList<User> selectedUsers = getSelectedContacts();
+				if (e.getClickCount() == 2) {
+					int find = GimClient.findRoom(selectedUsers.getFirst());
+
+					if (find == -1) {
+						if (!selectedUsers.getFirst().getStatus().equalsIgnoreCase("offline")) {
+							model.createRoom(getSelectedContacts().getFirst());
+						}
+
+					} else {
+						GimClient.getWindow(selectedUsers.getFirst()).setVisible(true);
 					}
-					
 				}
-				else {
-					GimClient.getWindow(selectedUsers.getFirst()).setVisible(true);
-				}
-					
+				
 			}
 
 		}
