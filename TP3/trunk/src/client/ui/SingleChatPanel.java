@@ -91,10 +91,10 @@ public class SingleChatPanel extends ChatPanel {
 			displayPicture.setBorder(BorderFactory.createLineBorder(UIManager.getColor("controlShadow")));
 			displayPicture.setIconTextGap(0);
 
-			final ImageIcon statusIcon = new ImageIcon(model.getPath() + "status/"
+			ImageIcon statusIcon = new ImageIcon(model.getPath() + "status/"
 					+ user.getStatus().toString().toLowerCase() + ".png", "Icon");
 
-			JLabel statusIconLabel = new JLabel(statusIcon);
+			final JLabel statusIconLabel = new JLabel(statusIcon);
 			statusIconLabel.setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, getBackground()));
 			statusIconLabel.setPreferredSize(new Dimension(26, 26));
 
@@ -114,8 +114,9 @@ public class SingleChatPanel extends ChatPanel {
 			user.addUserChangedListener(new UserChangedListener() {
 				@Override
 				public void statusChanged() {
-					statusIcon.setImage(new ImageIcon(model.getPath() + "status/"
-							+ user.getStatus().toString().toLowerCase() + ".png", "Icon").getImage());
+					statusIconLabel.setIcon(new ImageIcon(model.getPath() + "/status/"
+							+ user.getStatus().toString().toLowerCase() + ".png", "Icon"));
+					System.out.println(user.getStatus().toString().toLowerCase() );
 				}
 
 				@Override
