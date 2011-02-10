@@ -96,9 +96,11 @@ public class GimClient {
 
 	// We do this so we don't open a new chat every time the user clicks chat
 	public static int findRoom(User chatWith) {
+		// and this :P
+		
 		for (int i = 0; i < windows.size(); i++) {
 			if (windows.get(i).getChatPanel() instanceof SingleChatPanel) {
-				if (windows.get(i).getChatPanel().getChatWith() == chatWith) {
+				if (windows.get(i).getChatPanel().getChatWith().getEmail() == chatWith.getEmail()) {
 					// set chat to visible
 					return i;
 				}
@@ -150,7 +152,9 @@ public class GimClient {
 	public static ChatWindowIdentifier getWindowIdentifierFromUser(User user) {
 		for (int i = 0; i < windows.size(); i++) {
 			if (windows.get(i).getChatPanel() instanceof SingleChatPanel) {
-				if (windows.get(i).getChatPanel().getChatWith() == user) {
+				// I changed this... note to self, incase shit storm..
+				
+				if (windows.get(i).getChatPanel().getChatWith().getEmail().equals(user.getEmail())) {
 					return windows.get(i);
 				}
 			}
