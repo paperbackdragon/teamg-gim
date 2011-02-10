@@ -443,6 +443,9 @@ public class ServerConnection {
 
 			// if we already have a window...
 			final ChatWindowIdentifier l = GimClient.getWindowIdentifierFromUser(contacts.getFirst());
+			
+			System.out.println("contacts.getFirst() is " + contacts.getFirst());
+			
 			if (l != null) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
