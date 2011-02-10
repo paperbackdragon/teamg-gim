@@ -4,6 +4,7 @@ import java.awt.AWTException;
 import java.awt.Image;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
+import java.awt.Window;
 
 import java.awt.SystemTray;
 
@@ -60,6 +61,20 @@ public class GimClient {
 		});
 
 	}
+	
+	// DEBUG
+	public static void printWindows() {
+		if (windows.size() > 0) {
+			for (int i = 0; i < windows.size(); i++) {
+				System.out.println("window: " + windows.get(i).getUser());
+			}
+		}
+		else {
+			System.out.println("window list empty!");
+		}
+	}
+	
+	// </DEBUG>
 
 	// ACCESSORS
 	public static MainWindow getMainWindow() {

@@ -6,6 +6,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
+import client.GimClient;
 import client.Model;
 import client.Options;
 
@@ -150,6 +151,8 @@ public class LoginPanel extends JPanel {
 			model.getServer().authenticate(email.getText(), pwd.getPassword());
 			previous = true;
 		}
+		
+		GimClient.printWindows();
 	}
 
 	class LoginListener implements ActionListener {
