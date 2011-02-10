@@ -8,6 +8,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,26 +41,33 @@ public class ChatPanel extends JPanel {
 	protected JTextArea chatBox;
 	protected JEditorPane messages;
 	protected JButton send;
+	
+	public boolean showTimestamps = model.getOptions().showTimestamps;
 
 	private static final long serialVersionUID = 1L;
 	private LinkedList<String> messageQueue;
 
-	private Smiley[] smilies = {
-	new Smiley(":)", "Happy_smiley.png"), new Smiley(":-)", "Happy_smiley.png"), new Smiley(":(", "Sad_smiley.png"),
-			new Smiley(":-(", "Sad_smiley.png"), new Smiley(":P", "Tonque_out_smiley.png"),
-			new Smiley(":-P", "Tonque_out_smiley.png"), new Smiley(";(", "Crying_smiley.png"),
-			new Smiley(";-(", "Crying_smiley.png"), new Smiley(":'(", "Crying_smiley.png"),
-			new Smiley(";)", "Winking_smiley.png"), new Smiley(";-)", "Winking_smiley.png"),
-			new Smiley(":D", "Very_happy_smiley.png"), new Smiley(":-D", "Very_happy_smiley.png"),
-			new Smiley(":S", "Confused_smiley.png"), new Smiley(":-S", "Confused_smiley.png"),
-			new Smiley("(X)", "Xbox.png"), new Smiley("(@)", "Cat.png"), new Smiley("CALEF13", "calef13.png")
-	};
+	private Smiley[] smilies = { new Smiley(":)", "Happy_smiley.png"), new Smiley(":-)", "Happy_smiley.png"),
+			new Smiley(":(", "Sad_smiley.png"), new Smiley(":-(", "Sad_smiley.png"),
+			new Smiley(":P", "Tonque_out_smiley.png"), new Smiley(":-P", "Tonque_out_smiley.png"),
+			new Smiley(";(", "Crying_smiley.png"), new Smiley(";-(", "Crying_smiley.png"),
+			new Smiley(":'(", "Crying_smiley.png"), new Smiley(";)", "Winking_smiley.png"),
+			new Smiley(";-)", "Winking_smiley.png"), new Smiley(":D", "Very_happy_smiley.png"),
+			new Smiley(":-D", "Very_happy_smiley.png"), new Smiley(":S", "Confused_smiley.png"),
+			new Smiley(":-S", "Confused_smiley.png"), new Smiley("(X)", "Xbox.png"), new Smiley("(@)", "Cat.png"),
+			new Smiley("CALEF13", "calef13.png") };
 
 	private int messageCount;
 	private User chatWith;
 
 	private Boolean inProgress = false;
 	private boolean isFocused;
+
+	Font f = (Font) UIManager.get("Label.font");
+	Pattern pattern = Pattern
+			.compile(
+					"(?<![=\"/>])(www\\.|(http|https|ftp|news)://)(\\w+?\\.\\w+)+([a-zA-Z0-9~!@#$%^&*()_\\-=+\\/?.:;',]*)?([^.'# !])",
+					Pattern.DOTALL | Pattern.UNIX_LINES | Pattern.CASE_INSENSITIVE);
 
 	/**
 	 * Constructor for a chat box. Creates styles, smiles and everything else we
@@ -90,8 +99,6 @@ public class ChatPanel extends JPanel {
 			}
 		});
 
-		// timer = new Timer(500,new
-		// FlashwindowListener(GimClient.getWindowIdentifierFromId(id).getWindow()));
 		isFocused = false;
 
 	}
@@ -110,7 +117,6 @@ public class ChatPanel extends JPanel {
 	public void chatBoxEnabled(final Boolean b) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-
 				chatBox.setEnabled(b);
 			}
 		});
@@ -123,13 +129,12 @@ public class ChatPanel extends JPanel {
 	private void sendMessageQueue() {
 		if (!messageQueue.isEmpty()) {
 			System.out.println("The queue is " + messageQueue.toArray().toString());
-		}
-		else {
+		} else {
 			System.out.println("Empty Queue");
 		}
-		
+
 		while (!messageQueue.isEmpty()) {
-			model.message(id, messageQueue.removeLast());
+			model.getServer().message(id, messageQueue.removeLast());
 		}
 	}
 
@@ -168,17 +173,15 @@ public class ChatPanel extends JPanel {
 	 * Sends a message to the message log
 	 */
 	private void sendMessage() {
-
 		if (chatBox.getText().length() > 0) {
 			receiveMessage(model.getSelf(), chatBox.getText());
 
 			if (getInProgress()) {
-				model.message(id, chatBox.getText());
+				model.getServer().message(id, chatBox.getText());
 			} else {
 				messageQueue.push(chatBox.getText());
-				
+
 				if (id.equals("-1")) {
-					
 					model.createRoom(chatWith);
 				}
 			}
@@ -196,9 +199,6 @@ public class ChatPanel extends JPanel {
 	public void receiveMessage(final User sender, final String message) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-
-				Font f = (Font) UIManager.get("Label.font");
-				
 				// If the user is not focused on this window, alert them a
 				// message has been received.
 				if (isFocused == false) {
@@ -217,19 +217,27 @@ public class ChatPanel extends JPanel {
 											+ "\" alt='" + s.getText() + "'>");
 				}
 
-				StringBuffer sb = new StringBuffer();
-				sb.append("<html><body><table cellpadding=0 cellspacing=0 border=0><tr><td valign=bottom height=22>");
-				sb.append("<b><font face='" + f.getFontName() + ", sans-serif' color=" + color + ">" + sender.getNickname()
-						+ ":</font></b> <font face='" + f.getFontName() + ", sans-serif'>" + msg);
-				sb.append(" </font></tr></td></table></body></html>");
-				msg = sb.toString();
-
-				String r = "(?<![=\"/>])(www\\.|(http|https|ftp|news)://)(\\w+?\\.\\w+)+([a-zA-Z0-9~!@#$%^&*()_\\-=+\\/?.:;',]*)?([^.'# !])";
-				Pattern pattern = Pattern.compile(r, Pattern.DOTALL | Pattern.UNIX_LINES | Pattern.CASE_INSENSITIVE);
 				Matcher matcher = pattern.matcher(msg);
 				msg = matcher.replaceAll("<a href=\"$0\">$0</a>");
 				msg = msg.replaceAll(Pattern.quote("<a href=\"www."), "<a href=\"http://wwww.");
 				msg = msg.replaceAll(Pattern.quote("\n"), "<br>");
+
+				String timestamp = "";
+				if (showTimestamps) {
+					Calendar c = new GregorianCalendar();
+					timestamp = String.format("(%02d:%02d:%02d) ", c.get(Calendar.HOUR_OF_DAY), c
+							.get(Calendar.MINUTE), c.get(Calendar.SECOND));
+				}
+				
+				StringBuffer sb = new StringBuffer();
+				sb.append("<table width=100% cellpadding=0 cellspacing=2 border=0>");
+				sb.append("<tr><td>");
+				sb.append("<font face='" + f.getFontName() + ", Arial, sans-serif' color=" + color + ">" + timestamp
+						+ "<b>");
+				sb.append(sender.getNickname() + ": </b></font>");
+				sb.append("<font face='" + f.getFontName() + ", Arial, sans-serif'> " + msg);
+				sb.append("</font></table>");
+				msg = sb.toString();
 
 				Document doc = (Document) messages.getDocument();
 				try {
@@ -304,6 +312,23 @@ public class ChatPanel extends JPanel {
 		public void actionPerformed(ActionEvent ae) {
 			flashWindow(chatwindow);
 		}
+	}
+
+	public void systemMessage(String msg) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("<table width=100% cellpadding=5 cellspacing=0 border=0><tr><td valign=bottom align=center>");
+		sb.append("<b><font face='" + f.getFontName() + ", sans-serif' color=#888888>- " + msg);
+		sb.append(" -</font></tr></td></table>");
+		msg = sb.toString();
+
+		Document doc = (Document) messages.getDocument();
+		try {
+			((HTMLEditorKit) messages.getEditorKit()).read(new java.io.StringReader(msg), doc, doc.getLength());
+		} catch (IOException e) {
+		} catch (BadLocationException e) {
+		}
+
+		messages.setCaretPosition(doc.getLength());
 	}
 
 }

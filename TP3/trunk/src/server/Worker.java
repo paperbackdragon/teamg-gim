@@ -302,8 +302,7 @@ public class Worker implements Runnable {
 			/**
 			 * Unblock the user
 			 */
-
-			user.unblock(user);
+			this.loggedInUser.unblock(user);
 
 			return this.okay;
 
@@ -364,7 +363,7 @@ public class Worker implements Runnable {
 
 		String online = "ONLINE ";
 		String offline = "OFFLINE ";
-		String blocked = "BLOCKED";
+		String blocked = "BLOCKED ";
 
 		// Sort the online and offline users
 		for (User user : this.loggedInUser.getFriendList()) {

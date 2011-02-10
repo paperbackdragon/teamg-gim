@@ -33,11 +33,18 @@ public class LoginPanel extends JPanel {
 		LoginListener loginListener = new LoginListener();
 
 		JPanel frame = new JPanel(new BorderLayout());
-
+		ImageIcon logo = new ImageIcon(model.getPath() + "/icons/logo.png");
+		
 		// Main JPanel
-		JPanel loginFrame = new JPanel();
-		loginFrame.setLayout(new BoxLayout(loginFrame, BoxLayout.Y_AXIS));
+		JPanel loginFrame = new JPanel(new BorderLayout());
+		loginFrame.add(new JLabel(logo), BorderLayout.NORTH);
 
+		// A panel with a border
+		JPanel borderedArea = new JPanel();
+		borderedArea.setLayout(new BoxLayout(borderedArea, BoxLayout.Y_AXIS));
+		TitledBorder title = BorderFactory.createTitledBorder("Please Login");
+		borderedArea.setBorder(title);
+		
 		// Panel containing email address label and text box
 		JPanel emailPanel = new JPanel();
 		emailPanel.setLayout(new GridLayout(2, 1, 15, 0));
@@ -73,29 +80,6 @@ public class LoginPanel extends JPanel {
 		options.add(savePassword);
 		options.add(rememberUser);
 
-		// Login button and panel
-		JPanel l = new JPanel();
-		l.setLayout(new BoxLayout(l, BoxLayout.X_AXIS));
-		loginButton = new JButton("Log In");
-		loginButton.addActionListener(loginListener);
-		l.add(loginButton, BorderLayout.CENTER);
-
-		// Register button
-		JPanel registerPanel = new JPanel();
-		JLabel notReg = new JLabel("<html><b>Need an account?</b></html>");
-		notReg.setAlignmentX(Component.CENTER_ALIGNMENT);
-		register = new JButton("Register");
-		register.addActionListener(loginListener);
-		register.setAlignmentX(Component.CENTER_ALIGNMENT);
-		registerPanel.add(notReg);
-		registerPanel.add(register);
-
-		// A panel with a border
-		JPanel borderedArea = new JPanel();
-		borderedArea.setLayout(new BoxLayout(borderedArea, BoxLayout.Y_AXIS));
-		TitledBorder title = BorderFactory.createTitledBorder("Please Login");
-		borderedArea.setBorder(title);
-
 		// Add things to the bordered panel
 		borderedArea.add(emailPanel);
 		borderedArea.add(Box.createVerticalStrut(5));
@@ -103,23 +87,36 @@ public class LoginPanel extends JPanel {
 		borderedArea.add(Box.createVerticalStrut(10));
 		borderedArea.add(options);
 		borderedArea.add(Box.createVerticalStrut(10));
-
-		// Add the bordered panel to the window
-		loginFrame.add(Box.createVerticalStrut(10));
-		loginFrame.add(borderedArea);
+		borderedArea.add(new JSeparator());
+		borderedArea.add(Box.createVerticalStrut(5));
+		
+		loginButton = new JButton("Log In");
+		loginButton.addActionListener(loginListener);
+		JPanel loginPanel = new JPanel();
+		loginPanel.add(loginButton);
+		
+		borderedArea.add(loginPanel);
+		borderedArea.add(Box.createVerticalStrut(5));
+		
+		loginFrame.add(borderedArea, BorderLayout.CENTER);
+		
 		frame.add(Box.createVerticalStrut(5));
-		loginFrame.add(l);
-
-		setLayout(new BorderLayout());
-
 		frame.add(loginFrame, BorderLayout.NORTH);
-		frame.add(registerPanel, BorderLayout.SOUTH);
 
-		ImageIcon logo = new ImageIcon(model.getPath() + "/icons/logo.png");
-		add(new JLabel(logo), BorderLayout.NORTH);
-		add(Box.createHorizontalStrut(5), BorderLayout.EAST);
-		add(frame, BorderLayout.CENTER);
-		add(Box.createHorizontalStrut(5), BorderLayout.WEST);
+		// Register button
+		JPanel registerPanel = new JPanel();
+		JLabel notReg = new JLabel("<html><b>Need an account?</b></html>");
+		notReg.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
+		register = new JButton("Register");
+		register.addActionListener(loginListener);
+		register.setAlignmentX(Component.CENTER_ALIGNMENT);
+		registerPanel.add(notReg);
+		registerPanel.add(register);
+		
+		setLayout(new BorderLayout());
+		add(frame, BorderLayout.NORTH);
+		add(registerPanel, BorderLayout.SOUTH);
 		
 		if(model.getOptions().isAutoLogin()) {
 			login();
@@ -127,8 +124,8 @@ public class LoginPanel extends JPanel {
 		
 	}
 
-	public void setParent(JFrame frame) {
-		parent = (MainWindow) frame;
+	public void setParent(MainWindow frame) {
+		parent = frame;
 		parent.canLogout(false);
 	}
 
@@ -150,12 +147,11 @@ public class LoginPanel extends JPanel {
 		else
 			options.setPassword(null);
 		if (previous == false) {
-			model.authenticate(email.getText(), pwd.getPassword());
+			model.getServer().authenticate(email.getText(), pwd.getPassword());
 			previous = true;
 		}
 	}
 
-	// ACTION LISTENERS
 	class LoginListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource().equals(loginButton)) {

@@ -95,7 +95,7 @@ public class RegisterPanel extends JPanel {
 		} else if (pwd.getPassword().length == 0 || confirm.getPassword().length == 0) {
 			JOptionPane.showMessageDialog(RegisterPanel.this, "Please enter a password in both fields.");
 		} else if (Arrays.equals(pwd.getPassword(), confirm.getPassword())) {
-			model.register(email.getText(), pwd.getPassword());
+			model.getServer().register(email.getText(), pwd.getPassword());
 		} else {
 			pwd.setText("");
 			confirm.setText("");

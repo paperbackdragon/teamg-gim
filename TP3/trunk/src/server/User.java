@@ -163,7 +163,9 @@ public class User implements Serializable {
 	 */
 	public void block(User user) {
 		this.blockedUsers.put(user.getId(), user);
-		this.getWorker().putResponse(new Command("UPDATE", "FRIENDLIST", Command.encode(this.getId())));
+		Worker w = this.getWorker();
+		if(w != null)
+			w.putResponse(new Command("UPDATE", "FRIENDLIST", Command.encode(this.getId())));
 	}
 
 	/**

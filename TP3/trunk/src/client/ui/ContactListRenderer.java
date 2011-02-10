@@ -24,11 +24,10 @@ import client.Model;
 import client.User;
 import client.User.Status;
 
-public class ContactListRenderer extends JLabel implements ListCellRenderer {
+public class ContactListRenderer extends JPanel implements ListCellRenderer {
 
 	private static final long serialVersionUID = 1L;
 	public HashMap<String, ImageIcon> icons = new HashMap<String, ImageIcon>();
-	private int lwidth = 0;
 
 	Model model = Model.getInstance();
 
@@ -38,21 +37,15 @@ public class ContactListRenderer extends JLabel implements ListCellRenderer {
 					"Icon");
 			icons.put(s.toString().toLowerCase(), statusIcon);
 		}
+		
+		ImageIcon statusIcon = new ImageIcon(model.getPath() + "status/blocked.png", "Icon");
+		icons.put("blocked", statusIcon);
 	}
 
 	public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
 			boolean cellHasFocus) {
 
-		if (this.lwidth == 0)
-			this.lwidth = list.getWidth();
-
-		return renderContact(list, value, index, isSelected, cellHasFocus);
-	}
-
-	private Component renderContact(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-
 		User user = (User) value;
-
 		setPreferredSize(list.getSize());
 
 		JPanel contact = new JPanel(new BorderLayout(5, 0));
@@ -60,8 +53,12 @@ public class ContactListRenderer extends JLabel implements ListCellRenderer {
 
 		// Gray out user icons when they're offline
 		Image displayPictureIcon = user.getDisplayPic(32, 32).getImage();
-		if (user.getStatus().equalsIgnoreCase("offline")) {
-			Image image =  new BufferedImage(32, 32, BufferedImage.TYPE_BYTE_GRAY);
+		if (user.getStatus().equalsIgnoreCase("offline") || model.getFriendList().isBlocked(user.getEmail())) {
+			
+			// TODO: If this works it's a hack. Find out why.
+			model.getServer().getStatus(user.getEmail());
+			
+			Image image = new BufferedImage(32, 32, BufferedImage.TYPE_BYTE_GRAY);
 			Graphics g = image.getGraphics();
 			g.drawImage(displayPictureIcon, 0, 0, null);
 			g.dispose();
@@ -73,14 +70,22 @@ public class ContactListRenderer extends JLabel implements ListCellRenderer {
 		displayPicture.setIconTextGap(0);
 
 		// Set their status icon
-		ImageIcon statusIcon = this.icons.get(user.getStatus());
+		String status, blocked = "";
+		if (model.getFriendList().isBlocked(user.getEmail())) {
+			status = "blocked";
+			blocked = "<i>(blocked)</i>";
+		} else {
+			status = user.getStatus();
+		}
+
+		ImageIcon statusIcon = this.icons.get(status.toLowerCase());
 		JLabel statusIconLabel = new JLabel(statusIcon);
 		statusIconLabel.setPreferredSize(new Dimension(16, 16));
 
 		JPanel userInfo = new JPanel(new GridLayout(2, 1));
 		userInfo.setOpaque(false);
 
-		JLabel username = new JLabel("<html>" + Html.escape(user.getNickname()) + "</html>");
+		JLabel username = new JLabel("<html> " + blocked + " " + Html.escape(user.getNickname()) + "</html>");
 		JLabel personalMessage = new JLabel("<html><small>" + Html.escape(user.getPersonalMessage())
 				+ "</small></html>");
 
@@ -96,7 +101,7 @@ public class ContactListRenderer extends JLabel implements ListCellRenderer {
 
 		if (isSelected) {
 			contact.setBackground(UIManager.getColor("List.selectionBackground"));
-			contact.setBorder(BorderFactory.createMatteBorder(1, 2, 1, 2, UIManager
+			contact.setBorder(BorderFactory.createMatteBorder(1, 2, 1, 5, UIManager
 					.getColor("List.selectionBackground")));
 			contact.setOpaque(true);
 
@@ -108,16 +113,23 @@ public class ContactListRenderer extends JLabel implements ListCellRenderer {
 			personalMessage.setBackground(UIManager.getColor("List.selectionBackground"));
 			personalMessage.setOpaque(true);
 		} else {
-			username.setBackground(UIManager.getColor("List.background"));
-			personalMessage.setBackground(UIManager.getColor("List.background"));
-			contact.setBorder(BorderFactory.createMatteBorder(1, 2, 1, 2, UIManager.getColor("List.background")));
+			username.setBackground(UIManager.getColor("EditorPane.background"));
+			username.setOpaque(true);
+			
+			personalMessage.setBackground(UIManager.getColor("EditorPane.background"));
+			personalMessage.setOpaque(true);
+			
+			contact.setBorder(BorderFactory.createMatteBorder(1, 2, 1, 5, UIManager.getColor("EditorPane.background")));
 		}
 
 		contact.add(displayPicture, BorderLayout.WEST);
 		contact.add(info, BorderLayout.CENTER);
 		contact.add(statusIconLabel, BorderLayout.EAST);
-
+		
+		contact.setToolTipText("Email: " + user.getEmail());
+		
 		return contact;
 	}
 
+	
 }

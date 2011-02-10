@@ -10,17 +10,25 @@ import java.io.Serializable;
  */
 public class Options implements Serializable {
 
-	private static final long serialVersionUID = 4L;
+	private static final long serialVersionUID = 6L;
+	
 	boolean remeberEmail;
 	boolean rememberPassword;
 	boolean autoLogin;
 	String email;
 	String password;
+	
 	public int chatWindowWidth = 650;
 	public int chatWindowHeight = 500;
+	
 	public int mainWindowWidth = 310;
 	public int mainWindowHeight = 600;
+	
 	public boolean showOffline = false;
+	public boolean enableLogging = true;
+	public boolean showTimestamps = true;
+	
+	public boolean showNotifications = true;
 
 	public boolean isRemeberEmail() {
 		return remeberEmail;

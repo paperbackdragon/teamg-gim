@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.URISyntaxException;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -93,14 +92,6 @@ public class Model {
 		}
 	}
 
-	public void acceptRequest(String user) {
-		outLink.accept(user);
-	}
-
-	public void addfriend(String user) {
-		outLink.add(user);
-	}
-
 	public synchronized void addInvitation(User from) {
 		invitationsList.add(from);
 	}
@@ -119,14 +110,6 @@ public class Model {
 		this.users.put(user.getEmail().toLowerCase(), user);
 	}
 
-	public void authenticate(String email, char[] pwd) {
-		outLink.authenticate(email, pwd);
-	}
-
-	public void blockfriend(String user) {
-		outLink.block(user);
-	}
-
 	public void createRoom(LinkedList<User> contacts) {
 		newRoomList.add(contacts);
 		typeList.add(true);
@@ -141,26 +124,8 @@ public class Model {
 		outLink.createSingleChat(user);
 	}
 
-	public void endNetworkWriter() {
-		outLink.endNetworkWriter();
-	}
-
-	public Collection<User> getBlockedfriends() {
-		return friendlist.getBlockedUsers();
-	}
-
-	public void getDisplayPicture(String user) {
-		outLink.getDisplayPicture(user);
-	}
-
 	public FriendList getFriendList() {
 		return this.friendlist;
-	}
-	
-	public void getUsers() {
-		for(User u: this.users.values()) {
-			System.out.println(u.getEmail());
-		}
 	}
 
 	public String getLatestPerson() {
@@ -219,35 +184,8 @@ public class Model {
 		return this.users.get(user.toLowerCase());
 	}
 
-	public void invite(String roomid, String user) {
-		outLink.invite(roomid, user);
-	}
-
-	// End: connection stuff
-
-	// ROOM stuff
-
-	public void join(String roomid) {
-		outLink.join(roomid);
-	}
-
-	public void leave(String roomid) {
-		outLink.leave(roomid);
-	}
-
-	public void logout() {
-		outLink.logout();
-
-		// maybe should not be here...
-		// outLink.setConnected(false);
-	}
-
-	public void message(String roomid, String message) {
-		outLink.message(roomid, message);
-	}
-
 	public void quit() {
-		logout();
+		this.getServer().logout();
 		
 		String filename = "/options.db";
 		FileOutputStream fos = null;
@@ -257,28 +195,10 @@ public class Model {
 			out = new ObjectOutputStream(fos);
 			out.writeObject(this.options);
 			out.close();
-			System.out.println("Object Persisted");
 		} catch (IOException ex) {
-			ex.printStackTrace();
 		}
 		
 		System.exit(0);
-	}
-
-	public void register(String email, char[] pwd) {
-		outLink.register(email, pwd);
-	}
-
-	// end: ROOM stuff
-
-	// Friends list stuff
-
-	public void removefriend(String user) {
-		outLink.delete(user);
-	}
-
-	public void setConnected(boolean b) {
-		outLink.setConnected(false);
 	}
 
 	public void setLatestPerson(String latest) {
@@ -292,22 +212,6 @@ public class Model {
 
 	public void setSelf(User self) {
 		this.loggedInUser = self;
-	}
-
-	public void type(String roomid) {
-		outLink.type(roomid);
-	}
-
-	public void unblockfriend(String user) {
-		outLink.unblock(user);
-	}
-
-	public void users(String roomid) {
-		outLink.roomusers(roomid);
-	}
-
-	public void setOptions(Options options) {
-		this.options = options;
 	}
 	
 	public Options getOptions() {
