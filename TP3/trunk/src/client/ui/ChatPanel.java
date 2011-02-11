@@ -25,6 +25,8 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.html.HTMLEditorKit;
 
+import util.Html;
+
 import client.Model;
 import client.GimClient;
 import client.Smiley;
@@ -101,11 +103,12 @@ public class ChatPanel extends JPanel {
 
 		isFocused = false;
 
-		chatBox = new JTextArea(new JLimitedDocument(4000));
+		chatBox = new JTextArea(new JLimitedDocument(1500));
 		chatBox.setEditable(true);
 		chatBox.setLineWrap(true);
 		chatBox.setWrapStyleWord(true);
-
+		chatBox.setText("");
+		
 		EnterListener enterListener = new EnterListener();
 		chatBox.addKeyListener(enterListener);
 
@@ -242,7 +245,7 @@ public class ChatPanel extends JPanel {
 				sb.append("<tr><td>");
 				sb.append("<font face='" + f.getFontName() + ", Arial, sans-serif' color=" + color + ">" + timestamp
 						+ "<b>");
-				sb.append(sender.getNickname() + ": </b></font>");
+				sb.append(Html.escape(sender.getNickname()) + ": </b></font>");
 				sb.append("<font face='" + f.getFontName() + ", Arial, sans-serif'> " + msg);
 				sb.append("</font></table>");
 				msg = sb.toString();
@@ -292,7 +295,7 @@ public class ChatPanel extends JPanel {
 		public void keyTyped(KeyEvent e) {
 			if (e.getKeyChar() == KeyEvent.VK_ENTER && e.getModifiers() != 1) {
 				if (chatBox.getText().trim().length() != 0) {
-					chatBox.getText().substring(0, chatBox.getText().length() - 1);
+					chatBox.getText().trim();
 					sendMessage();
 				}
 				chatBox.setText("");

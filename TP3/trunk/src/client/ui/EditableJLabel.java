@@ -27,6 +27,7 @@ public class EditableJLabel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JLabel label;
 	private JTextField textField;
+	private String value = "";
 	private LinkedList<ValueChangedListener> listeners = new LinkedList<ValueChangedListener>();
 
 	/**
@@ -45,7 +46,8 @@ public class EditableJLabel extends JPanel {
 
 		// Create the JPanel for the "normal" state
 		JPanel labelPanel = new JPanel(new GridLayout(1, 1));
-		label = new JLabel(startText);
+		this.value = startText;
+		label = new JLabel(value);
 		labelPanel.add(label);
 
 		// Create the JPanel for the "hover state"
@@ -55,7 +57,7 @@ public class EditableJLabel extends JPanel {
 		if(limit > 0)
 			textField.setDocument(new JLimitedDocument(limit));
 		
-		textField.setText(startText);
+		textField.setText(this.value);
 		textField.addMouseListener(hl);
 		textField.addKeyListener(hl);
 		textField.addFocusListener(hl);
@@ -81,8 +83,9 @@ public class EditableJLabel extends JPanel {
 	 *            The text to start with
 	 */
 	public void setText(String text) {
-		this.label.setText(text);
-		this.textField.setText(text);
+		this.value = text;
+		this.label.setText(value);
+		this.textField.setText(value);
 	}
 
 	/**
@@ -91,7 +94,7 @@ public class EditableJLabel extends JPanel {
 	 * @return The text from the label
 	 */
 	public String getText() {
-		return this.label.getText();
+		return this.value;
 	}
 
 	/**
@@ -151,7 +154,7 @@ public class EditableJLabel extends JPanel {
 		@Override
 		public void focusGained(FocusEvent arg0) {
 			locked = true;
-			oldValue = textField.getText();
+			oldValue = new String(value);
 		}
 
 		/**
@@ -186,9 +189,9 @@ public class EditableJLabel extends JPanel {
 		public void focusLost(FocusEvent e) {
 			if (!oldValue.equals(textField.getText())) {
 				setText(textField.getText());
-				oldValue = textField.getText();
+				oldValue = new String(value);
 				for (ValueChangedListener v : listeners) {
-					v.valueChanged(textField.getText(), EditableJLabel.this);
+					v.valueChanged(EditableJLabel.this.value, EditableJLabel.this);
 				}
 			}
 			release();
