@@ -12,7 +12,6 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 
@@ -105,12 +104,7 @@ public class GroupChatPanel extends ChatPanel {
 		// Bottom Panel
 		JPanel chatPanel = new JPanel();
 		chatPanel.setLayout(new BorderLayout());
-		chatBox = new JTextArea();
-		chatBox.setEditable(true);
-		chatBox.setLineWrap(true);
-		chatBox.setWrapStyleWord(true);
 		chatBox.setFont(chatPanel.getFont());
-		
 		EnterListener enterListener = new EnterListener();
 		chatBox.addKeyListener(enterListener);
 		JScrollPane chatPane = new JScrollPane(chatBox);

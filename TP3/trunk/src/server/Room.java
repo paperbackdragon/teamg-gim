@@ -113,8 +113,9 @@ public class Room {
 
 		// Notify other users that they've left
 		Command l = new Command("ROOM", "LEFT", this.getId() + " " + Command.encode(left.getId()));
-		for (User user : users.values()) 
+		for (User user : users.values()) {
 			user.getWorker().putResponse(l);
+		}
 
 		return true;
 	}

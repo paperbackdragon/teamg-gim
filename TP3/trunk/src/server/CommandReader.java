@@ -79,7 +79,8 @@ public class CommandReader implements Runnable {
 			}
 
 			if (length > limit) {
-				// Make sure its not within special limits for the :set display_pic: command
+				// Make sure its not within special limits for the :set
+				// display_pic: command
 				if (command == null
 						|| args == null
 						|| !(command.equalsIgnoreCase("SET") && args.equalsIgnoreCase("DISPLAY_PIC") && length <= (limit * 4))) {

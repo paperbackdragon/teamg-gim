@@ -10,7 +10,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
 
@@ -45,14 +44,6 @@ public class SingleChatPanel extends ChatPanel {
 		JPanel chatPanel = new JPanel();
 		chatPanel.setLayout(new BorderLayout());
 
-		chatBox = new JTextArea();
-		chatBox.setEditable(true);
-		chatBox.setLineWrap(true);
-		chatBox.setWrapStyleWord(true);
-		chatBox.setFont(chatPanel.getFont());
-
-		EnterListener enterListener = new EnterListener();
-		chatBox.addKeyListener(enterListener);
 		JScrollPane chatPane = new JScrollPane(chatBox);
 		chatPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		chatPane.setPreferredSize(new Dimension(235, 50));
@@ -62,6 +53,7 @@ public class SingleChatPanel extends ChatPanel {
 		SendListener sendListener = new SendListener();
 		send.addActionListener(sendListener);
 
+		chatBox.setFont(chatPanel.getFont());
 		chatPanel.setPreferredSize(new Dimension(0, 50));
 		chatPanel.add(chatPane, BorderLayout.CENTER);
 		chatPanel.add(send, BorderLayout.EAST);
