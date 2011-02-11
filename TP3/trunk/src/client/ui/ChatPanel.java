@@ -185,12 +185,12 @@ public class ChatPanel extends JPanel {
 	 */
 	private void sendMessage() {
 		if (chatBox.getText().length() > 0) {
-			receiveMessage(model.getSelf(), chatBox.getText());
+			receiveMessage(model.getSelf(), chatBox.getText().trim());
 
 			if (getInProgress()) {
-				model.getServer().message(id, chatBox.getText());
+				model.getServer().message(id, chatBox.getText().trim());
 			} else {
-				messageQueue.push(chatBox.getText());
+				messageQueue.push(chatBox.getText().trim());
 
 				if (id.equals("-1")) {
 					model.createRoom(chatWith);
@@ -295,7 +295,6 @@ public class ChatPanel extends JPanel {
 		public void keyTyped(KeyEvent e) {
 			if (e.getKeyChar() == KeyEvent.VK_ENTER && e.getModifiers() != 1) {
 				if (chatBox.getText().trim().length() != 0) {
-					chatBox.getText().trim();
 					sendMessage();
 				}
 				chatBox.setText("");
