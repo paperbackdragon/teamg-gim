@@ -1,10 +1,25 @@
 package client.ui;
 
 import java.awt.Dimension;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JSeparator;
+import javax.swing.UIManager;
 import javax.swing.text.html.HTMLEditorKit;
 
 import client.Model;
@@ -175,9 +190,7 @@ public class ChatWindow extends JFrame {
 			} else if (e.getSource() == enableLogging) {
 				model.getOptions().enableLogging = enableLogging.isSelected();
 			}
-		}
-
-		@Override
+		}		@Override
 		public void componentShown(ComponentEvent e) {
 		}
 

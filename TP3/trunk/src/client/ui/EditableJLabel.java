@@ -53,7 +53,7 @@ public class EditableJLabel extends JPanel {
 		textField = new JTextField();
 		
 		if(limit > 0)
-			textField.setDocument(new JTextFieldLimit(limit));
+			textField.setDocument(new JLimitedDocument(limit));
 		
 		textField.setText(startText);
 		textField.addMouseListener(hl);

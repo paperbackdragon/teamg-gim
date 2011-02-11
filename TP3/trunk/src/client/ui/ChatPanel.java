@@ -41,7 +41,7 @@ public class ChatPanel extends JPanel {
 	protected JTextArea chatBox;
 	protected JEditorPane messages;
 	protected JButton send;
-	
+
 	public boolean showTimestamps = model.getOptions().showTimestamps;
 
 	private static final long serialVersionUID = 1L;
@@ -100,6 +100,14 @@ public class ChatPanel extends JPanel {
 		});
 
 		isFocused = false;
+
+		chatBox = new JTextArea(new JLimitedDocument(4000));
+		chatBox.setEditable(true);
+		chatBox.setLineWrap(true);
+		chatBox.setWrapStyleWord(true);
+
+		EnterListener enterListener = new EnterListener();
+		chatBox.addKeyListener(enterListener);
 
 	}
 
@@ -225,12 +233,12 @@ public class ChatPanel extends JPanel {
 				String timestamp = "";
 				if (showTimestamps) {
 					Calendar c = new GregorianCalendar();
-					timestamp = String.format("(%02d:%02d:%02d) ", c.get(Calendar.HOUR_OF_DAY), c
-							.get(Calendar.MINUTE), c.get(Calendar.SECOND));
+					timestamp = String.format("(%02d:%02d:%02d) ", c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE),
+							c.get(Calendar.SECOND));
 				}
-				
+
 				StringBuffer sb = new StringBuffer();
-				sb.append("<table width=100% cellpadding=0 cellspacing=2 border=0>");
+				sb.append("<table width=100% cellpadding=0 border=0 style='padding-top: 2px; padding-bottom: 2px;'>");
 				sb.append("<tr><td>");
 				sb.append("<font face='" + f.getFontName() + ", Arial, sans-serif' color=" + color + ">" + timestamp
 						+ "<b>");
@@ -283,10 +291,10 @@ public class ChatPanel extends JPanel {
 	public class EnterListener implements KeyListener {
 		public void keyTyped(KeyEvent e) {
 			if (e.getKeyChar() == KeyEvent.VK_ENTER && e.getModifiers() != 1) {
-				String text = chatBox.getText();
-				chatBox.setText(text.substring(0, chatBox.getCaretPosition() - 1)
-						+ text.substring(chatBox.getCaretPosition()));
-				sendMessage();
+				if (chatBox.getText().trim().length() != 0) {
+					chatBox.getText().substring(0, chatBox.getText().length() - 1);
+					sendMessage();
+				}
 				chatBox.setText("");
 			} else if (e.getKeyChar() == KeyEvent.VK_ENTER && e.getModifiers() == 1) {
 				chatBox.append("\n");
