@@ -37,7 +37,6 @@ import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import util.Base64;
-import util.Html;
 
 import client.FriendListChangedListener;
 import client.Model;
@@ -89,17 +88,22 @@ public class ContactPanel extends JPanel {
 
 				setLayout(new GridLayout(3, 1, 0, 0));
 
-				name = new EditableJLabel(Html.escape(self.getNickname()), 50);
-				message = new EditableJLabel(Html.escape(self.getPersonalMessage()), 175);
-				status = new JComboBox(new String[] { "Online", "Away", "Busy", "Offline" });
+				name = new EditableJLabel(self.getNickname(), 50);
+				message = new EditableJLabel(self.getPersonalMessage(), 175);
+				status = new JComboBox(new String[] { "Online", "Away", "Busy",
+						"Offline" });
 
 				// Create a listener for the editableJLabels
 				ValueChangedListener valueListener = new ValueChangedListener() {
 					@Override
 					public void valueChanged(String value, JComponent source) {
 						if (source.equals(name)) {
-							self.setNickname(value);
-							model.getServer().setNickname(value);
+							if (value.length() == 0) {
+								name.setText(self.getNickname());
+							} else {
+								self.setNickname(value);
+								model.getServer().setNickname(value);
+							}
 						} else if (source.equals(message)) {
 							self.setPersonalMessage(value);
 							model.getServer().setPersonalMessage(value);
@@ -114,12 +118,12 @@ public class ContactPanel extends JPanel {
 
 					@Override
 					public void nicknameChanged() {
-						name.setText(Html.escape(self.getNickname()));
+						name.setText(self.getNickname());
 					}
 
 					@Override
 					public void personalMessageChanged() {
-						message.setText(Html.escape(self.getPersonalMessage()));
+						message.setText(self.getPersonalMessage());
 					}
 
 					@Override
@@ -140,10 +144,13 @@ public class ContactPanel extends JPanel {
 					@Override
 					public void itemStateChanged(ItemEvent e) {
 						self.setStatus(status.getSelectedItem().toString());
-						model.getServer().setStatus(status.getSelectedItem().toString());
+						model.getServer().setStatus(
+								status.getSelectedItem().toString());
 					}
 				});
 
+				
+				
 				add(name);
 				add(message);
 				add(status);
@@ -153,8 +160,9 @@ public class ContactPanel extends JPanel {
 		public PersonalInfo() {
 
 			setLayout(new BorderLayout(2, 0));
-			setBorder(BorderFactory.createMatteBorder(3, 0, 3, 0, getBackground()));
-			
+			setBorder(BorderFactory.createMatteBorder(3, 0, 3, 0,
+					getBackground()));
+
 			ChoosePic select = new ChoosePic();
 			ImageIcon icon = self.getDisplayPic(64, 64);
 			final JButton b = new JButton(icon);
@@ -194,18 +202,22 @@ public class ContactPanel extends JPanel {
 
 		public void actionPerformed(ActionEvent e) {
 			JFileChooser chooser = new JFileChooser();
-			chooser.addChoosableFileFilter(new FileNameExtensionFilter("Image Files", "jpeg", "jpg", "gif", "png",
-					"bmp"));
+			chooser.addChoosableFileFilter(new FileNameExtensionFilter(
+					"Image Files", "jpeg", "jpg", "gif", "png", "bmp"));
 
 			int option = chooser.showOpenDialog(getParent());
 
 			if (option == JFileChooser.APPROVE_OPTION) {
 				try {
-					File resized = new File(model.getPath() + "/display_picture.jpg");
-					BufferedImage originalImage = ImageIO.read(chooser.getSelectedFile());
-					int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
+					File resized = new File(model.getPath()
+							+ "/display_picture.jpg");
+					BufferedImage originalImage = ImageIO.read(chooser
+							.getSelectedFile());
+					int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB
+							: originalImage.getType();
 
-					BufferedImage resizedImage = new BufferedImage(128, 128, type);
+					BufferedImage resizedImage = new BufferedImage(128, 128,
+							type);
 					Graphics2D g = resizedImage.createGraphics();
 					g.drawImage(originalImage, 0, 0, 128, 128, null);
 					g.dispose();
@@ -251,9 +263,13 @@ public class ContactPanel extends JPanel {
 			list = new JList(listModel);
 
 			// Create a heading
-			final JLabel onlineLabel = new JLabel("<html><b>Contacts (" + model.getFriendList().getOnlineUsers().size()
-					+ " Online/" + model.getFriendList().getOfflineUsers().size() + " Offline)</b></html>");
-			onlineLabel.setBorder(BorderFactory.createMatteBorder(1, 2, 1, 2, UIManager.getColor("EditorPane.background")));
+			final JLabel onlineLabel = new JLabel("<html><b>Contacts ("
+					+ model.getFriendList().getOnlineUsers().size()
+					+ " Online/"
+					+ model.getFriendList().getOfflineUsers().size()
+					+ " Offline)</b></html>");
+			onlineLabel.setBorder(BorderFactory.createMatteBorder(1, 2, 1, 2,
+					UIManager.getColor("EditorPane.background")));
 			online.add(onlineLabel, BorderLayout.NORTH);
 
 			// The listener we'll be using to keep track of changes to people in
@@ -293,48 +309,56 @@ public class ContactPanel extends JPanel {
 				u.addUserChangedListener(listener);
 			}
 
-			model.getFriendList().addFriendListChangedListener(new FriendListChangedListener() {
+			model.getFriendList().addFriendListChangedListener(
+					new FriendListChangedListener() {
 
-				@Override
-				public void stateChanged() {
-					for (Object o : listModel.toArray()) {
-						((User) o).removeUserChangedListener(listener);
-					}
+						@Override
+						public void stateChanged() {
+							for (Object o : listModel.toArray()) {
+								((User) o).removeUserChangedListener(listener);
+							}
 
-					Collection<User> users;
-					if (model.getOptions().showOffline)
-						users = model.getFriendList().getFriendList();
-					else
-						users = model.getFriendList().getOnlineUsers();
+							Collection<User> users;
+							if (model.getOptions().showOffline)
+								users = model.getFriendList().getFriendList();
+							else
+								users = model.getFriendList().getOnlineUsers();
 
-					// TODO: This doesn't work because the list shuffles!
-					int[] indicies = list.getSelectedIndices();
+							// TODO: This doesn't work because the list
+							// shuffles!
+							int[] indicies = list.getSelectedIndices();
 
-					DefaultListModel listModel = new DefaultListModel();
-					for (User u : users) {
-						listModel.addElement(u);
-						u.addUserChangedListener(listener);
-					}
+							DefaultListModel listModel = new DefaultListModel();
+							for (User u : users) {
+								listModel.addElement(u);
+								u.addUserChangedListener(listener);
+							}
 
-					list.setModel(listModel);
-					list.setSelectedIndices(indicies);
+							list.setModel(listModel);
+							list.setSelectedIndices(indicies);
 
-					onlineLabel.setText("<html><b>Contacts (" + model.getFriendList().getOnlineUsers().size()
-							+ " Online / " + model.getFriendList().getOfflineUsers().size() + " Offline)</b></html>");
-				}
+							onlineLabel.setText("<html><b>Contacts ("
+									+ model.getFriendList().getOnlineUsers()
+											.size()
+									+ " Online / "
+									+ model.getFriendList().getOfflineUsers()
+											.size() + " Offline)</b></html>");
+						}
 
-				@Override
-				public void friendRemove(User user) {
-				}
+						@Override
+						public void friendRemove(User user) {
+						}
 
-				@Override
-				public void friendAdded(User user) {
-					model.getServer().getNickname(user.getEmail());
-					model.getServer().getDisplayPicture(user.getEmail());
-					model.getServer().getPersonalMessage(user.getEmail());
-					model.getServer().getStatus(user.getEmail());
-				}
-			});
+						@Override
+						public void friendAdded(User user) {
+							model.getServer().getNickname(user.getEmail());
+							model.getServer()
+									.getDisplayPicture(user.getEmail());
+							model.getServer().getPersonalMessage(
+									user.getEmail());
+							model.getServer().getStatus(user.getEmail());
+						}
+					});
 
 			// Add the listeners
 			list.addMouseListener(new MListener());
@@ -358,23 +382,27 @@ public class ContactPanel extends JPanel {
 		public ButtonPanel() {
 			setLayout(new GridLayout(1, 4, 5, 5));
 			add = new JButton();
-			add.setIcon(new ImageIcon(new ImageIcon(model.getPath() + "/icons/add.png").getImage().getScaledInstance(
-					32, 20, Image.SCALE_SMOOTH)));
+			add.setIcon(new ImageIcon(new ImageIcon(model.getPath()
+					+ "/icons/add.png").getImage().getScaledInstance(32, 20,
+					Image.SCALE_SMOOTH)));
 			add.setToolTipText("Add a new contact");
 
 			del = new JButton();
-			del.setIcon(new ImageIcon(new ImageIcon(model.getPath() + "/icons/remove.png").getImage()
-					.getScaledInstance(32, 20, Image.SCALE_SMOOTH)));
+			del.setIcon(new ImageIcon(new ImageIcon(model.getPath()
+					+ "/icons/remove.png").getImage().getScaledInstance(32, 20,
+					Image.SCALE_SMOOTH)));
 			del.setToolTipText("Remove a contact");
 
 			chat = new JButton();
-			chat.setIcon(new ImageIcon(new ImageIcon(model.getPath() + "/icons/chat.png").getImage().getScaledInstance(
-					32, 20, Image.SCALE_SMOOTH)));
+			chat.setIcon(new ImageIcon(new ImageIcon(model.getPath()
+					+ "/icons/chat.png").getImage().getScaledInstance(32, 20,
+					Image.SCALE_SMOOTH)));
 			chat.setToolTipText("Start a chat with the selected contact");
 
 			group = new JButton();
-			group.setIcon(new ImageIcon(new ImageIcon(model.getPath() + "/icons/group.png").getImage()
-					.getScaledInstance(32, 20, Image.SCALE_SMOOTH)));
+			group.setIcon(new ImageIcon(new ImageIcon(model.getPath()
+					+ "/icons/group.png").getImage().getScaledInstance(32, 20,
+					Image.SCALE_SMOOTH)));
 			group.setToolTipText("Start a group chat with the selected contacts");
 
 			ButtonListener buttonListener = new ButtonListener();
@@ -406,9 +434,13 @@ public class ContactPanel extends JPanel {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 
-						String s = (String) JOptionPane.showInputDialog(null,
-								"Input the user name of the person you wish to add to your contacts", "Add friend",
-								JOptionPane.PLAIN_MESSAGE, null, null, "");
+						String s = (String) JOptionPane
+								.showInputDialog(
+										null,
+										"Input the user name of the person you wish to add to your contacts",
+										"Add friend",
+										JOptionPane.PLAIN_MESSAGE, null, null,
+										"");
 
 						if (s != null) {
 							model.getServer().add(s);
@@ -416,7 +448,8 @@ public class ContactPanel extends JPanel {
 
 					}
 				});
-			} else if (e.getSource().equals(del) && getSelectedContacts().size() > 0) {
+			} else if (e.getSource().equals(del)
+					&& getSelectedContacts().size() > 0) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 
@@ -427,9 +460,13 @@ public class ContactPanel extends JPanel {
 						}
 
 						Object[] options = { "Yes", "No", };
-						int n = JOptionPane.showOptionDialog(null, "Are you sure you want to remove: " + users
-								+ " from your contacts?", "remove friends", JOptionPane.YES_NO_CANCEL_OPTION,
-								JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+						int n = JOptionPane.showOptionDialog(null,
+								"Are you sure you want to remove: " + users
+										+ " from your contacts?",
+								"remove friends",
+								JOptionPane.YES_NO_CANCEL_OPTION,
+								JOptionPane.QUESTION_MESSAGE, null, options,
+								options[1]);
 
 						if (n == 0) {
 							for (User u : selectedUsers) {
@@ -441,7 +478,8 @@ public class ContactPanel extends JPanel {
 					}
 				});
 
-			} else if (e.getSource().equals(chat) && getSelectedContacts().size() > 0) {
+			} else if (e.getSource().equals(chat)
+					&& getSelectedContacts().size() > 0) {
 
 				LinkedList<User> selectedUsers = getSelectedContacts();
 
@@ -452,7 +490,8 @@ public class ContactPanel extends JPanel {
 
 					// if they're not offline, create a room via the traditional
 					// channels
-					if (!selectedUsers.getFirst().getStatus().equalsIgnoreCase("offline")) {
+					if (!selectedUsers.getFirst().getStatus()
+							.equalsIgnoreCase("offline")) {
 						model.createRoom(getSelectedContacts().getFirst());
 					}
 
@@ -488,10 +527,12 @@ public class ContactPanel extends JPanel {
 					}
 
 				} else { // already a window open for them
-					GimClient.getWindow(selectedUsers.getFirst()).setVisible(true);
+					GimClient.getWindow(selectedUsers.getFirst()).setVisible(
+							true);
 				}
 
-			} else if (e.getSource().equals(group) && getSelectedContacts().size() > 0) {
+			} else if (e.getSource().equals(group)
+					&& getSelectedContacts().size() > 0) {
 				model.createRoom(getSelectedContacts());
 			}
 		}
@@ -505,7 +546,8 @@ public class ContactPanel extends JPanel {
 
 			if (e.getButton() == MouseEvent.BUTTON3) {
 				list.setSelectedIndex(list.locationToIndex(e.getPoint()));
-				ContextMenu menu = new ContextMenu((User) list.getSelectedValue());
+				ContextMenu menu = new ContextMenu(
+						(User) list.getSelectedValue());
 				menu.show(e.getComponent(), e.getX(), e.getY());
 
 			} else {
@@ -515,15 +557,17 @@ public class ContactPanel extends JPanel {
 					int find = GimClient.findRoom(selectedUsers.getFirst());
 
 					if (find == -1) {
-						if (!selectedUsers.getFirst().getStatus().equalsIgnoreCase("offline")) {
+						if (!selectedUsers.getFirst().getStatus()
+								.equalsIgnoreCase("offline")) {
 							model.createRoom(getSelectedContacts().getFirst());
 						}
 
 					} else {
-						GimClient.getWindow(selectedUsers.getFirst()).setVisible(true);
+						GimClient.getWindow(selectedUsers.getFirst())
+								.setVisible(true);
 					}
 				}
-				
+
 			}
 
 		}
