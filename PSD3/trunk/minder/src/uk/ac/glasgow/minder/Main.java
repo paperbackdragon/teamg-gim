@@ -24,7 +24,7 @@ public class Main {
 					new InternetAddress("monkey.me@glasgow.ac.uk"), Privilege.ADMINISTRATOR);
 
 		
-		EventHost host = new Controller();
+		EventHost host = new Controller(rs);
 		
 		UIState uiState = new UIStateImpl(rs, host);
 		

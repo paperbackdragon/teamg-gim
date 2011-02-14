@@ -21,104 +21,103 @@ import uk.ac.glasgow.minder.uistate.UIState;
  * @author tws
  * 
  */
-public class UIStateImpl implements UIState{
-	
+public class UIStateImpl implements UIState {
+
 	private RecipientStore recipientStore;
 	private EventHost eventHost;
-	
+
 	private User currentUser;
-	
+
 	/**
 	 * @param recipientStore
 	 * @param eventHost
 	 */
-	public UIStateImpl(RecipientStore recipientStore, EventHost eventHost){
+	public UIStateImpl(RecipientStore recipientStore, EventHost eventHost) {
 		this.recipientStore = recipientStore;
 		this.eventHost = eventHost;
 	}
-	
+
 	@Override
 	public User login(String username, String password) {
-		currentUser = recipientStore.authenticateUser(username,password);
+		currentUser = recipientStore.authenticateUser(username, password);
 		return currentUser;
 	}
 
 	@Override
-	public void createUser(
-			String displayName,
-			String username,
-			String password,
-			InternetAddress emailAddress,
-			Privilege privilege) {
+	public void createUser(String displayName, String username,
+			String password, InternetAddress emailAddress, Privilege privilege) {
 
-		if (!checkPrivilege(ADMINISTRATOR)) return;
-		
-		recipientStore.addUser(displayName, username, password, emailAddress, privilege);
+		if (!checkPrivilege(ADMINISTRATOR))
+			return;
+
+		recipientStore.addUser(displayName, username, password, emailAddress,
+				privilege);
 	}
-	
+
 	@Override
 	public void createMailingList(String label) {
-		
-		if (!checkPrivilege(ADMINISTRATOR)) return;
-		
-		recipientStore.createMailingList(label,currentUser.getUid());	
+
+		if (!checkPrivilege(ADMINISTRATOR))
+			return;
+
+		recipientStore.createMailingList(label, currentUser.getUid());
 	}
 
-	
 	@Override
 	public void addUserToMailingList(String username, String label) {
-		
-		if (!checkPrivilege(ADMINISTRATOR)) return;
-			
-		recipientStore.addUserToMailingList(label, username);		
-	}	
+
+		if (!checkPrivilege(ADMINISTRATOR))
+			return;
+
+		recipientStore.addUserToMailingList(label, username);
+	}
 
 	@Override
 	public Set<Recipient> searchRecipients(String pattern) {
+		if (!checkPrivilege(RECIPIENT))
+			return null;
 		
-		if (!checkPrivilege(RECIPIENT)) return null;
 		return recipientStore.searchRecipients(pattern);
 	}
-	
+
 	@Override
 	public void createDeadlineEvent(Date date, String deliverable, String course) {
 
-		if (!checkPrivilege(EVENT_MANAGER)) return;
+		if (!checkPrivilege(EVENT_MANAGER))
+			return;
 
 		eventHost.createDeadlineEvent(date, deliverable, course);
-		
-	}
-	
-	@Override
-	public void createLectureEvent(
-			Date date,
-			String location,
-			String lecturerUsername,
-			long duration,
-			String title) {
-		
-		if (!checkPrivilege(EVENT_MANAGER)) return;
 
-		eventHost.createLectureEvent(date, location, lecturerUsername,duration, title);
 	}
 
 	@Override
-	public void attachReminderToEvent(
-			String eventid,
-			String recipientid,
+	public void createLectureEvent(Date date, String location,
+			String lecturerUsername, long duration, String title) {
+
+		if (!checkPrivilege(EVENT_MANAGER))
+			return;
+
+		eventHost.createLectureEvent(date, location, lecturerUsername,
+				duration, title);
+	}
+
+	@Override
+	public void attachReminderToEvent(String eventid, String recipientid,
 			long timeBefore) {
-		eventHost.attachReminderToEvent(eventid,recipientid,timeBefore);
+		eventHost.attachReminderToEvent(eventid, recipientid, timeBefore);
 	}
 
 	@Override
 	public Set<Event> searchEvents(String pattern) {
-		if (!checkPrivilege(RECIPIENT)) return null;
+		if (!checkPrivilege(RECIPIENT))
+			return null;
 
 		return eventHost.searchEvents(pattern);
 	}
 
 	private boolean checkPrivilege(Privilege privilege) {
-		if (currentUser == null) return false;
+		if (currentUser == null)
+			return false;
 		return currentUser.getPrivilege().compareTo(privilege) <= 0;
 	}
 }

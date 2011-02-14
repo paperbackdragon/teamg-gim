@@ -72,5 +72,16 @@ public class EventImpl implements Event {
 				.getTime()) / 1000))
 			reminders.add(new Reminder(recipientid, timeBefore));
 	}
+	
+	public Reminder getNextReminder() {
+		Reminder next = null;
+		
+		for(Reminder r: this.reminders) {
+			if(next == null || r.getTimeBefore() < next.getTimeBefore())
+				next = r;
+		}
+		
+		return next;
+	}
 
 }

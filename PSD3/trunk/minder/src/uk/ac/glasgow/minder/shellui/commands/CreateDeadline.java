@@ -19,22 +19,20 @@ public class CreateDeadline extends AbstractMinderCommand {
 
 	@Override
 	public String invoke(List<String> arguments) throws Exception {
-	DateFormat df = DateFormat.getInstance();
-		
+		DateFormat df = DateFormat.getInstance();
+
 		Date date = null;
-		String dateS = arguments.get(0)+" "+arguments.get(1);
+		String dateS = arguments.get(0) + " " + arguments.get(1);
 		date = df.parse(dateS);
-		
-		String deliverable =  arguments.get(2);
+
+		String deliverable = arguments.get(2);
 		String course = arguments.get(3);
-		
-		if (	date != null 
-				&& deliverable != null 
-				&& course != null ){
+
+		if (date != null && deliverable != null && course != null) {
 			uiState.createDeadlineEvent(date, deliverable, course);
-			return "Created deadline event for ["+deliverable+"].";
-		}
-		else throw new Exception();
+			return "Created deadline event for [" + deliverable + "].";
+		} else
+			throw new Exception();
 	}
 
 }
