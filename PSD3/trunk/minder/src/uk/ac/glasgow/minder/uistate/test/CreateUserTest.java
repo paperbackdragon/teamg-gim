@@ -42,39 +42,38 @@ public class CreateUserTest {
 	}
 
 	@Test
-	public void userAlreadyExists() throws Exception {
+	public void userAlreadyExists() {
 		try {
 			s.createUser("stevie", "Stevie", "meow123", new InternetAddress("cyblob@gmail.com"), Privilege.RECIPIENT);
-			s.createUser("stevie", "Stevie", "meow123", new InternetAddress("cyblob2@gmail.com"), Privilege.RECIPIENT);
+			s.createUser("stevie", "Stevie", "meow123", new InternetAddress("cyblob@gmail.com"), Privilege.RECIPIENT);
 		} catch (AddressException e) {}
 		
 		Set<Recipient> recipients = s.searchRecipients("Stevie");
-		//for(Recipient r : recipients) {
-		//	Assert.assertTrue(r..getEmailAddresses().contains(new InternetAddress("cyblob@gmail.com")));
-		//}
 		
-		//THIS ALLOWS OVERWRITING
+		//TODO: Don't allow overwriting (if necessary)
 		Assert.assertEquals(recipients.size(), 1);
 	}
 	
 	@Test
 	public void bigPassword() {
+		//TODO: Make this test work by editing UIState
 		try {
 			s.createUser("jimi", "Jimi Hendrix", "purplehaze", new InternetAddress("email@email.com"), Privilege.RECIPIENT);
 		} catch (AddressException e) {}
 		
 		Set<Recipient> recipients = s.searchRecipients("Jimi Hendrix");
-		Assert.assertEquals(recipients.size(), 0);
+		Assert.assertEquals(0, recipients.size());
 	}
 	
 	@Test
 	public void badPassword() {
+		//TODO: Make this test work by editing UIState
 		try {
 			s.createUser("jimi", "Jimi Hendrix", "%&o_O", new InternetAddress("email@email.com"), Privilege.RECIPIENT);
 		} catch (AddressException e) {}
 		
 		Set<Recipient> recipients = s.searchRecipients("Jimi Hendrix");
-		Assert.assertEquals(recipients.size(), 0);
+		Assert.assertEquals(0, recipients.size());
 	}
 
 	@Test
@@ -84,7 +83,7 @@ public class CreateUserTest {
 		} catch (AddressException e) {}
 		
 		Set<Recipient> recipients = s.searchRecipients("Jimi Hendrix");
-		Assert.assertEquals(recipients.size(), 0);
+		Assert.assertEquals(0, recipients.size());
 	}
 	
 	@Test
@@ -94,7 +93,6 @@ public class CreateUserTest {
 		} catch (AddressException e) {}
 		
 		Set<Recipient> recipients = s.searchRecipients("Jimi Hendrix");
-		Assert.assertEquals(recipients.size(), 1);
-		
+		Assert.assertEquals(1, recipients.size());
 	}
 }
