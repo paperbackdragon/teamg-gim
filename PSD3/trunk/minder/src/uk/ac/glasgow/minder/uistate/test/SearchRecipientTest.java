@@ -54,6 +54,6 @@ public class SearchRecipientTest {
 	
 	@Test
 	public void manyRecipResults() {
-		Assert.assertEquals(2, s.searchRecipients("Level *").size());
+		Assert.assertEquals(2, s.searchRecipients("Level .*").size());
 	}
 }
