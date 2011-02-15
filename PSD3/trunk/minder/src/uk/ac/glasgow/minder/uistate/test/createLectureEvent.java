@@ -57,29 +57,58 @@ public class createLectureEvent {
 		s.createLectureEvent(date, "Kelvin Hall",  "Ted Tedson", 7200, "Class Test");
 		
 		
-		// ?? am i searching on the right thing, james?
-		Assert.assertEquals(0, s.searchEvents("Exercise 1").size());
+		
+		Assert.assertEquals(0, s.searchEvents("Class Test").size());
 		
 	}
 
 	@Test
 	public void dateNotProvided() {
+		s.createMailingList("Level 4");
+		
+		s.createLectureEvent(null, "Kelvin Hall",  "Ted Tedson", 7200, "Class Test");
+		
+		Assert.assertEquals(0, s.searchEvents("Class Test").size());
 		
 	}
 	
 	@Test
 	
 	public void noLocationGiven() {
+		s.createMailingList("Level 4");
+		Calendar cal = new GregorianCalendar(1800, 05, 14);
+		Date date = cal.getTime();
+		
+		s.createLectureEvent(date, null,  "Ted Tedson", 7200, "Class Test");
+		
+		Assert.assertEquals(0, s.searchEvents("Class Test").size());
+		
 		
 	}
 	
 	@Test
 	public void noLecturerUsernameGiven() {
 		
+		s.createMailingList("Level 4");
+		Calendar cal = new GregorianCalendar(1800, 05, 14);
+		Date date = cal.getTime();
+		
+		s.createLectureEvent(date, "Kelvin Hall",  null, 7200, "Class Test");
+		
+		Assert.assertEquals(0, s.searchEvents("Class Test").size());
+		
 	}
 	
 	@Test
 	public void validInput() {
+		
+		s.createMailingList("Level 4");
+		Calendar cal = new GregorianCalendar(1800, 05, 14);
+		Date date = cal.getTime();
+		
+		s.createLectureEvent(date, "Kelvin Hall",  "Ted Tedson", 7200, "Class Test");
+		
+		Assert.assertEquals(1, s.searchEvents("Class Test").size());
 		
 	}
 }
