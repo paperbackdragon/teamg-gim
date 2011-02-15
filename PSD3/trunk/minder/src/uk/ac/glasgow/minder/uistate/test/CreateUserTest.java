@@ -56,7 +56,6 @@ public class CreateUserTest {
 	
 	@Test
 	public void bigPassword() {
-		//TODO: Make this test work by editing UIState
 		try {
 			s.createUser("jimi", "Jimi Hendrix", "purplehaze", new InternetAddress("email@email.com"), Privilege.RECIPIENT);
 		} catch (AddressException e) {}
@@ -67,7 +66,6 @@ public class CreateUserTest {
 	
 	@Test
 	public void badPassword() {
-		//TODO: Make this test work by editing UIState
 		try {
 			s.createUser("jimi", "Jimi Hendrix", "%&o_O", new InternetAddress("email@email.com"), Privilege.RECIPIENT);
 		} catch (AddressException e) {}
