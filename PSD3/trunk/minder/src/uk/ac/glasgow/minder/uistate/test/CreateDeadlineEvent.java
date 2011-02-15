@@ -111,7 +111,7 @@ public class CreateDeadlineEvent {
 		
 		s.createDeadlineEvent(date, "Exercise 3", "Maths");
 		
-		
+		Assert.assertEquals(1, s.searchEvents("Class Test").size());
 		
 		
 		
