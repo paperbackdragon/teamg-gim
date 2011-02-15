@@ -52,7 +52,9 @@ public class createLectureEvent {
 		
 		s.createMailingList("Level 4");
 		Calendar cal = new GregorianCalendar(1800, 01, 21);
+		
 		Date date = cal.getTime();
+		System.out.println(date.getYear());
 		
 		s.createLectureEvent(date, "Kelvin Hall",  "Ted Tedson", 7200, "Class Test");
 		
