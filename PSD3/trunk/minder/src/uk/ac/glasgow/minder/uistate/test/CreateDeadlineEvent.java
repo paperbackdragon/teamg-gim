@@ -47,7 +47,7 @@ public class CreateDeadlineEvent {
 	@Test
 	public void dateInvalid() {
 		s.createMailingList("Level 4");
-		Calendar cal = new GregorianCalendar(01, 01, 1800);
+		Calendar cal = new GregorianCalendar(1800, 01, 01);
 		Date date = cal.getTime();
 		
 		s.createDeadlineEvent(date, "Exercise 1", "History");
@@ -74,7 +74,7 @@ public class CreateDeadlineEvent {
 		
 		s.createMailingList("Level 4");
 		
-		Calendar cal = new GregorianCalendar(25, 11, 2010);
+		Calendar cal = new GregorianCalendar(2010, 25, 11 );
 		Date date = cal.getTime();
 		
 		s.createDeadlineEvent(date, "Exercise 2", "Maths");
@@ -88,7 +88,7 @@ public class CreateDeadlineEvent {
 	@Test
 	public void courseNotProvided() {
 		s.createMailingList("Level 4");
-		Calendar cal = new GregorianCalendar(25, 11, 2010);
+		Calendar cal = new GregorianCalendar(2010, 25, 11);
 		Date date = cal.getTime();
 		
 		s.createDeadlineEvent(date, "Exercise 1", null);
@@ -102,7 +102,7 @@ public class CreateDeadlineEvent {
 	public void validInput() {
 		
 		s.createMailingList("Level 4");
-		Calendar cal = new GregorianCalendar(25, 11, 2010);
+		Calendar cal = new GregorianCalendar(2010, 25, 11);
 		Date date = cal.getTime();
 		
 		s.createDeadlineEvent(date, "Exercise 3", "Maths");
