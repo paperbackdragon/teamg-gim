@@ -19,13 +19,14 @@ import uk.ac.glasgow.minder.recipient.Privilege;
 import uk.ac.glasgow.minder.recipient.impl.RecipientStoreImpl;
 import uk.ac.glasgow.minder.uistate.impl.UIStateImpl;
 
-public class CreateDeadlineEvent {
+public class createLectureEvent {
 	
 	private RecipientStoreImpl rs;
 	private UIStateImpl s;
 
 	@Before
 	public void setUp() throws Exception {
+		
 		rs = new RecipientStoreImpl();
 		rs.addUser("Administrator", "admin", "monkey",
 		new InternetAddress("monkey.me@glasgow.ac.uk"), Privilege.ADMINISTRATOR);
@@ -37,6 +38,7 @@ public class CreateDeadlineEvent {
 
 	@After
 	public void tearDown() throws Exception {
+		
 		File target = new File("mailing.obj");
 		target.delete();
 		target = new File("users.obj");
@@ -45,77 +47,39 @@ public class CreateDeadlineEvent {
 	}
 	
 	@Test
+	
 	public void dateInvalid() {
+		
 		s.createMailingList("Level 4");
-		Calendar cal = new GregorianCalendar(1800, 01, 01);
+		Calendar cal = new GregorianCalendar(1800, 01, 21);
 		Date date = cal.getTime();
 		
-		s.createDeadlineEvent(date, "Exercise 1", "History");
+		s.createLectureEvent(date, "Kelvin Hall",  "Ted Tedson", 7200, "Class Test");
 		
 		
 		// ?? am i searching on the right thing, james?
 		Assert.assertEquals(0, s.searchEvents("Exercise 1").size());
 		
 	}
-	
+
 	@Test
 	public void dateNotProvided() {
 		
-		s.createMailingList("Level 4");
-		s.createDeadlineEvent(null, "Exercise 1", "History");
-		
-		// ?? am i searching on the right thing, james?
-		Assert.assertEquals(0, s.searchEvents("Exercise 1").size());
+	}
+	
+	@Test
+	
+	public void noLocationGiven() {
 		
 	}
 	
 	@Test
-	public void alreadyHasADeadline() {
-		
-		s.createMailingList("Level 4");
-		
-		Calendar cal = new GregorianCalendar(2010, 25, 11 );
-		Date date = cal.getTime();
-		
-		s.createDeadlineEvent(date, "Exercise 2", "Maths");
-		s.createDeadlineEvent(date, "Exercise 2", "Maths");
-		
-		// ?? am i searching on the right thing, james?
-		Assert.assertEquals(1, s.searchEvents("Exercise 2").size());
+	public void noLecturerUsernameGiven() {
 		
 	}
-	
-	@Test
-	public void courseNotProvided() {
-		s.createMailingList("Level 4");
-		Calendar cal = new GregorianCalendar(2010, 25, 11);
-		Date date = cal.getTime();
-		
-		s.createDeadlineEvent(date, "Exercise 1", "");
-		
-		Assert.assertEquals(0, s.searchEvents("Exercise 4").size());
-		
-		
-	}
-	
-	// ************
-	// WHAT ABOUT DEADLINE NOT PROVIDED? - WILL ASK YOU GUYS LATER :P
-	// ************
 	
 	@Test
 	public void validInput() {
 		
-		s.createMailingList("Level 4");
-		Calendar cal = new GregorianCalendar(2010, 25, 11);
-		Date date = cal.getTime();
-		
-		s.createDeadlineEvent(date, "Exercise 3", "Maths");
-		
-		
-		
-		
-		
 	}
-	
-
 }
