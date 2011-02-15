@@ -21,7 +21,7 @@ import uk.ac.glasgow.minder.recipient.impl.RecipientStoreImpl;
 import uk.ac.glasgow.minder.recipient.impl.UserImpl;
 import uk.ac.glasgow.minder.uistate.impl.UIStateImpl;
 
-public class AddUserToML {
+public class AddUserToMLTest {
 
 	private RecipientStoreImpl rs;
 	private UIStateImpl s;
