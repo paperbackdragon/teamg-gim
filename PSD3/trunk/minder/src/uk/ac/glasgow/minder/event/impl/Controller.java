@@ -1,7 +1,10 @@
 package uk.ac.glasgow.minder.event.impl;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,6 +18,7 @@ import javax.mail.internet.MimeMessage;
 
 import uk.ac.glasgow.minder.event.Event;
 import uk.ac.glasgow.minder.event.EventHost;
+import uk.ac.glasgow.minder.recipient.Recipient;
 import uk.ac.glasgow.minder.recipient.RecipientStore;
 
 /**
@@ -32,29 +36,43 @@ public class Controller implements Runnable, EventHost {
 	public Controller(RecipientStore rs) {
 		this.rs = rs;
 		t = new Thread(this);
+		t.start();
+
+		/*
+		 * GregorianCalendar now = new GregorianCalendar();
+		 * now.add(Calendar.SECOND, 25);
+		 * 
+		 * createDeadlineEvent(now.getTime(), "Hello There",
+		 * "Mr T's fighting course");
+		 * 
+		 * Set<Event> events = searchEvents(".*"); Event e = events.toArray(new
+		 * Event[0])[0];
+		 * 
+		 * attachReminderToEvent(e.getUid(), "james", 5);
+		 */
 	}
 
 	@Override
 	public void run() {
 		while (true) {
 			EventImpl nextEvent = getNextReminderEvent();
-			Reminder nextReminder = nextEvent.getNextReminder();
-			long time = (nextEvent.getStartDate().getTime() - System
-					.currentTimeMillis()) / 1000;
+			Reminder nextReminder = null;
+			long time = Long.MAX_VALUE;
 
-			if (time <= 0)
-				time = Integer.MAX_VALUE;
+			if (nextEvent != null) {
+				nextReminder = nextEvent.getNextReminder();
+				time = (nextEvent.getStartDate().getTime() - (System.currentTimeMillis() / 1000) - nextReminder
+						.getTimeBefore()) * 1000;
+			}
 
 			try {
-				Thread.sleep(time - nextReminder.getTimeBefore());
+				Thread.sleep(time);
 			} catch (InterruptedException e) {
 				continue;
 			}
 
 			synchronized (this) {
-
 				try {
-
 					String host = "smtp.gmail.com";
 					String from = "psd310g";
 					String pass = "unsecure7";
@@ -66,56 +84,46 @@ public class Controller implements Runnable, EventHost {
 					props.put("mail.smtp.port", "587");
 					props.put("mail.smtp.auth", "true");
 
-					String[] to = rs.searchRecipients(nextReminder.getRecipientId()).toArray(new String[0]);
+					Set<Recipient> recipients = rs.searchRecipients(nextReminder.getRecipientId());
 
 					Session session = Session.getDefaultInstance(props, null);
 					MimeMessage message = new MimeMessage(session);
 					message.setFrom(new InternetAddress(from));
 
-					InternetAddress[] toAddress = new InternetAddress[to.length];
-
 					// To get the array of addresses
-					for (int i = 0; i < to.length; i++) {
-						toAddress[i] = new InternetAddress(to[i]);
+					LinkedList<InternetAddress> emails = new LinkedList<InternetAddress>();
+					for (Recipient r : recipients) {
+						for (InternetAddress email : r.getEmailAddresses()) {
+							emails.add(email);
+						}
 					}
 
-					System.out.println(Message.RecipientType.TO);
+					InternetAddress[] toAddress = emails.toArray(new InternetAddress[0]);
 
 					for (int i = 0; i < toAddress.length; i++) {
-						message.addRecipient(Message.RecipientType.TO,
-								toAddress[i]);
+						message.addRecipient(Message.RecipientType.TO, toAddress[i]);
 					}
 
 					if (nextEvent instanceof LectureEvent) {
 						LectureEvent e = (LectureEvent) nextEvent;
-						message.setSubject("Event Reminder: Lecture "
-								+ e.getTitle());
-						message.setText("This is an automated message to remind you that "
-								+ e.getTitle()
-								+ " is "
-								+ "taking place at "
-								+ e.getLocation()
-								+ " by "
-								+ e.getLecturerUsername()
-								+ ". "
-								+ "The lecture will take place on "
-								+ e.getStartDate()
-								+ " and last for "
+						message.setSubject("Event Reminder: Lecture " + e.getTitle());
+						message.setText("This is an automated message to remind you that " + e.getTitle() + " is "
+								+ "taking place at " + e.getLocation() + " by " + e.getLecturerUsername() + ". "
+								+ "The lecture will take place on " + e.getStartDate() + " and last for "
 								+ (e.getDuration() / 60) + "minutes");
 					} else {
 						DeadlineEvent e = (DeadlineEvent) nextEvent;
-						message.setSubject("Event Reminder: Deadline for "
-								+ e.getDeliverable());
-						message.setText("This is an automated message to remind you that "
-								+ e.getDeliverable()
-								+ " is due at"
-								+ e.getStartDate());
+						message.setSubject("Event Reminder: Deadline for " + e.getDeliverable());
+						message.setText("This is an automated message to remind you that " + e.getDeliverable()
+								+ " is due on " + e.getStartDate());
 					}
 
 					Transport transport = session.getTransport("smtp");
 					transport.connect(host, from, pass);
 					transport.sendMessage(message, message.getAllRecipients());
 					transport.close();
+
+					nextEvent.removeReminder(nextReminder);
 
 				} catch (MessagingException e) {
 					System.out.println("Send in the sharks.");
@@ -129,10 +137,11 @@ public class Controller implements Runnable, EventHost {
 
 	private EventImpl getNextReminderEvent() {
 		EventImpl nextEvent = null;
-		long timeBefore = 0;
+		long timeBefore = Long.MAX_VALUE;
 
 		for (EventImpl e : events.values()) {
-			if (e.getNextReminder().timeBefore < timeBefore) {
+			Reminder r = e.getNextReminder();
+			if (r != null && r.timeBefore < timeBefore) {
 				nextEvent = e;
 				timeBefore = e.getNextReminder().timeBefore;
 			}
@@ -141,34 +150,39 @@ public class Controller implements Runnable, EventHost {
 		return nextEvent;
 	}
 
+	@Override
 	public void createDeadlineEvent(Date date, String deliverable, String course) {
-		DeadlineEvent e = new DeadlineEvent(deliverable, course,
-				date.getTime() / 1000);
-		events.put(e.getUid(), e);
-		t.interrupt();
+		if (date == null || date.before(new Date()) || deliverable == null || deliverable.length() == 0
+				|| course == null || course.length() == 0)
+			return;
+
+		DeadlineEvent e = new DeadlineEvent(deliverable, course, date.getTime() / 1000);
+
+		if (events.get(e.getUid()) == null)
+			events.put(e.getUid(), e);
 	}
 
 	@Override
-	public void createLectureEvent(Date date, String location,
-			
-			String lecturerUsername, long duration, String title) {
-		LectureEvent e = new LectureEvent(location, lecturerUsername, duration,
-				title, date.getTime() / 1000);
-		events.put(e.getUid(), e);
-		t.interrupt();
+	public void createLectureEvent(Date date, String location, String lecturerUsername, long duration, String title) {
+		if (date == null || date.before(new Date()))
+			return;
+
+		LectureEvent e = new LectureEvent(location, lecturerUsername, duration, title, date.getTime() / 1000);
+
+		if (events.get(e.getUid()) == null)
+			events.put(e.getUid(), e);
 	}
 
 	@Override
 	public Set<Event> searchEvents(String pattern) {
 		Set<Event> matched = new HashSet<Event>();
-
 		for (Event e : events.values()) {
-			if(e instanceof DeadlineEvent) {
+			if (e instanceof DeadlineEvent) {
 				if (((DeadlineEvent) e).getDeliverable().matches(pattern)) {
 					matched.add(e);
 				}
 			} else {
-				if(((LectureEvent) e).getTitle().matches(pattern)) {
+				if (((LectureEvent) e).getTitle().matches(pattern)) {
 					matched.add(e);
 				}
 			}
@@ -178,14 +192,16 @@ public class Controller implements Runnable, EventHost {
 	}
 
 	@Override
-	public void attachReminderToEvent(String eventid, String recipientid,
-			long timeBefore) {
+	public void attachReminderToEvent(String eventid, String recipientid, long timeBefore) {
 		EventImpl e = events.get(eventid);
-
-		if (e == null)
+		if (e == null) {
+			System.out.println("Could not find event to add reminder to");
 			return;
+		}
 
+		System.out.println("Attached reminder to " + e.getUid());
 		e.attachReminder(recipientid, timeBefore);
+		t.interrupt();
 	}
 
 }

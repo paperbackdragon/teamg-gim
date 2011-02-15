@@ -24,8 +24,7 @@ public class UserImpl implements User {
 
 	public UserImpl(
 
-	String displayName, String username, String password,
-			InternetAddress emailAddress, Privilege privilege) {
+	String displayName, String username, String password, InternetAddress emailAddress, Privilege privilege) {
 		this.username = username;
 		this.displayName = displayName;
 		this.password = password;
@@ -92,8 +91,7 @@ public class UserImpl implements User {
 
 	@Override
 	public String toString() {
-		return username + "\t" + displayName + "\t" + privilege + "\t"
-				+ emailAddress;
+		return username + "\t" + displayName + "\t" + privilege + "\t" + emailAddress;
 	}
 
 }
