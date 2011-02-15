@@ -1,9 +1,6 @@
 package uk.ac.glasgow.minder.uistate.test;
 
-import static org.junit.Assert.*;
-
 import java.io.File;
-import java.util.Set;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -16,7 +13,6 @@ import org.junit.Test;
 
 import uk.ac.glasgow.minder.event.impl.Controller;
 import uk.ac.glasgow.minder.recipient.Privilege;
-import uk.ac.glasgow.minder.recipient.Recipient;
 import uk.ac.glasgow.minder.recipient.User;
 import uk.ac.glasgow.minder.recipient.impl.RecipientStoreImpl;
 import uk.ac.glasgow.minder.recipient.impl.UserImpl;

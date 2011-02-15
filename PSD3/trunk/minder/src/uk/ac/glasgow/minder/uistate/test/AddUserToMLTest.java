@@ -18,7 +18,6 @@ import uk.ac.glasgow.minder.recipient.Recipient;
 import uk.ac.glasgow.minder.recipient.User;
 import uk.ac.glasgow.minder.recipient.impl.MailingList;
 import uk.ac.glasgow.minder.recipient.impl.RecipientStoreImpl;
-import uk.ac.glasgow.minder.recipient.impl.UserImpl;
 import uk.ac.glasgow.minder.uistate.impl.UIStateImpl;
 
 public class AddUserToMLTest {
