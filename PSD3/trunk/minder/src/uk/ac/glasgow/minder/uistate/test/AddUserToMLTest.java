@@ -18,6 +18,7 @@ import uk.ac.glasgow.minder.recipient.Recipient;
 import uk.ac.glasgow.minder.recipient.User;
 import uk.ac.glasgow.minder.recipient.impl.MailingList;
 import uk.ac.glasgow.minder.recipient.impl.RecipientStoreImpl;
+import uk.ac.glasgow.minder.recipient.impl.UserImpl;
 import uk.ac.glasgow.minder.uistate.impl.UIStateImpl;
 
 public class AddUserToMLTest {
@@ -74,14 +75,14 @@ public class AddUserToMLTest {
 			s.createUser("Mark Jones", "mark", "pineapple", new InternetAddress("mark@gmail.com"), Privilege.RECIPIENT);
 		} catch (AddressException e) {}
 		s.addUserToMailingList("mark", "Level 4");
+		MailingList ml = s.searchRecipients("Level 4").toArray(new MailingList[0])[0];
+		User u1 = ml.getMembers().toArray(new UserImpl[0])[0];
+		
 		s.addUserToMailingList("mark", "Level 4");
+		ml = s.searchRecipients("Level 4").toArray(new MailingList[0])[0];
+		User u2 = ml.getMembers().toArray(new UserImpl[0])[0];
 		
-		Set<Recipient> recipients = s.searchRecipients("Level 4");
-		Object[] recipAry = recipients.toArray();
-		Set<User> u = ((MailingList) recipAry[0]).getMembers();
-		
-		//TODO: does this overwrite users in mailing lists? does it matter?
-		Assert.assertEquals(1, u.size());
+		Assert.assertEquals(u1, u2);
 	}
 	
 	@Test
