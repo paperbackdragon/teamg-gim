@@ -15,7 +15,7 @@ import static uk.ac.glasgow.minder.recipient.Privilege.*;
 import uk.ac.glasgow.minder.uistate.UIState;
 
 /**
- * Implements the UIState interface, providing a facade to other bundles in the
+ * Badly implements the UIState interface, providing a facade to other bundles in the
  * minder system.
  * 
  * @author tws
@@ -109,9 +109,11 @@ public class UIStateImpl implements UIState {
 
 	@Override
 	public Set<Event> searchEvents(String pattern) {
-		if (!checkPrivilege(RECIPIENT))
+		if (!checkPrivilege(RECIPIENT)) {
+			System.out.println("Fucking null");
 			return null;
-
+		}
+		System.out.println("Not null");
 		return eventHost.searchEvents(pattern);
 	}
 

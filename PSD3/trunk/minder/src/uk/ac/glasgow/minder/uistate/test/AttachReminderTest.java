@@ -1,6 +1,5 @@
 package uk.ac.glasgow.minder.uistate.test;
 
-import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -12,7 +11,6 @@ import javax.mail.internet.InternetAddress;
 
 import junit.framework.Assert;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,14 +33,6 @@ public class AttachReminderTest {
 		
 		s = new UIStateImpl(rs, new Controller(rs));
 		s.login("admin", "monkey");
-	}
-	
-	@After
-	public void tearDown() throws Exception {
-		File target = new File("mailing.obj");
-		target.delete();
-		target = new File("users.obj");
-		target.delete();
 	}
 
 	@Test

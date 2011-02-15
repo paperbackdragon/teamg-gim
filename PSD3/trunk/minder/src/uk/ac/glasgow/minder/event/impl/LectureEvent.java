@@ -6,7 +6,7 @@ public class LectureEvent extends EventImpl {
 	String lecturerUsername;
 	long duration;
 	String title;
-	
+
 	public String getLocation() {
 		return location;
 	}
@@ -23,10 +23,12 @@ public class LectureEvent extends EventImpl {
 		return title;
 	}
 
-	protected LectureEvent(String location, String lecturerUsername,
-			long duration, String title, long time) {
+	protected LectureEvent(String location, String lecturerUsername, long duration, String title, long time) {
 		super(location + " " + lecturerUsername + " " + time, time);
-
+		this.title = title;
+		this.lecturerUsername = lecturerUsername;
+		this.location = location;
+		this.duration = duration;
 	}
 
 }

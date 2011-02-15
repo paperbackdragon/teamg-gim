@@ -22,6 +22,9 @@ public class Main {
 		RecipientStore rs = new RecipientStoreImpl();
 			rs.addUser("Administrator", "admin", "monkey",
 					new InternetAddress("monkey.me@glasgow.ac.uk"), Privilege.ADMINISTRATOR);
+			
+			rs.addUser("james", "james", "password",
+					new InternetAddress("cyblob@gmail.com"), Privilege.RECIPIENT);
 
 		
 		EventHost host = new Controller(rs);

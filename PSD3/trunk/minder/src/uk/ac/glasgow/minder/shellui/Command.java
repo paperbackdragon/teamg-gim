@@ -4,6 +4,6 @@ import java.util.List;
 
 public interface Command {
 	public String invoke(List<String> arguments) throws Exception;
-	
+
 	public String getUsage();
 }

@@ -65,10 +65,10 @@ public class EventImpl implements Event {
 	 * @param recipientid
 	 *            The recipient of the reminder
 	 * @param timeBefore
-	 *            The time before the event to add the reminder
+	 *            The time before the event to add the reminder in seconds
 	 */
 	public void attachReminder(String recipientid, long timeBefore) {
-		if (timeBefore > ((System.currentTimeMillis() - this.getStartDate()
+		if (timeBefore < ((System.currentTimeMillis() - this.getStartDate()
 				.getTime()) / 1000))
 			reminders.add(new Reminder(recipientid, timeBefore));
 	}
@@ -82,6 +82,10 @@ public class EventImpl implements Event {
 		}
 		
 		return next;
+	}
+	
+	public void removeReminder(Reminder r) {
+		reminders.remove(r);
 	}
 
 }

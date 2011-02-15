@@ -29,8 +29,7 @@ public class ShellUI {
 
 	private String title;
 
-	public ShellUI(InputStream in, OutputStream out, OutputStream err,
-			String title) {
+	public ShellUI(InputStream in, OutputStream out, OutputStream err, String title) {
 		this.title = title;
 		st = new StreamTokenizer(new BufferedReader(new InputStreamReader(in)));
 		st.quoteChar('\'');
@@ -68,8 +67,7 @@ public class ShellUI {
 						args = processArguments();
 
 					} catch (IOException e) {
-						err.println("Exception while reading arguments of command["
-								+ commandName + "].");
+						err.println("Exception while reading arguments of command[" + commandName + "].");
 						e.printStackTrace();
 					}
 					if (args != null)
@@ -77,12 +75,10 @@ public class ShellUI {
 							String message = c.invoke(args);
 							out.println(message);
 						} catch (Exception e) {
-							err.println("Exception while invoking command["
-									+ commandName + "] with arguments [" + args
+							err.println("Exception while invoking command[" + commandName + "] with arguments [" + args
 									+ "].");
 							e.printStackTrace();
-							out.println("usage: " + commandName + " "
-									+ c.getUsage());
+							out.println("usage: " + commandName + " " + c.getUsage());
 						}
 
 				} else {
