@@ -3,6 +3,7 @@ package uk.ac.glasgow.minder.shellui.commands;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import uk.ac.glasgow.minder.uistate.UIState;
 
@@ -19,7 +20,7 @@ public class CreateDeadline extends AbstractMinderCommand {
 
 	@Override
 	public String invoke(List<String> arguments) throws Exception {
-		DateFormat df = DateFormat.getInstance();
+		DateFormat df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.UK);
 
 		Date date = null;
 		String dateS = arguments.get(0) + " " + arguments.get(1);
