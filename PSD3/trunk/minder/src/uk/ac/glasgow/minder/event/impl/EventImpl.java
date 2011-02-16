@@ -6,6 +6,12 @@ import java.util.Properties;
 
 import uk.ac.glasgow.minder.event.Event;
 
+/**
+ * LOL COMMIT 500!
+ * @author 0800890m
+ *
+ */
+
 public class EventImpl implements Event {
 
 	private long time;
