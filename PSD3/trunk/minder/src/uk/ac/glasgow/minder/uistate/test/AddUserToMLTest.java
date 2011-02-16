@@ -101,19 +101,6 @@ public class AddUserToMLTest {
 	}
 
 	@Test
-	public void noMLSpecified() {
-		try {
-			s.createUser("John Smith", "John", "banana", new InternetAddress("jsmith@gmail.com"), Privilege.RECIPIENT);
-		} catch (AddressException e) {
-		}
-
-		s.addUserToMailingList("John", "");
-
-		// TODO: How to test whether John was added to a mailing list?
-		// Assert.
-	}
-
-	@Test
 	public void correct() {
 		s.createMailingList("Level 8");
 		try {

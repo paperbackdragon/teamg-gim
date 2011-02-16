@@ -54,8 +54,6 @@ public class AttachReminderTest {
 		s.attachReminderToEvent("GE2", "John", 7200000);
 		Set<Event> events = s.searchEvents("GE2");
 		
-		/*TODO: any way to see which reminders were sent to John?
-		(so this actually checks what it should)*/
 		Assert.assertEquals(0, events.size());
 	}
 	
@@ -108,9 +106,6 @@ public class AttachReminderTest {
 		
 		Object[] eventsAry = events.toArray();
 		Properties eventProp = ((Event) eventsAry[0]).getEventProperties();
-		
-		/*TODO: Is it possible to test whether this is the exact reminder
-		we added (not just how many we added)?*/
 		
 		Assert.assertEquals("1", eventProp.getProperty("numberReminders"));
 	}
