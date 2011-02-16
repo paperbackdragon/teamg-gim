@@ -15,8 +15,8 @@ import static uk.ac.glasgow.minder.recipient.Privilege.*;
 import uk.ac.glasgow.minder.uistate.UIState;
 
 /**
- * Badly implements the UIState interface, providing a facade to other bundles in the
- * minder system.
+ * Badly implements the UIState interface, providing a facade to other bundles
+ * in the minder system.
  * 
  * @author tws
  * 
@@ -44,14 +44,18 @@ public class UIStateImpl implements UIState {
 	}
 
 	@Override
-	public void createUser(String displayName, String username,
-			String password, InternetAddress emailAddress, Privilege privilege) {
+	public void createUser(String displayName, String username, String password, InternetAddress emailAddress,
+			Privilege privilege) {
 
-		if (!checkPrivilege(ADMINISTRATOR))
+		if (!checkPrivilege(ADMINISTRATOR) || password.length() > 8)
 			return;
+		
+		if(!password.matches("^[A-Za-z0-9]+$"))
+			return;
+		
+		System.out.println("adding " + username);
 
-		recipientStore.addUser(displayName, username, password, emailAddress,
-				privilege);
+		recipientStore.addUser(displayName, username, password, emailAddress, privilege);
 	}
 
 	@Override
@@ -76,7 +80,7 @@ public class UIStateImpl implements UIState {
 	public Set<Recipient> searchRecipients(String pattern) {
 		if (!checkPrivilege(RECIPIENT))
 			return null;
-		
+
 		return recipientStore.searchRecipients(pattern);
 	}
 
@@ -91,19 +95,16 @@ public class UIStateImpl implements UIState {
 	}
 
 	@Override
-	public void createLectureEvent(Date date, String location,
-			String lecturerUsername, long duration, String title) {
+	public void createLectureEvent(Date date, String location, String lecturerUsername, long duration, String title) {
 
 		if (!checkPrivilege(EVENT_MANAGER))
 			return;
 
-		eventHost.createLectureEvent(date, location, lecturerUsername,
-				duration, title);
+		eventHost.createLectureEvent(date, location, lecturerUsername, duration, title);
 	}
 
 	@Override
-	public void attachReminderToEvent(String eventid, String recipientid,
-			long timeBefore) {
+	public void attachReminderToEvent(String eventid, String recipientid, long timeBefore) {
 		eventHost.attachReminderToEvent(eventid, recipientid, timeBefore);
 	}
 

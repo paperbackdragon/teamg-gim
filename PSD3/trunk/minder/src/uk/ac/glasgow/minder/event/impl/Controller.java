@@ -1,8 +1,6 @@
 package uk.ac.glasgow.minder.event.impl;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Properties;
@@ -37,7 +35,6 @@ public class Controller implements Runnable, EventHost {
 		this.rs = rs;
 		t = new Thread(this);
 		t.start();
-
 		/*
 		 * GregorianCalendar now = new GregorianCalendar();
 		 * now.add(Calendar.SECOND, 25);
@@ -61,11 +58,10 @@ public class Controller implements Runnable, EventHost {
 
 			if (nextEvent != null) {
 				nextReminder = nextEvent.getNextReminder();
-				time = (nextEvent.getStartDate().getTime() - (System.currentTimeMillis() / 1000) - nextReminder
-						.getTimeBefore()) * 1000;
+				time = nextEvent.getStartDate().getTime() - System.currentTimeMillis() - nextReminder.getTimeBefore();
 			}
-
 			try {
+				System.out.println("Sleeping for " + time);
 				Thread.sleep(time);
 			} catch (InterruptedException e) {
 				continue;
@@ -156,7 +152,7 @@ public class Controller implements Runnable, EventHost {
 				|| course == null || course.length() == 0)
 			return;
 
-		DeadlineEvent e = new DeadlineEvent(deliverable, course, date.getTime() / 1000);
+		DeadlineEvent e = new DeadlineEvent(deliverable, course, date.getTime());
 
 		if (events.get(e.getUid()) == null)
 			events.put(e.getUid(), e);
@@ -164,10 +160,11 @@ public class Controller implements Runnable, EventHost {
 
 	@Override
 	public void createLectureEvent(Date date, String location, String lecturerUsername, long duration, String title) {
-		if (date == null || date.before(new Date()))
+		if (date == null || date.before(new Date()) || location == null || location.length() == 0 || duration < 0
+				|| title == null || title.length() == 0 || lecturerUsername == null || lecturerUsername.length() == 0)
 			return;
 
-		LectureEvent e = new LectureEvent(location, lecturerUsername, duration, title, date.getTime() / 1000);
+		LectureEvent e = new LectureEvent(location, lecturerUsername, duration, title, date.getTime());
 
 		if (events.get(e.getUid()) == null)
 			events.put(e.getUid(), e);
@@ -198,6 +195,9 @@ public class Controller implements Runnable, EventHost {
 			System.out.println("Could not find event to add reminder to");
 			return;
 		}
+
+		if (rs.searchRecipients(recipientid).size() == 0)
+			return;
 
 		System.out.println("Attached reminder to " + e.getUid());
 		e.attachReminder(recipientid, timeBefore);

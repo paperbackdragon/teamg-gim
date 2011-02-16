@@ -6,7 +6,7 @@ public class DeadlineEvent extends EventImpl {
 	String course;
 
 	protected DeadlineEvent(String deliverble, String course, long time) {
-		super(deliverble + " " + course + " " + time, time);
+		super(deliverble + course + time, time);
 		this.deliverable = deliverble;
 		this.course = course;
 	}

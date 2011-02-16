@@ -24,7 +24,7 @@ public class LectureEvent extends EventImpl {
 	}
 
 	protected LectureEvent(String location, String lecturerUsername, long duration, String title, long time) {
-		super(location + " " + lecturerUsername + " " + time, time);
+		super(location + lecturerUsername + time, time);
 		this.title = title;
 		this.lecturerUsername = lecturerUsername;
 		this.location = location;
