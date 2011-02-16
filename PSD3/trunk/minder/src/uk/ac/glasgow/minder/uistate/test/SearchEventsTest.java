@@ -43,7 +43,6 @@ public class SearchEventsTest {
 		Calendar cal3 = new GregorianCalendar(2011, 2, 11);
 		Date date3 = cal3.getTime();
 		s.createDeadlineEvent(date3, "Report", "PSD3");
-		
 	}
 	
 	@AfterClass
@@ -54,7 +53,6 @@ public class SearchEventsTest {
 		target.delete();
 	}
 	
-	//TODO: all these tests throw null-pointer exceptions
 	@Test
 	public void noEventResults() {
 		Assert.assertEquals(0, s.searchEvents("Lunch").size());

@@ -74,6 +74,7 @@ public class AddUserToMLTest {
 		try {
 			s.createUser("Mark Jones", "mark", "pineapple", new InternetAddress("mark@gmail.com"), Privilege.RECIPIENT);
 		} catch (AddressException e) {}
+		
 		s.addUserToMailingList("mark", "Level 4");
 		MailingList ml = s.searchRecipients("Level 4").toArray(new MailingList[0])[0];
 		User u1 = ml.getMembers().toArray(new UserImpl[0])[0];

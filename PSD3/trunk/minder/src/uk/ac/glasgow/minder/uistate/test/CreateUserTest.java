@@ -15,7 +15,9 @@ import org.junit.Test;
 import uk.ac.glasgow.minder.event.impl.Controller;
 import uk.ac.glasgow.minder.recipient.Privilege;
 import uk.ac.glasgow.minder.recipient.Recipient;
+import uk.ac.glasgow.minder.recipient.impl.MailingList;
 import uk.ac.glasgow.minder.recipient.impl.RecipientStoreImpl;
+import uk.ac.glasgow.minder.recipient.impl.UserImpl;
 import uk.ac.glasgow.minder.uistate.impl.UIStateImpl;
 
 public class CreateUserTest {
@@ -45,13 +47,15 @@ public class CreateUserTest {
 	public void userAlreadyExists() {
 		try {
 			s.createUser("stevie", "Stevie", "meow123", new InternetAddress("cyblob@gmail.com"), Privilege.RECIPIENT);
+		} catch (AddressException e) {}
+		UserImpl u1 = s.searchRecipients("Stevie").toArray(new UserImpl[0])[0];
+		
+		try {
 			s.createUser("stevie", "Stevie", "meow123", new InternetAddress("cyblob@gmail.com"), Privilege.RECIPIENT);
 		} catch (AddressException e) {}
+		UserImpl u2 = s.searchRecipients("Stevie").toArray(new UserImpl[0])[0];
 		
-		Set<Recipient> recipients = s.searchRecipients("Stevie");
-		
-		//TODO: Don't allow overwriting (if necessary)
-		Assert.assertEquals(recipients.size(), 1);
+		Assert.assertEquals(u1, u2);
 	}
 	
 	@Test

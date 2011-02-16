@@ -17,7 +17,7 @@ import uk.ac.glasgow.minder.recipient.Privilege;
 import uk.ac.glasgow.minder.recipient.impl.RecipientStoreImpl;
 import uk.ac.glasgow.minder.uistate.impl.UIStateImpl;
 
-public class CreateDeadlineEvent {
+public class CreateDeadlineEventTest {
 
 	private RecipientStoreImpl rs;
 	private UIStateImpl s;
