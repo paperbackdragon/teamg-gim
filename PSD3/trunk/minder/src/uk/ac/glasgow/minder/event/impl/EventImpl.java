@@ -16,7 +16,7 @@ public class EventImpl implements Event {
 	 * Create a new event
 	 * 
 	 * @param time
-	 *            The time in seconds since 1st January 1970
+	 *            The time in ms since 1st January 1970
 	 */
 	protected EventImpl(String uid, long time) {
 		this.uid = uid;
@@ -65,27 +65,33 @@ public class EventImpl implements Event {
 	 * @param recipientid
 	 *            The recipient of the reminder
 	 * @param timeBefore
-	 *            The time before the event to add the reminder in seconds
+	 *            The time before the event to add the reminder in ms
 	 */
 	public void attachReminder(String recipientid, long timeBefore) {
-		if (timeBefore < ((System.currentTimeMillis() - this.getStartDate()
-				.getTime()) / 1000))
+		System.out.println(new Date(this.getStartDate().getTime() - timeBefore) + " " + System.currentTimeMillis());
+		
+		if (timeBefore > 0 && (this.getStartDate().getTime() - timeBefore) >= System.currentTimeMillis())
 			reminders.add(new Reminder(recipientid, timeBefore));
 	}
-	
+
 	public Reminder getNextReminder() {
 		Reminder next = null;
-		
-		for(Reminder r: this.reminders) {
-			if(next == null || r.getTimeBefore() < next.getTimeBefore())
+
+		for (Reminder r : this.reminders) {
+			if (next == null || r.getTimeBefore() < next.getTimeBefore())
 				next = r;
 		}
-		
+
 		return next;
 	}
-	
+
 	public void removeReminder(Reminder r) {
 		reminders.remove(r);
+	}
+	
+	@Override
+	public String toString() {
+		return this.getUid();
 	}
 
 }

@@ -32,18 +32,19 @@ public class RecipientStoreImpl implements RecipientStore {
 	@Override
 	public void addUser(String displayName, String username, String password, InternetAddress emailAddress,
 			Privilege privilege) {
-
 		UserImpl user = new UserImpl(displayName, username, password, emailAddress, privilege);
-		users.put(username, user);
-		recipients.put(username, user);
-		writeOutToStore();
+		if (users.get(username) == null) {
+			users.put(username, user);
+			recipients.put(username, user);
+			writeOutToStore();
+		}
 	}
 
 	@Override
 	public void addUserToMailingList(String label, String username) {
 		MailingList mailingList = mailingLists.get(label);
 		User user = users.get(username);
-		if (mailingList != null && user != null) {
+		if (mailingList != null && user != null && !mailingList.getMembers().contains(user)) {
 			mailingList.addMember(user);
 			writeOutToStore();
 		}
@@ -53,7 +54,9 @@ public class RecipientStoreImpl implements RecipientStore {
 	@Override
 	public void createMailingList(String label, String ownerUsername) {
 		User owner = users.get(ownerUsername);
-		if (owner != null) {
+		if (owner != null
+				&& !(mailingLists.containsKey(label) && mailingLists.get(label).getOwner().getUid().equals(
+						ownerUsername))) {
 			MailingList mailingList = new MailingList(label, owner);
 			recipients.put(label, mailingList);
 			mailingLists.put(label, mailingList);

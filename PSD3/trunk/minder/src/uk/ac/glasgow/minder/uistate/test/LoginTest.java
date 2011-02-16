@@ -2,7 +2,6 @@ package uk.ac.glasgow.minder.uistate.test;
 
 import java.io.File;
 
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 import junit.framework.Assert;
@@ -59,6 +58,6 @@ public class LoginTest {
 	
 	@Test
 	public void badBoth() {
-		Assert.assertNull(s.login("james", "isacat...meow"));
+		Assert.assertNull(s.login("james", "isacat...meow")); // I AM!
 	}
 }

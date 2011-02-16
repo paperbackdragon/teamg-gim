@@ -64,10 +64,10 @@ public class AttachReminderTest {
 		Calendar cal = new GregorianCalendar(2011, 4, 30);
 		Date date = cal.getTime();
 		s.createDeadlineEvent(date, "Class Test", "PSD3");
-		
-		s.attachReminderToEvent("Class Test", "Greg", 7200000);
-		
 		Set<Event> events = s.searchEvents("Class Test");
+		
+		s.attachReminderToEvent(events.toArray(new Event[0])[0].getUid(), "Greg", 7200000);
+
 		Object[] eventsAry = events.toArray();
 		Properties eventProp = ((Event) eventsAry[0]).getEventProperties();
 		
@@ -83,10 +83,10 @@ public class AttachReminderTest {
 		Calendar cal = new GregorianCalendar(2011, 4, 30);
 		Date date = cal.getTime();
 		s.createDeadlineEvent(date, "Class Test", "PSD3");
-		
-		s.attachReminderToEvent("Class Test", "John", -1);
-		
 		Set<Event> events = s.searchEvents("Class Test");
+		
+		s.attachReminderToEvent(events.toArray(new Event[0])[0].getUid(), "John", -1);
+		
 		Object[] eventsAry = events.toArray();
 		Properties eventProp = ((Event) eventsAry[0]).getEventProperties();
 		
@@ -103,9 +103,9 @@ public class AttachReminderTest {
 		Date date = cal.getTime();
 		s.createDeadlineEvent(date, "Class Test", "PSD3");
 		
-		s.attachReminderToEvent("Class Test", "John", 7200000);
-		
 		Set<Event> events = s.searchEvents("Class Test");
+		s.attachReminderToEvent(events.toArray(new Event[0])[0].getUid(), "John", 7200000);
+		
 		Object[] eventsAry = events.toArray();
 		Properties eventProp = ((Event) eventsAry[0]).getEventProperties();
 		

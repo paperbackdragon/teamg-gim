@@ -11,7 +11,7 @@ public class Reminder {
 	 * @param recipientId
 	 *            The recipient of the reminder
 	 * @param timeBefore
-	 *            The time in seconds before the event to send the reminder
+	 *            The time in ms before the event to send the reminder
 	 */
 	public Reminder(String recipientId, long timeBefore) {
 		this.recipientId = recipientId;
@@ -30,7 +30,7 @@ public class Reminder {
 	/**
 	 * Get the time before the reminder to send the reminder
 	 * 
-	 * @return the time before the remind to send the reminder in seconds
+	 * @return the time before the remind to send the reminder in ms
 	 */
 	public long getTimeBefore() {
 		return timeBefore;
