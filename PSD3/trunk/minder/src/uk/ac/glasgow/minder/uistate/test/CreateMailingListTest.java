@@ -15,6 +15,7 @@ import org.junit.Test;
 import uk.ac.glasgow.minder.event.impl.Controller;
 import uk.ac.glasgow.minder.recipient.Privilege;
 import uk.ac.glasgow.minder.recipient.Recipient;
+import uk.ac.glasgow.minder.recipient.impl.MailingList;
 import uk.ac.glasgow.minder.recipient.impl.RecipientStoreImpl;
 import uk.ac.glasgow.minder.uistate.impl.UIStateImpl;
 
@@ -44,11 +45,12 @@ public class CreateMailingListTest {
 	@Test
 	public void labelExists() {
 		s.createMailingList("Level 4");
-		s.createMailingList("Level 4");
+		MailingList ml1 = s.searchRecipients("Level 4").toArray(new MailingList[0])[0];
 		
-		//TODO: Don't allow overwriting (if necessary)		
-		Set<Recipient> recipients = s.searchRecipients("Level 4");
-		Assert.assertEquals(1, recipients.size());
+		s.createMailingList("Level 4");
+		MailingList ml2 = s.searchRecipients("Level 4").toArray(new MailingList[0])[0];
+		
+		Assert.assertEquals(ml1, ml2);
 	}
 	
 	@Test

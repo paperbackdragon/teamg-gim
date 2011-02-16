@@ -26,6 +26,9 @@ public class LoginTest {
 	@Before
 	public void setUp() throws Exception {
 		rs = new RecipientStoreImpl();
+		rs.addUser("Administrator", "admin", "monkey",
+				new InternetAddress("monkey.me@glasgow.ac.uk"), Privilege.ADMINISTRATOR);
+		
 		s = new UIStateImpl(rs, new Controller(rs));
 	}
 
@@ -39,27 +42,23 @@ public class LoginTest {
 	
 	@Test
 	public void correct() {
-		//TODO: Create User.equals method, then complete login tests
-		
-		try {
-			User user1 = new UserImpl("Administrator", "admin", "monkey", 
-					new InternetAddress("monkey.me@glasgow.ac.uk"), Privilege.ADMINISTRATOR);
-			rs.addUser("Administrator", "admin", "monkey",
-					new InternetAddress("monkey.me@glasgow.ac.uk"), Privilege.ADMINISTRATOR);
-			
-			Assert.assertEquals(user1, s.login("admin", "monkey"));
-		} catch (AddressException e) {}		
+		User u1 = s.login("admin", "monkey");
+		User u2 = s.searchRecipients("admin").toArray(new UserImpl[0])[0];
+		Assert.assertEquals(u1, u2);
 	}
 	
 	@Test
 	public void badPassword() {
+		Assert.assertNull(s.login("admin", "sunshine"));
 	}
 	
 	@Test
 	public void badUsername() {
+		Assert.assertNull(s.login("sdfsdfsdf", "monkey"));
 	}		
 	
 	@Test
 	public void badBoth() {
+		Assert.assertNull(s.login("james", "isacat...meow"));
 	}
 }
