@@ -1,14 +1,17 @@
 package client.ui;
 
 import java.awt.Font;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.regex.Matcher;
@@ -45,6 +48,10 @@ public class ChatPanel extends JPanel {
 	protected JButton send;
 
 	public boolean showTimestamps = model.getOptions().showTimestamps;
+	public boolean enableLogging = model.getOptions().enableLogging;
+
+	public BufferedWriter out;
+	public String logfile;
 
 	private static final long serialVersionUID = 1L;
 	private LinkedList<String> messageQueue;
@@ -60,7 +67,7 @@ public class ChatPanel extends JPanel {
 			new Smiley("CALEF13", "calef13.png") };
 
 	private int messageCount;
-	private User chatWith;
+	protected User user;
 
 	private Boolean inProgress = false;
 	private boolean isFocused;
@@ -75,12 +82,13 @@ public class ChatPanel extends JPanel {
 	 * Constructor for a chat box. Creates styles, smiles and everything else we
 	 * need
 	 */
-	public ChatPanel(String roomID) {
+	public ChatPanel(User user, String roomID) {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
 		}
 
+		this.user = user;
 		id = roomID;
 		messageQueue = new LinkedList<String>();
 
@@ -108,9 +116,44 @@ public class ChatPanel extends JPanel {
 		chatBox.setLineWrap(true);
 		chatBox.setWrapStyleWord(true);
 		chatBox.setText("");
-		
+
 		EnterListener enterListener = new EnterListener();
 		chatBox.addKeyListener(enterListener);
+
+		Date d = new Date();
+		String timestamp = d.toString();
+
+		String filename;
+
+		if (this instanceof SingleChatPanel)
+			filename = model.getPath() + "/logs/" + user.getEmail() + ".html";
+		else
+			filename = model.getPath() + "/logs/" + "Group Chat " + timestamp + ".html";
+
+		File f = new File(filename);
+		boolean exists = f.exists();
+
+		try {
+			out = new BufferedWriter(new FileWriter(filename, true));
+			this.logfile = filename;
+		} catch (IOException e) {
+			this.enableLogging = false;
+		}
+
+		if (!exists) {
+			if (this instanceof SingleChatPanel) {
+				try {
+					out.write("<html><head><title>Chat with " + user.getEmail() + "</title><head><body>");
+				} catch (IOException e) {
+				}
+			} else {
+				try {
+					out.write("<html><head><title>Group chat on " + timestamp + "</title><head><body>");
+				} catch (IOException e) {
+				}
+			}
+
+		}
 
 	}
 
@@ -149,14 +192,6 @@ public class ChatPanel extends JPanel {
 		}
 	}
 
-	public void setChatWith(User chatWith) {
-		this.chatWith = chatWith;
-	}
-
-	public User getChatWith() {
-		return chatWith;
-	}
-
 	public void setIsFocused(Boolean focused) {
 		this.isFocused = focused;
 	}
@@ -173,6 +208,10 @@ public class ChatPanel extends JPanel {
 		this.id = id;
 	}
 
+	public User getChatWith() {
+		return this.user;
+	}
+
 	/**
 	 * Set the focus of the mouse to the input text box
 	 */
@@ -184,7 +223,8 @@ public class ChatPanel extends JPanel {
 	 * Sends a message to the message log
 	 */
 	private void sendMessage() {
-		if (chatBox.getText().length() > 0) {
+		if (chatBox.getText().trim().length() > 0) {
+
 			receiveMessage(model.getSelf(), chatBox.getText().trim());
 
 			if (getInProgress()) {
@@ -193,7 +233,7 @@ public class ChatPanel extends JPanel {
 				messageQueue.push(chatBox.getText().trim());
 
 				if (id.equals("-1")) {
-					model.createRoom(chatWith);
+					model.createRoom(user);
 				}
 			}
 		}
@@ -247,12 +287,17 @@ public class ChatPanel extends JPanel {
 						+ "<b>");
 				sb.append(Html.escape(sender.getNickname()) + ": </b></font>");
 				sb.append("<font face='" + f.getFontName() + ", Arial, sans-serif'> " + msg);
-				sb.append("</font></table>");
+				sb.append("</font></table>\n");
 				msg = sb.toString();
+				msg = msg.replace("  ", "&nbsp ");
 
 				Document doc = (Document) messages.getDocument();
 				try {
 					((HTMLEditorKit) messages.getEditorKit()).read(new java.io.StringReader(msg), doc, doc.getLength());
+					if (ChatPanel.this.enableLogging) {
+						ChatPanel.this.out.write(msg);
+						ChatPanel.this.out.flush();
+					}
 				} catch (IOException e) {
 				} catch (BadLocationException e) {
 				}
@@ -281,8 +326,10 @@ public class ChatPanel extends JPanel {
 	 */
 	public class SendListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			sendMessage();
-			chatBox.setText("");
+			if (chatBox.getText().trim().length() != 0) {
+				sendMessage();
+				chatBox.setText("");
+			}
 			chatBox.requestFocusInWindow();
 		}
 
@@ -292,6 +339,7 @@ public class ChatPanel extends JPanel {
 	 * A Key listener to send messages upon pressing "Enter"
 	 */
 	public class EnterListener implements KeyListener {
+
 		public void keyTyped(KeyEvent e) {
 			if (e.getKeyChar() == KeyEvent.VK_ENTER && e.getModifiers() != 1) {
 				if (chatBox.getText().trim().length() != 0) {
@@ -310,30 +358,20 @@ public class ChatPanel extends JPanel {
 		}
 	}
 
-	class FlashwindowListener implements ActionListener {
-		private Window chatwindow;
-
-		private final native void flashWindow(Window chatwindow);
-
-		public FlashwindowListener(Window window) {
-			this.chatwindow = window;
-		}
-
-		public void actionPerformed(ActionEvent ae) {
-			flashWindow(chatwindow);
-		}
-	}
-
 	public void systemMessage(String msg) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("<table width=100% cellpadding=5 cellspacing=0 border=0><tr><td valign=bottom align=center>");
 		sb.append("<b><font face='" + f.getFontName() + ", sans-serif' color=#888888>- " + msg);
-		sb.append(" -</font></tr></td></table>");
+		sb.append(" -</font></tr></td></table>\n");
 		msg = sb.toString();
 
 		Document doc = (Document) messages.getDocument();
 		try {
 			((HTMLEditorKit) messages.getEditorKit()).read(new java.io.StringReader(msg), doc, doc.getLength());
+			if (ChatPanel.this.enableLogging) {
+				ChatPanel.this.out.write(msg);
+				ChatPanel.this.out.flush();
+			}
 		} catch (IOException e) {
 		} catch (BadLocationException e) {
 		}

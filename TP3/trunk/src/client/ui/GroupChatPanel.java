@@ -45,7 +45,7 @@ public class GroupChatPanel extends ChatPanel {
 	 *            The ID of the room used for identification
 	 */
 	public GroupChatPanel(String roomID) {
-		super(roomID);
+		super(null, roomID);
 
 		setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, getBackground()));
 		setLayout(new BorderLayout(5, 5));

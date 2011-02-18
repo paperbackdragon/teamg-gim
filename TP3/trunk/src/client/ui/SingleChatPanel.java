@@ -24,7 +24,6 @@ import client.UserChangedListener;
 public class SingleChatPanel extends ChatPanel {
 
 	private static final long serialVersionUID = 1L;
-	private User user;
 
 	/**
 	 * Constructor
@@ -33,8 +32,7 @@ public class SingleChatPanel extends ChatPanel {
 	 *            The ID of the room
 	 */
 	public SingleChatPanel(User user, String roomID) {
-		super(roomID);
-		this.user = user;
+		super(user, roomID);
 
 		setLayout(new BorderLayout(5, 5));
 		setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, getBackground()));
@@ -61,7 +59,6 @@ public class SingleChatPanel extends ChatPanel {
 		add(new ContactInfo(), BorderLayout.NORTH);
 		add(messagePane, BorderLayout.CENTER);
 		add(chatPanel, BorderLayout.SOUTH);
-
 	}
 
 	// PANELS
@@ -108,7 +105,8 @@ public class SingleChatPanel extends ChatPanel {
 				public void statusChanged() {
 					statusIconLabel.setIcon(new ImageIcon(model.getPath() + "/status/"
 							+ user.getStatus().toString().toLowerCase() + ".png", "Icon"));
-					System.out.println(user.getStatus().toString().toLowerCase() );
+					
+					SingleChatPanel.this.systemMessage(user.getNickname() + " is " + user.getStatus().toLowerCase());
 				}
 
 				@Override

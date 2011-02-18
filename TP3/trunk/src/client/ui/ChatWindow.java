@@ -8,6 +8,9 @@ import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
@@ -30,8 +33,7 @@ public class ChatWindow extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
-	private JMenuItem invite, viewLog, clearWindow, block, remove, close,
-			showTimestamps, enableLogging;
+	private JMenuItem invite, viewLog, clearWindow, block, remove, close, showTimestamps, enableLogging;
 	private ChatPanel main;
 	private static Model model = Model.getInstance();
 
@@ -46,14 +48,11 @@ public class ChatWindow extends JFrame {
 
 		// Set the window icon depending on the type of chat
 		if (panel instanceof SingleChatPanel)
-			this.setIconImage(((SingleChatPanel) panel).getUser()
-					.getDisplayPic().getImage());
+			this.setIconImage(((SingleChatPanel) panel).getUser().getDisplayPic().getImage());
 		else
-			this.setIconImage(new ImageIcon(model.getPath() + "icons/logo.png")
-					.getImage());
+			this.setIconImage(new ImageIcon(model.getPath() + "icons/logo.png").getImage());
 
-		setPreferredSize(new Dimension(model.getOptions().chatWindowWidth,
-				model.getOptions().chatWindowHeight));
+		setPreferredSize(new Dimension(model.getOptions().chatWindowWidth, model.getOptions().chatWindowHeight));
 
 		this.setTitle(title);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -135,25 +134,24 @@ public class ChatWindow extends JFrame {
 				GimClient.removeRoom(main);
 
 			} else if (e.getSource() == viewLog) {
-				// TODO: Open the auto-generated log for this user
-
+				try {
+					java.awt.Desktop.getDesktop().browse(new URI("file:///" + main.logfile));
+				} catch (IOException e2) {
+				} catch (URISyntaxException e2) {
+				}
 			} else if (e.getSource() == clearWindow) {
 				main.messages.setEditorKit(new HTMLEditorKit());
 
 			} else if (e.getSource() == block) {
-				model.getFriendList().addBlockedUser(
-						((SingleChatPanel) main).getUser());
-				model.getServer().block(
-						((SingleChatPanel) main).getUser().getEmail());
+				model.getFriendList().addBlockedUser(((SingleChatPanel) main).getUser());
+				model.getServer().block(((SingleChatPanel) main).getUser().getEmail());
 				main.chatBox.setEditable(false);
 				model.getServer().leave(main.getID());
 				GimClient.removeRoom(main);
 
 			} else if (e.getSource() == remove) {
-				model.getFriendList().removeUser(
-						((SingleChatPanel) main).getUser());
-				model.getServer().delete(
-						((SingleChatPanel) main).getUser().getEmail());
+				model.getFriendList().removeUser(((SingleChatPanel) main).getUser());
+				model.getServer().delete(((SingleChatPanel) main).getUser().getEmail());
 				model.getServer().leave(main.getID());
 				GimClient.removeRoom(main);
 
@@ -166,22 +164,17 @@ public class ChatWindow extends JFrame {
 					temp[i] = participants[i].toString();
 				}
 
-				SelectContactsPanel inputs = new SelectContactsPanel(model
-						.getFriendList().getOnlineUsers(), temp);
+				SelectContactsPanel inputs = new SelectContactsPanel(model.getFriendList().getOnlineUsers(), temp);
 				if (inputs.getBoxes().size() != 0) {
-					JOptionPane.showMessageDialog(null, inputs,
-							"Select contacts to invite",
-							JOptionPane.PLAIN_MESSAGE);
+					JOptionPane.showMessageDialog(null, inputs, "Select contacts to invite", JOptionPane.PLAIN_MESSAGE);
 					ArrayList<JCheckBox> checkboxes = inputs.getBoxes();
 					for (int i = 0; i < checkboxes.size(); i++) {
 						if (checkboxes.get(i).isSelected() == true) {
-							model.getServer().invite(main.id,
-									checkboxes.get(i).getText());
+							model.getServer().invite(main.id, checkboxes.get(i).getText());
 						}
 					}
 				} else {
-					JOptionPane
-							.showMessageDialog(null, "No contacts available");
+					JOptionPane.showMessageDialog(null, "No contacts available");
 				}
 
 			} else if (e.getSource() == showTimestamps) {
@@ -189,8 +182,11 @@ public class ChatWindow extends JFrame {
 				main.showTimestamps = showTimestamps.isSelected();
 			} else if (e.getSource() == enableLogging) {
 				model.getOptions().enableLogging = enableLogging.isSelected();
+				main.enableLogging = enableLogging.isSelected();
 			}
-		}		@Override
+		}
+
+		@Override
 		public void componentShown(ComponentEvent e) {
 		}
 
@@ -217,6 +213,13 @@ public class ChatWindow extends JFrame {
 		public void windowClosed(WindowEvent e) {
 			model.getServer().leave(main.getID());
 			GimClient.removeRoom(main);
+
+			if (ChatWindow.this.main.out != null) {
+				try {
+					ChatWindow.this.main.out.close();
+				} catch (IOException e1) {
+				}
+			}
 		}
 
 		@Override
