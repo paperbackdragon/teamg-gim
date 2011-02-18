@@ -13,7 +13,7 @@ public class SelectContactsPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	ArrayList<JCheckBox> boxes;
-	
+
 	String[] roomparticipants;
 
 	public SelectContactsPanel(Collection<User> friendlist, String[] participants) {
@@ -29,7 +29,7 @@ public class SelectContactsPanel extends JPanel {
 
 			checkbox.setVisible(true);
 			add(checkbox);
-			
+
 			boxes.add(checkbox);
 		}
 
@@ -38,13 +38,11 @@ public class SelectContactsPanel extends JPanel {
 	}
 
 	private boolean inroomparticipants(String tocheck) {
-
 		for (int i = 0; i < roomparticipants.length; i++) {
 			if (roomparticipants[i].equals(tocheck)) {
 				return true;
 			}
 		}
-
 		return false;
 	}
 

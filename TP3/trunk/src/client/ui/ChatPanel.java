@@ -141,7 +141,7 @@ public class ChatPanel extends JPanel {
 		}
 
 		if (!exists) {
-			if (this instanceof SingleChatPanel) {
+			if (this instanceof SingleChatPanel && user != null) {
 				try {
 					out.write("<html><head><title>Chat with " + user.getEmail() + "</title><head><body>");
 				} catch (IOException e) {
