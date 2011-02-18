@@ -148,7 +148,7 @@ public class ChatPanel extends JPanel {
 				this.enableLogging = false;
 			}
 
-			if (!exists) {
+			if (!exists && this.enableLogging) {
 				if (this instanceof SingleChatPanel && user != null) {
 					try {
 						out.write("<html><head><title>Chat with " + user.getEmail() + "</title><head><body>");
@@ -156,7 +156,7 @@ public class ChatPanel extends JPanel {
 					}
 				} else {
 					try {
-						out.write("<html><head><title>Group chat on " + timestamp + "</title><head><body>");
+						out.write("<html><head><title>Group chat on " + timestamp.replaceAll(":", "-") + "</title><head><body>");
 					} catch (IOException e) {
 					}
 				}
