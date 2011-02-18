@@ -465,9 +465,7 @@ public class ServerConnection {
 					public void run() {
 						SingleChatPanel scp = new SingleChatPanel(contacts.getFirst(), roomid);
 
-						scp.setChatWith(contacts.getFirst());
-
-						ChatWindow ui = new ChatWindow("GIM - Chat with2 " + contacts.getFirst().getEmail(), scp);
+						ChatWindow ui = new ChatWindow("Chat with " + contacts.getFirst().getEmail() + " - GIM", scp);
 						GimClient.addWindow(contacts.getFirst(), ui, scp);
 
 						ui.setLocationRelativeTo(null);// center new chat window
@@ -547,7 +545,6 @@ public class ServerConnection {
 				model.getServer().leave(roomid);
 			} else if (l.getChatPanel() instanceof GroupChatPanel) {
 				// do this later...
-				GimClient.getWindowIdentifierFromId(roomid).getChatPanel().systemMessage(user + " has left the chat\n");
 				model.getServer().roomusers(roomid);
 			}
 
@@ -596,7 +593,7 @@ public class ServerConnection {
 
 					GroupChatPanel gcp = new GroupChatPanel(roomid);
 
-					ChatWindow ui = new ChatWindow("GIM - Group Chat", gcp);
+					ChatWindow ui = new ChatWindow("Group Chat - GIM", gcp);
 
 					GimClient.addWindow(null, ui, gcp);
 					ui.setVisible(true);
@@ -640,8 +637,6 @@ public class ServerConnection {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					SingleChatPanel scp = new SingleChatPanel(invitedBy, roomid);
-
-					scp.setChatWith(invitedBy);
 
 					ChatWindow ui = new ChatWindow("GIM - Chat with " + invitedBy.getEmail(), scp);
 					GimClient.addWindow(invitedBy, ui, scp);

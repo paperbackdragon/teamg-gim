@@ -98,7 +98,7 @@ public class ContactPanel extends JPanel {
 					@Override
 					public void valueChanged(String value, JComponent source) {
 						if (source.equals(name)) {
-							if (value.length() == 0) {
+							if (value.trim().length() == 0) {
 								name.setText(self.getNickname());
 							} else {
 								self.setNickname(value);

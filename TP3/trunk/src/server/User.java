@@ -16,14 +16,14 @@ public class User implements Serializable {
 	public static enum Status {
 		OFFLINE, ONLINE, BUSY, AWAY
 	}
-	
+
 	/**
-	 * Taken from: http://stackoverflow.com/questions/153716/verify-email-in-java
-	 * I hope it works correctly...
+	 * Taken from:
+	 * http://stackoverflow.com/questions/153716/verify-email-in-java I hope it
+	 * works correctly...
 	 */
-	private static final Pattern rfc2822 = Pattern.compile(
-	        "^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$"
-	);
+	private static final Pattern rfc2822 = Pattern
+			.compile("^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$");
 
 	/**
 	 * Check if the ID is a valid one
@@ -127,11 +127,11 @@ public class User implements Serializable {
 	public void addFriend(User user) {
 		this.friendList.put(user.getId(), user);
 		this.friendRequests.remove(user.getId());
-		
+
 		Worker w = this.getWorker();
-		if(w != null)
+		if (w != null)
 			w.putResponse(new Command("UPDATE", "FRIENDLIST", Command.encode(this.getId())));
-		
+
 		user.addToInFriendList(this);
 	}
 
@@ -164,7 +164,7 @@ public class User implements Serializable {
 	public void block(User user) {
 		this.blockedUsers.put(user.getId(), user);
 		Worker w = this.getWorker();
-		if(w != null)
+		if (w != null)
 			w.putResponse(new Command("UPDATE", "FRIENDLIST", Command.encode(this.getId())));
 	}
 
@@ -274,14 +274,15 @@ public class User implements Serializable {
 		Collection<User> users = new LinkedList<User>();
 
 		for (User user : this.getInFreindList()) {
-			if (user.isOnline()) {
+			if (user.isOnline() && !blockedUsers.contains(user)) {
 				users.add(user);
 			}
 		}
 
 		for (Room room : this.getRooms()) {
 			for (User user : room.getUsers()) {
-				users.add(user);
+				if (!blockedUsers.contains(user))
+					users.add(user);
 			}
 		}
 
