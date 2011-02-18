@@ -124,35 +124,47 @@ public class ChatPanel extends JPanel {
 		String timestamp = d.toString();
 
 		String filename;
+		boolean dirExists = false;
 
-		if (this instanceof SingleChatPanel)
-			filename = model.getPath() + "/logs/" + user.getEmail() + ".html";
-		else
-			filename = model.getPath() + "/logs/" + "Group Chat " + timestamp + ".html";
+		File dir = new File(model.getPath() + "/logs/");
+		if (!dir.exists())
+			dir.mkdir();
 
-		File f = new File(filename);
-		boolean exists = f.exists();
+		dirExists = dir.exists();
 
-		try {
-			out = new BufferedWriter(new FileWriter(filename, true));
-			this.logfile = filename;
-		} catch (IOException e) {
-			this.enableLogging = false;
-		}
+		if (dirExists) {
+			if (this instanceof SingleChatPanel)
+				filename = model.getPath() + "/logs/" + user.getEmail() + ".html";
+			else
+				filename = model.getPath() + "/logs/" + "Group Chat " + timestamp + ".html";
 
-		if (!exists) {
-			if (this instanceof SingleChatPanel && user != null) {
-				try {
-					out.write("<html><head><title>Chat with " + user.getEmail() + "</title><head><body>");
-				} catch (IOException e) {
-				}
-			} else {
-				try {
-					out.write("<html><head><title>Group chat on " + timestamp + "</title><head><body>");
-				} catch (IOException e) {
-				}
+			File f = new File(filename);
+			boolean exists = f.exists();
+
+			try {
+				out = new BufferedWriter(new FileWriter(filename, true));
+				this.logfile = filename;
+			} catch (IOException e) {
+				this.enableLogging = false;
 			}
 
+			if (!exists) {
+				if (this instanceof SingleChatPanel && user != null) {
+					try {
+						out.write("<html><head><title>Chat with " + user.getEmail() + "</title><head><body>");
+					} catch (IOException e) {
+					}
+				} else {
+					try {
+						out.write("<html><head><title>Group chat on " + timestamp + "</title><head><body>");
+					} catch (IOException e) {
+					}
+				}
+
+			}
+
+		} else {
+			this.enableLogging = false;
 		}
 
 	}
