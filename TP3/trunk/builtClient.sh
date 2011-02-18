@@ -1,6 +1,8 @@
 #!/bin/bash
 
-CLIENTFILES="./bin/Gim.jar status smiles icons default.jpg offline.png online.png"
+mkdir logs
+
+CLIENTFILES="./bin/Gim.jar status logs smiles icons default.jpg offline.png online.png"
 
 rm Gim.jar gim_client.zip
 
