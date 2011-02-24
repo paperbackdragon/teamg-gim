@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}meow | let the cat out of the bag{% endblock %}
+
+{% block main %}
+				  
+<div id="content">
+	<div class="padding">
+	  
+	    <form id="makepost">
+	    	<label for="meowtext">What's happening? *purr purr*</label>
+	 		<textarea name="meowtext"></textarea> 
+	 		
+	 		<div class="right"><a class="button big"><span class="icon pen"></span>POST</a></div>
+	 		
+	 		<a class="button big"><span class="icon plus"></span>ADD MEDIA</a>
+	    </form>
+	    
+	    <div id="posts">
+	   
+            <div id="loading">
+	            <img src="/site_media/images/loading.gif" /> Loading...
+            </div>
+            
+            <!-- This is where the meows go! -->
+	    
+	    </div>
+	    
+	</div>
+</div>
+
+		
+<div id="sidebar">
+	<div class="padding">
+	
+	    <div id="userbox">
+	    	<img src="/site_media/images/ewy.jpg" id="mepic" alt="Me!">
+	        <h3>EWAN &#8220;EWY&#8221; BAIRD</h3>
+	    </div>
+	    
+	    <div class="divider"></div>
+	    
+	    <div id="lastmeow">
+	        <span class="num">Feb 14th</span> Today I am pretending it's not a holiday so I can have a real Snow Day experience.
+	    </div>
+	    
+	    <div class="divider"></div>
+	    
+	    <div class="title"><span class="num">12</span> FOLLOWERS</div>
+	    <div id="followers" class="usericons">
+	    	<img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!">
+	    </div>
+	    
+	    <div class="divider"></div>
+	    
+	    <div class="title"><span class="num">1,322</span> FOLLOWING</div>
+	    <div id="following" class="usericons">
+	    	<img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!">
+	    </div>
+	    
+	    
+	</div>
+</div>
+
+<div class="clear"></div>
+			
+{% endblock %}
