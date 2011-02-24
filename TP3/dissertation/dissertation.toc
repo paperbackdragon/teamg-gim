@@ -1,21 +1,22 @@
 \contentsline {chapter}{\numberline {1}Introduction}{4}
 \contentsline {section}{\numberline {1.1}Introduction}{4}
-\contentsline {section}{\numberline {1.2}Problem Definition}{4}
-\contentsline {chapter}{\numberline {2}Design}{5}
-\contentsline {section}{\numberline {2.1}Protocol Design}{5}
-\contentsline {section}{\numberline {2.2}Client Design}{5}
-\contentsline {section}{\numberline {2.3}Server Design}{5}
-\contentsline {section}{\numberline {2.4}Networking Design}{5}
-\contentsline {chapter}{\numberline {3}Implementation}{6}
-\contentsline {section}{\numberline {3.1}Client}{6}
-\contentsline {section}{\numberline {3.2}Server}{6}
-\contentsline {section}{\numberline {3.3}Client-Server Communication}{6}
-\contentsline {section}{\numberline {3.4}Storage}{6}
-\contentsline {chapter}{\numberline {4}Evaluation}{7}
-\contentsline {section}{\numberline {4.1}Server Evaluation}{7}
-\contentsline {section}{\numberline {4.2}Client Evaluation}{7}
-\contentsline {section}{\numberline {4.3}User Evaluation}{7}
-\contentsline {chapter}{\numberline {5}Conclusion}{8}
-\contentsline {section}{\numberline {5.1}Contributions}{8}
-\contentsline {section}{\numberline {5.2}Reflective}{8}
-\contentsline {chapter}{\numberline {A}Appendices}{9}
+\contentsline {section}{\numberline {1.2}Problem Definition}{5}
+\contentsline {section}{\numberline {1.3}Requirements}{5}
+\contentsline {chapter}{\numberline {2}Design}{6}
+\contentsline {section}{\numberline {2.1}Protocol Design}{6}
+\contentsline {section}{\numberline {2.2}Client Design}{6}
+\contentsline {section}{\numberline {2.3}Server Design}{7}
+\contentsline {section}{\numberline {2.4}Networking Design}{7}
+\contentsline {chapter}{\numberline {3}Implementation}{8}
+\contentsline {section}{\numberline {3.1}Client}{8}
+\contentsline {section}{\numberline {3.2}Server}{8}
+\contentsline {section}{\numberline {3.3}Client-Server Communication}{8}
+\contentsline {section}{\numberline {3.4}Storage}{8}
+\contentsline {chapter}{\numberline {4}Evaluation}{9}
+\contentsline {section}{\numberline {4.1}Server Evaluation}{9}
+\contentsline {section}{\numberline {4.2}Client Evaluation}{9}
+\contentsline {section}{\numberline {4.3}User Evaluation}{9}
+\contentsline {chapter}{\numberline {5}Conclusion}{10}
+\contentsline {section}{\numberline {5.1}Contributions}{10}
+\contentsline {section}{\numberline {5.2}Reflective}{10}
+\contentsline {chapter}{\numberline {A}Appendices}{11}
