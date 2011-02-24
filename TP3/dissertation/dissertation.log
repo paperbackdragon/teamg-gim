@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2010.11.16)  21 FEB 2011 17:01
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2010.11.16)  24 FEB 2011 11:20
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -96,25 +96,25 @@ File: images/CompSci_mono.pdf Graphic file (type pdf)
 
 <use images/CompSci_mono.pdf>
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 7.
+(Font)              <12> on input line 9.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 7.
+(Font)              <8> on input line 9.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 7.
+(Font)              <6> on input line 9.
  [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <./images/CompSci_mono.pdf>
 ]
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10.95> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 8.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 10.
  [1]
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <14.4> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 13.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 15.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <10.95> on input line 13.
+(Font)              <10.95> on input line 15.
  [1]
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <24.88> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 14.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 16.
  (./dissertation.toc [2
 
 ])
@@ -126,50 +126,76 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <24.88> not available
 Chapter 1.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <20.74> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 1.
-(./chapter1/intro.tex) (./chapter1/problem_definition.tex))
-(./chapter2/design.tex [4
+(./chapter1/intro.tex
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no ™ in font ptmr7t!
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no ™ in font ptmr7t!
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no ™ in font ptmr7t!
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no ™ in font ptmr7t!
+) [4
 
-]
+] (./chapter1/problem_definition.tex)
+(./chapter1/requirements.tex)) (./chapter2/design.tex [5]
 Chapter 2.
-(./chapter2/protocol.tex) (./chapter2/client.tex) (./chapter2/server.tex)
-(./chapter2/networking.tex)) (./chapter3/implementation.tex [5
+(./chapter2/protocol.tex) (./chapter2/client.tex
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no ™ in font ptmr7t!
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no ™ in font ptmr7t!
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no ˜ in font ptmr7t!
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no ™ in font ptmr7t!
+) (./chapter2/server.tex)
+(./chapter2/networking.tex [6
 
-]
+])) (./chapter3/implementation.tex [7]
 Chapter 3.
 (./chapter3/client.tex) (./chapter3/server.tex) (./chapter3/communication.tex)
-(./chapter3/storage.tex)) (./chapter4/evaluation.tex [6
+(./chapter3/storage.tex)) (./chapter4/evaluation.tex [8
 
 ]
 Chapter 4.
 (./chapter4/server.tex) (./chapter4/client.tex) (./chapter4/user.tex))
-(./chapter5/conclusion.tex [7
+(./chapter5/conclusion.tex [9
 
 ]
 Chapter 5.
 (./chapter5/contributions.tex) (./chapter5/reflective.tex))
-(./appendix/appendix.tex [8
+(./appendix/appendix.tex [10
 
 ]
 Appendix A.
 )
 No file dissertation.bbl.
-[9
+[11
 
 ] (./dissertation.aux) ) 
 Here is how much of TeX's memory you used:
- 1088 strings out of 495061
- 14196 string characters out of 1182620
- 63062 words of memory out of 3000000
+ 1091 strings out of 495061
+ 14260 string characters out of 1182620
+ 63063 words of memory out of 3000000
  4225 multiletter control sequences out of 15000+50000
  21150 words of font info for 44 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
- 32i,7n,23p,211b,163s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 32i,7n,23p,716b,163s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/usr/share/texmf-texlive/fonts/enc/dvips/base/8r.enc}<
 /usr/share/texmf-texlive/fonts/type1/urw/times/utmb8a.pfb></usr/share/texmf-tex
 live/fonts/type1/urw/times/utmr8a.pfb>
-Output written on dissertation.pdf (11 pages, 58083 bytes).
+Output written on dissertation.pdf (13 pages, 65223 bytes).
 PDF statistics:
- 55 PDF objects out of 1000 (max. 8388607)
+ 62 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  6 words of extra memory for PDF output out of 10000 (max. 10000000)
 
