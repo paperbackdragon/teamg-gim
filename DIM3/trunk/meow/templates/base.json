@@ -1,0 +1,18 @@
+[
+    {% for meow in Meows %}
+    {
+        "uid":      {{ meow.by.pk }},
+        "mid":      {{ meow.pk }},
+        "username": "{{ meow.by }}",
+        "time":     {{ meow.epoch_time }},
+        "message":  "{{ meow.meow }}"{% if meow.media_type %},
+        "media":    
+        {
+            "type": "{{ meow.media_type }}",
+            "URL":  "{{ meow.media_url }}"
+        }
+        {% endif %}
+    }
+    {% if not forloop.last %},{% endif %}
+    {% endfor %}
+]
