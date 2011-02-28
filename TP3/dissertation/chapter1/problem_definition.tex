@@ -1,6 +1,17 @@
 \section{Problem Definition}
+The following was our given problem definition\footnote{\texttt{http://fims.moodle.gla.ac.uk/file.php/129/1243.pdf}}:
+
+\begin{quote}
 Instant messaging systems such as Jabber, AIM, ICQ and IRC have become popular in the last few years. The aim of the project is to build a simple instant messaging system, written in Java, to develop your understanding of networked systems and programming.
 
 The group will be required to develop both an instant messaging client and server, and to design the network protocol they use to communicate. The server should accept connections from an arbitrary number of clients. Clients will have a graphical user interface, and should be able to accept and receive text-based messages, to indicate if the user is busy, available or idle, and to convey usernames and other details.
 
 The project involves network and user-interface programming. It would suit a group with an interest in low-level systems design and implementation issues.
+\end{quote}
+
+Despite the fact the above problem definition says we have to develop the client, server, and protocol, we were told we could also construct the system using the protocol of another existing instant messenger, like IRC or MSN Messenger. In that case, we would focus more on the development of the client. Instead, we opted to create the whole thing ourselves, since it would give us more control and we would be able to learn more about the entire process of creating an instant messenger.
+
+The problem definition also states that we should at least have text-based messages, statuses (online, offline, etc), and usernames. We decided to expand on this, including smileys (small pictures) in messages, a personal message and display picture for each user, and more.
+
+It wasn’t explicitly stated, but we had to decide how to structure the users: whether they should have ``friends'' or ``contacts,'' whether it should be chatroom-style, and whether there should be one-on-one conversations, group conversations, or both. We chose to do a combination, in that users may have contacts and one-on-one conversations, but may also join, create, and invite other users to group chatrooms.
+
