@@ -33,7 +33,11 @@
 			<a href="/" id="logo">meow</a>
 			
 			<div id="nav">
-			    <a href="/login/" class="button left"><span class="key icon"></span>LOGIN</a><a href="/register/" class="button primary right"><span class="user icon"></span>REGISTER</a>
+			{% if user.is_authenticated %}
+			    <a href="/accounts/options" class="button left"><span class="cog icon"></span>{{ user.username|upper }}</a><a href="/accounts/logout" class="button primary right"><span class="user icon"></span>LOGOUT</a>
+			{% else %}
+			    <a href="/accounts/login/" class="button left"><span class="key icon"></span>LOGIN</a><a href="/accounts/register/" class="button primary right"><span class="user icon"></span>REGISTER</a>
+			{% endif %}
 			</div>
 			
 		</div>

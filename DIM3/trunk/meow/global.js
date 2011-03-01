@@ -1,5 +1,4 @@
 var latest = 0;
-var limit = 15;
 
 $(document).ready(function() {
 
@@ -30,33 +29,18 @@ $(document).ready(function() {
         }
     });
 
-    /**
-     * Load any new posts
-     */
-    schedule();
+    loadNewPosts();
 
 });
 
-function schedule() {
-	loadNewPosts();
-	limit = 0;
-	setTimeout('schedule()', 30000);
-}
-
-/**
- * Make a request for news posts
- */
 function loadNewPosts() {
 
-    //$('#loading').slideDown('slow');
+    $('#loading').slideDown('slow');
 
-	$.getJSON('/JSON/' + latest + '/' + limit, function(data) {
+	$.getJSON('/JSON/', function(data) {
 		var items = [];
 
 		$.each(data, function(key, value) {
-		    if(parseInt(value.mid) > latest)
-		        latest = parseInt(value.mid);
-		
 			var meow = '<div class="post" id="' + value.mid + '">';
 			meow += '<div class="meow">';
 						
@@ -64,7 +48,7 @@ function loadNewPosts() {
 			    meow += '<div class="media">';
 			    
 			    if(value.media.type == 'I')
-			        meow += '<img src="' + value.media.url + '" />';
+			        meow += '<img src="' + value.media.URL + '" />';
 			    
 			    meow += '</div>';
 			}
@@ -78,19 +62,11 @@ function loadNewPosts() {
 		});
 
         $('#loading').slideUp('slow');
-		$(items.join('')).hide().insertAfter('#loading').fadeIn(1000);
+		$(items.join('')).hide().insertAfter('#loading').fadeIn('slow');
 
 	});
 	
 }	
-
-
-function addMeow() {
-    $.post("/addMeow/", $("#addMeow").serialize());
-    $("#addMeow #text").val("");
-    loadNewPosts();
-}
-
 
 function elapsedTime(createdAt) {
     var ageInSeconds = (new Date().getTime() - new Date(createdAt * 1000).getTime()) / 1000;
@@ -103,7 +79,7 @@ function elapsedTime(createdAt) {
         return 'just now';
     }
     if (ageInSeconds < 60) {
-        var n = parseInt(ageInSeconds);
+        var n = ageInSeconds;
         return n + ' second' + s(n) + ' ago';
     }
     if (ageInSeconds < 60 * 60) {
@@ -131,7 +107,8 @@ function elapsedTime(createdAt) {
 }
 
 // Make date parseable in IE
-function fixDate (d) {
+function fixDate (d)
+{
     var a = d.split(' ');
     var year = a.pop();
     return a.slice(0, 3).concat([year]).concat(a.slice(3)).join(' ');

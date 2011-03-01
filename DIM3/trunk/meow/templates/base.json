@@ -3,13 +3,13 @@
     {
         "uid":      {{ meow.by.pk }},
         "mid":      {{ meow.pk }},
-        "username": "{{ meow.by }}",
+        "username": "{{ meow.by|escape }}",
         "time":     {{ meow.epoch_time }},
-        "message":  "{{ meow.meow }}"{% if meow.media_type %},
+        "message":  "{{ meow.meow|escape }}"{% if meow.media_type %},
         "media":    
         {
             "type": "{{ meow.media_type }}",
-            "URL":  "{{ meow.media_url }}"
+            "URL":  "{{ meow.media_url|escape }}"
         }
         {% endif %}
     }

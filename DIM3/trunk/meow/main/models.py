@@ -39,6 +39,10 @@ class Meow(models.Model):
     mentions = models.ManyToManyField(User, related_name = 'isMentioned', verbose_name = 'Users Mentioned')
     tags = models.ManyToManyField(Tag, verbose_name = 'Tags')
 
+    class Meta:
+        get_latest_by = 'time'
+        ordering = ['-time']
+
     def epoch_time(self):
         return mktime(self.time.timetuple())
 

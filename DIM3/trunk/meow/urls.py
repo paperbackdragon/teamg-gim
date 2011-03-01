@@ -1,6 +1,9 @@
 from django.conf.urls.defaults import *
-from meow.main.views import auth, stream
 from django.contrib import admin
+from django.contrib.auth.views import login, logout
+from django.http import HttpResponsePermanentRedirect
+
+from meow.main.views import auth, stream, main
 
 admin.autodiscover()
 
@@ -9,12 +12,15 @@ urlpatterns = patterns('',
     (r'^admin/doc/', include('django.contrib.admindocs.urls')),
     (r'^admin/', include(admin.site.urls)),
 
-    (r'^login/$', auth.login),
-    (r'^logout/$', auth.logout),
+    (r'^accounts/login/$', login),
+    (r'^accounts/logout/$', logout, {'next_page': '/'}),
+    (r'^accounts/register/$', auth.register),
 
     (r'^$', stream.main),
-    (r'^JSON/$', stream.JSON),
-    (r'^(.+)/$', stream.user),
+    (r'^JSON/(\d*)/(\d*)/$', stream.JSON),
+    (r'^user/(.+)/$', stream.user),
+
+    (r'^addMeow/$', main.add_meow),
 
     #   A hack which lets us server up media files from the django server.
     #   It really should never be used in a production environment but it'll
