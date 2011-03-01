@@ -18,18 +18,18 @@
 \contentsline {subsubsection}{Could Have}{9}
 \contentsline {subsubsection}{Would Like To Have}{10}
 \contentsline {subsection}{\numberline {2.3.1}GUI Structure}{10}
-\contentsline {section}{\numberline {2.4}Server Design}{11}
-\contentsline {section}{\numberline {2.5}Networking Design}{11}
-\contentsline {chapter}{\numberline {3}Implementation}{12}
-\contentsline {section}{\numberline {3.1}Client}{12}
-\contentsline {section}{\numberline {3.2}Server}{12}
-\contentsline {section}{\numberline {3.3}Client-Server Communication}{12}
-\contentsline {section}{\numberline {3.4}Storage}{12}
-\contentsline {chapter}{\numberline {4}Evaluation}{13}
-\contentsline {section}{\numberline {4.1}Server Evaluation}{13}
-\contentsline {section}{\numberline {4.2}Client Evaluation}{13}
-\contentsline {section}{\numberline {4.3}User Evaluation}{13}
-\contentsline {chapter}{\numberline {5}Conclusion}{14}
-\contentsline {section}{\numberline {5.1}Contributions}{14}
-\contentsline {section}{\numberline {5.2}Reflective}{14}
-\contentsline {chapter}{\numberline {A}Appendices}{15}
+\contentsline {section}{\numberline {2.4}Server Design}{12}
+\contentsline {section}{\numberline {2.5}Networking Design}{12}
+\contentsline {chapter}{\numberline {3}Implementation}{13}
+\contentsline {section}{\numberline {3.1}Client}{13}
+\contentsline {section}{\numberline {3.2}Server}{13}
+\contentsline {section}{\numberline {3.3}Client-Server Communication}{13}
+\contentsline {section}{\numberline {3.4}Storage}{13}
+\contentsline {chapter}{\numberline {4}Evaluation}{14}
+\contentsline {section}{\numberline {4.1}Server Evaluation}{14}
+\contentsline {section}{\numberline {4.2}Client Evaluation}{14}
+\contentsline {section}{\numberline {4.3}User Evaluation}{14}
+\contentsline {chapter}{\numberline {5}Conclusion}{15}
+\contentsline {section}{\numberline {5.1}Contributions}{15}
+\contentsline {section}{\numberline {5.2}Reflective}{15}
+\contentsline {chapter}{\numberline {A}Appendices}{16}

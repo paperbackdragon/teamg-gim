@@ -74,19 +74,37 @@ This high level approach allowed us to draw high level boundaries between compon
 
 2.2.2.2 Model-Viewer-Controller Structural Concerns
 
-Model
-
-
-
-
 Controller
 
 The controller was one of the more challenging parts of the design process. The controller would be called by both the networking component, and the viewer, implying that its operations must be thread safe. We were constrained by our use of the swing environment, which we had learned from previous experience, will freeze if the networking code is ran on the thread running the GUI. A further complexity was handling the boundary between the requirements of the network code, and the protocol that was being handled by the networking code. Naturally, the GUI architects should not need to concern themselves with the specifics of the protocol, while designing the GUI. 
 
-To deal with the threading complexity, we designed a scheme whereby there would be an intermediate buffer between the controller component, and the networking code. The controller thread would wait until there was a command from the network placed onto the buffer, and act accordingly. Furthermore, when the controller component needed to call the network, it would place a command onto the buffer, to be interpreted by the  networking code. We believed this scheme to be appropriate as controller could either call the network from internal code, or events from the GUI (possibly simultaneously).
-
-[Fancy picture showing this could go here] 
+To deal with the threading complexity, we designed a scheme whereby there would be an intermediate buffer between the controller component, and the networking code. The controller thread would wait until there was a command from the network placed onto the buffer, and act accordingly on the model and GUI. Furthermore, when the controller component needed to call the network, it would place a command onto the buffer, to be interpreted by the  networking code. We believed this scheme to be appropriate as controller could either call the network from internal code, or events from the GUI (possibly simultaneously).
 
 To deal with the design complexity of the boundary, we decided that initially, an interface would be written by the networking architects, including javadoc, to describe the requirements of the GIM protocol of the client, from the controller. In the implementation, the controller would then implement this interface. This allowed the requirements from the client to be understood, without having to understand the inner workings of the protocol. Furthermore, the structure of the protocol could change, without any change to the interface or consultation with the GUI architects. The networking architect would write code to parse incoming commands to calls these methods described by the interface, and write outgoing commands from the GUI.
 
+[there's a diagram on google docs - will ask someone how to put it here later]
+[note: Somebody will make a better, possibly UML diagram]
+
 [NOTE: WRITE IN IMPLENTATION SECTION, THIS DIDN’T HAPPEN. (okay, lower case time)... Instead, we put things onto swing’s event queue, and only used the buffer for outgoing traffic. We decided the parsing code was best placed in the network reading thread, to keep the code tidy. Furthermore, this hid the protocol code from the GUI more...]
+
+[Picture of flow of information between buffer, controller, and network.]
+
+Model
+
+The design of the model involved determining what state information had to be held about the client. This was informed by the previous work of requirements analysis and the conception of features. The model was also informed by the design of the viewer.
+
+Two ‘must have’ of the system were the presence of a ‘contact list’, and support for ‘user statuses.’ This implied that there should be data structures for the maintenance of a contact list, and the statuses of users. To deal with this requirement, we designed the model to have a data structure to maintain information about users, including their status, nickname and personal messages. 
+
+The viewer required that the user’s own state information (such as status, and nickname) were displayed. As these were evident in multiple windows in the viewer design (such as in chat windows, and on the buddy list), the model was designed to maintain a record of the user’s current status. 
+
+Viewer
+
+[Reference GUI design ? -> that section comes next... ]
+
+
+2.2.2.3 
+
+
+
+
+
