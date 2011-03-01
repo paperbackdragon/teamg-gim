@@ -7,11 +7,12 @@
 <div id="content">
 	<div class="padding">
 	  
-	    <form id="makepost">
+	    <form id="addMeow">
+            {% csrf_token %}
 	    	<label for="meowtext">What's happening? *purr purr*</label>
-	 		<textarea name="meowtext"></textarea> 
+	 		<textarea id="text" name="text"></textarea> 
 	 		
-	 		<div class="right"><a class="button big"><span class="icon pen"></span>POST</a></div>
+	 		<div class="right"><a class="button big" onclick="addMeow();"><span class="icon pen"></span>POST</a></div>
 	 		
 	 		<a class="button big"><span class="icon plus"></span>ADD MEDIA</a>
 	    </form>
@@ -34,8 +35,8 @@
 	<div class="padding">
 	
 	    <div id="userbox">
-	    	<img src="/site_media/images/ewy.jpg" id="mepic" alt="Me!">
-	        <h3>EWAN &#8220;EWY&#8221; BAIRD</h3>
+	    	<img src="/site_media/images/1.jpg" id="mepic" alt="Me!">
+	        <h3>{{ user.first_name }} {{ user.last_name }}</h3>
 	    </div>
 	    
 	    <div class="divider"></div>
@@ -48,14 +49,14 @@
 	    
 	    <div class="title"><span class="num">12</span> FOLLOWERS</div>
 	    <div id="followers" class="usericons">
-	    	<img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!">
+	    	<img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!">
 	    </div>
 	    
 	    <div class="divider"></div>
 	    
 	    <div class="title"><span class="num">1,322</span> FOLLOWING</div>
 	    <div id="following" class="usericons">
-	    	<img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!"><img src="me.jpg" alt="Me!">
+	    	<img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!">
 	    </div>
 	    
 	    
