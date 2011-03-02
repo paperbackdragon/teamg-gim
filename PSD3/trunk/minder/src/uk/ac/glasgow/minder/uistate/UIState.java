@@ -38,4 +38,8 @@ public interface UIState {
 	public Set<Recipient> searchRecipients(String pattern);
 		
 	public Set<Event> searchEvents(String pattern);
+
+	void createConference(String title, Date startDate, Date endDaye);
+
+	public void createConference(String event, String conference);
 }

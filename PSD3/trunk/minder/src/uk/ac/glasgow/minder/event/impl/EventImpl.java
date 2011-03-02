@@ -7,9 +7,8 @@ import java.util.Properties;
 import uk.ac.glasgow.minder.event.Event;
 
 /**
- * LOL COMMIT 500!
  * @author 0800890m
- *
+ * 
  */
 
 public class EventImpl implements Event {
@@ -75,7 +74,7 @@ public class EventImpl implements Event {
 	 */
 	public void attachReminder(String recipientid, long timeBefore) {
 		System.out.println(new Date(this.getStartDate().getTime() - timeBefore) + " " + System.currentTimeMillis());
-		
+
 		if (timeBefore > 0 && (this.getStartDate().getTime() - timeBefore) >= System.currentTimeMillis())
 			reminders.add(new Reminder(recipientid, timeBefore));
 	}
@@ -91,10 +90,18 @@ public class EventImpl implements Event {
 		return next;
 	}
 
+	/**
+	 * Remove a reminder from the event
+	 * 
+	 * @param r
+	 */
 	public void removeReminder(Reminder r) {
 		reminders.remove(r);
 	}
-	
+
+	/**
+	 * Get the ID of this event
+	 */
 	@Override
 	public String toString() {
 		return this.getUid();

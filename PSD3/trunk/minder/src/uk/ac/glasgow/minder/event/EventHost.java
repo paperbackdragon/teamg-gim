@@ -24,4 +24,8 @@ public interface EventHost {
 	 */
 	public void attachReminderToEvent(String eventid, String recipientid,
 			long timeBefore);
+
+	public void createConference(String title, Date startDate, Date endDate);
+
+	public void addToConference(String event, String conference);
 }

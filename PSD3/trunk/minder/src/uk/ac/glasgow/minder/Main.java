@@ -18,31 +18,29 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception {
-		
-		RecipientStore rs = new RecipientStoreImpl();
-			rs.addUser("Administrator", "admin", "monkey",
-					new InternetAddress("monkey.me@glasgow.ac.uk"), Privilege.ADMINISTRATOR);
-			
-			rs.addUser("james", "james", "password",
-					new InternetAddress("cyblob@gmail.com"), Privilege.RECIPIENT);
 
-		
+		RecipientStore rs = new RecipientStoreImpl();
+		rs.addUser("Administrator", "admin", "monkey", new InternetAddress("monkey.me@glasgow.ac.uk"),
+				Privilege.ADMINISTRATOR);
+
+		rs.addUser("james", "james", "password", new InternetAddress("cyblob@gmail.com"), Privilege.RECIPIENT);
+
 		EventHost host = new Controller(rs);
-		
 		UIState uiState = new UIStateImpl(rs, host);
-		
-		ShellUI shellUI = new ShellUI(System.in,System.out,System.err,"minder");
-		
-		shellUI.registerCommand("login",new Login(uiState));
-		shellUI.registerCommand("createuser",new CreateUser(uiState));
-		shellUI.registerCommand("createml",new CreateMailingList(uiState));
-		shellUI.registerCommand("adduserml",new AddUserToMailingList(uiState));
-		shellUI.registerCommand("searchrecipients",new SearchRecipients(uiState));
-		shellUI.registerCommand("searchevents",new SearchEvents(uiState));
-		shellUI.registerCommand("addreminder",new AddReminder(uiState));
-		shellUI.registerCommand("createlecture",new CreateLecture(uiState));
-		shellUI.registerCommand("createdeadline",new CreateDeadline(uiState));
-		shellUI.registerCommand("exit",new Exit(uiState));
+		ShellUI shellUI = new ShellUI(System.in, System.out, System.err, "minder");
+
+		shellUI.registerCommand("login", new Login(uiState));
+		shellUI.registerCommand("createuser", new CreateUser(uiState));
+		shellUI.registerCommand("createml", new CreateMailingList(uiState));
+		shellUI.registerCommand("adduserml", new AddUserToMailingList(uiState));
+		shellUI.registerCommand("searchrecipients", new SearchRecipients(uiState));
+		shellUI.registerCommand("searchevents", new SearchEvents(uiState));
+		shellUI.registerCommand("addreminder", new AddReminder(uiState));
+		shellUI.registerCommand("createlecture", new CreateLecture(uiState));
+		shellUI.registerCommand("createdeadline", new CreateDeadline(uiState));
+		shellUI.registerCommand("createconference", new CreateConference(uiState));
+		shellUI.registerCommand("addtoconference", new AddToConference(uiState));
+		shellUI.registerCommand("exit", new Exit(uiState));
 		shellUI.run();
 	}
 

@@ -107,14 +107,17 @@ public class UIStateImpl implements UIState {
 	public void attachReminderToEvent(String eventid, String recipientid, long timeBefore) {
 		eventHost.attachReminderToEvent(eventid, recipientid, timeBefore);
 	}
+	
+	@Override
+	public void createConference(String title, Date startDate, Date endDate) {
+		eventHost.createConference(title, startDate, endDate);
+	}
 
 	@Override
 	public Set<Event> searchEvents(String pattern) {
 		if (!checkPrivilege(RECIPIENT)) {
-			System.out.println("Fucking null");
 			return null;
 		}
-		System.out.println("Not null");
 		return eventHost.searchEvents(pattern);
 	}
 
@@ -122,5 +125,10 @@ public class UIStateImpl implements UIState {
 		if (currentUser == null)
 			return false;
 		return currentUser.getPrivilege().compareTo(privilege) <= 0;
+	}
+
+	@Override
+	public void createConference(String event, String conference) {
+		eventHost.addToConference(event, conference);
 	}
 }
