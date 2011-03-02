@@ -18,6 +18,9 @@ public class ConferenceEvent extends EventImpl {
 
 	public ConferenceEvent(String title, Date startDate, Date endDate) {
 		super(title + startDate.toString() + endDate.toString(), startDate.getTime());
+		this.title = title;
+		this.startDate = startDate;
+		this.endDate = endDate;
 	}
 
 	void addEvent(EventImpl e) {
