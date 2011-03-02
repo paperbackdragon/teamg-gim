@@ -1,0 +1,3 @@
+ClasspPath: mail.jar
+Main-Class: uk/ac/glasgow/minder/Main
+

@@ -57,9 +57,13 @@ public class Controller implements Runnable, EventHost {
 
 			if (nextEvent != null) {
 				nextReminder = nextEvent.getNextReminder();
-				time = nextEvent.getStartDate().getTime() - System.currentTimeMillis() - nextReminder.getTimeBefore();
+				time = nextEvent.getStartDate().getTime()
+						- System.currentTimeMillis()
+						- nextReminder.getTimeBefore();
 			}
 
+			System.out.println(time);
+			
 			try {
 				Thread.sleep(time);
 			} catch (InterruptedException e) {
@@ -80,7 +84,8 @@ public class Controller implements Runnable, EventHost {
 					props.put("mail.smtp.port", "587");
 					props.put("mail.smtp.auth", "true");
 
-					Set<Recipient> recipients = rs.searchRecipients(nextReminder.getRecipientId());
+					Set<Recipient> recipients = rs
+							.searchRecipients(nextReminder.getRecipientId());
 
 					Session session = Session.getDefaultInstance(props, null);
 					MimeMessage message = new MimeMessage(session);
@@ -95,42 +100,66 @@ public class Controller implements Runnable, EventHost {
 					}
 
 					// Add them recipients to the email
-					InternetAddress[] toAddress = emails.toArray(new InternetAddress[0]);
+					InternetAddress[] toAddress = emails
+							.toArray(new InternetAddress[0]);
 					for (int i = 0; i < toAddress.length; i++) {
-						message.addRecipient(Message.RecipientType.TO, toAddress[i]);
+						message.addRecipient(Message.RecipientType.TO,
+								toAddress[i]);
 					}
 
 					// Set the email contents. Not very petty, but it works.
 					if (nextEvent instanceof LectureEvent) {
 						LectureEvent e = (LectureEvent) nextEvent;
-						message.setSubject("Event Reminder: Lecture " + e.getTitle());
-						message.setText("This is an automated message to remind you that " + e.getTitle() + " is "
-								+ "taking place at " + e.getLocation() + " by " + e.getLecturerUsername() + ". "
-								+ "The lecture will take place on " + e.getStartDate() + " and last for "
+						message.setSubject("Event Reminder: Lecture "
+								+ e.getTitle());
+						message.setText("This is an automated message to remind you that "
+								+ e.getTitle()
+								+ " is "
+								+ "taking place at "
+								+ e.getLocation()
+								+ " by "
+								+ e.getLecturerUsername()
+								+ ". "
+								+ "The lecture will take place on "
+								+ e.getStartDate()
+								+ " and last for "
 								+ (e.getDuration() / 60) + "minutes");
 					} else if (nextEvent instanceof DeadlineEvent) {
 						DeadlineEvent e = (DeadlineEvent) nextEvent;
-						message.setSubject("Event Reminder: Deadline for " + e.getDeliverable());
-						message.setText("This is an automated message to remind you that " + e.getDeliverable()
-								+ " is due on " + e.getStartDate());
+						message.setSubject("Event Reminder: Deadline for "
+								+ e.getDeliverable());
+						message.setText("This is an automated message to remind you that "
+								+ e.getDeliverable()
+								+ " is due on "
+								+ e.getStartDate());
 					} else if (nextEvent instanceof ConferenceEvent) {
 						ConferenceEvent e = (ConferenceEvent) nextEvent;
 
-						message.setSubject("Conference Reminder: " + e.getTitle() + " from " + e.getStartDate()
+						message.setSubject("Conference Reminder: "
+								+ e.getTitle() + " from " + e.getStartDate()
 								+ " till " + e.getEndDate());
-						
+
 						String msg = "The conference has the following deadlines:\n";
 
 						for (Event deadline : e.getEvents()) {
 							if (deadline instanceof DeadlineEvent) {
-								msg += "\t" + ((DeadlineEvent) deadline).getDeliverable() + " for ";
-								msg += ((DeadlineEvent) deadline).getCourse() + " due ";
-								msg += ((DeadlineEvent) deadline).getStartDate() + "\n";
+								msg += "\t"
+										+ ((DeadlineEvent) deadline)
+												.getDeliverable() + " for ";
+								msg += ((DeadlineEvent) deadline).getCourse()
+										+ " due ";
+								msg += ((DeadlineEvent) deadline)
+										.getStartDate() + "\n";
 							} else if (deadline instanceof LectureEvent) {
-								msg += "\t" + ((LectureEvent) deadline).getTitle()+ " by ";
-								msg += ((LectureEvent) deadline).getLecturerUsername() + " at ";
-								msg += ((LectureEvent) deadline).getLocation() + " on ";
-								msg += ((LectureEvent) deadline).getStartDate() + "\n";
+								msg += "\t"
+										+ ((LectureEvent) deadline).getTitle()
+										+ " by ";
+								msg += ((LectureEvent) deadline)
+										.getLecturerUsername() + " at ";
+								msg += ((LectureEvent) deadline).getLocation()
+										+ " on ";
+								msg += ((LectureEvent) deadline).getStartDate()
+										+ "\n";
 							}
 						}
 
@@ -181,8 +210,9 @@ public class Controller implements Runnable, EventHost {
 	 */
 	@Override
 	public void createDeadlineEvent(Date date, String deliverable, String course) {
-		if (date == null || date.before(new Date()) || deliverable == null || deliverable.length() == 0
-				|| course == null || course.length() == 0)
+		if (date == null || date.before(new Date()) || deliverable == null
+				|| deliverable.length() == 0 || course == null
+				|| course.length() == 0)
 			return;
 
 		DeadlineEvent e = new DeadlineEvent(deliverable, course, date.getTime());
@@ -195,14 +225,18 @@ public class Controller implements Runnable, EventHost {
 	 * Create a lecture event.
 	 */
 	@Override
-	public void createLectureEvent(Date date, String location, String lecturerUsername, long duration, String title) {
+	public void createLectureEvent(Date date, String location,
+			String lecturerUsername, long duration, String title) {
 		// F*** yeah. I mean no. But, really, it's not pretty and I don't like
 		// it, but it's the easiest way of doing it.
-		if (date == null || date.before(new Date()) || location == null || location.length() == 0 || duration < 0
-				|| title == null || title.length() == 0 || lecturerUsername == null || lecturerUsername.length() == 0)
+		if (date == null || date.before(new Date()) || location == null
+				|| location.length() == 0 || duration < 0 || title == null
+				|| title.length() == 0 || lecturerUsername == null
+				|| lecturerUsername.length() == 0)
 			return;
 
-		LectureEvent e = new LectureEvent(location, lecturerUsername, duration, title, date.getTime());
+		LectureEvent e = new LectureEvent(location, lecturerUsername, duration,
+				title, date.getTime());
 
 		if (events.get(e.getUid()) == null)
 			events.put(e.getUid(), e);
@@ -219,8 +253,12 @@ public class Controller implements Runnable, EventHost {
 				if (((DeadlineEvent) e).getDeliverable().matches(pattern)) {
 					matched.add(e);
 				}
-			} else {
+			} else if (e instanceof LectureEvent) {
 				if (((LectureEvent) e).getTitle().matches(pattern)) {
+					matched.add(e);
+				}
+			} else if (e instanceof ConferenceEvent) {
+				if (((ConferenceEvent) e).getTitle().matches(pattern)) {
 					matched.add(e);
 				}
 			}
@@ -233,7 +271,8 @@ public class Controller implements Runnable, EventHost {
 	 * Attach a reminder to an existing event
 	 */
 	@Override
-	public void attachReminderToEvent(String eventid, String recipientid, long timeBefore) {
+	public void attachReminderToEvent(String eventid, String recipientid,
+			long timeBefore) {
 		EventImpl e = events.get(eventid);
 		if (e == null) {
 			System.out.println("Could not find event to add reminder to");
@@ -254,11 +293,12 @@ public class Controller implements Runnable, EventHost {
 
 	@Override
 	public void createConference(String title, Date startDate, Date endDate) {
-		if (title == null || title.length() == 0 || startDate == null || endDate == null || startDate.after(endDate))
+		if (title == null || title.length() == 0 || startDate == null
+				|| endDate == null || startDate.after(endDate))
 			return;
 
 		ConferenceEvent e = new ConferenceEvent(title, startDate, endDate);
-
+		
 		if (events.get(e.getUid()) == null)
 			events.put(e.getUid(), e);
 	}
