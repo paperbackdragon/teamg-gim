@@ -14,12 +14,16 @@
 \contentsline {subsection}{\numberline {2.1.2}Protocol Specification}{10}
 \contentsline {subsubsection}{Syntax}{10}
 \contentsline {subsubsection}{Roles and States}{11}
-\contentsline {subsubsection}{Security and Encryption}{11}
 \contentsline {subsubsection}{Encoding, Limits and Restrictions}{11}
-\contentsline {subsection}{\numberline {2.1.3}Protocol Evolution}{11}
-\contentsline {section}{\numberline {2.2}Client Design}{11}
-\contentsline {subsection}{\numberline {2.2.1}GUI Structure}{11}
-\contentsline {section}{\numberline {2.3}Server Design}{13}
+\contentsline {subsection}{\numberline {2.1.3}Protocol Evolution}{12}
+\contentsline {subsection}{\numberline {2.1.4}Possible Future Changes}{12}
+\contentsline {section}{\numberline {2.2}Client Design}{12}
+\contentsline {subsection}{\numberline {2.2.1}GUI Structure}{12}
+\contentsline {subsection}{\numberline {2.2.2}Design of Client Structure}{12}
+\contentsline {subsubsection}{Approach}{12}
+\contentsline {subsubsection}{Model-Viewer-Controller Structural Concerns}{13}
+\contentsline {subsubsection}{}{14}
+\contentsline {section}{\numberline {2.3}Server Design}{14}
 \contentsline {section}{\numberline {2.4}Networking Design}{14}
 \contentsline {chapter}{\numberline {3}Implementation}{15}
 \contentsline {section}{\numberline {3.1}Client}{15}
