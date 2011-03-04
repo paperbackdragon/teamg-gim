@@ -83,21 +83,24 @@ As mentioned above, the client role has 2 states: Logged-in and Unauthorized. Wh
 
 Any non letter or digit (anything not a-Z or 0-9) in the data segment of a command is encoded and replaced by \texttt{\SLASH U+} followed by a 4 digit number representing the UTF-16 code for the character. For example, the @ character in the previous example is encoded as \texttt{\SLASH U+0040}. The only exception to this rule a character which is used to format or separate different chunks of data. In the GIM Protocol this is always either a single space character (the equivalent of \texttt{\SLASH U+0020}) or a newline character (\texttt{\SLASH n}).
 
-Display pictures, which are small images in JPEG format, cannot be transferred easily using the GIM Protocol without first converting them to a text based format. JPEG and any other binary data is first encoded using BASE64 before being sent using the protocol.
+Display pictures, which are small images in JPEG format, cannot be transferred easily using the GIM Protocol without first being converted to a text based format. JPEG and any other binary data is encoded using BASE64 encoding which is widely used and fairly efficient in terms of bandwidth and processing time.
 
 This makes the protocol very easy to parse as we can safely split the data segment into separate parts without worrying about how data from the user is formatted. This means that we can guarantee every occurrence of a white-space character in the data segment is safe to use for splitting the data.
 
 Clients connected to the server are limited to sending 100 commands in rolling 5 second window. Normal usage should result in a much lower rate (less than 5 per second) and anything more than than this most likely indicates a malfunctioning or malicious client. In the event that a client exceeds this limit then the server closes the connection with the client.
 
-The data segment of commands are limited to 8192 characters in length. This includes data that has been encoded. The exception to this rule is the \texttt{:SET DISPLAY\_PIC:} command, which is used to set a users display picture. The limit for this command is 4x greater than that of a normal command (32,768 characters).
+The data segment of commands is limited to 8192 characters in length. This includes data that has been encoded. The only exception to this rule is the \texttt{:SET DISPLAY\_PIC:} command, which is used to set a users display picture. The limit for this command is 4x greater than that of a normal command (32,768 characters or around 24kb worth of JPEG data).
 
 
 \subsection{Protocol Evolution}
 
-As the project 
+The GIM Protocol has undergone several significant changes since its original draft. The most notable of these was a move towards a smaller number of commands by merging similar commands together and using arguments to modify their behaviour. This cut the number of commands by over 1/3rd, from around 30 to only 19. This resulted in a much easier to understand and more consistent protocol and was particularly effective when grouping commands which used the same data to perform different actions. However, even though the protocol now seems less complex, the complexity has simply been moved into the individual commands. Their functionality still exists and they still have to be implemented and understood.
+
+A prime example of this is the \texttt{:FRIEND:} command. What was originally 6 separate commands to add, delete, block, accept friend requests etc. simply became 1 command with 6 arguments.
+
+There are still some commands which could arguably benefit from being merged. For example, it would make sense for the \texttt{:LOGOUT:} command to be part of the \texttt{:AUTH:} command which allows clients to login and register, as all 3 of these actions are conceptually similar. However the \texttt{LOGOUT} command is not available unless the user is in the logged-in state and so once could argue that it should not be part of the \texttt{AUTH} command as it will not always be applicable.
 
 
-\subsection{Possible Future Changes}
 
 
 
