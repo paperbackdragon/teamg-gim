@@ -21,8 +21,8 @@
 \contentsline {subsection}{\numberline {2.2.2}Design of Client Structure}{12}
 \contentsline {subsubsection}{Approach}{13}
 \contentsline {subsubsection}{Model-Viewer-Controller Structural Concerns}{13}
-\contentsline {subsubsection}{}{14}
-\contentsline {section}{\numberline {2.3}Server Design}{14}
+\contentsline {subsubsection}{}{15}
+\contentsline {section}{\numberline {2.3}Server Design}{15}
 \contentsline {section}{\numberline {2.4}Networking Design}{15}
 \contentsline {chapter}{\numberline {3}Implementation}{16}
 \contentsline {section}{\numberline {3.1}Client}{16}
