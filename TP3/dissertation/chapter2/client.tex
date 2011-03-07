@@ -26,7 +26,8 @@ To deal with the threading complexity, we designed a scheme whereby there would 
 
 To deal with the design complexity of the boundary, we decided that initially, an interface would be written by the networking architects, including javadoc, to describe the requirements of the GIM protocol of the client, from the controller. In the implementation, the controller would then implement this interface. This allowed the requirements from the client to be understood, without having to understand the inner workings of the protocol. Furthermore, the structure of the protocol could change, without any change to the interface or consultation with the GUI architects. The networking architect would write code to parse incoming commands to calls these methods described by the interface, and write outgoing commands from the GUI.
 
-[note: Somebody will make a better, possibly UML diagram]
+note: not final version
+\includegraphics[scale=0.65]{chapter2/diagrams/buffer.png}
 
 \subsection {Model}
 
