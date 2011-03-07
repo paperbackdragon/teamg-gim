@@ -22,7 +22,7 @@
 \contentsline {subsection}{\numberline {2.2.3}2.2.2.2 Model-Viewer-Controller Structural Concerns}{13}
 \contentsline {subsection}{\numberline {2.2.4}Controller}{13}
 \contentsline {subsection}{\numberline {2.2.5}Model}{14}
-\contentsline {subsection}{\numberline {2.2.6}Viewer}{14}
+\contentsline {subsection}{\numberline {2.2.6}Viewer}{15}
 \contentsline {subsubsection}{}{15}
 \contentsline {section}{\numberline {2.3}Server Design}{15}
 \contentsline {section}{\numberline {2.4}Networking Design}{15}
