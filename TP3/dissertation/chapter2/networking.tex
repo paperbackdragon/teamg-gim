@@ -14,6 +14,9 @@ Reading from the network was handled by designing a class which we named 'Networ
 
 \subsubsection {Command Handling }
 
+The parsing of commands was a broad concern that effected both the server and client's activities. This motivated the need to design a 'Command' class which could be used to parse commands. As described in the protocol design section, the GIM protocol follows a structured approach which for each command it is possible to identify the command, argument, and data segments associated with a command. The role of the command class would be to provide facilities that would take a line read from incoming socket data, and create an object from which the individual segements of the command may be extracted. An additional responsibility of this class would be to convert images to and from base64 encoding for transmission over the network (as required by the GIM protocol.)
+
+We thought this was a sensible design decision as it provided a layer of abstraction which allowed the structure of the GIM protocol to change, or additional commands to be added, while only having to change the command class to handle this change. This lead to the design of a 'util' package, as part of our project's structure, while included classes common to both the client and the server networking code. 
 
 
 
