@@ -6,15 +6,15 @@
 \subsection{Protocol Overview}
 
 \begin{figure}[!h]
-    \begin{center}
+    \begin{center} %should there even be more than one "client" bubble in this diagram?
         \includegraphics[scale=0.65]{chapter2/diagrams/protocol_high_level.png}
         \caption{The exchange of messages between a client and the server}
         \label{highLevelDia}
     \end{center}
 \end{figure}
 
-Gim uses a client-server architecture, where one computer (known as the Sever) acts as a central point to which other computers (the Clients) connect. The clients do not communicate directly with each other and all communication takes place between the clients and the server. If a client wishes to send a message to another client it must first got through the server.
-
+GIM uses a client-server architecture, where one computer (known as the server) acts as a central point to which other computers (the clients) connect. The clients do not communicate directly with each other. If a client wishes to send a message to another client it must first got through the server.
+%protocol: capitalized or no?
 A protocol is a set of rules that determine the format and transmission of data between computers. In GIM, the Protocol is responsible for enabling communication between the clients and the server in a reliable and consistent manner.  The syntax (the structure, or format) and semantics (the meaning) of the Protocol are discussed in the next section.
 
 At the highest level of abstraction, the GIM Protocol works in a very simple manner.  A client connects to the sever and they exchange messages until the connection is closed, as shown in Figure ~\ref{highLevelDia}.
@@ -27,7 +27,7 @@ In practice there are several clients connected to the server at once, however a
 
 \subsubsection{Syntax}
 
-The GIM Protocol uses a simple, text based syntax. Each full command begins with a colon followed by a command name and its arguments. A second colon marks the end of the headers and beginning of the data segment. A semi-colon marks the end of the data segment and the termination of the command. The basic structure of a full command is shown below:
+The GIM Protocol uses a simple, text based syntax. Each full command begins with a colon followed by a command name and its arguments. A second colon marks the end of the header and beginning of the data segment. A semi-colon marks the end of the data segment and the termination of the command. The basic structure of a full command is shown below:
 
 \texttt{:<COMMAND\_NAME> <ARGUMENTS>: <DATA>;}
 
@@ -49,9 +49,9 @@ Commands names are predefined and \texttt{<COMMAND\_NAME>} can be any 1 of the f
  \end{tabular}
 }
  
-\texttt{<ARGUMENTS>} is a set of zero or more predefined arguments which can be passed to the command in order to change its behaviour. Each command has its own set of arguments, some commands require arguments, some commands accept more than one argument and some commands have no arguments. The protocol specification defines over 60 arguments and a full listing for each command can be found in the \emph{GIM Protocol Specification Document}.
+\texttt{<ARGUMENTS>} is a set of zero or more predefined arguments which can be passed to the command in order to change its behaviour. Each command has its own set of arguments. Some commands require arguments (sometimes more than one) and some commands have no arguments. The protocol specification defines over 60 arguments, and a full listing for each command can be found in the \emph{GIM Protocol Specification Document}.
 
-Unlike the command and argument segments, the \texttt{<DATA>} segment does not have any predefined values and has a varying syntax across different commands.  For example, the \texttt{ROOM} command has \texttt{JOIN} and \texttt{LEAVE} arguments which are used to join or leave a chat. The majority of the data is likely to have been provided by the user at some point, and as such the data segment is considered to be ``unsafe". This data is encoded (See \emph{Encoding, Limits and Restrictions} for information about how the data is encoded). A full specification for the data segment of each command can be found in the \emph{GIM Protocol Specification Document}.
+Unlike the command and argument segments, the \texttt{<DATA>} segment does not have any predefined values and has a varying syntax across different commands.  For example, the \texttt{:ROOM:} command has \texttt{:JOIN:} and \texttt{:LEAVE:} arguments which are used to join or leave a chat. The majority of the data is likely to have been provided by the user at some point, and as such the data segment is considered to be ``unsafe". This data is encoded (See \emph{Encoding, Limits and Restrictions} for information about how the data is encoded). A full specification for the data segment of each command can be found in the \emph{GIM Protocol Specification Document}. %should there be a link to this?
 
 For example, the following is an example of a command sent from the client to the server requesting the Nickname and Status of the users joe@example.com and bill@gmail.org:
 
@@ -66,42 +66,42 @@ bill\SLASH U+0040mail.org\\
 Billy The Kid\\
 AWAY;}
 
-\emph{(Please note that the data segments is the previous examples have been encoded  defined below in Encoding, Limits and Restrictions.)}
+\emph{(Please note that the data segments is the previous examples have been encoded as defined below in Encoding, Limits and Restrictions.)}
 
 \subsubsection{Roles and States}
 
 The protocol defines two separate roles: The Client role and the Server role. Each role is only able to send a specific subset of commands and receive all of the commands sent by the opposite role (i.e. the server must understand all of the commands which the client is able to send and vice-versa). This means that both the client and server must implement all commands.
 
-Having clearly defined roles is an integral part of the GIM Protocol. This allows the semantics of a command to be used to generate a response in cases where both roles are able to send and receive a command but where the command has a different meaning depending on its source. 
+Having clearly defined roles is an integral part of the GIM Protocol. This allows the semantics of a command to generate a response. Both roles are able to send and receive commands, but the commands have different meanings depending on their source. 
 
-For example, the \texttt{AUTH} command can be sent by both the client and the server roles. When sent by the server it is used to indicate the current state of the client (Either Logged-in or Unauthorized) but when sent by the client it indicates that they wish to login or register a new account. This means that the same command must be implemented differently depending on the role of the sender.
+For example, the \texttt{:AUTH:} command can be sent by both the client and the server. When sent by the server it is used to indicate the current state of the client (Either Logged-in or Unauthorized) but when sent by the client it indicates that a user wishes to login or register a new account. This means that the same command must be implemented differently depending on the role of the sender.
 
 As mentioned above, the client role has 2 states: Logged-in and Unauthorized. When the client first establishes a connection it is placed in the unauthorized state. This means that it has access to an even smaller subset of commands, only those essential to logging-in or registering a new account. Once the client has successfully logged-in it is granted access to the full set of client commands.
 
 
 \subsubsection{Encoding, Limits and Restrictions}
 
-Any non letter or digit (anything not a-Z or 0-9) in the data segment of a command is encoded and replaced by \texttt{\SLASH U+} followed by a 4 digit number representing the UTF-16 code for the character. For example, the @ character in the previous example is encoded as \texttt{\SLASH U+0040}. The only exception to this rule is a character which is used to format or separate different chunks of data. In the GIM Protocol this is always either a single space (the equivalent of \texttt{\SLASH U+0020}) or a newline character (\texttt{\SLASH n}).
+Any non-letter or digit (anything not a-Z or 0-9) in the data segment of a command is encoded and replaced by \texttt{\SLASH U+} followed by a 4 digit number representing the UTF-16 code for the character. For example, the @ character in the previous example is encoded as \texttt{\SLASH U+0040}. The only exception to this rule is a character which is used to format or separate different chunks of data. In the GIM Protocol this is always either a single space (the equivalent of \texttt{\SLASH U+0020}) or a newline character (\texttt{\SLASH n}).
 
 Display pictures, which are small images in JPEG format, cannot be transferred easily using the GIM Protocol without first being converted to a text based format. JPEG and any other binary data is encoded using BASE64 encoding which is widely used and fairly efficient in terms of bandwidth and processing time.
 
-This makes the protocol very easy to parse as we can safely split the data segment into separate parts without worrying about how data from the user is formatted. This means that we can guarantee every occurrence of a white-space character in the data segment is safe to use for splitting the data.
+This makes the protocol very easy to parse as we can safely split the data segment into separate parts without worrying about how data from the user is formatted. This means we can guarantee that every occurrence of a white-space character in the data segment is safe to use for splitting the data.
 
-Clients connected to the server are limited to sending 100 commands in rolling 5 second window. Normal usage should result in a much lower rate (less than 5 per second) and anything more than than this most likely indicates a malfunctioning or malicious client. In the event that a client exceeds this limit then the server closes the connection with the client.
+Clients connected to the server are limited to sending 100 commands in a rolling 5 second window. Normal usage should result in a much lower rate (less than 5 per second) and anything more than than this most likely indicates a malfunctioning or malicious client. In the event a client exceeds this limit, the server closes the connection with the client.
 
 The data segment of commands sent by the client is limited to 8192 characters in length. This includes data that has been encoded. The only exception to this rule is the \texttt{:SET DISPLAY\_PIC:} command, which is used to set a users display picture. The limit for this command is 4x greater than that of a normal command (32,768 characters or around 24kb worth of JPEG data). The server has no such limits on any command.
 
 
 \subsection{Protocol Evolution}
 
-The GIM Protocol has undergone several significant changes since its first draft. The most notable of these was a move towards a smaller number of commands by merging similar commands together and allowing their behaviour to be modified by arguments. This cut the number of commands from 30 to 19, and resulted in a much easier to understand and more consistent protocol. Although this hid some of the complexity at a high level, it does mean that many of the commands are more complex. However this trade-off has been worthwhile and has made the protocol easier to use and remember at a slight cost to ease of implementation.
+The GIM Protocol has undergone several significant changes since its first draft. The most notable of these was a move toward a smaller number of commands. This was done by merging similar commands together and allowing their behaviour to be modified by arguments. The number of commands was cut from 30 to 19, and resulted in a much easier to understand and more consistent protocol. Although this hid some of the complexity at a high level, it means that many of the commands are more complex. Overall, this trade-off has been worthwhile and has made the protocol easier to use and remember, at a slight cost to ease of implementation.
 
-A prime example of this is the \texttt{:FRIEND:} command. What was originally 6 separate commands to manage a user's friend list (adding, deleting, blocking, accepting friend requests, etc.) became a single command with several possible arguments. This grouped the related functionality of each command together and while the single command was more complex, it was still easier to use and remember than 6 separate commands.
+A prime example of this is the \texttt{:FRIEND:} command. What was originally 6 separate commands to manage a user's friend list (adding, deleting, blocking, accepting friend requests, etc.) became a single command with several possible arguments. This grouped the related functionality of each command together. While the single command is more complex, it is still easier to use and remember than 6 separate commands.
 
-There are still some commands which could arguably benefit from being merged. For example, it would make sense for the \texttt{:LOGOUT:} command to be part of the \texttt{:AUTH:} command which allows clients to login and register; all of these actions are conceptually similar. However, the \texttt{LOGOUT} command is not available unless the user is in the logged-in state and so one could argue that it should not be part of the \texttt{AUTH} command as it will not always be applicable. The decision to keep them separate was made purely on personal preference as there was no clear advantages for either choice. 
+There are still some commands which could arguably benefit from being merged. For example, it would make sense for the \texttt{:LOGOUT:} command to be part of the \texttt{:AUTH:} command which allows clients to login and register; all of these actions are conceptually similar. However, the \texttt{:LOGOUT:} command is not available unless the user is in the logged-in state, so one could argue that it should not be part of the \texttt{:AUTH:} command. The decision to keep them separate was made purely on personal preference as there were no clear advantages for either choice. 
 
 During the implementation of GIM, there were several modifications made to the format of the data segment for some commands. These were brought on by a desire to keep the protocol consistent across all commands. There was a often a sense of confusion about how the data segment for each command was split into sections as each command had a different format; some used newlines, some used commas and some used spaces as separators. In the end we chose to use spaces as separators in all commands except the \texttt{:INFO:} command where newlines made more sense. 
 
-The protocol has changed significantly since its first draft and has made significant improvements in terms of easy of use, simplicity and consistency. Although there are still some minor tweaks which could be made to further improve the protocol, it is currently in a stable and usable state. Future changes to the protocol might include the addition of support for file transfers and VoIP. 
+The protocol has changed considerably since its first draft and has undergone substantial improvements in terms of ease of use, simplicity, and consistency. Although there are still some minor tweaks which could be made to further the improvement the protocol, it is currently in a stable and usable state. Future changes to the protocol might include the addition of support for file transfers and VoIP. %we may have not mentioned till now that these two things aren't implemented yet...
 
 
