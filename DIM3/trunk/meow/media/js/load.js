@@ -39,6 +39,8 @@ $(document).ready(function() {
         monochrome: false
     });
 
+    $('#lastmeow .meow').html(parse($('#lastmeow .meow').html()));
+
     // Load any new posts
     schedule();
 
