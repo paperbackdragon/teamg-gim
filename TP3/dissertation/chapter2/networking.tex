@@ -18,6 +18,10 @@ The parsing of commands was a broad concern that effected both the server and cl
 
 We thought this was a sensible design decision as it provided a layer of abstraction which allowed the structure of the GIM protocol to change, or additional commands to be added, while only having to change the command class to handle this change. This lead to the design of a 'util' package, as part of our project's structure, while included classes common to both the client and the server networking code. 
 
+On creation of this command object by the 'NetworkReader' class, it would be handed to the command buffer for retrieval and further parsing by the controller, and then translation into a method call. In addition to promoting code re-use, this approach had the advantage of hiding the structure of the GIM protocol from the client, which increased the degree of modularity in the system.   
+
+
+
 
 
 
