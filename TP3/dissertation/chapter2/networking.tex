@@ -6,7 +6,13 @@ We determined the role of the client networking component to be to maintain a co
 
 \subsubsection {Maintaining a Connection}
 
-The connection to the server had to be designed such that our program could freely write to the socket, and receive commands with the appearance of concurrency. Furthermore, there client code should not have to worry about doing two simultaneous writes to the server, if there is any multithreaded aspects that could cause this. In reality, we would have to manage the connection to the socket so that the socket would not be written to while a read or write was in progress. 
+The connection to the server had to be designed such that our program could freely write to the socket, and receive commands without having to worry about networking concurrency. For example, the client should not have to worry about doing multiple (possibly simultaneous if there is any multithreaded aspects of its operations) writes to the server, and waiting for these actions to complete. With these considerations in mind, we had to design our component to manage the connection so that the socket would not be written to while a read or write was in progress, while accomodating multiple requests. We had to implement this management in a way that these operations would be hidden from the client. 
+
+Reading from the network was handled by designing a class which we named 'NetworkReader.' This class would be run on a thread, and listen to the socket connection for incoming commands. When a command was received, it would then place it onto the intermediate command buffer to be handled by the controller thread (as discussed in section 2.2.4.) The methods within the buffer class would be designed with threading in mind, so that it would remain in a consistent state. A further role of the network reader class would be to inform the client that the connection to the server had been broken, and that action needed to be taken to inform the user and reset any internal information.
+
+Writing to the network was handled by a thread that monitors the buffer for any commands to send to the server. Commands can accumulate in this buffer, so that the client does not have to wait till a command is sent to continue its operations. 
+
+
 
 
 
