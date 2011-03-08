@@ -1,8 +1,8 @@
 var latest = 0;
 var limit = 15;
+var loaded = false;
 
 $(document).ready(function() {
-
     /**
      * Enable protection form cross site scripting.
      * Django doesn't like post data from Javascript unless 
@@ -30,18 +30,38 @@ $(document).ready(function() {
         }
     });
 
-    /**
-     * Load any new posts
-     */
+     
+    //Background noise is sexy
+    $('body').noisy({
+        intensity: 0.9, 
+        size: 200, 
+        opacity: 0.06,
+        monochrome: false
+    });
+
+    // Load any new posts
     schedule();
 
 });
 
+
+/**
+ * Get new posts on a regular interval
+ */
 function schedule() {
 	loadNewPosts();
 	limit = 0;
 	setTimeout('schedule()', 30000);
 }
+
+
+/**
+ * Turns mentions and hashtags into clickable URLs
+ */
+function parse(str) {
+    return str.replace(/@([A-Z0-9]+)/gi, '@<a href="/user/$1/">$1</a>').replace(/\#([A-Z0-9]+)/gi, '<a href="/tag/$1/">#$1</a>');
+}
+
 
 /**
  * Make a request for news posts
@@ -68,23 +88,36 @@ function loadNewPosts() {
 			    
 			    meow += '</div>';
 			}
-			
-			meow += '<h3>' + value.username + '</h3>';
+	
+            // Escape any html and parse the message for metions and hashtags
+            value.message = $('<div/>').text(value.message).html();
+            value.message = parse(value.message);
+    
+			meow += '<span class="username"><a href="/user/' + value.username + '/">' + value.username + '</a></span> <span class="realname">';
+            meow += value.firstname + ' ' + value.lastname + '</span>';
 			meow += '<p>' + value.message + '</p>';
 			meow += '<div class="date">' + elapsedTime(value.time) + '</div></div>';
-			meow += '<div class="displaypic"><img src="/site_media/images/' + value.uid + '.jpg"></div>';
+			meow += '<div class="displaypic"><a href="/user/' + value.username + '/"><img src="/site_media/images/' + value.uid + '.jpg"></a></div>';
 			meow += '<div class="clear"></div></div></div>';
 			items.push(meow);
 		});
 
-        $('#loading').slideUp('slow');
-		$(items.join('')).hide().insertAfter('#loading').fadeIn(1000);
+        if(loaded) {
+		    $(items.join('')).hide().insertAfter('#loading').fadeIn(1000);
+        } else {
+            $(items.join('')).insertAfter('#loading');
+            $('#loading').slideUp('normal');
+            loaded = true;
+        }
 
 	});
 	
 }	
 
 
+/**
+ * Add a meow from the form to the db and update the stream
+ */
 function addMeow() {
     $.post("/addMeow/", $("#addMeow").serialize());
     $("#addMeow #text").val("");
@@ -92,6 +125,9 @@ function addMeow() {
 }
 
 
+/**
+ * Convert a time from ms into a human readable, relative, time.
+ */
 function elapsedTime(createdAt) {
     var ageInSeconds = (new Date().getTime() - new Date(createdAt * 1000).getTime()) / 1000;
 
@@ -130,7 +166,10 @@ function elapsedTime(createdAt) {
     return n + ' year' + s(n) + ' ago';
 }
 
-// Make date parseable in IE
+
+/*
+ * Make the date parsable in IE
+ */
 function fixDate (d) {
     var a = d.split(' ');
     var year = a.pop();
