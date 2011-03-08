@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}meow | let the cat out of the bag{% endblock %}
+
+{% block main %}
+				  
+<div id="content">
+	<div class="padding">
+	
+	    {% if from.errors %}
+	        <p class="error">Sorry, the username or password you entered was incorrect.</p>
+	    {% endif %}
+	    
+        <form name="login" action="" method="post">
+            {% csrf_token %}
+            <label for="username">Username or email:</label>
+            <input type="text" name="username" value="" id="username">
+            <label for="password">Password:</label>
+            <input type="password" name="password" value="" id="password">
+            
+            <a class="button big" onclick="document.forms['login'].submit();"><span class="icon key"></span>LOGIN</a>
+            <input type="hidden" name="next" value="/">
+        </form>
+	   
+	</div>
+</div>
+
+		
+<div id="sidebar">
+	<div class="padding">
+	
+        <h2>Please login or my owner will beat me! They love beating me, the sadistic bastards!</h2>
+	    
+	</div>
+</div>
+
+<div class="clear"></div>
+			
+{% endblock %}
