@@ -35,30 +35,39 @@
 	<div class="padding">
 	
 	    <div id="userbox">
-	    	<img src="/site_media/images/1.jpg" id="mepic" alt="Me!">
-	        <h3>{{ user.first_name }} {{ user.last_name }}</h3>
+	    	<a href="/user/{{ user.username }}/"><img src="/site_media/images/{{ user.pk }}.jpg" id="mepic" alt="{{ user.username }}"></a>
+	        <h3><a href="/user/{{ user.username }}/">{{ user.first_name }} {{ user.last_name }}</a></h3>
 	    </div>
 	    
 	    <div class="divider"></div>
 	    
 	    <div id="lastmeow">
-	        <span class="num">Feb 14th</span> Today I am pretending it's not a holiday so I can have a real Snow Day experience.
+	        <span class="num"><a href="/meow/{{ last_meow.pk }}/">{{ last_meow.time|date:"b jS"|capfirst }}</a></span><span class="meow"> {{ last_meow.meow }} </span>
 	    </div>
 	    
 	    <div class="divider"></div>
 	    
-	    <div class="title"><span class="num">12</span> FOLLOWERS</div>
-	    <div id="followers" class="usericons">
-	    	<img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!">
-	    </div>
-	    
-	    <div class="divider"></div>
-	    
-	    <div class="title"><span class="num">1,322</span> FOLLOWING</div>
+	    <div class="title"><span class="num">{{ following|length }}</span> FOLLOWING</div>
 	    <div id="following" class="usericons">
-	    	<img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!"><img src="/site_media/images/me.jpg" alt="Me!">
+	    	{% for f in following %}
+	    	    <a href="/user/{{ f.username }}/"><img src="/site_media/images/{{ f.pk }}.jpg"></a>
+	    	{% empty %}
+	    	    You don't follow anyone. That's a bit sad.
+	    	{% endfor %}
 	    </div>
 	    
+	    <div class="divider"></div>
+	    
+	    	    <div class="title"><span class="num">{{ follows|length }}</span> FOLLOWER{{ follows|length|pluralize|upper }}</div>
+	    <div id="followers" class="usericons">
+	    	{% for f in follows %}
+	    	    <a href="/user/{{ f.username }}/"><img src="/site_media/images/{{ f.pk }}.jpg"></a>
+	    	{% empty %}
+	    	    No one follows you. Go make so friends.
+	    	{% endfor %}
+	    </div>
+	    
+	    <div class="divider"></div>
 	    
 	</div>
 </div>

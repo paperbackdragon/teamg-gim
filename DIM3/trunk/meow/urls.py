@@ -19,6 +19,7 @@ urlpatterns = patterns('',
     (r'^$', stream.main),
     (r'^JSON/(\d*)/(\d*)/$', stream.JSON),
     (r'^user/(.+)/$', stream.user),
+    #(r'^tag/(.+)/$', tag),
 
     (r'^addMeow/$', main.add_meow),
 

@@ -46,3 +46,6 @@ class Meow(models.Model):
     def epoch_time(self):
         return mktime(self.time.timetuple())
 
+    def __unicode__(self):
+        return u'%s : %s' % (self.by, self.meow)
+
