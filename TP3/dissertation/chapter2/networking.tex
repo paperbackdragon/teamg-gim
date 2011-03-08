@@ -2,9 +2,22 @@
 
 \subsection{Client Networking Structure}
 
-Initially, we determined the role of the client networking component to be to maintain a connection with the server, read commands from the command buffer and pass them to the server, and pass commands from the server to the client. These two concerns came with different challenges; where keeping a connection with the server involved considering how to manage writing and reading data to the socket simultaneously, and reading and writing commands involved considering how best to parse data coming from the socket, and pass data between components.
-
-\subsubsection {Command Passing }
-
+We determined the role of the client networking component to be to maintain a connection with the server, read commands from the command buffer and pass them to the server, and pass commands from the server to the client. These two concerns came with different challenges; where keeping a connection with the server involved considering how to manage writing and reading data to the socket simultaneously, and sending and receiving commands involved considering how best to parse data coming from the socket, and pass data between components.
 
 \subsubsection {Maintaining a Connection}
+
+The connection to the server had to be designed such that our program could freely write to the socket, and receive commands with the appearance of concurrency. Furthermore, there client code should not have to worry about doing two simultaneous writes to the server, if there is any multithreaded aspects that could cause this. In reality, we would have to manage the connection to the socket so that the socket would not be written to while a read or write was in progress. 
+
+
+
+\subsubsection {Command Handling }
+
+
+
+
+
+
+
+
+
+
