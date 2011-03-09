@@ -19,33 +19,33 @@ A user is a registered account on the server with a unique identifier (an email 
 The user's identifier and password are used to authenticate the user at login. These cannot be changed one the account has been created. 
 
 \subsubsection{Nickname}
-A users nickname is a short and familiar name for that user. A nickname does not need to be unique and is not intended to be used as an identifier by the system. By default a user's nickname is their email address.
+A user's nickname is a short and familiar name for that user. A nickname does not need to be unique and is not intended to be used as an identifier by the system. By default a user's nickname is their email address.
 
 \subsubsection{Personal Message}
-The personal message is a medium length message (usually only a sentence or 2) which the user can use to share news or any information about themselves.
+The personal message is a medium length message (usually only a sentence or two) which the user can use to share news or any information about themselves.
 
 \subsubsection{Display Picture}
-A Display Picture is a small image chosen by the user, often of them-self, so that they can be easily identified visually. By default a users display picture is the GIM logo. 
+A Display Picture is a small image chosen by the user, often of themselves, so that they can be easily identified visually. By default a user's display picture is the GIM logo. 
 
 \subsubsection{Status}
-A user can have one of several status: Online, Away, Busy and Appear Offline. The first 3 status' are used simply as an indication of the user's likelihood to respond to a message. The Appear Offline status allows the user to appear to other users as though they were not signed in but still receive updates and messages from other users.
+A user can have one of several statuses: Online, Away, Busy and Appear Offline. The first three statuses are used simply as an indication of the user's likelihood to respond to a message. The Appear Offline status allows the user to appear to other users as though they were not signed in but still receive updates and messages from other users.
 
 \subsubsection{Friend List}
-Each user has their own Friend List, a list of users who have accepted a friend request from the owner of the Friend List. When a user accepts a friend request, the sender and receiver are added to each other's Friend List. The server only grants access to information about a user if that user is in the requesting user's Friend List. A user is only able to see information about another user if the other user has accepted a friend request from the requesting user, or if the users are currently in the same Room. This means that simply removing a user from your friend list does not stop them from being able to view your information or message you. 
+Each user has their own Friend List, a list of users who have accepted a friend request from the owner of the Friend List. When a user accepts a friend request, the sender and receiver are added to each other's Friend List. The server only grants access to information about a user if that user is in the requesting user's Friend List or if the users are currently in the same Room. This means that simply removing a user from your Friend List does not stop them from being able to view your information or message you.
 
-A user is considered to be subscribed to all of the users in their Friend List. This means that they receive update notifications from the server whenever a user in their Friend List updates their nickname, personal message, display picture or status.
+A user is considered to be `subscribed' to all of the users in their Friend List. This means that they receive update notifications from the server whenever a user in their Friend List updates their nickname, personal message, display picture or status.
 
 \subsubsection{Blocked User}
-A user is able to stop a another user from communicating with and viewing their information by blocking them. It is possible to block any user, even users not currently in your friend list. Blocking a user is a 1 way process and does not stop a user from messaging or viewing information about users they have blocked.
+A user is able to stop a another user from communicating with them and viewing their information by blocking that user. It is possible to block any user, even users not currently in your friend list. Blocking a user is a one-way process and does not stop a user from messaging or viewing information about users they have blocked.
 
 \subsubsection{Room}
-A Room is a collection of 1 or more users and each Room has a unique identifier. All chat messages in GIM are sent to Rooms rather than particular users. The server then forwards messages from the room to the users in the room.
+A Room is a collection of one or more users and each Room has a unique identifier. All chat messages in GIM are sent to Rooms rather than particular users. The server then forwards messages from the room to the users in the room.
 
-In order to join a Room a user must either create a new Room (in which case they are automatically place into the room) or the must be invited to the Room by a user already in the Room. 
+In order to join a Room a user must either create a new Room (in which case they are automatically placed into the Room) or they must be invited to the Room by a user already in the Room. 
 
 A Room can have one of 2 types: Personal or Group. A Personal Room is much more restrictive than a Group Room. A Personal Room must be provided with the identifier of one other user at time of creation and is limited to only 2 users. Once a Personal Room has been created you cannot invite any other users. A Group Room has no such restrictions. Any number of users may be invited to a Group Room at any time.
 
-(Someone rewrite the bit about rooms so it makes sense, please!)
+(Someone rewrite the bit about rooms so it makes sense, please!) [Makes sense to me... -Heather]
 
 \subsection{Server Structure}
 
