@@ -89,7 +89,7 @@ This makes the protocol very easy to parse as we can safely split the data segme
 
 Clients connected to the server are limited to sending 100 commands in a rolling 5 second window. Normal usage should result in a much lower rate (less than 5 per second) and anything more than than this most likely indicates a malfunctioning or malicious client. In the event a client exceeds this limit, the server closes the connection with the client.
 
-The data segment of commands sent by the client is limited to 8192 characters in length. This includes data that has been encoded. The only exception to this rule is the \texttt{:SET DISPLAY\_PIC:} command, which is used to set a users display picture. The limit for this command is 4x greater than that of a normal command (32,768 characters or around 24kb worth of JPEG data). The server has no such limits on any command.
+The data segment of commands sent by the client is limited to 8192 characters in length. This includes data that has been encoded, so a single @ character encoded as \SLASH U+0040 counts for 7 characters towards the limit. The only exception to this rule is the \texttt{:SET DISPLAY\_PIC:} command, which is used to set a users display picture. The limit for this command is 4x greater than that of a normal command (32,768 characters or around 24kb worth of JPEG data). The server has no such limits and can send commands of any length.
 
 
 \subsection{Protocol Evolution}
@@ -104,4 +104,6 @@ During the implementation of GIM, there were several modifications made to the f
 
 The protocol has changed considerably since its first draft and has undergone substantial improvements in terms of ease of use, simplicity, and consistency. Although there are still some minor tweaks which could be made to further the improvement the protocol, it is currently in a stable and usable state. Future changes to the protocol might include the addition of support for file transfers and VoIP. %we may have not mentioned till now that these two things aren't implemented yet...
 
+(Could have made encoding more efficient by not using \SLASH U+, use something shorter.)
 
+(Something about the chnages made to the room command to differentiate between group and personal chats.)
