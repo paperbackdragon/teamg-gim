@@ -59,7 +59,7 @@ In order to manage this, the server generates a new worker for every connected c
     \end{center}
 \end{figure}
 
-Each worker has 2 buffers, one which stores commands read from the network (the command buffer), and one which stores commands to be written to the network (the response buffer). The worker continually reads commands from the command buffer and writes, processes them and then puts the responses into the response buffer. At the same time the worker is also reading and writing data from the respective buffers onto the network.
+Each worker has 2 buffers, one which stores commands read from the network (the command buffer), and one which stores commands to be written to the network (the response buffer). The worker continually reads commands from the command buffer, processes them, and puts the responses into the response buffer. At the same time the worker is also reading and writing data from the respective buffers onto the network.
 
 \begin{figure}[!h]
     \begin{center}
