@@ -59,25 +59,25 @@ In order to manage this, the server generates a new worker for every connected c
     \end{center}
 \end{figure}
 
-Each worker has 2 buffers, one which stores commands read from the network (the command buffer), and one which stores commands to be written to the network (the response buffer). The worker continually reads commands from the command buffer, processes them, and puts the responses into the response buffer. At the same time the worker is also reading and writing data from the respective buffers onto the network.
+Each worker has 2 buffers, one which stores commands read from the network (the command buffer), and one which stores commands to be written to the network (the response buffer). The worker continually reads commands from the command buffer, processes them, and puts the responses into the response buffer. At the same time the worker is also performing network reads and writes to fill and empty the respective buffers.
 
 \begin{figure}[!h]
     \begin{center}
         \includegraphics[scale=0.75]{chapter2/diagrams/worker_detail.png}
         \caption{A more detailed diagram of what happens inside a worker.}
-        \label{WorkersDia}
+        \label{WorkerDatailedDia}
     \end{center}
 \end{figure}
 
-Workers are able to indirectly communicate with other clients by putting commands into other workers' buffers. Since the command still passes through the worker assigned to the client, this allows a worker to pass requests and messages from one client to another without directly communicating with the other client.
+Workers are able to indirectly communicate with other clients by putting commands into other workers' buffers. Since the command still passes through the worker assigned to the client, this allows a worker to pass requests and messages from one client to another without directly communicating with the other client. 
 
-Workers can also communicate using the shared data.
+The server also has a large section of backing data which stores all of the users, rooms, workers and any other operational data required by the server. Any worker can read and modify this data at any time so care must be taken to ensure that synchronisation problems are avoided.
 
-
-\begin{figure}[!h]
+\newpage
+\begin{figure}
     \begin{center}
-        \includegraphics[scale=0.65]{chapter2/diagrams/server_uml.png}
-        \caption{THIS IS NOT DONE.}
+        \includegraphics[scale=0.5, angle=-90]{chapter2/diagrams/server_uml.png}
+        \caption{UML showing the structure of the GIM Server}
         \label{highLevelDia}
     \end{center}
 \end{figure}
