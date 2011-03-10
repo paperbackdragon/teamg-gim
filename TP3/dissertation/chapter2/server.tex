@@ -47,9 +47,9 @@ A Room can be one of two types: Personal or Group. A Personal Room is much more 
 
 \subsection{Server Structure}
 
-From the very beginning the server was designed to be secure (users must trust it to keep their information secure and route messages correctly), scalable (it must be able to cope with any number of connected clients), and simple. 
+From the very beginning the server was designed to be secure, scalable, and simple. Users must trust it to keep their information safe and route messages correctly, and it must be able to cope with any number of connected clients.
 
-In order to manage this, the server generates a new worker for every connected client which acts as the single point of contact for the client it was created for. This greatly simplifies the design of the server as we can treat each connection individually and allows the server to scale to a large number of clients easily.
+In order to manage this, the server generates a new worker for every connected client. This new worker acts as the single point of contact for its respective client. This greatly simplifies the design of the server as we can treat each connection individually and allows the server to easily scale to a large number of clients.
 
 \begin{figure}[!h]
     \begin{center}
@@ -69,9 +69,9 @@ Each worker has 2 buffers, one which stores commands read from the network (the 
     \end{center}
 \end{figure}
 
-Workers are able to indirectly communicate with other clients by putting commands into another worker's buffers. This allows a worker to pass requests and messages from one client to another without directly communicating with the client as the command still passes through the worker assigned to the client.
+Workers are able to indirectly communicate with other clients by putting commands into other workers' buffers. Since the command still passes through the worker assigned to the client, this allows a worker to pass requests and messages from one client to another without directly communicating with the other client.
 
-Workers can also communicate using the shared data. The.
+Workers can also communicate using the shared data.
 
 
 \begin{figure}[!h]
