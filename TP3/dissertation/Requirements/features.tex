@@ -1,68 +1,93 @@
-\section{Requirements}
+\section{Features}
 
 Once we established how to structure user communication, the next task was to determine what the important features of an instant messenger were, and what was achievable within the scope of the project. This process involved several team meetings where we discussed our experience with a variety of existing instant messengers and picked areas that we wished to draw from.
 
 The many messaging programs already out there provided us with a solid foundation for our own client GUI. Our experiences with these programs allowed us to choose features which we felt were achievable and, more importantly, useful to users. We conceived a feature set split into 4 categories of importance, using the MoSCoW method. %Link to MoSCoW method?
 
-\subsection{Must Have}
+\subsection*{Must Have Features}
 
 \begin{itemize}
-\item{Send Messages}
-\item{Graphical User Interface (GUI)}
-\item{User Nicknames}
-\item{Contact List}
-\item{User Status}
+\item{Send Messages\\
+	The ability to send messages from one client to another.}
+\item{Graphical User Interface (GUI)\\
+	A collection of panels and buttons to help the user interact with the client.}
+\item{User Nickname\\
+	A name that the user can edit, used so that their contacts may more easily identify them.}
+\item{Contact List\\
+	A list of the user's contacts, viewable by the user.}
+\item{User Status\\
+	An attribute that shows whether the user is available to receive messages, which the user can set.}
 \end{itemize}
 
-\subsection{Should Have}
+The `Must Have' category has features that were taken from the initial problem specification, containing the basic elements of an instant messenger. Sending messages, using a GUI, and user statuses were taken from the problem definition, however we felt it was crucial and within the scope of this project to include contact lists and user nicknames as must have features.
+
+
+\subsection*{Should Have Features}
 
 \begin{itemize}
-\item{URL Parsing}
-\item{Display Pictures}
-\item{File Transfers}
-\item{Personal Messages}
-\item{Smileys}
+\item{URL Parsing\\
+	The ability for a user to quickly select hyperlinks in the chat window.}
+\item{Display Picture\\
+	An image that a user uses to represent themselves to their contacts.}
+\item{File Transferring\\
+	The ability to send files from one client to another.}
+\item{Personal Message\\
+	A small message that the user can use to share news or anything else interesting.}
+\item{Smileys\\
+	Also known as emoticons, these are small icons the user can type, used to represent emotions in chat.}
 \end{itemize}
 
-\subsection{Could Have}
+`Should Have' features are those which we felt were within the scope of the project and would significantly enhance the user's experience. URL parsing was given high priority due to our experiences using other IM clients, which often involves sending various website links to contacts. While display pictures do not directly impact the functionality of the program, we felt that they would make the chatting experience more personal, and allow users to have what has been a standard feature of similar programs for some time. We considered the ability to send files between users a useful feature to include, despite the fact it would potentially be one of the most difficult items on the list to implement. As we considered personal messages simple to implement, it was assigned a relatively high priority. And while smileys add visual appeal, they would not add significant functionality since text-based representations can be used. They are easy enough to implement though, so we chose to have them in the second-highest category.
+
+
+\subsection*{Could Have Features}
 
 \begin{itemize}
-\item{Contact List Grouping}
-\item{Offline Messaging}
-\item{Chat Logging}
-\item{Custom Fonts and Colours}
+\item{Contact List Grouping\\
+	This is where the user can create subsets of their contacts. Managing large contact lists thus becomes much easier.}
+\item{Offline Messaging\\
+	This allows users to send messages to each other regardless of their status. When a user logs into the system, they receive any messages that were sent to them while they were not logged in.}
+\item{Chat Logging\\
+	The ability to store previous conversations on the user's computer.}
+\item{Custom Fonts and Colours\\
+	These options let users type in font colors and styles of their choosing.}
 \end{itemize}
 
-\subsection{Would Like To Have}
+`Could Have' features are those that, given time, we think would be worth implementing. Contact list grouping would initially be in the form of displaying `Online' and `Offline' contacts. Time permitting, we might extend it to include user-defined custom groups. Offline messaging is useful for short disconnects to prevent messages being lost, so we thought it important enough to include. Chat logging can be useful, but from our experience, it is not used that often, and thus was not higher in the list of features. Custom fonts and colors can help make reading messages more pleasing to the eye, but aren't that important or required for functionality, thus the lower priority.
+
+
+\subsection*{Would Like To Have Features}
 
 \begin{itemize}
-\item{User Profile}
-\item{Custom Commands}
-\item{Themes}
-\item{Plug-in Support}
-\item{VoIP}
+\item{User Profile\\
+	User profiles are pages which contain details on a particular user, viewable by contacts.}
+\item{Custom Commands\\
+	These act in a similar way to an IRC client: when typed into the chat box, `/whois' and `/join', for example, show information about a user or join a chatroom, respectively. As these are `custom' commands, the user can change or add commands themselves.}
+\item{Themes\\
+	A preset of colours used to alter the interface's look and feel.}
+\item{Plug-in Support\\
+	The ability for other developers to create additional features that can be added to certain areas, for example support for other messenger protocols.}
+\item{Voice-over Internet Protocol (VoIP)\\
+	A protocol designed to accommodate voice chat between clients.}
 \end{itemize}
 
-The `Must Have' category has features that were taken from the initial problem specification. These features generally contain the basic elements of an instant messenger, such as sending messages and using a graphical user interface. Sending messages, using a GUI, and user statuses were taken from the problem definition, however we felt it was crucial and within the scope of this project to include contact lists and user nicknames as must have features.
-
-`Should Have' features are those which we felt were within the scope of the project and would significantly enhance the user's experience. URL parsing is the ability for a user to quickly select hyperlinks in the chat window. This was given high priority due to our experiences using other IM clients, which often involves sending various website links to contacts. Display pictures are images that a user uses to represent themselves to their contacts. While display pictures do not directly impact the functionality of the program, we felt that they would make the chatting experience more personal, and allow users to have what has been a standard feature of similar programs for some time. We considered the ability to send files between users a useful feature to include, despite the fact it would potentially be one of the most difficult items on the list to implement. Personal messages are one of the easier features on the list. A personal message is a small message that can be seen by a user's contacts, usually visible under their username, used to share moods, interesting quotes, etc. As this was considered to be simple to implement, it was assigned a relatively high priority. Smileys (also known as emoticons) are small icons used to represent emotions in chat. While they add visual appeal, smileys would not add significant functionality since text-based representations can be used.
-
-`Could Have' features are those that, given time, we think would be worth implementing. Contact list grouping is where the user is able to create subsets of their contacts, which makes managing large contact lists easier. This would likely be included in the form of displaying `Online' and `Offline' contacts, and possibly extended to have user-defined custom groups. Offline messaging allows users to send messages to each other regardless of their status. When a user logs into the system, they receive any messages that were sent to them while they were not logged in. This is useful for short disconnects to prevent messages being lost. Chat logging is the ability to store conversations on the user's computer. While this feature can be useful, from experience, it is not used that often. Custom fonts and colours would let users be able to type in font colors and styles of their choosing. This helps make reading messages pleasing to the eye, but isn't that important or required for functionality, thus its lower priority.
-
-Features which we `Would Like To Have' are low priority, and thus aren't as important to implement. User profiles are pages which contain details on a particular user, viewable by contacts. Beyond the basic concept, we had not decided how these would function or what they would contain. Custom commands would act in a similar way to an IRC client: when typed into the chat box, commands such as `/whois' or `/join' would show information about a user or join a chatroom, respectively. As these are custom commands, the user would be able to change or add commands themselves. Themes are another feature to further customisation. A theme is a preset of colours used to alter the interface's look and feel. We decided this didn't seem part of useful functionality, but might be nice to add if we had time. Two of the more demanding requirements we conceived were Plug-in Support and VoIP. The former is the ability for other developers to create additional features that can be added to certain areas, for example support for other messenger protocols. The latter, VoIP (Voice-over Internet Protocol), is a protocol designed to accommodate voice chat between clients. While this is a very desirable feature, it was considered to be out of the scope of the project. Despite that fact, we decided to include it so we could implement it in the unlikely case that we had time at the end of our project.
+Features which we `Would Like To Have' are low priority, and thus aren't as important to implement. Beyond the basic concept of profiles, we had not decided how these would function or what they would contain. We did not think they were that important. Custom commands seemed unnecessary, since they require an overhead of knowing what the commands are and how they work, and we aren't aiming to have only computer-savvy users. We decided themes didn't seem part of useful functionality, but might be nice to add if we had time. Two of the more demanding requirements we conceived were plug-in support and VoIP. While these were desirable features, they were considered to be out of the scope of the project. Despite that fact, we decided to include them so we could aim to implement them at a later time.
 
 
-\subsection{Rejected Features}
+\subsection*{Rejected Features}
 
 There were some features which we agreed were not desirable or worth our time implementing.
 
 \begin{itemize}
 
-\item{Nudges}
-\item{Winks}
-\item{Spell Checking}
+\item{Nudges\\
+	Events which one user sends to another to force their chat window into focus.}
+\item{Winks\\
+	A similar feature to nudges, but containing multi-media.}
+\item{Spell Checking\\
+	The ability for a chat window text box to highlight misspelled words that the user has typed.}
 
 \end{itemize}
 
-Nudges are events which one user sends to another to force their chat window into focus. These are considered by many to be an irritation which is prone to abuse, hence our decision to not include them. Winks are a similar feature with more multi-media, and were also decided to be not worth adding. Spell Checking was considered, but due to the typically informal nature of IM conversations and the fact that people purposely misspell words at times, it was not included.
+Nudges and winks are considered by many to be an irritation which is prone to abuse, hence our decision to not include them. Spell Checking was considered, but due to the typically informal nature of IM conversations and the fact that people purposely misspell words at times, it was not included.
 
