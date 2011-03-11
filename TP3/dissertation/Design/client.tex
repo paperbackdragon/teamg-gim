@@ -29,7 +29,7 @@ To deal with the threading complexity, we designed a scheme with an intermediate
 [confusing] To deal with the design complexity of the boundary, we decided that initially, an interface would be written by the networking architects to describe the requirements of the GIM protocol of the client from the controller. The controller would then implement this interface. This allowed the requirements from the client to be understood, without having to understand the inner workings of the protocol. Furthermore, the structure of the protocol could change, without any change to the interface or consultation with the GUI architects. The networking architect would write a method in the controller class to parse incoming commands to call the methods described by the interface as appropriate. For outgoing commands to the server, an interface outlining possible calls to the server would be written by the architect to be called by the controller. [/confusing (restructure sentences, basically)]
 
 note: not final version
-\includegraphics[scale=0.65]{chapter2/diagrams/buffer.png}
+\includegraphics[scale=0.65]{Design/diagrams/buffer.png}
 
 \subsection {Model}
 
@@ -45,7 +45,7 @@ After some interface design work (which will be discussed in coming sections), i
 
 We anticipated this would be advantageous as it would reduce the repetition of code and keep functionality consistent between the two windows. We felt in particular that the panel displaying incoming images would change in formatting messages, as the project would evolve to include some of our possible features, such as the implementation of emoticons and font colours (See section x.y). [this last sentence is confusing... reword?]
 
-\includegraphics[scale=0.65]{chapter2/diagrams/chatwin.png}
+\includegraphics[scale=0.65]{Design/diagrams/chatwin.png}
 
 
 

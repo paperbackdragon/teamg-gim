@@ -53,7 +53,7 @@ In order to manage this, the server generates a new worker for every connected c
 
 \begin{figure}[!h]
     \begin{center}
-        \includegraphics[scale=0.75]{chapter2/diagrams/server_workers.png}
+        \includegraphics[scale=0.75]{Design/diagrams/server_workers.png}
         \caption{The GIM Server with 3 connected clients, each with their own worker.}
         \label{WorkersDia}
     \end{center}
@@ -63,7 +63,7 @@ Each worker has 2 buffers, one which stores commands read from the network (the 
 
 \begin{figure}[!h]
     \begin{center}
-        \includegraphics[scale=0.75]{chapter2/diagrams/worker_detail.png}
+        \includegraphics[scale=0.75]{Design/diagrams/worker_detail.png}
         \caption{A more detailed diagram of what happens inside a worker.}
         \label{WorkerDatailedDia}
     \end{center}
@@ -76,7 +76,7 @@ The server also has a large section of backing data which stores all of the user
 \newpage
 \begin{figure}
     \begin{center}
-        \includegraphics[scale=0.5, angle=-90]{chapter2/diagrams/server_uml.png}
+        \includegraphics[scale=0.5, angle=-90]{Design/diagrams/server_uml.png}
         \caption{UML showing the structure of the GIM Server}
         \label{highLevelDia}
     \end{center}
