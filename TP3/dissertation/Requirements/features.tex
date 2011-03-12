@@ -2,7 +2,7 @@
 
 Once we established how to structure user communication, the next task was to determine what the important features of an instant messenger were, and what was achievable within the scope of the project. This process involved several team meetings where we discussed our experience with a variety of existing instant messengers and picked areas that we wished to draw from.
 
-The many messaging programs already out there provided us with a solid foundation for our own client GUI. Our experiences with these programs allowed us to choose features which we felt were achievable and, more importantly, useful to users. We conceived a feature set split into 4 categories of importance, using the MoSCoW method. %Link to MoSCoW method?
+The many messaging programs already out there provided us with a solid foundation for our own client GUI. Our experiences with these programs allowed us to choose features which we felt were achievable and, more importantly, useful to users. We conceived a feature set split into 4 categories of importance, using the MoSCoW\footnote{\texttt{http://www.coleyconsulting.co.uk/moscow.htm}} method.
 
 \subsection*{Must Have Features}
 
@@ -68,10 +68,10 @@ The `Must Have' category has features that were taken from the initial problem s
 \item{Plug-in Support\\
 	The ability for other developers to create additional features that can be added to certain areas, for example support for other messenger protocols.}
 \item{Voice-over Internet Protocol (VoIP)\\
-	A protocol designed to accommodate voice chat between clients.}
+	A protocol designed to accommodate voice chat between clients. A notable open standard of this is SIP, Session Initiation Protocol (RFC 3261\footnote{\texttt{http://tools.ietf.org/html/rfc3261}}).}
 \end{itemize}
 
-Features which we `Would Like To Have' are low priority, and thus aren't as important to implement. Beyond the basic concept of profiles, we had not decided how these would function or what they would contain. We did not think they were that important. Custom commands seemed unnecessary, since they require an overhead of knowing what the commands are and how they work, and we aren't aiming to have only computer-savvy users. We decided themes didn't seem part of useful functionality, but might be nice to add if we had time. Two of the more demanding requirements we conceived were plug-in support and VoIP. While these were desirable features, they were considered to be out of the scope of the project. Despite that fact, we decided to include them so we could aim to implement them at a later time.
+Features which we `Would Like To Have' are the lowest priority, and thus aren't important to implement. Beyond the basic concept of profiles, we had not decided how these would function or what they would contain. We did not think they were importantto include, as they aren't necessary for communication, and many instant messengers don't use them. Custom commands seemed unnecessary, since they require an overhead of knowing what the commands are and how they work, and we can provide functionality well enough with a GUI. We decided themes didn't seem part of useful functionality, but might be nice to add if we had time. Two of the more demanding requirements we conceived were plug-in support and VoIP. While these were desirable features, they were considered to be out of the scope of the project. Despite that fact, we decided to include them so we could aim to implement them at a later time.
 
 
 \subsection*{Rejected Features}
