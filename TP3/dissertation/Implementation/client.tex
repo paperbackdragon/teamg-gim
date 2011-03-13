@@ -34,7 +34,7 @@ Invitation:
 \item Client spawns the appropriate chat window, or updates the internal state information of an existing window with the new roomid in the window list. Information includes who is in the room, and the id to send messages to.
 \item If it is a group chat, client asks server for the user list in the room
 
-In retrospect, our trade off between keeping an abstract protocol may have been too high. Aside from this communication between the client and the server, there are complexities within the client code to ensure these 
+In retrospect, our trade off between keeping an abstract protocol may have been too high. Aside from this communication between the client and the server, there are complexities within the client code to ensure these events are performed in sequence. For example, a user should not be allowed to send a message before the conversation participant has also joined the room, in the case of a personal chat. 
 
 
 
