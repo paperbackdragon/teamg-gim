@@ -24,7 +24,7 @@ Creation:
 \item Server responds with `created' and the room id.
 \item Client matches the type of chat with the `new room' queue, and the user list from the `invitations' queue.
 \item Client spawns the appropriate chat window, or updates the internal state information of an existing window with the new roomid in the window list. Information includes who is in the room and the id to send messages to.
-\item The client is informed that the participant has joined the room.
+\item Client is informed that the participant has joined the room, through the 'joined' argument in the "::ROOM::" command.
 \end {enumerate}
 
 Invitation:
@@ -34,7 +34,7 @@ Invitation:
 \item Server responds with `Personal' or `Group.'
 \item Client matches request with response from the ``invited'' queue.
 \item Client spawns the appropriate chat window, or updates the internal state information of an existing window with the new roomid in the window list. Information includes who is in the room and the id to send messages to.
-\item Client is informed that the participant has joined the room.
+\item Client is informed that the participant has joined the room, through the 'joined' argument in the "::ROOM::" command.
 \item If it is a group chat, client asks server for the user list in the room.
 \end{enumerate}
 
@@ -42,4 +42,4 @@ In retrospect, the trade off between keeping an abstract protocol (which could b
 
 \subsection{Evolution of Code}
 
-
+As described in the design section, a requirement from the client model was to store information about users.\footnote{reference goes here} During the early stages of the implementation, it was believed it would be sufficient to get display the the user's nickname in a chat window, by polling the 'User' list stored in the model any time a message was received. However, as the implementation progressed it became clear that many areas on the interface dynamically updated friend information - including the contact list, group chat window, and single chat window. As the implementation of these interface features was gradual, the original approach was to update each area of the interface in isolation whenever the server alerted the client of a change. We encountered problems with this approach as 
