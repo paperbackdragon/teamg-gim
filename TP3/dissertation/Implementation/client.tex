@@ -24,6 +24,8 @@ Creation:
 \item Server responds with 'created' with the room id.
 \item Client matches the type of chat with the 'new room' queue, and the user list from the 'invitations queue.'
 \item Client spawns, or updates existing window in the window list with the room id to send messages to, and the user(s) in the chat.
+\item The client is informed that the participant has joined the room.
+\end{enumerate}
 
 Invitation:
 \begin{enumerate}
@@ -33,8 +35,9 @@ Invitation:
 \item Client matches request with response from the "invited" queue.
 \item Client spawns the appropriate chat window, or updates the internal state information of an existing window with the new roomid in the window list. Information includes who is in the room, and the id to send messages to.
 \item If it is a group chat, client asks server for the user list in the room
+\end{enumerate}
 
-In retrospect, our trade off between keeping an abstract protocol may have been too high. Aside from this communication between the client and the server, there are complexities within the client code to ensure these events are performed in sequence. For example, a user should not be allowed to send a message before the conversation participant has also joined the room, in the case of a personal chat. 
+In retrospect, our trade off between keeping an abstract protocol may have been too high. Aside from this communication between the client and the server, there are complexities within the client code to ensure these events are performed in sequence. For example, a user should not be allowed to send a message before the conversation participant has also joined the room, in the case of a personal chat. This meant that safegaurds had to be considered during these sequence of events to ensure messages were not dropped, while ensuring the user did not have to 'wait' for the other user to enter the room, before entering a message. 
 
 
 
