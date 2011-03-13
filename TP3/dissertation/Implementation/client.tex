@@ -25,7 +25,7 @@ Creation:
 \item Client matches the type of chat with the `new room' queue, and the user list from the `invitations' queue.
 \item Client spawns the appropriate chat window, or updates the internal state information of an existing window with the new roomid in the window list. Information includes who is in the room and the id to send messages to.
 \item The client is informed that the participant has joined the room.
-\end
+\end {enumerate}
 
 Invitation:
 \begin{enumerate}
@@ -41,3 +41,5 @@ Invitation:
 In retrospect, the trade off between keeping an abstract protocol (which could be used for different styles of implementation) and designing towards our own client and server may have been too high. Aside from the communication between the client and the server, there are complexities within the client code to ensure these events are performed in sequence which left much opportunity for error in the control of threading. For example, a user should not be allowed to send a message before the conversation participant has also joined the room, in the case of a personal chat between steps 6 and 7. This meant that safeguards had to be considered during this sequence of events to ensure messages were not dropped, while ensuring the user did not have to `wait' for the other user to enter the room before entering a message. This motivated the need for a boolean value (internal to chat windows) indicating whether the chat participant was in the room. While this value is false, messages to be sent are buffered until it turns true. A further issue of synchronization was internal to the code. Since the GUI was running on a separate thread from the incoming networking thread, it was conceivable that an incoming message could occur before the internal room id was updated in step 6. In fact, this issue was subtle enough that it was not recognised until late in development. In retrospect, part of our problem was from not identifying where the Swing event queue needed to be used (as outlined in the previous section), as well as the complex set of events that needed to occur to establish a chat. Throughout this project, we became more aware of the careful approach required when using threads.
 
 \subsection{Evolution of Code}
+
+
