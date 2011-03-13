@@ -14,7 +14,21 @@ The first draft of the GIM protocol treated all conversations as 'rooms', and di
 
 This change was a test of the boundary of responsibilites within our client structure, as it effected communication with the server, and the back end of the client. The protocol engineer's solution to the issue was to add a 'type' argument to the room command. In the case creating a room, the type now had to be specified. To allow a user to work out what room type a chat had, the 'type' argument would be used, with a room identifier. This kept the protocol abstract, as some conceivable implementations of the protocol may not be interested in this. In order to deal with these changes, our client had to be designed to sequence responses from the server with certain requests. As the protocol did not include sequence numbers, we had to re-design the model to perform this task. In retrospect, this may demonstrate a weakness within the protocol. It was apparent that the amount of "talk" between the client and server to achieve the goal of starting a chat was now more complex, which required an understanding of what needed to be stored at each stage. This high level plan was determined:
 
-:: a list goes here *goes and investigates lists in latex* ::
+Creation:
+\begin{enumerate}
+\item 
+
+Invitation:
+
+\begin{enumerate}
+\item Client receives invite to chat from server on certain room id from user. [Store username in a queue]  
+\item Client asks server the type of the room that it has been invited to. 
+\item Server responds with 'Personal' or 'Group'
+\item Client matches request with response from the queue
+\item Client spawns the appropriate chat window, or updates the internal state information of an existing window with the new roomid. Information includes who is in the room, and the id to send messages to.
+\item If it is a group chat, client asks server for the user list in the room
+
+
 
 
 \subsection{Evolution of Code}
