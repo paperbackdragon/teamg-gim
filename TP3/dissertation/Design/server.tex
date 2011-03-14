@@ -27,6 +27,13 @@ The personal message is a medium length message (usually only a sentence or two)
 \subsubsection{Display Picture}
 A Display Picture is a small image chosen by the user, often of themselves, so that they can be easily identified visually. By default a user's display picture is the GIM logo. 
 
+\subsubsection{Room}
+A Room is a collection of one or more users and each Room has a unique identifier. All chat messages in GIM are sent to Rooms rather than particular users. The server then forwards messages from the room to the users in the room.
+
+In order to join a Room a user must either create a new Room (in which case they are automatically placed into the Room) or they must be invited to the Room by a user already in the Room. 
+
+A Room can be one of two types: Personal or Group. A Personal Room is much more restrictive than a Group Room. A Personal Room must be provided with the identifier of one other user at time of creation and is limited to only 2 users. Once a Personal Room has been created you cannot invite any other users. A Group Room has no such restrictions. Any number of users may be invited to a Group Room at any time.
+
 \subsubsection{Status}
 A user can have one of several statuses: Online, Away, Busy and Appear Offline. The first three statuses are used simply as an indication of the user's likelihood to respond to a message. The Appear Offline status allows the user to appear to other users as though they were not signed in but still receive updates and messages from other users.
 
@@ -37,13 +44,6 @@ A user is considered to be `subscribed' to all of the users in their Friend List
 
 \subsubsection{Blocked User}
 A user is able to stop a another user from communicating with them and viewing their information by blocking that user. It is possible to block any user, even users not currently in your friend list. Blocking a user is a one-way process and does not stop a user from messaging or viewing information about users they have blocked.
-
-\subsubsection{Room}
-A Room is a collection of one or more users and each Room has a unique identifier. All chat messages in GIM are sent to Rooms rather than particular users. The server then forwards messages from the room to the users in the room.
-
-In order to join a Room a user must either create a new Room (in which case they are automatically placed into the Room) or they must be invited to the Room by a user already in the Room. 
-
-A Room can be one of two types: Personal or Group. A Personal Room is much more restrictive than a Group Room. A Personal Room must be provided with the identifier of one other user at time of creation and is limited to only 2 users. Once a Personal Room has been created you cannot invite any other users. A Group Room has no such restrictions. Any number of users may be invited to a Group Room at any time.
 
 \subsection{Server Structure}
 
@@ -74,11 +74,12 @@ Workers are able to indirectly communicate with other clients by putting command
 The server also has a large section of backing data which stores all of the users, rooms, workers and any other operational data required by the server. Any worker can read and modify this data at any time so care must be taken to ensure that synchronisation problems are avoided.
 
 \newpage
-\begin{figure}
-    \begin{center}
-        \includegraphics[scale=0.5, angle=-90]{Design/diagrams/server_uml.png}
-        \caption{UML showing the structure of the GIM Server}
-        \label{highLevelDia}
-    \end{center}
-\end{figure}
-
+\begin{landscape}
+    \begin{figure}
+        \begin{center}
+            \includegraphics[scale=0.5]{Design/diagrams/server_uml.png}
+            \caption{UML showing the structure of the GIM Server}
+            \label{highLevelDia}
+        \end{center}
+    \end{figure}
+\end{landscape}
