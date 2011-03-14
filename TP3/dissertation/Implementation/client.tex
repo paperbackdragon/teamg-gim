@@ -10,7 +10,7 @@ While implementing the client, it became clear that some of our larger design ch
 
 In the design section we outlined how we envisioned the flow of information between the controller and networking components would work. 
 
-::two classes that make up the controller component - the swing event queue. Talk about how this reduced the number of threads, but was also problematic as it obfusticated where the thread safety needed to be ::
+::two classes that make up the controller component - the swing event queue. Talk about how this reduced the number of threads, but was also problematic as it obfuscated where the thread safety needed to be ::
 
 
 \subsection{Collaboration}
@@ -49,4 +49,4 @@ As described in the design section, a requirement from the client model was to s
 
 A further significant evolution in our code, also centred around out use of swing, was a need to overcome a significant problem with rendering the contact list. As a contact list naturally follows a tree structure, where there are branches arranged by status, or group name, we thought the swing 'JTree' component was a suitable choice to use in our implementation. JTrees allow elements to be added and removed like 'branches', which is suitable for when contacts are added, or removed, or change status.  However, we experienced rendering problems with the JTree component in swing across different platforms. On windows based platforms, friend elements were pushed together, and ruined the appearance of the contact list.  After significant hours of work to attempt to sort these rendering issues, we investigated using JLists instead. [write about writing own renderer, write about merits of JLists compared to JTrees.]
 
-:: talk about the evolution of establishing a connection - how it now waits for all model information to be received before displaying ::
+A difficulty we had as a result of trying to separate concerns was that the networking component would take care of log ins, 
