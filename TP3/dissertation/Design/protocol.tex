@@ -89,17 +89,17 @@ The data segment of commands sent by the client is limited to 8192 characters in
 
 \subsection{Heart Beat}
 
-In order to ensure that clients are working correctly and have not disconnected or crashed without closing the connection, the protocol specifies that a client should send at least 1 valid command every 15 seconds. This can be problematic if the client is sitting idle as the vast majority of commands have side effects which may be undesirable. In order to avoid this the protocol has the \texttt{:PING:} and \texttt{:PONG:} commands. The \texttt{:PING:} command can be sent by the client at any time to signal that it is still active and without any side-effects. The server will always respond with the \texttt{:PONG:} command, which got its name in an attempt to bring some humour into the protocol.
+In order to ensure that clients are working correctly and have not disconnected or crashed without closing the connection, the protocol specifies that a client should send at least 1 valid command every 15 seconds. This can be problematic if the client is sitting idle as the vast majority of commands have side effects which may be undesirable. In order to avoid this the protocol has the \texttt{:PING:} and \texttt{:PONG:} commands. The \texttt{:PING:} command can be sent by the client at any time to signal that it is still active, without any side-effects. The server will always respond with the \texttt{:PONG:} command, which got its name in an attempt to bring some humour into the protocol.
 
 \subsection{Error Handling}
 
-The protocol specifies an \texttt{:ERROR:} command which the server may send if it has received a command it cannot fulfil. Almost all of the commands which can be sent by the client, with the exception of the \texttt{:PING:} command, can generate an \texttt{:ERROR:}. The specific type of error is signified by the arguments of the command, for example, an attempt to login with incorrect details might yield \texttt{:ERROR LOGIN\_DETAILS\_INCORRECT:;}.
+The protocol specifies an \texttt{:ERROR:} command which the server may send if it has received a command it cannot fulfill. Almost all of the commands which can be sent by the client, with the exception of the \texttt{:PING:} command, can generate an \texttt{:ERROR:}. The specific type of error is signified by the arguments of the command, for example, an attempt to login with incorrect details might yield \texttt{:ERROR LOGIN\_DETAILS\_INCORRECT:;}.
 
 The \texttt{:ERROR:} command can be very cumbersome to use as there are a very large number of arguments (usually several for every different command) and it can be difficult to match an error to a command as there is no identification of the command which caused it. Possible changes to address these issues are discussed in Protocol Evolution.
 
 \subsection{Client-Server Interaction}
 
-Once a client has entered the logged in state it is able to send any command at any time, and in any order. The server is also able to send unsolicited commands to the client such as invites, updates and messages. As such, both the client and server have to be able to operate in a stateless way, treating each command they receive separate to all other commands. It is quite possible, and reasonable, for a client to send several commands to the server before it receives a response to the first. This eliminates the need to wait between some commands and allows for much more efficient client-server communication.
+Once a client has entered the logged-in state it is able to send any command at any time, and in any order. The server is also able to send unsolicited commands to the client such as invites, updates and messages. As such, both the client and server have to be able to operate in a stateless way, treating each command they receive separate to all other commands. It is quite possible, and reasonable, for a client to send several commands to the server before it receives a response to the first. This eliminates the need to wait between some commands and allows for much more efficient client-server communication.
 
 \newpage
 \begin{landscape}
@@ -116,12 +116,12 @@ Figure \ref{interactionDia} shows typical usage of the GIM protocol. The followi
 \begin{enumerate}
 \item{A client connects, attempts to log in using the \texttt{:AUTH LOGIN:} command, and waits for a reply.}
 \item{The server responds \texttt{:AUTH OKAY:} signifying that the information was correct and the user has been logged in.}
-\item{The client sets the users status to ONLINE and immediately requests the user's friendlist from the server, without waiting for a response to the \texttt{:SET STATUS:} command.}
+\item{The client sets the user's status to ONLINE and immediately requests the user's friendlist from the server, without waiting for a response to the \texttt{:SET STATUS:} command.}
 \item{The client receives the user's friendlist from the server and issues a \texttt{:GET:} command requesting the nickname and status of everyone in the friendlist.}
-\item{The server recieves the \texttt{:GET:} commands and responds with an \texttt{:INFO:} command containing the requested data.}
+\item{The server receives the \texttt{:GET:} commands and responds with an \texttt{:INFO:} command containing the requested data.}
 \item{Several seconds later the user is invited to a room and attempts to join it.}
 \item{The server responds to the request to join the room with \texttt{:OKAY:} and the client requests a list of users in the room.}
-\item{The server sends the client a list of users in the room, including them-self.}
+\item{The server sends the client a list of users in the room, including themselves.}
 \item{Two messages are sent to the room by other users and the server sends them to the client.}
 \item{The client notices that it has not sent any commands for few seconds and sends a \texttt{:PING:} command to signal that it is still active.}
 \item{The user sends a message to the room then leaves it.}
@@ -130,16 +130,16 @@ Figure \ref{interactionDia} shows typical usage of the GIM protocol. The followi
 
 \subsection{Protocol Evolution}
 
-The GIM Protocol has undergone several significant changes since its first draft, such as the addition of different types of room and the removal of commas as separators to simplify the data segment. The most notable of these however was a move toward a smaller number of commands. This was done by merging similar commands together and allowing their behaviour to be modified by arguments. The number of commands was cut from 30 to 19, and resulted in a much easier to understand and more consistent protocol. Although this hid some of the complexity at a high level, it means that many of the commands are more complex. Overall this trade-off has been worthwhile and has made the protocol easier to use, as the cost of being slightly harder to implement.
+The GIM Protocol has undergone several significant changes since its first draft, such as the addition of different types of rooms and the removal of commas as separators to simplify the data segment. The most notable of these however was a move toward a smaller number of commands. This was done by merging similar commands together and allowing their behaviour to be modified by arguments. The number of commands was cut from 30 to 19, and resulted in a much easier to understand and more consistent protocol. Although this hid some of the complexity at a high level, it means that many of the commands are more complex. Overall this trade-off has been worthwhile and has made the protocol easier to use, at the cost of being slightly harder to implement.
 
 A prime example of this is the \texttt{:FRIEND:} command. What was originally 6 separate commands to manage a user's friend list (adding, deleting, blocking, accepting friend requests, etc.) became a single command with several possible arguments. This grouped the related functionality of each command together. While the single command is more complex, it is still easier to use and remember than 6 separate commands.
 
 There are still some commands which could arguably benefit from being merged. For example, it would make sense for the \texttt{:LOGOUT:} command to be part of the \texttt{:AUTH:} command which allows clients to login and register; all of these actions are conceptually similar. However, the \texttt{:LOGOUT:} command is not available unless the user is in the logged-in state, so one could argue that it should not be part of the \texttt{:AUTH:} command. The decision to keep them separate was made purely on personal preference as there were no clear advantages for either choice. 
 
-During the implementation of GIM, there were several modifications made to the format of the data segment for some commands. These were brought on by a desire to keep the protocol consistent across all commands. There was a often a sense of confusion about how the data segment for each command was split into sections as each command had a different format; some used newlines, some used commas and some used spaces as separators. In the end we chose to use spaces as separators in all commands except the \texttt{:INFO:} command where newlines made more sense. 
+During the implementation of GIM, there were several modifications made to the format of the data segment for some commands. These were brought on by a desire to keep the protocol consistent across all commands. There was often a sense of confusion about how the data segment for each command was split into sections as each command had a different format; some used newlines, some used commas, and some used spaces as separators. In the end we chose to use spaces as separators in all commands except the \texttt{:INFO:} command where newlines made more sense. 
 
 (Something about errors and how to improve the current situation)
 
 (Could have made encoding more efficient by not using \texttt{\char`\\ U+}, use something shorter.)
 
-The protocol has changed considerably since its first draft and has undergone substantial improvements in terms of ease of use, simplicity, and consistency. Although there are still some minor tweaks which could be made to further the improvement the protocol, it is currently in a stable and usable state. Future extensions to the protocol might include the addition of support for other features such as file transfers and VoIP (Voice over Internet Protocol).
+The protocol has changed considerably since its first draft and has undergone substantial improvements in terms of ease of use, simplicity, and consistency. Although there are still some minor tweaks which could be made to further the improvement the protocol, it is currently in a stable and usable state. Future extensions to the protocol might include the addition of support for other features such as file transfers and VoIP.
