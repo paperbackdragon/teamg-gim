@@ -43,11 +43,9 @@ The view required that the user's own state information (such as status and nick
 
 After some interface design work (which will be discussed in coming sections), it was apparent that the system had to support two different styles of chat windows: a group chat and a chat with a single user. However, there were some observable commonalities between both windows, such as sending messages, displaying incoming messages, and using very similar Java Swing components to handle this functionality. At the same time, there was enough differing behaviour between the two windows to justify having two different classes to handle them, such as the group chat's need to maintain a list of users in the room. With this in mind, we designed our class structure code dealing with the interface to have a super class named ChatWindow, outlining this common functionality, which two sub classes called GroupChatWindow and SingleChatWindow which would extend this super class. 
 
-We anticipated this would be advantageous as it would reduce the repetition of code and keep functionality consistent between the two windows. We felt this consistency would be important, as our code using the Swing components used to display messages would evolve, or need configuring, as we implementing some of our 'should have' features (such as emoticons and font colours.) Therefore, it would be crucial for the displaying of messages in Group Chat and SingleChat windows to remain consistent.
+We anticipated this would be advantageous as it would reduce the repetition of code and keep functionality consistent between the two windows. We felt this consistency would be important, as our code using the Swing components used to display messages would evolve, or need configuring, as we implemented some of our 'should have' features (such as emoticons and font colours.) Therefore, this change would be crucial for the displaying of messages in Group Chat and SingleChat windows to remain consistent.
 
 \includegraphics[scale=0.65]{Design/diagrams/chatwin.png}
-
-
 
 
 \subsection{Design of GUI}
@@ -61,20 +59,20 @@ After we had decided the basic form of the interface, we created a number of use
 The following are examples of key use cases as defined during the design process. These have not been altered for inclusion within this document.
 
 {\bf Add contact}
-User clicks the “add contact” button in the main window, or the option from the top menu. They are prompted to enter their friend’s email. They enter the email and the system searches for that person in the database. If found, the contact is sent a request for friendship. If the contact accepts, then both the user and contact now have each other as contacts, and they show up in the main window. If not accepted, neither is added. If the contact is not found, they are prompted again to enter the email, with the option to cancel.
+User clicks the ``add contact'' button in the main window, or the option from the top menu. They are prompted to enter their friend's email. They enter the email and the system searches for that person in the database. If found, the contact is sent a request for friendship. If the contact accepts, then both the user and contact now have each other as contacts, and they show up in the main window. If not accepted, neither is added. If the contact is not found, they are prompted again to enter the email, with the option to cancel.
 
 {\bf Group Chat}
 User can choose to group chat from the main window button, main menu, or in a chat window with another contact. A window will show up in which the user can create a chatroom, and then the user will be prompted to choose the contacts they wish to invite. The chatroom appears to the user. Those contacts will see the invitation, and if they accept, will be placed in the chatroom. Contacts will be able to invite other people as well. The chatroom will disappear once every user has left.
 
 {\bf Log Out}
-User clicks the “log out” option in the menu. The X in the corner will only minimize the program. A dialog box appears, asking if they are sure they want to log out. If yes, they are logged out, and the log in/register pop-up appears. If they want to quit the program completely, they will have to choose “quit” from the menu.
+User clicks the ``log out'' option in the menu. The X in the corner will only minimize the program. A dialog box appears, asking if they are sure they want to log out. If yes, they are logged out, and the log in/register pop-up appears. If they want to quit the program completely, they will have to choose ``quit'' from the menu.
 
-At this stage of the process we had begun to make a few implementation decisions, and while some aspects of each use case were ommitted in the final product, generally these specifications were adheared to. Much of the redundancy was removed, primarilly due to time restrictions. For example the number of ways to start a group chat is reduced to one, from the three ways mentioned in the use case. Group chats can only be started by pressing the button on the main window, however, the other details of the use case are generally true to the implementation.
+At this stage of the process we had begun to make a few implementation decisions, and while some aspects of each use case were omitted in the final product, generally these specifications were adhered to. Much of the redundancy was removed, primarily due to time restrictions. For example the number of ways to start a group chat was reduced to one, from the three ways mentioned in the use case. Group chats can only be started by pressing the button on the main window. However, the other details of the use case are generally true to the implementation.
 
-The use of informal notation for the use cases was, in retrospect, ill-conceived. A more formal notation including pre and post conditions, non-functional requirements, and priorities would have provided a better foundation for implementation. Due to the scope of the project and the time restrictions, we felt that these simple use cases were adequate.
+The use of informal notation for the use cases was, in retrospect, ill-conceived. A more formal notation including pre and post conditions, non-functional requirements, and priorities would have provided a better foundation for implementation. Though, due to the scope of the project and the time restrictions, we felt that these simple use cases were adequate.
 
 \subsubsection{Interface Wireframes}
 
-With the use cases, we started to design a GUI which could accomidate the desired features. Although many UI sketches were made, they were all minor variations on the core design which heavily derived from the traditional MSN model.
+With the use cases, we started to design a GUI which could accommodate the desired features. Although many UI sketches were made, they were all minor variations on the core design which we derived from the traditional Windows Live Messenger model.
 
 
