@@ -40,7 +40,7 @@ public class SingleChatPanel extends ChatPanel {
 		JScrollPane messagePane = new JScrollPane(messages);
 
 		JPanel chatPanel = new JPanel();
-		chatPanel.setLayout(new BorderLayout());
+		chatPanel.setLayout(new BorderLayout(4, 4));
 
 		JScrollPane chatPane = new JScrollPane(chatBox);
 		chatPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);

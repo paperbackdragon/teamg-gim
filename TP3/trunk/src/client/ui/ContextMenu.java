@@ -2,6 +2,9 @@ package client.ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -77,8 +80,12 @@ public class ContextMenu extends JPopupMenu {
 				model.getFriendList().removeUser(user);
 
 			} else if (e.getSource() == viewLogs) {
-				// TODO: Open the logs
-
+				try {
+					String filename = model.getPath() + "/logs/" + user.getEmail() + ".html";
+					java.awt.Desktop.getDesktop().browse(new URI("file:///" + filename));
+				} catch (IOException e2) {
+				} catch (URISyntaxException e2) {
+				}
 			}
 		}
 
