@@ -79,11 +79,6 @@ public class RegisterPanel extends JPanel {
 		add(buttonPanel);
 	}
 
-	// HELPER METHODS
-	public Dimension getPreferredSize() {
-		return new Dimension(300, 400);
-	}
-
 	public void setParent(JFrame frame) {
 		parent = (MainWindow) frame;
 		parent.canLogout(false);

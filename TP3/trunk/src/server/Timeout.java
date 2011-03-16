@@ -3,7 +3,7 @@ package server;
 public class Timeout implements Runnable {
 
 	private Data data = Data.getInstance();
-	private int timeoutTime;
+	private long timeoutTime;
 	private long startup;
 
 	/**
@@ -12,7 +12,7 @@ public class Timeout implements Runnable {
 	 * @param time
 	 *            The time in seconds which a worker has till it timeouts
 	 */
-	public Timeout(int time) {
+	public Timeout(long time) {
 		this.timeoutTime = time;
 		this.startup = System.currentTimeMillis();
 	}
@@ -38,21 +38,17 @@ public class Timeout implements Runnable {
 				continue;
 			}
 
-			synchronized (this) {
+			int online = 0;
 
-				int online = 0;
-
-				for (Worker w : data.getWorkers()) {
-					if (w.getLastCommunicationTimeDifference() > this.timeoutTime)
-						w.quit();
-					else if (w.isLoggedin())
-						online++;
-				}
-
-				data.uptime = uptime();
-				data.online = online;
-
+			for (Worker w : data.getWorkers()) {
+				if (w.getLastCommunicationTimeDifference() > this.timeoutTime)
+					w.quit();
+				else if (w.isLoggedin())
+					online++;
 			}
+
+			data.uptime = uptime();
+			data.online = online;
 
 		}
 	}
