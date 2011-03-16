@@ -10,9 +10,49 @@ The GIM server is primarily responsible for synchronising the communication betw
     \item{Storing user information such as nicknames, passwords, display pictures, friend lists, etc.}
 \end{itemize}
 
-\subsection{Key Concepts}
+\subsection{Server Structure}
 
-\subsubsection{User}
+From the very beginning the server was designed to be secure, scalable, and simple. Users must trust it to keep their information safe and route messages correctly, and it must be able to cope with any number of connected clients.
+
+In order to manage this, the server generates a new worker for every connected client. This new worker acts as the single point of contact for its respective client. This greatly simplifies the design of the server as we can treat each connection individually and allows the server to easily scale to a large number of clients.
+
+\begin{figure}[!h]
+    \begin{center}
+        \includegraphics[scale=0.6]{Design/diagrams/server_workers.png}
+        \caption{The GIM Server with 3 connected clients, each with their own worker.}
+        \label{WorkersDia}
+    \end{center}
+\end{figure}
+
+Each worker has 2 buffers, one which stores commands read from the network (the command buffer), and one which stores commands to be written to the network (the response buffer). The worker continually reads commands from the command buffer, processes them, and puts the responses into the response buffer. At the same time the worker is also performing network reads and writes to fill and empty the respective buffers.
+
+The buffers allow the worker to run using several threads which increases the performance on multi-core systems as the server is able to read from the network, process commands, and write to the network in a truly concurrent fashion. This mean that at any one time a worker could be handling up to 3 different commands, each at a different stage of execution, and still have several commands stored in the buffers waiting to be used.
+
+\begin{figure}[!h]
+    \begin{center}
+        \includegraphics[scale=0.6]{Design/diagrams/worker_detail.png}
+        \caption{The internal components of a single worker.}
+        \label{WorkerDatailedDia}
+    \end{center}
+\end{figure}
+
+\subsection{Client-to-Client Messaging}
+\label{c2c}
+No direct client to client communication is possible, however workers are able to indirectly communicate with other clients (i.e. clients to which they are not connected) by passing commands to the other client's worker. This is the server's main method of inter-client communication and relies heavily on the use of the buffers to pass messages from one worker to the network writer or command processor of another worker.
+
+As the protocol defines no client to client communication is possible before a user has logged in, and as user can only be logged in on one client at a time, only a user id is necessary to send a command to a user. As long as a record is kept of which worker belongs to each online user then sending a message to a user is no more complicated that identifying the particular user.
+
+\subsection{Message Routing}
+
+Message routing in the server is fairly simple because of the use of Rooms. A Room is a collection of one or more users and each Room has a unique identifier. In order to join a Room a user must either create a new Room (in which case they are automatically placed into the Room) or they must be invited to the Room by a user already in the Room. A Room can be one of two types: Personal or Group. A Personal Room is much more restrictive than a Group Room. A Personal Room must be provided with the identifier of one other user at time of creation and is limited to only 2 users. Once a Personal Room has been created you cannot invite any other users. A Group Room has no such restrictions. Any number of users may be invited to a Group Room at any time.
+
+All chat messages in GIM are sent to Rooms rather than particular users. The server must maintain a list of the users in each room, and open receiving a message for that room, forward it to all of the users in the room (excluding the sender of the message). This is done using the method described in section \ref{c2c}. A \texttt{:MESSAGE:} command is generated and placed into the Response Buffer of the worker assigned to each of the recipients ready for the worker to send to the client.
+
+\subsection{Subscriptions and Notifications}
+One of the servers most critical responsibilities is notifying users of changes to the users they are subscribed to. A user is considered to be subscribed to users who are in their friend list or both users are currently in the same Room.
+
+\subsection{User Accounts}
+
 A user is a registered account on the server with a unique identifier (an email address), password, nickname, personal message, display picture, status, and friend list. 
 
 \subsubsection{Identification}
@@ -27,13 +67,6 @@ The personal message is a medium length message (usually only a sentence or two)
 \subsubsection{Display Picture}
 A Display Picture is a small image chosen by the user, often of themselves, so that they can be easily identified visually. By default a user's display picture is the GIM logo. 
 
-\subsubsection{Room}
-A Room is a collection of one or more users and each Room has a unique identifier. All chat messages in GIM are sent to Rooms rather than particular users. The server then forwards messages from the room to the users in the room.
-
-In order to join a Room a user must either create a new Room (in which case they are automatically placed into the Room) or they must be invited to the Room by a user already in the Room. 
-
-A Room can be one of two types: Personal or Group. A Personal Room is much more restrictive than a Group Room. A Personal Room must be provided with the identifier of one other user at time of creation and is limited to only 2 users. Once a Personal Room has been created you cannot invite any other users. A Group Room has no such restrictions. Any number of users may be invited to a Group Room at any time.
-
 \subsubsection{Status}
 A user can have one of several statuses: Online, Away, Busy and Appear Offline. The first three statuses are used simply as an indication of the user's likelihood to respond to a message. The Appear Offline status allows the user to appear to other users as though they were not signed in but still receive updates and messages from other users.
 
@@ -45,33 +78,29 @@ A user is considered to be `subscribed' to all of the users in their Friend List
 \subsubsection{Blocked User}
 A user is able to stop a another user from communicating with them and viewing their information by blocking that user. It is possible to block any user, even users not currently in your friend list. Blocking a user is a one-way process and does not stop a user from messaging or viewing information about users they have blocked.
 
-\subsection{Server Structure}
+\subsection{Synchronisation}
 
-From the very beginning the server was designed to be secure, scalable, and simple. Users must trust it to keep their information safe and route messages correctly, and it must be able to cope with any number of connected clients.
-
-In order to manage this, the server generates a new worker for every connected client. This new worker acts as the single point of contact for its respective client. This greatly simplifies the design of the server as we can treat each connection individually and allows the server to easily scale to a large number of clients.
+The server has a large section of backing data which stores all of the users, rooms, workers and any other operational data required by the server. Due to the highly concurrent nature of the server it is very important to ensure that the data is properly synchronised. This is to prevent race conditions where two writes occur on an object at the same time giving an unpredictable output. 
 
 \begin{figure}[!h]
     \begin{center}
-        \includegraphics[scale=0.75]{Design/diagrams/server_workers.png}
-        \caption{The GIM Server with 3 connected clients, each with their own worker.}
-        \label{WorkersDia}
+        \includegraphics[scale=0.6]{Design/diagrams/server_race_condition.png}
+        \caption{Unsynchronised workers updating the same object at the same time, resulting in a race condition and giving the unexpected value of 6 rather than 7.}
+        \label{RaceConditionDia}
     \end{center}
 \end{figure}
 
-Each worker has 2 buffers, one which stores commands read from the network (the command buffer), and one which stores commands to be written to the network (the response buffer). The worker continually reads commands from the command buffer, processes them, and puts the responses into the response buffer. At the same time the worker is also performing network reads and writes to fill and empty the respective buffers.
+To stop this the server must lock (claim ownership of) the data before it is updated. This is a very tricky thing to do as as the lock must be long enough to ensure that no updates occur between reading the original data and writing the updated data, whilst also keeping the lock as short as possible to avoid long periods of blocking and keep performance high.
 
 \begin{figure}[!h]
     \begin{center}
-        \includegraphics[scale=0.75]{Design/diagrams/worker_detail.png}
-        \caption{A more detailed diagram of what happens inside a worker.}
-        \label{WorkerDatailedDia}
+        \includegraphics[scale=0.6]{Design/diagrams/server_locking.png}
+        \caption{Synchronised workers using locking to read and write the updated value, giving the expected value of 7.}
+        \label{lockingDia}
     \end{center}
 \end{figure}
 
-Workers are able to indirectly communicate with other clients by putting commands into other workers' buffers. Since the command still passes through the worker assigned to the client, this allows a worker to pass requests and messages from one client to another without directly communicating with the other client. 
-
-The server also has a large section of backing data which stores all of the users, rooms, workers and any other operational data required by the server. Any worker can read and modify this data at any time so care must be taken to ensure that synchronisation problems are avoided.
+This means that the data must be carefully managed...blah
 
 \newpage
 \begin{landscape}
