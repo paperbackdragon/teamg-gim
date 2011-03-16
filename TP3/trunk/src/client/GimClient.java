@@ -169,6 +169,7 @@ public class GimClient {
 				return windows.get(i);
 			}
 		}
+		System.out.println("Hello");
 		return null;
 	}
 

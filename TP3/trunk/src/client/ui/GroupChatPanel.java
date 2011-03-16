@@ -103,7 +103,7 @@ public class GroupChatPanel extends ChatPanel {
 
 		// Bottom Panel
 		JPanel chatPanel = new JPanel();
-		chatPanel.setLayout(new BorderLayout());
+		chatPanel.setLayout(new BorderLayout(4,4));
 		chatBox.setFont(chatPanel.getFont());
 		EnterListener enterListener = new EnterListener();
 		chatBox.addKeyListener(enterListener);
