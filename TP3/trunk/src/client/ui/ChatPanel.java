@@ -111,7 +111,7 @@ public class ChatPanel extends JPanel {
 
 		isFocused = false;
 
-		chatBox = new JTextArea(new JLimitedDocument(1500));
+		chatBox = new JTextArea(new LimitedDocument(1500));
 		chatBox.setEditable(true);
 		chatBox.setLineWrap(true);
 		chatBox.setWrapStyleWord(true);
@@ -156,7 +156,8 @@ public class ChatPanel extends JPanel {
 					}
 				} else {
 					try {
-						out.write("<html><head><title>Group chat on " + timestamp.replaceAll(":", "-") + "</title><head><body>");
+						out.write("<html><head><title>Group chat on " + timestamp.replaceAll(":", "-")
+								+ "</title><head><body>");
 					} catch (IOException e) {
 					}
 				}

@@ -127,15 +127,17 @@ public class Worker implements Runnable {
 
 			if (user != null && user.getPasswordHash().equalsIgnoreCase(dataParts[1])) {
 
-				// Make sure the user ins't already logged in
+				// Make sure the user ins't already logged in elsewhere
 				if (user.getWorker() != null) {
 					Worker w = user.getWorker();
 					w.putResponse(new Command("ERROR", "LOGGED_IN_FROM_OTHER_LOCATION"));
 					w.putCommand(new Command("QUIT"));
+
+					// Wait till the other use has been logged out
 					w.waitToDie();
 				}
 
-				// They provided accurate details, log them in
+				// log them in
 				this.loggedInUser = user;
 				this.loggedInUser.login(this);
 
@@ -277,7 +279,7 @@ public class Worker implements Runnable {
 			 * Add the user
 			 */
 
-			// Make sure they're not alread a friend
+			// Make sure they're not already a friend
 			if (this.loggedInUser.isFriendsWith(user))
 				return new Command("ERROR", "ALREADY_IN_FRIENDLIST", Command.encode(user.getId()));
 
@@ -383,8 +385,8 @@ public class Worker implements Runnable {
 
 	/**
 	 * <p>
-	 * <b>:GET { NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC }:
-	 * {[user],[user]};</b>
+	 * <b>:GET { NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC }: {[user]
+	 * [user]};</b>
 	 * </p>
 	 * 
 	 * <p>
@@ -474,8 +476,8 @@ public class Worker implements Runnable {
 	 * 
 	 * @return the time in seconds
 	 */
-	public int getLastCommunicationTimeDifference() {
-		return (int) ((System.currentTimeMillis() - this.lastCommunication) / 1000);
+	public long getLastCommunicationTimeDifference() {
+		return (System.currentTimeMillis() - this.lastCommunication) / 1000;
 	}
 
 	/**
@@ -572,9 +574,7 @@ public class Worker implements Runnable {
 	 * has been received from the client.
 	 * </p>
 	 * 
-	 * @param cmd
-	 *            the PING Command
-	 * @return an OKAY command
+	 * @return a PONG
 	 */
 	private Command ping() {
 		return new Command("PONG");
@@ -685,7 +685,7 @@ public class Worker implements Runnable {
 	public Command quit() {
 		logout();
 		kill();
-		return this.okay;
+		return this.okay; // It should never get to here, but just in case...
 	}
 
 	/**
@@ -894,7 +894,7 @@ public class Worker implements Runnable {
 	 * RUN FOREST! RUN!
 	 * 
 	 * ...but seriously. This creates the threads that the input and output to
-	 * the socket run in. It then reads commands off the command buffer, and
+	 * the socket run in. It then reads commands off the command buffer and
 	 * processes them, putting responses back into the response buffer.
 	 */
 	@Override
@@ -905,8 +905,8 @@ public class Worker implements Runnable {
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			out = new PrintWriter(socket.getOutputStream(), true);
 		} catch (IOException e) {
-			System.out.println("We're fscked.");
-			System.exit(-1);
+			System.out.println("We're fscked. The connection closed.");
+			return;
 		}
 
 		// Create a thread to read in and handle commands
@@ -1053,18 +1053,21 @@ public class Worker implements Runnable {
 	/**
 	 * Update the time which the Worker last received a communication from the
 	 * client.
+	 * 
+	 * NOTE: Kills the client if they send over 100 commands in a period of 5
+	 * seconds.
 	 */
 	private void updateLastCommunication() {
 		this.lastCommunication = System.currentTimeMillis();
 
-		// Fill the time buffer and loop round where necessary
+		// Fill the time buffer. If we loop round and hit one used less than 5
+		// seconds ago then we know they've sent too many in the 5 second window
 		long oldest = this.commandTimes[this.commandLimit];
 		if (oldest != 0 && oldest > (this.lastCommunication - 5000))
 			kill();
 
 		this.commandTimes[this.commandLimit] = this.lastCommunication;
 		this.commandLimit = (this.commandLimit + 1) % (this.commandTimes.length - 1);
-
 	}
 
 	/**

@@ -96,7 +96,7 @@ public class GimServer {
 		((SSLServerSocket) data.serverSocket).setEnabledCipherSuites(suitePickOrder);
 
 		// Create a new thread to check for timeouts and update system data
-		Timeout timeout = new Timeout(20);
+		Timeout timeout = new Timeout(30);
 		Thread timeoutThread = new Thread(timeout);
 		timeoutThread.start();
 
@@ -105,7 +105,7 @@ public class GimServer {
 		controller.start();
 
 		// Listen for connections and create a Worker for them
-		while (true) {
+		while (data.serverSocket.isBound()) {
 			try {
 				int clientID = data.getNextClientID();
 				Worker worker = new Worker(clientID, data.serverSocket.accept());
@@ -115,7 +115,7 @@ public class GimServer {
 				t.setName(clientID + " ");
 				t.start();
 			} catch (IOException e) {
-				break;
+				continue;
 			}
 		}
 
