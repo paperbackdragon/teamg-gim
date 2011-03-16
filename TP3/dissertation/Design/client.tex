@@ -1,12 +1,14 @@
 \section{Client Design}
+\label{client_design}
 
 \subsection{Design of Client Structure}
 
 \subsection{Outline}
 
-This section will outline our initial design of the system. We aimed for a high degree of modularity to separate concerns among team members and improve the ease of maintaining code. The process of identifying the concerns of the client and representing these in a component based design will be discussed in the `Approach' section. The remainder of the section will discuss our design of individual components, and how we identified their roles within the larger system. Particular focus will be made on how we made sure sections of the client were removed as far as possible from other sections, and challenges in ensuring this requirement. 
+This section will outline our initial design of the system. We aimed for a high degree of modularity to separate concerns among team members and improve the ease of maintaining code. The process of identifying the concerns of the client and representing these in a component based design will be discussed in subsection \ref{client_approach}. The remainder of the section will discuss our design of individual components, and how we identified their roles within the larger system. Particular focus will be made on how we made sure sections of the client were removed as far as possible from other sections, and challenges in ensuring this requirement. 
 
 \subsection{Approach}
+\label{client_approach}
 
 In designing the client, we had the high level aim of creating a modular system to allow team members to take responsibility for certain aspects of the system. From an early stage in the design process, we were aware that the client had a large set of responsibilities. We determined these responsibilities to be: to maintain a connection with the server, implement the GIM protocol, provide a user interface to the system and keep a record of up to date information about the user's friends. Our first task was to design a set of interacting sub-components to handle these responsibilities.
 
@@ -21,10 +23,11 @@ This high level approach allowed us to draw boundaries between components and as
 \subsection {Model-Viewer-Controller Structural Concerns}
 
 \subsection {Controller}
+\label{controller}
 
 The controller was one of the more challenging parts of the design process. The controller would be called by both the networking component and the viewer, implying that its operations must be thread safe. We were constrained by our use of the Java Swing\footnote{See \texttt{http://download.oracle.com/javase/6/docs/technotes/guides/swing/} for more information.} environment, which we had learned from previous experience will freeze if the networking code is run on the GUI thread. A further complexity was ensuring that the controller could use the commands of the GIM protocol without having to know its workings in detail. Naturally, the GUI architects should not need to concern themselves with the specifics of the protocol while designing the GUI.
 
-To deal with the threading complexity, we designed a scheme with an intermediate buffer between the controller component and the networking code. The controller thread waits until there is a command from the network placed into the buffer, and acts accordingly on the model and GUI. Furthermore, when the controller component needs to call the network, it places a command into the buffer to be interpreted by the networking code. We believed this scheme to be appropriate as the controller could either call the network from internal code or events from the GUI (possibly simultaneously).\footnote{See networking design section(***use labels here***) for further discussion on the motivation behind this buffer.}
+To deal with the threading complexity, we designed a scheme with an intermediate buffer between the controller component and the networking code. The controller thread waits until there is a command from the network placed into the buffer, and acts accordingly on the model and GUI. Furthermore, when the controller component needs to call the network, it places a command into the buffer to be interpreted by the networking code. We believed this scheme to be appropriate as the controller could either call the network from internal code or events from the GUI, possibly simultaneously (See section \ref{networking_design} for further discussion on the motivation behind this buffer).
 
 To deal with the design complexity of abstracting the protocol from the controller's use of its commands, the network architects designed two interfaces to describe the different methods. One interface contained method stubs concerning incoming commands from the server, and the other methods that could be called to send commands to the server. This allowed other team members to understand what the controller must do to implement the GIM protocol, without having to understand the inner workings of the protocol. This had the additional advantage of allowing the structure of the protocol to change, without having to change the interface or consult the team members working on other areas of the GUI. Another way we kept it unnecessary for other team members to understand the protocol was the inclusion of a parsing method in the controller the networking architects would write. This method parses incoming messages from the server and calls the appropriate method. The methods called would be written by any team member. The network architects would then be responsible for implementing the methods in the interface for outgoing commands to the server.
 
@@ -32,6 +35,7 @@ note: not final version
 \includegraphics[scale=0.65]{Design/diagrams/buffer.png}
 
 \subsection {Model}
+\label{model}
 
 The design of the model involved determining what state information had to be held about the client. This was informed by the previous work of requirements analysis and the conception of features. The model was also informed by the design of the viewer.
 
@@ -41,14 +45,15 @@ The view required that the user's own state information (such as status and nick
 
 \subsection {Viewer}
 
-After some interface design work (which will be discussed in coming sections), it was apparent that the system had to support two different styles of chat windows: a group chat and a chat with a single user. However, there were some observable commonalities between both windows, such as sending messages, displaying incoming messages, and using very similar Java Swing components to handle this functionality. At the same time, there was enough differing behaviour between the two windows to justify having two different classes to handle them, such as the group chat's need to maintain a list of users in the room. With this in mind, we designed our class structure code dealing with the interface to have a super class named ChatWindow, outlining this common functionality, which two sub classes called GroupChatWindow and SingleChatWindow which would extend this super class. 
+After some interface design work (see section \ref{gui_design} for more of a discussion), it was apparent that the system had to support two different styles of chat windows: a group chat and a chat with a single user. However, there were some observable commonalities between both windows, such as sending messages, displaying incoming messages, and using very similar Java Swing components to handle this functionality. At the same time, there was enough differing behaviour between the two windows to justify having two different classes to handle them, such as the group chat's need to maintain a list of users in the room. With this in mind, we designed our class structure code dealing with the interface to have a super class named ChatWindow, outlining this common functionality, which two sub classes called GroupChatWindow and SingleChatWindow which would extend this super class. 
 
-We anticipated this would be advantageous as it would reduce the repetition of code and keep functionality consistent between the two windows. We felt this consistency would be important, as our code using the Swing components used to display messages would evolve, or need configuring, as we implemented some of our 'should have' features (such as emoticons and font colours.) Therefore, this class structure would be crucial for the displaying of messages in Group Chat and SingleChat windows to remain consistent.
+We anticipated this would be advantageous as it would reduce the repetition of code and keep functionality consistent between the two windows. We felt this consistency would be important, as our code using the Swing components used to display messages would evolve, or need configuring, as we implemented some of our `should have' features (such as emoticons and font colours.) Therefore, this class structure would be crucial for the displaying of messages in Group Chat and SingleChat windows to remain consistent.
 
 \includegraphics[scale=0.65]{Design/diagrams/chatwin.png}
 
 
 \subsection{Design of GUI}
+\label{gui_design}
 
 As we had decided to incorporate both group and one-to-one chats, this provided a wide scope in terms of interface design. We had the option to base our interface on either IRC or Windows Live Messenger style clients, or to create something entirely of our own. Windows Live was ultimately selected as the basis of the GUI for a number of reasons; primarily we believed that it was better suited to our feature set. An IRC style interface would require a considerable amount of redesigning to accommodate features such as display pictures, contact lists, and offline messaging. While creating our own style of IM interface would be interesting, it would likely lead to an inferior design, and be more time consuming to create. Windows Live style programs typically integrate the vast majority--if not all--of our MoSCoW feature set, and was therefore chosen as our starting point.
 
@@ -79,7 +84,7 @@ With these use cases we started to design a GUI that could accommodate the desir
 
 \includegraphics[width=7cm]{Design/diagrams/Main_UI.png}
 
-This is the wireframe for the main window the user will see after they have logged in. The layout is typical of instant messenger programs, and represents what users would expect to see.
+The above wireframe is the main window the user will see after they have logged in. The layout is typical of instant messenger programs, and represents what users would expect to see.
 
 \includegraphics[width=7cm]{Design/diagrams/Chat_Box.png}
 

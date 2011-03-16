@@ -43,6 +43,7 @@ No direct client to client communication is possible, however workers are able t
 As the protocol defines no client to client communication is possible before a user has logged in, and as user can only be logged in on one client at a time, only a user id is necessary to send a command to a user. As long as a record is kept of which worker belongs to each online user, then sending a message to a user is no more complicated than identifying the particular user.
 
 \subsection{Message Routing}
+\label{message_routing}
 
 Message routing in the server is fairly simple because of the use of Rooms. A Room is a collection of one or more users and each Room has a unique identifier. In order to join a Room a user must either create a new Room (in which case they are automatically placed into the Room) or they must be invited to the Room by a user already in the Room. A Room can be one of two types: Personal or Group. A Personal Room is much more restrictive than a Group Room. A Personal Room must be provided with the identifier of one other user at time of creation and is limited to only 2 users. Once a Personal Room has been created you cannot invite any other users. A Group Room has no such restrictions. Any number of users may be invited to a Group Room at any time.
 
@@ -52,7 +53,6 @@ All chat messages in GIM are sent to Rooms rather than particular users. The ser
 One of the servers most critical responsibilities is notifying users of changes to the users they are subscribed to. A user is considered to be subscribed to users who are in their friend list or both users are currently in the same Room.
 
 \subsection{User Accounts}
-
 A user is a registered account on the server with a unique identifier (an email address), password, nickname, personal message, display picture, status, and friend list. 
 
 \subsubsection{Identification}
