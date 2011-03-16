@@ -26,7 +26,7 @@ In order to manage this, the server generates a new worker for every connected c
 
 Each worker has 2 buffers, one which stores commands read from the network (the command buffer), and one which stores commands to be written to the network (the response buffer). The worker continually reads commands from the command buffer, processes them, and puts the responses into the response buffer. At the same time the worker is also performing network reads and writes to fill and empty the respective buffers.
 
-The buffers allow the worker to run using several threads which increases the performance on multi-core systems as the server is able to read from the network, process commands, and write to the network in a truly concurrent fashion. This mean that at any one time a worker could be handling up to 3 different commands, each at a different stage of execution, and still have several commands stored in the buffers waiting to be used.
+The buffers allow the worker to run using several threads which increases the performance on multi-core systems as the server is able to read from the network, process commands, and write to the network in a truly concurrent fashion. This means that at any one time a worker could be handling up to 3 different commands, each at a different stage of execution, and still have several commands stored in the buffers waiting to be used.
 
 \begin{figure}[!h]
     \begin{center}
@@ -40,7 +40,7 @@ The buffers allow the worker to run using several threads which increases the pe
 \label{c2c}
 No direct client to client communication is possible, however workers are able to indirectly communicate with other clients (i.e. clients to which they are not connected) by passing commands to the other client's worker. This is the server's main method of inter-client communication and relies heavily on the use of the buffers to pass messages from one worker to the network writer or command processor of another worker.
 
-As the protocol defines no client to client communication is possible before a user has logged in, and as user can only be logged in on one client at a time, only a user id is necessary to send a command to a user. As long as a record is kept of which worker belongs to each online user then sending a message to a user is no more complicated that identifying the particular user.
+As the protocol defines no client to client communication is possible before a user has logged in, and as user can only be logged in on one client at a time, only a user id is necessary to send a command to a user. As long as a record is kept of which worker belongs to each online user, then sending a message to a user is no more complicated than identifying the particular user.
 
 \subsection{Message Routing}
 
