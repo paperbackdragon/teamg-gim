@@ -85,6 +85,10 @@ public class ChatWindow extends JFrame {
 
 		if (panel instanceof SingleChatPanel) {
 			block = new JMenuItem("Block");
+			
+			if(model.getFriendList().isBlocked(((SingleChatPanel) main).getUser().getEmail()))
+				block.setText("Unblock");
+			
 			block.addActionListener(l);
 			block.setMnemonic(KeyEvent.VK_B);
 			fileMenu.add(block);

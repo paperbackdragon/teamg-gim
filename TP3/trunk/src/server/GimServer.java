@@ -64,9 +64,6 @@ public class GimServer {
 
 		System.out.println(users.size() + " users loaded.");
 
-		Room room = new Room(null, true);
-		data.addRoom(room);
-
 		SSLServerSocketFactory sslSrvFactory = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
 		try {
 			data.serverSocket = (SSLServerSocket) sslSrvFactory.createServerSocket(4444);
@@ -105,7 +102,7 @@ public class GimServer {
 		controller.start();
 
 		// Listen for connections and create a Worker for them
-		while (data.serverSocket.isBound()) {
+		while (!data.serverSocket.isClosed()) {
 			try {
 				int clientID = data.getNextClientID();
 				Worker worker = new Worker(clientID, data.serverSocket.accept());
