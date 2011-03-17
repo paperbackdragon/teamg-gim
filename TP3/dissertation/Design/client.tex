@@ -66,23 +66,51 @@ With any user interface, the primary goal is usability. As instant messengers ha
 The GIM use cases were created in order to provide an easily understood reference for how the system should operate at a high layer of abstraction. The following are our most important use cases as defined during the design process. Two actors were identified for the system: ``Senders'' and ``Contacts.'' Both of these actors have equal privileges within the system and use the system in the same way, hence both derive from the ``User'' type. This distinction between senders and contacts is made for the design process, as in reality users of the system are both senders and contacts.
 
 {\bf Add contact}
-User clicks the ``add contact'' button in the main window, or the option from the top menu. They are prompted to enter their friend's email. They enter the email and the system searches for that person in the database. If found, the contact is sent a request for friendship. If the contact accepts, then both the user and contact now have each other as contacts, and they show up in the main window. If not accepted, neither is added. If the contact is not found, they are prompted again to enter the email, with the option to cancel.
+Sender clicks the ``add contact'' button in the main window, or the option from the top menu. They are prompted to enter the contacts's email. They enter the email and the system searches for that person in the database. If found, the contacts is sent a request for friendship. If the contact accepts, then both the sender and contact now have each other as contacts, and they show up in the main window. If not accepted, neither is added. If the contact is not found, they are prompted again to enter the email, with the option to cancel.
 
 {\bf Group Chat}
 Sender can choose to group chat from the main window button, main menu, or in a chat window with another contact. A window will show up in which the sender can create a chatroom, and then the sender will be prompted to choose the contacts they wish to invite. The chatroom appears to the sender. Those contacts will see the invitation, and if they accept, will be placed in the chatroom. Contacts will be able to invite other people as well. The chatroom will disappear once every user has left.
 
 {\bf Log Out}
-User clicks the ``log out'' option in the menu. The X in the corner will only minimize the program. A dialog box appears, asking if they are sure they want to log out. If yes, they are logged out, and the log in/register pop-up appears. If they want to quit the program completely, they will have to choose ``quit'' from the menu.
+User clicks the ``log out'' option in the menu. The X in the corner will only minimize the program. A dialog box appears, asking if they are sure they want to log out. If yes, they are logged out, and the log in/register pop-up appears. If they want to quit the program completely, they will have to choose``quit'' from the menu.
 
-At this stage of the process we had begun to make a few implementation decisions, and while some aspects of each use case were omitted in the final product, generally these specifications were adhered to. Much of the redundancy was removed, primarily due to time restrictions. For example the number of ways to start a group chat was reduced to one, from the three ways mentioned in the use case. Group chats can only be started by pressing the button on the main window. However, the other details of the use case are generally true to the implementation.
+At this stage of the process we had begun to make a few implementation decisions, and while some aspects of each use case were ommitted in the final product, generally these specifications were adheared to. Much of the redundancy was removed, primarilly due to time restrictions. For example the number of ways to start a group chat is reduced to one, from the three ways mentioned in the use case. Group chats can only be started by pressing the button on the main window in the final program. In contrast to this, the ``Log Out'' use case is implemented to this specification exactly.
 
-The use of informal notation for the use cases was, in retrospect, ill-conceived. A more formal notation including pre and post conditions, non-functional requirements, and priorities would have provided a better foundation for implementation. Though, due to the scope of the project and the time restrictions, we felt that these simple use cases were adequate.
+The use of informal notation for the use cases was, in retrospect, ill-conceived. A more formal notation including pre and post conditions, non-functional requirements, and priorities would have provided a better foundation for implementation. An example of where this caused confusion was in the implementation of blocking and removing contacts, where the pre and post conditions varied in subtle ways. However, due to the scope of the project and the time restrictions, we felt that these simple use cases were adequate for our needs.
 
 \subsubsection{Interface Wireframes}
 
 With these use cases we started to design a GUI that could accommodate the desired features. Although many UI sketches were made, they were all minor variations on the core design which we derived from the traditional instant messenger model, such as used in Windows Live.
 
 \includegraphics[width=7cm]{Design/diagrams/Main_UI.png}
+
+{\bf Walkthough}
+
+\begin{enumerate}
+
+\item Menu - Drop down menus which provide more options for the user, such a logging out and qutting the program.
+ 
+\item Display Picture - An image which represents the user. This image box also acts as a button allowing users to select a different picture.
+
+\item Nickname - An editable text box which allows the user to change their display name. Their account name used to log in is not affected.
+
+\item Personal Message - An editable text box which allows the user to set a message viewable by other users.
+
+\item Status - The user can select from a set list of statuses which will change the icon to indicate their status to other uses.
+
+\item Contact List - The list of online and offline contacts the user has added to their contact list.
+
+\item Contact - A selectable element in the contact list to represent a user, contains a display picture, username, personal message and status.
+
+\item Add User - Brings up a prompt to input a users email address and, if successful, add them to the contact list.
+
+\item Remove User - Brings up a prompt to remove the selected user from the contact list.
+
+\item Start Chat - Creates a chat window with the selected contact.
+
+\item Start Group Chat - Creates a Group chat with only the current user inside. 
+
+\end{enumerate}
 
 The above wireframe is the main window the user will see after they have logged in. The layout is typical of instant messenger programs, and represents what users would expect to see.
 
