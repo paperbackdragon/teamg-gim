@@ -52,16 +52,16 @@ We anticipated this would be advantageous as it would reduce the repetition of c
 \includegraphics[scale=0.65]{Design/diagrams/chatwin.png}
 
 
-\subsection{Design of GUI}
+\section{Design of Client GUI}
 \label{gui_design}
 
 As we had decided to incorporate both group and one-to-one chats, this provided a wide scope in terms of interface design. We had the option to base our interface on either IRC or Windows Live Messenger style clients, or to create something entirely of our own. Windows Live was ultimately selected as the basis of the GUI for a number of reasons; primarily we believed that it was better suited to our feature set. An IRC style interface would require a considerable amount of redesigning to accommodate features such as display pictures, contact lists, and offline messaging. While creating our own style of IM interface would be interesting, it would likely lead to an inferior design, and be more time consuming to create. Windows Live style programs typically integrate the vast majority--if not all--of our MoSCoW feature set, and was therefore chosen as our starting point.
 
-\subsubsection{Aims}
+\subsection{Aims}
 
 With any user interface, the primary goal is usability. As instant messengers have existed for a number of years, there is a standard layout which users expect and are comfortable with. The goal of our GUI was to provide a simple and intuitive interface, without using something too different from what users would expect from an IM application.
  
-\subsubsection{Example Use Cases}
+\subsection{Example Use Cases}
 
 The GIM use cases were created in order to provide an easily understood reference for how the system should operate at a high layer of abstraction. The following are our most important use cases as defined during the design process. Two actors were identified for the system: ``Senders'' and ``Contacts.'' Both of these actors have equal privileges within the system and use the system in the same way, hence both derive from the ``User'' type. This distinction between senders and contacts is made for the design process, as in reality users of the system are both senders and contacts.
 
