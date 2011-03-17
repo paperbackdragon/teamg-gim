@@ -108,9 +108,7 @@ public class CommandReader implements Runnable {
 					// Reset the length counter
 					length = 0;
 
-					// Remove or comment out if not debugging
-					if(Data.getInstance().debug)
-						System.out.println("<< " + cmd);
+					System.out.println("<< " + cmd);
 
 					// Reset variables for the next command
 					command = null;
