@@ -1,5 +1,33 @@
 \documentclass{l3proj}
 \usepackage{lscape}
+
+\makeatletter
+\newcommand\ackname{Acknowledgements}
+\if@titlepage
+  \newenvironment{acknowledgements}{%
+      \titlepage
+      \null\vfil
+      \@beginparpenalty\@lowpenalty
+      \begin{center}%
+        \bfseries \ackname
+        \@endparpenalty\@M
+      \end{center}}%
+     {\par\vfil\null\endtitlepage}
+\else
+  \newenvironment{acknowledgements}{%
+      \if@twocolumn
+        \section*{\abstractname}%
+      \else
+        \small
+        \begin{center}%
+          {\bfseries \ackname\vspace{-.5em}\vspace{\z@}}%
+        \end{center}%
+        \quotation
+      \fi}
+      {\if@twocolumn\else\endquotation\fi}
+\fi
+\makeatother
+
 \begin{document}
 \title{GIM - Team G Instant Messenger}
 \author{Ewan Baird \\
@@ -10,7 +38,7 @@ James McMinn}
 \maketitle
 \begin{abstract}
 
-GIM is a client/server instant messanging application implmented in the Java Language. Comperable to many other similar programs, GIM allows users to communicate over a network with text based messages, using our own proprietary protocol. This dissertation discusses the process of developing GIM from the initial problem definition, though to completion.
+GIM is a client/server instant messaging application implemented in the Java Language. Comparable to many other similar programs, GIM allows users to communicate over a network with text based messages, using our own proprietary protocol. This dissertation discusses the process of developing GIM from the initial problem definition, though to completion.
 
 \end{abstract}
 
