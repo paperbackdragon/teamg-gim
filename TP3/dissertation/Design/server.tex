@@ -64,19 +64,19 @@ Each user has their own Friend List, a list of users who have accepted a friend 
 
 \subsection{Client-to-Client Messaging}
 \label{c2c}
-No direct client to client communication is possible, however workers are able to indirectly communicate with other clients (i.e. clients to which they are not connected) by passing commands to the other client's worker. This is the server's main method of inter-client communication and relies heavily on the use of the buffers to pass messages from one worker to the network writer or command processor of another worker.
+No direct client to client communication is possible, however workers and in an ad-hoc fashion, clients, are able to indirectly communicate with other clients (i.e. clients to which they are not connected) by passing commands to the other client's worker. This is the server's main method of inter-client communication and relies heavily on the use of the buffers to pass messages from one worker to the network writer or command processor of another worker.
 
 As the protocol defines no client to client communication is possible before a user has logged in, and as user can only be logged in on one client at a time, only a user id is necessary to send a command to a user. As long as a record is kept of which worker belongs to each online user, then sending a message to a user is no more complicated than identifying the particular user.
 
-\subsection{Message Routing}
+\subsection{Rooms and Message Routing}
 \label{message_routing}
 
 Message routing in the server is fairly simple because of the use of Rooms. A Room is a collection of one or more users and each Room has a unique identifier. In order to join a Room a user must either create a new Room (in which case they are automatically placed into the Room) or they must be invited to the Room by a user already in the Room. A Room can be one of two types: Personal or Group. A Personal Room is much more restrictive than a Group Room. A Personal Room must be provided with the identifier of one other user at time of creation and is limited to only 2 users. Once a Personal Room has been created you cannot invite any other users. A Group Room has no such restrictions. Any number of users may be invited to a Group Room at any time.
 
-All chat messages in GIM are sent to Rooms rather than particular users. The server must maintain a list of the users in each room, and open receiving a message for that room, forward it to all of the users in the room (excluding the sender of the message). This is done using the method described in section \ref{c2c}. A \texttt{:MESSAGE:} command is generated and placed into the Response Buffer of the worker assigned to each of the recipients ready for the worker to send to the client.
+All chat messages in GIM are sent to Rooms rather than particular users. The server must maintain a list of the users in each room, and upon receipt of a message for that room, forward it to all of the users in the room (excluding the sender of the message). This is done using the method described in section \ref{c2c}. A \texttt{:MESSAGE:} command is generated and placed into the Response Buffer of the worker assigned to each of the recipients ready for the worker to send to the client.
 
 \subsection{Subscriptions, Privacy and Notifications}
-One of the server's most critical responsibilities is notifying users of changes to the users; this is done using the concept of subscriptions.  A user (the subscriber) is considered to be subscribed to another user (the subscribee) if they meet at least one of two conditions:
+One of the server's most critical responsibilities is notifying users of changes to other users; this is done using the concept of subscriptions.  A user (the subscriber) is considered to be subscribed to another user (the subscribee) if they meet at least one of two conditions:
 
 \begin{enumerate}
 \item{The subscriber has the subscribee in their friend list, or had them in their friend list at some point in the past}
@@ -111,12 +111,22 @@ The server must also make sure only to lock when needed, and not obtain a lock f
     \end{center}
 \end{figure}
 
-\newpage
+\subsection{The Controller and Timeout Manager}
+Even though the server should be capable of functioning autonomously, some of the features defined by the protocol (in particular the \texttt{:BROADCAST:} command which allows the server to send a message to all of the clients connected to it) require some sort of interaction with the server in a manner which is different from the client-server model. The controller allows authorised users (defined by the operating system as able to connect to the session which is running the server) to interact through a command line interface with the server. They are then able to execute several several commands defined by the controller (not to be confused with protocol commands, controller commands are completely independant) to broadcast messages and control the server. 
+
+For example, the \texttt{QUIT} command tells the server to shut down and create a persistence file to store user data, while the following would send a \texttt{:BROADCAST:} command to all of the connected clients:
+
+\texttt{BROADCAST We're shutting the server down in 15 minutes.}
+
+The server needs to periodically check for clients which have not send a command in last 15 seconds (as defined in the protocol) and disconnect them. This means that the server must compare the time the last command was received by every worker with the current time, and if the difference exceeds 15 seconds then disconnect them.
+
+Due to the nature of the Controller and Timeout Manager, they both must run on separate threads from the rest of the server or risk blocking a more important function, such as accepting incoming connections and creating workers for them.
+
 \begin{landscape}
     \begin{figure}
         \begin{center}
             \includegraphics[scale=0.5]{Design/diagrams/server_uml.png}
-            \caption{UML showing the structure of the GIM Server}
+            \caption{UML showing the structure of the GIM Server. Still needs a little work.}
             \label{highLevelDia}
         \end{center}
     \end{figure}
