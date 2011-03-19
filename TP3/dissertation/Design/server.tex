@@ -11,7 +11,7 @@ The GIM server is primarily responsible for synchronising the communication betw
     \item{Storing user information such as nicknames, passwords, display pictures, friend lists, etc.}
 \end{itemize}
 
-%Dont end a section with a list
+%TODO: Dont end a section with a list
 
 \subsection{Server Structure}
 
@@ -19,7 +19,7 @@ From the very beginning the server was designed to be secure, scalable, and simp
 
 In order to manage this, the server generates a new worker for every connected client. This new worker acts as the single point of contact for its respective client. This greatly simplifies the design of the server as we can treat each connection individually and allows the server to easily scale to a large number of clients.
 
-% Refer to figures by numbers from written text
+%TODO: Refer to figures by numbers from written text
 \begin{figure}
     \begin{center}
         \includegraphics[scale=0.6]{Design/diagrams/server_workers.png}
@@ -63,10 +63,10 @@ A user can have one of only two states, Online or Offline. States should not be 
 Each user has their own Friend List, a list of users who have accepted a friend request from the owner of the Friend List. When a user accepts a friend request, the sender and receiver are added to each other's Friend List.}
 \end{itemize}
 
-%Explain the design choices below. 
+%TODO: Explain the design choices below. 
 \subsection{Client-to-Client Messaging}
 \label{c2c}
-No direct client to client communication is possible, however workers and in an ad-hoc fashion, clients, are able to indirectly communicate with other clients (i.e. clients to which they are not connected) by passing commands to the other client's worker. This is the server's main method of inter-client communication and relies heavily on the use of the buffers to pass messages from one worker to the network writer or command processor of another worker.
+No direct client-to-client communication is possible. However, workers and (in an ad-hoc fashion) clients are able to indirectly communicate with other clients (i.e. clients to which they are not connected) by passing commands to the other client's worker. This is the server's main method of inter-client communication and relies heavily on the use of the buffers to pass messages from one worker to the network writer or command processor of another worker.
 
 As the protocol defines no client to client communication is possible before a user has logged in, and as user can only be logged in on one client at a time, only a user id is necessary to send a command to a user. As long as a record is kept of which worker belongs to each online user, then sending a message to a user is no more complicated than identifying the particular user.
 
@@ -78,21 +78,21 @@ Message routing in the server is fairly simple because of the use of rooms. A ro
 All chat messages in GIM are sent to Rooms rather than particular users. The server must maintain a list of the users in each room, and upon receipt of a message for that room, forward it to all of the users in the room (excluding the sender of the message). This is done using the method described in section \ref{c2c}. A \texttt{:MESSAGE:} command is generated and placed into the Response Buffer of the worker assigned to each of the recipients ready for the worker to send to the client.
 
 \subsection{Subscriptions, Privacy and Notifications}
-One of the server's most critical responsibilities is notifying users of changes to other users; this is done using the concept of subscriptions.  A user (the subscriber) is considered to be subscribed to another user (the subscribee) if they meet at least one of two conditions:
+One of the server's most critical responsibilities is notifying users of changes to other users. This is done using the concept of subscriptions. A user (the subscriber) is considered to be subscribed to another user (the subscribee) if they meet at least one of two conditions:
 
 \begin{enumerate}
 \item{The subscriber has the subscribee in their friend list, or had them in their friend list at some point in the past}
-\item{Both the subscriber and subscribee are in the same room}5
+\item{Both the subscriber and subscribee are in the same room}
 \end{enumerate}
 
-When a user updates their status or changes any piece of their user information such as their nickname or personal message, the server needs to notify other clients so that they can update their information. The server generates a list of subscribers for this user and removes offline and blocked users. It then issues an \texttt{:UPDATE:} command to each of the clients, notifying them of the user and the piece of information which has been updated. Note that the server does not send the updated information, it merely notifies the client of the update, allowing it to request the updated information for the server when, and if it needs it.
+When a user changes any piece of their user information such as their status, nickname, or personal message, the server needs to notify other clients so that they can update their information. The server generates a list of subscribers for this user and removes offline and blocked users. It then issues an \texttt{:UPDATE:} command to each of the clients, notifying them of the user and the piece of information which has been updated. Note that the server does not send the updated information, it merely notifies the client of the update, allowing it to request the updated information for the server when and if it needs it.
 
 Subscriptions are also used as a method of access control. A user is only able to request information about another user if they are subscribed to that user. This limitation means that a user is effectively granting another user access to read their information by adding them to their friend list. However, the converse is not true. Removing a user from your friend list does not remove their access to your information as they may still have you in their friend list. In order to combat this, you are able to block a user which removes this access to your information and status updates. This enhances privacy and gives the user control of who is able to access their data.
 
 \subsection{Synchronisation}
-The server has a large section of backing data which stores all of the users, rooms, workers and any other operational data required by the server. Due to the highly concurrent nature of the server it is very important to ensure that the data is properly synchronised. This is to prevent race conditions where two writes occur on an object at the same time giving an unpredictable output. 
+The server has a large section of backing data which stores all of the users, rooms, workers and any other operational data required by the server. Due to the highly concurrent nature of the server it is very important to ensure that the data is properly synchronised. This is to prevent race conditions where two writes occur on an object at the same time giving an unpredictable output.
 
-%Refer to figure my number from text
+%TODO: Refer to figure my number from text
 \begin{figure}
     \begin{center}
         \includegraphics[scale=0.6]{Design/diagrams/server_race_condition.png}
@@ -101,10 +101,9 @@ The server has a large section of backing data which stores all of the users, ro
     \end{center}
 \end{figure}
 
-To stop this the server must lock (claim ownership of) the data before it is updated. This is a very tricky thing to do as as the lock must be long enough to ensure that no updates occur between reading the original data and writing the updated data, whilst also keeping the lock as short as possible to avoid long periods of blocking and keep performance high.
+To stop this the server must lock (claim ownership of) the data before it is updated. This is a very tricky thing to do as as the lock must be long enough to ensure that no updates occur between reading the original data and writing the updated data, while also keeping the lock as short as possible to avoid long periods of blocking and keep performance high.
 
-
-The server must also make sure only to lock when needed, and not obtain a lock for objects it does not require. This simplest solution would be to lock the entire data object, and only allow reads and writes through a proxy. However this would be extremely costly in terms of performance as writes to individual objects inside the data object would block writes to other objects, meaning that at any one time only a single write could occur. Instead the data object must be clever and only lock the objects which are to be written to, allowing for simultaneously writes to separate objects whist still stopping race conditions from occurring.
+The server must also make sure only to lock when needed, and not obtain a lock for objects it does not require. This simplest solution would be to lock the entire data object, and only allow reads and writes through a proxy. However this would be extremely costly in terms of performance as writes to individual objects inside the data object would block writes to other objects, meaning that at any one time only a single write could occur. Instead the data object must be clever and only lock the objects which are to be written to, allowing for simultaneouswrites to separate objects while still stopping race conditions from occurring.
 
 \begin{figure}
     \begin{center}
@@ -115,13 +114,13 @@ The server must also make sure only to lock when needed, and not obtain a lock f
 \end{figure}
 
 \subsection{The Controller and Timeout Manager}
-Even though the server should be capable of functioning autonomously, some of the features defined by the protocol (in particular the \texttt{:BROADCAST:} command which allows the server to send a message to all of the clients connected to it) require some sort of interaction with the server in a manner which is different from the client-server model. The controller allows authorised users (defined by the operating system as able to connect to the session which is running the server) to interact through a command line interface with the server. They are then able to execute several several commands defined by the controller (not to be confused with protocol commands, controller commands are completely independent) to broadcast messages and control the server. 
+Even though the server should be capable of functioning autonomously, some of the features defined by the protocol require interaction with the server that deviates from the client-server model. For example, the \texttt{:BROADCAST:} commandallows the server to send a message to all of the clients it is connected to. The controller allows authorised users to interact through a command line interface with the server. These authorised users are allowed by the operating system to connect to the session that is running the server. They are then able to execute several commands defined by the controller to broadcast messages and control the server. These commands are independent from protocol commands.
 
-For example, the \texttt{QUIT} command tells the server to shut down and create a persistence file to store user data, while the following would send a \texttt{:BROADCAST:} command to all of the connected clients:
+For example, the \texttt{:QUIT:} command tells the server to shut down and create a persistence file to store user data, and the following would send a \texttt{:BROADCAST:} command to all of the connected clients:
 
 \texttt{BROADCAST We're shutting the server down in 15 minutes.}
 
-The server needs to periodically check for clients which have not send a command in last 15 seconds (as defined in the protocol) and disconnect them. This means that the server must compare the time the last command was received by every worker with the current time, and if the difference exceeds 15 seconds then disconnect them.
+The server needs to periodically check for clients which have not sent a command in the last 15 seconds (as defined in the protocol) and disconnect them. This means that the server must compare the time the last command was received by every worker with the current time. If the difference exceeds 15 seconds, they are disconnected.
 
 Due to the nature of the Controller and Timeout Manager, they both must run on separate threads from the rest of the server or risk blocking a more important function, such as accepting incoming connections and creating workers for them.
 
