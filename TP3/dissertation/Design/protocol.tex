@@ -23,15 +23,15 @@ In practice there are several clients connected to the server at once, however a
 
 \subsection{Syntax}
 
-The GIM Protocol uses a simple text-based syntax. We decide to use a text-based format as they have several advantages over binary formats. In particular, we wanted the protocol to be easy to use, human-readable and easy to debug. Although text-based formats are much more difficult to parse, they fit with our vision better than binary-based protocols.
-i
+The GIM Protocol uses a simple text-based syntax. We decide to use a text-based format as they have several advantages over binary formats. In particular, we wanted the protocol to be easy to use, human-readable, and easy to debug. Although text-based formats are much more difficult to parse, they fit with our vision better than binary-based protocols.
+
 Each full command begins with a colon followed by a command name and its arguments. A second colon marks the end of the header and beginning of the data segment. A semicolon marks the end of the data segment and the termination of the command. The basic structure of a full command is shown below:
 
 \texttt{:<COMMAND\_NAME> <ARGUMENTS>: <DATA>;}
 
 We chose this format as it clearly separates the commands and arguments from the data, making them easier to parse. It also relies on very standard characters for begging and terminating commands and does not rely on new lines as command separators, which have historically caused problems in protocols (although newlines are sometimes used in the \texttt{<DATA>} segment of commands).
 
-Commands names are predefined and \texttt{<COMMAND\_NAME>} can be any 1 of the following 19 values:
+Command names are predefined and \texttt{<COMMAND\_NAME>} can be any 1 of the following 19 values:
 
 %TODO: Why these commands?
 
@@ -53,16 +53,16 @@ Commands names are predefined and \texttt{<COMMAND\_NAME>} can be any 1 of the f
  
 \texttt{<ARGUMENTS>} is a set of zero or more predefined arguments which can be passed to the command in order to change its behaviour. Each command has its own set of arguments. Some commands require arguments (sometimes more than one) and some commands have no arguments. The protocol defines over 60 arguments, and a full listing for each command can be found in Appendix \ref{protocol_spec}.
 
-Unlike the command and argument segments, the \texttt{<DATA>} segment does not have any predefined values and has a varying syntax across different commands.  For example, the \texttt{:ROOM:} command has \texttt{:JOIN:} and \texttt{:LEAVE:} arguments which are used to join or leave a chat. The majority of the data is likely to have been provided by the user at some point, and as such the data segment is considered to be ``unsafe.'' This data is encoded (see section \ref{encoding} for more information). A full specification for the data segment of each command can also be found in Appendix \ref{protocol_spec}.
+Unlike the command and argument segments, the \texttt{<DATA>} segment does not have any predefined values and has a varying syntax across different commands.  For example, the \texttt{:ROOM:} command has \texttt{JOIN} and \texttt{LEAVE} arguments which are used to join or leave a chat. The majority of the data is likely to have been provided by the user at some point, and as such the data segment is considered to be ``unsafe.'' This data is encoded (see section \ref{encoding} for more information). A full specification for the data segment of each command can also be found in Appendix \ref{protocol_spec}.
 
-For example, the following is an example of a command sent from the client to the server requesting the Nickname and Status of the users joe@example.com and bill@gmail.org:
+The following is an example of a command sent from the client to the server requesting the Nickname and Status of the users joe@example.com and bill@gmail.org:
 
 \texttt{:GET NICKNAME STATUS: joe\SLASH U+0040example.com bill\SLASH U+0040mail.org;}
 
 To which the server may reply:
 
 \texttt{:INFO NICKNAME STATUS: joe\SLASH U+0040example.com\\
-Jeo\\
+Joe\\
 ONLINE\\
 bill\SLASH U+0040mail.org\\
 Billy The Kid\\
@@ -76,9 +76,9 @@ The protocol defines two separate roles: The Client role and the Server role. Ea
 
 Having clearly defined roles is an integral part of the GIM Protocol. This allows the semantics of a command to generate a response. Both roles are able to send and receive commands, but the commands have different meanings depending on their source. 
 
-For example, the \texttt{:AUTH:} command can be sent by both the client and the server. When sent by the server it is used to indicate the current state of the client (Either Logged-in or Unauthorized) but when sent by the client it indicates that a user wishes to login or register a new account. This means that the same command must be implemented differently depending on the role of the sender.
+For example, the \texttt{:AUTH:} command can be sent by both the client and the server. When sent by the server it is used to indicate the current state of the client (either logged-in or unauthorized) but when sent by the client it indicates that a user wishes to login or register a new account. This means that the same command must be implemented differently depending on the role of the sender.
 
-As mentioned above, the client role has 2 states: Logged-in and Unauthorized. When the client first establishes a connection it is placed in the unauthorized state. This means that it has access to an even smaller subset of commands, only those essential to logging-in or registering a new account. Once the client has successfully logged-in, it is granted access to the full set of client commands.
+As mentioned above, the client role has 2 states: logged-in and unauthorized. When the client first establishes a connection it is placed in the unauthorized state. This means that it has access to an even smaller subset of commands, only those essential to logging-in or registering a new account. Once the client has successfully logged-in, it is granted access to the full set of client commands.
 
 
 \subsection{Encoding, Limits and Restrictions}
@@ -90,7 +90,7 @@ Display pictures, which are small images in JPEG format, cannot be transferred e
 
 By ensuring that the data segment is encoded, it makes the protocol very easy to parse as we can safely split the data segment into separate parts without worrying about how data from the user is formatted. This means we can guarantee that every occurrence of a white-space character in the data segment is safe to use for splitting the data.
 
-Clients connected to the server are limited to sending 100 commands in a rolling 5 second window. Normal usage should result in a much lower rate (less than 5 per second) and anything more than than this most likely indicates a malfunctioning or malicious client. In the event a client exceeds this limit, the server closes the connection with the client. % Is any error message sent?
+Clients connected to the server are limited to sending 100 commands in a rolling 5 second window. Normal usage should result in a much lower rate (less than 5 per second) and anything more than than this most likely indicates a malfunctioning or malicious client. In the event a client exceeds this limit, the server closes the connection with the client. %TODO: Is any error message sent?
 
 The data segment of commands sent by the client is limited to 8192 characters in length. This includes data that has been encoded, so a single @ character encoded as \texttt{\SLASH U+0040} counts for 7 characters towards the limit. The only exception to this rule is the \texttt{:SET DISPLAY\_PIC:} command, which is used to set a users display picture. The limit for this command is 4x greater than that of a normal command (32,768 characters or around 24kb worth of JPEG data). If a client exceeds this limit then the server should close the connection to the client. The server itself has no such limits and can send commands of any length.
 
@@ -136,7 +136,7 @@ Figure \ref{interactionDia} shows typical usage of the GIM protocol. The followi
 \item{The client sends the \texttt{:QUIT:} command to the server and closes the connection. The server logs the user out and closes the connection.}
 \end{enumerate}
 
-This demonstrates the protocols ability to function without waiting for a reply to the previous command but also that it is sometimes necessary for the client to wait for data from the server. It also shows the server's ability to send unsolicited commands and the need for the client to be aware and cope with out of order responses from the server (i.e., the next message it receives may not be the response to the previous command).
+This demonstrates the protocol's ability to function without waiting for a reply to the previous command, but also that it is sometimes necessary for the client to wait for data from the server. It also shows the server's ability to send unsolicited commands and the need for the client to be aware and cope with out-of-order responses from the server (i.e., the next message it receives may not be the response to the previous command).
 
 \subsection{Protocol Evolution}
 \label{protocol_evol}
@@ -147,8 +147,8 @@ A prime example of this is the \texttt{:FRIEND:} command. What was originally 6 
 
 There are still some commands which could arguably benefit from being merged. For example, it would make sense for the \texttt{:LOGOUT:} command to be part of the \texttt{:AUTH:} command which allows clients to login and register; all of these actions are conceptually similar. However, the \texttt{:LOGOUT:} command is not available unless the user is in the logged-in state, so one could also argue that it should not be part of the \texttt{:AUTH:} command.
 
-During the implementation of GIM there were several modifications made to the format of the data segment for some commands. These were brought on by a desire to keep the protocol consistent across all commands. There was often a sense of confusion about how the data segment for each command was split into sections as each command had a different format; some used newlines, some used commas, and some used spaces as separators. In the end we chose to use spaces as separators in all commands except the \texttt{:INFO:} command where newlines made more sense in order to keep the line length of a the command down and as human-readable as possible.
+During the implementation of GIM there were several modifications made to the format of the data segment for some commands. These were brought on by a desire to keep the protocol consistent across all commands. There was often a sense of confusion about how the data segment for each command was split into sections as each command had a different format; some used newlines, some used commas, and some used spaces as separators. In the end we chose to use spaces as separators in all commands except the \texttt{:INFO:} command where newlines made more sense. We did this in order to keep the line length of the \texttt{:INFO:} command as small and human-readable as possible.
 
-Error handling has been one of the weaker areas of the GIM Protocol. Errors were mostly an after-thought and have several significant issues which need to be addressed. For example, there is currently no easy way of matching an error to a particular command. While it is possible to work backwards by counting the number of responses until we find the matching command it is not practical and it is overly complicated to do this. One solution might be introducing sequence numbers to the protocol, similar to SIP (RFC 3261). Each command could be assigned a sequence number or unique identifier of some type. Responses could use the same identifier so that the commands and responses could be easily matched. However this would add a lot of overhead and unnecessary complexity to the protocol, something which we have tried to avoid. Another issue is the number of possible errors. Almost every command can generate several errors, and every error must have a unique argument identifying the type of error. The server specifies over 70 possible error conditions, and every one of these will generate an \texttt{:ERROR:} response which must be dealt with. This means that the \texttt{:ERROR:} command is extremely complex and confusing to use. A possible solution might be to move away from using arguments to specify the error and instead adopt the same style used by HTTP. A set of errors codes could be used, with numbers between particular ranges reserved for errors of a particular type. For example, the numbers 500-599 could be reserved for server errors, while numbers between 0-100 could be authorisation errors.
+Error handling has been one of the weaker areas of the GIM Protocol. Errors were mostly an after-thought and have several significant issues which need to be addressed. For example, there is currently no easy way of matching an error to a particular command. While it is possible to work backwards by counting the number of responses until we find the matching command, it is overly complicated to do so. One solution might be introducing sequence numbers to the protocol, similar to SIP (RFC 3261). Each command could be assigned a sequence number or unique identifier of some type. Responses could use the same identifier so that the commands and responses could be easily matched. However this would add a lot of overhead and unnecessary complexity to the protocol, something which we have tried to avoid. Another issue is the number of possible errors. Almost every command can generate several errors, and every error must have a unique argument identifying the type of error. The server specifies over 70 possible error conditions, and every one of these will generate an \texttt{:ERROR:} response which must be dealt with. This means that the \texttt{:ERROR:} command is extremely complex and confusing to use. A possible solution might be to move away from using arguments to specify the error and instead adopt the same style used by HTTP. A set of errors codes could be used, with numbers between particular ranges reserved for errors of a particular type. For example, the numbers 500-599 could be reserved for server errors, while numbers between 0-100 could be authorisation errors.
 
 The protocol has changed considerably since its first draft and has undergone substantial improvements in terms of ease of use, simplicity, and consistency. Although there are still some minor tweaks which could be made to further the improve the protocol, it is currently in a stable and usable state. Future extensions to the protocol might include the addition of support for other features such as file transfers and VoIP.
