@@ -1,12 +1,19 @@
 \section{Server}
 
-This section will analyse how well the server implementation fulfils the design outlined in section \ref{ServerDesign}. In general, and apart from some issues with threading and concurrency, the server followed the design very closely and require very few design changes from start to completion. The most common problems experience with the server were related to typos which caused spelling and syntactic errors in the responses it generated.
+This section will analyse how well the server implementation fulfils the design outlined in section \ref{ServerDesign}. In general, the implementation of the server was a straight-forward affair with very few problems encountered during it's development. The most challenging part of the server's development related to concurrency, and is discussed in \ref{concur}. Spelling errors and typos were the most common cause of problems, however given their easy to fix nature, are not discussed.
 
 \subsection{Networking}
-
+The GIM server uses Java's built in Sockets and ServerSockets.  Ohhh yeah.
 
 \subsection{Concurrency}
+\label{concur}
+Concurrency was the biggest concern while implementing the server and it was very important that we got it right. Concurrency problems such race conditions are generally considered to be one of the most difficult problems to dubug, and so great care was taken to ensure that the possibility of bugs was kept as low as possible. Although we discovered some problems with the threading (discussed in section \ref{server_eval}) none of bugs were caused by race-conditions. Instead confusion about how threads work conceptually caused most of the threading related bugs. For example, in one case an attempt to kill anther thread actually caused the current thread to commit suicide. The following describes how thread safety was dealt with and the lessons we learnt.
+
+Originally the server used \texttt{HashMap} from the \texttt{java.util} package very extensively, primarily because of their very quick look up times and ability to use user IDs (Strings) as lookup values. Each \texttt{User} has 5 HashMaps to store data about their friends, who has them as a friend, friend requests, blocked users, and rooms they are current in. Each \texttt{Room} uses one to store users in that room, and another to store invited users. The global \texttt{Data} class uses another three to store all of the rooms, users and workers on the server. This was an issue because HashMaps are not thread safe, which means each of them had to be wrapped in a synchronised blocked to ensure thread safety. This was very tedious, very prone to human error and resulted in a large amount of excess code. Later on in the development of the server we discovered the \texttt{java.util.concurrent} package, which contains thread safe implementations of some of the classed in the \texttt{java.util} package, including a thread safe version of the HashMap class called \texttt{ConcurrentHashMap}. By using the ConcurrentHashMap, it allowed us to remove a lot of the boilerplate code used to make the original implementation thread safe, and made working with the HashMaps much safer and less prone to human error.
+
+The \texttt{Buffer} class implements a thread-safe and unbounded blocking queue. Essentially the buffer is a LinkedList made thread safe by only allowing items to be placed on the tail and remove from the head by calling synchronised methods. This ensured that at no point could more than one operation be performed on the list, preventing any race conditions from occurring.
 
 \subsection{Workers}
 
 \subsection{Detecting Abuse and Enforcing Limits}
+Originally the server did not enforce any of the limits defined in the protocol and these had to be built in at a later date.
