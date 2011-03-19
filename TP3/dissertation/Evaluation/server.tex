@@ -1,4 +1,4 @@
 \section{Server Evaluation}
 \label{server_eval}
 
-
+In the earlier stages of our project, the server was in more complete state than our client. This meant we had to develop a method of testing it in isolation, without using the client. We decided an appropriate method would be to send raw protocol commands via Telnet. Telnet allows a connection to be made to a socket, and text to be sent to this socket. As we were in an environment of Computing Science students who were comfortable with such technical tests, we were able to test the server's capability to handling several user accounts simultaneously by using some volunteers, in addition to ourselves to connect. Furthermore, as a group, we had been trained to have testing in mind - and attempts were made to make the server fail by sending it erroneous data. 
