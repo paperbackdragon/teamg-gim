@@ -1,10 +1,6 @@
 \section{Client Design}
 \label{client_design}
 
-\subsection{Design of Client Structure}
-
-\subsection{Outline}
-
 This section will outline our initial design of the system. We aimed for a high degree of modularity to separate concerns among team members and improve the ease of maintaining code. The process of identifying the concerns of the client and representing these in a component based design will be discussed in subsection \ref{client_approach}. The remainder of the section will discuss our design of individual components, and how we identified their roles within the larger system. Particular focus will be made on how we made sure sections of the client were removed as far as possible from other sections, and challenges in ensuring this requirement. 
 
 \subsection{Approach}
@@ -14,13 +10,14 @@ In designing the client, we had the high level aim of creating a modular system 
 
 It was agreed that the MVC (Model-View-Controller) architectural pattern, widely used for applications involving a graphical user interface, was a useful model to base our discussions around. This model abstracts the UI (view) from the back end of the system. When a user performs an action, the controller updates the model if any data associated with the system is changed, and updates the viewer to reflect these changes in the system state. This seemed appropriate to our needs of keeping and displaying an up-to-date record of the user's friend list and creating an interface, and would allow us to split responsibilities between the back and front end of the GUI.
 
-However, we faced challenges in adapting an additional networking component to implement the GIM protocol into this framework. We had the choice to conceptualise it as either an additional interface, which was 'controlled' by the server and controller, or indirectly (by way of the network) as a part of the controller component. As an additional interface, it could 'view' changes from users on the friends list, as notified by the server, and view changes to the model that it needed to know about. Although this was an interesting conceptual idea, it was difficult to consider how, or if, it could work in practicality. We decided it could be more useful to treat the networking code as part of the controller, as it would be modifying the model based on the server's response to its requests, and modifying the GUI to reflect these changes. However, for the sake of design, it was more useful to think of it as a distinct component the controller interacted with, as this would allow us to separate the concern of networking from the rest of the client.
+However, we faced challenges in adapting an additional networking component to implement the GIM protocol into this framework. We had the choice to conceptualise it as either an additional interface, which was `controlled' by the server and controller, or indirectly (by way of the network) as a part of the controller component. As an additional interface, it could `view' changes from users on the friends list, as notified by the server, and view changes to the model that it needed to know about. Although this was an interesting conceptual idea, it was difficult to consider how, or if, it could work in practicality. We decided it could be more useful to treat the networking code as part of the controller, as it would be modifying the model based on the server's response to its requests, and modifying the GUI to reflect these changes. However, for the sake of design, it was more useful to think of it as a distinct component the controller interacted with, as this would allow us to separate the concern of networking from the rest of the client.
 	
 This high level approach allowed us to draw boundaries between components and assign the more detailed design of individual components to team members. We decided a logical split would be to assign two members to the networking aspects of the system (client and server), and two members to the GUI components of the system (the GUI and its model). However, further collaboration was required to allow this design to happen in parallel. This involved planning how the components would talk to one another, as will be discussed in in section \ref{controller}
 
-[Diagram goes here, reflecting the above discussion (???) ]
+%TODO: [Diagram goes here, reflecting the above discussion (???) ]
 
 \subsection {Model-Viewer-Controller Structural Concerns}
+%TODO: this section
 
 \subsection {Controller}
 \label{controller}
@@ -57,8 +54,6 @@ We anticipated this would be advantageous as it would reduce the repetition of c
 
 As we had decided to incorporate both group and one-to-one chats, this provided a wide scope in terms of interface design. We had the option to base our interface on either IRC or Windows Live Messenger style clients, or to create something entirely of our own. Windows Live was ultimately selected as the basis of the GUI for a number of reasons; primarily we believed that it was better suited to our feature set. An IRC style interface would require a considerable amount of redesigning to accommodate features such as display pictures, contact lists, and offline messaging. While creating our own style of IM interface would be interesting, it would likely lead to an inferior design, and be more time consuming to create. Windows Live style programs typically integrate the vast majority--if not all--of our MoSCoW feature set, and was therefore chosen as our starting point.
 
-\subsection{Aims}
-
 With any user interface, the primary goal is usability. As instant messengers have existed for a number of years, there is a standard layout which users expect and are comfortable with. The goal of our GUI was to provide a simple and intuitive interface, without using something too different from what users would expect from an IM application.
  
 \subsection{Example Use Cases}
@@ -78,7 +73,7 @@ At this stage of the process we had begun to make a few implementation decisions
 
 The use of informal notation for the use cases was, in retrospect, ill-conceived. A more formal notation including pre and post conditions, non-functional requirements, and priorities would have provided a better foundation for implementation. An example of where this caused confusion was in the implementation of blocking and removing contacts, where the pre and post conditions varied in subtle ways. However, due to the scope of the project and the time restrictions, we felt that these simple use cases were adequate for our needs.
 
-\subsubsection{Interface Wireframes}
+\subsection{Interface Wireframes}
 
 With these use cases we started to design a GUI that could accommodate the desired features. Although many UI sketches were made, they were all minor variations on the core design which we derived from the traditional instant messenger model, such as used in Windows Live.
 
