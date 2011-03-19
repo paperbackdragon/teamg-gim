@@ -23,9 +23,9 @@ In practice there are several clients connected to the server at once, however a
 
 \subsection{Syntax}
 
-The GIM Protocol uses a simple, text based syntax. We decide to use a text based format as they have several advantages over binary formats. In particular, we wanted the protocol to be easy to use, human-readable and easy to debug. Although text based formats are much more difficult to parse, they fit with our vision much better than binary based protocols.
-
-Each full command begins with a colon followed by a command name and its arguments. A second colon marks the end of the header and beginning of the data segment. A semi-colon marks the end of the data segment and the termination of the command. The basic structure of a full command is shown below:
+The GIM Protocol uses a simple text-based syntax. We decide to use a text-based format as they have several advantages over binary formats. In particular, we wanted the protocol to be easy to use, human-readable and easy to debug. Although text-based formats are much more difficult to parse, they fit with our vision better than binary-based protocols.
+i
+Each full command begins with a colon followed by a command name and its arguments. A second colon marks the end of the header and beginning of the data segment. A semicolon marks the end of the data segment and the termination of the command. The basic structure of a full command is shown below:
 
 \texttt{:<COMMAND\_NAME> <ARGUMENTS>: <DATA>;}
 
@@ -33,7 +33,8 @@ We chose this format as it clearly separates the commands and arguments from the
 
 Commands names are predefined and \texttt{<COMMAND\_NAME>} can be any 1 of the following 19 values:
 
-% Why these commands?
+%TODO: Why these commands?
+
 \texttt{
 \begin{tabular}{ | p{3.3cm} |p{3.3cm}  |p{3.3cm} |p{3.3cm} | } 
     \hline
@@ -50,7 +51,7 @@ Commands names are predefined and \texttt{<COMMAND\_NAME>} can be any 1 of the f
  \end{tabular}
 }
  
-\texttt{<ARGUMENTS>} is a set of zero or more predefined arguments which can be passed to the command in order to change its behaviour. Each command has its own set of arguments. Some commands require arguments (sometimes more than one) and some commands have no arguments. The protocol specification defines over 60 arguments, and a full listing for each command can be found in Appendix \ref{protocol_spec}.
+\texttt{<ARGUMENTS>} is a set of zero or more predefined arguments which can be passed to the command in order to change its behaviour. Each command has its own set of arguments. Some commands require arguments (sometimes more than one) and some commands have no arguments. The protocol defines over 60 arguments, and a full listing for each command can be found in Appendix \ref{protocol_spec}.
 
 Unlike the command and argument segments, the \texttt{<DATA>} segment does not have any predefined values and has a varying syntax across different commands.  For example, the \texttt{:ROOM:} command has \texttt{:JOIN:} and \texttt{:LEAVE:} arguments which are used to join or leave a chat. The majority of the data is likely to have been provided by the user at some point, and as such the data segment is considered to be ``unsafe.'' This data is encoded (see section \ref{encoding} for more information). A full specification for the data segment of each command can also be found in Appendix \ref{protocol_spec}.
 
