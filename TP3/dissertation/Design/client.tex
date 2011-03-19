@@ -22,7 +22,7 @@ This high level approach allowed us to draw boundaries between components and as
 \subsection {Controller}
 \label{controller}
 
-The controller was one of the more challenging parts of the design process. The controller would be called by both the networking component and the viewer, implying that its operations must be thread safe. We were constrained by our use of the Java Swing\footnote{See \texttt{http://download.oracle.com/javase/6/docs/technotes/guides/swing/} for more information.} environment, which we had learned from previous experience will freeze if the networking code is run on the GUI thread. A further complexity was ensuring that the controller could use the commands of the GIM protocol without having to know its workings in detail. Naturally, the GUI architects should not need to concern themselves with the specifics of the protocol while designing the GUI.
+The controller was one of the more challenging parts of the design process. The controller would be called by both the networking component and the viewer, implying that its operations must be thread safe. We were constrained by our use of the Java Swing\footnote{\texttt{http://download.oracle.com/javase/6/docs/technotes/guides/swing/}} environment, which we had learned from previous experience will freeze if the networking code is run on the GUI thread. A further complexity was ensuring that the controller could use the commands of the GIM protocol without having to know its workings in detail. Naturally, the GUI architects should not need to concern themselves with the specifics of the protocol while designing the GUI.
 
 To deal with the threading complexity, we designed a scheme with an intermediate buffer between the controller component and the networking code. The controller thread waits until there is a command from the network placed into the buffer, and acts accordingly on the model and GUI. Furthermore, when the controller component needs to call the network, it places a command into the buffer to be interpreted by the networking code. We believed this scheme to be appropriate as the controller could either call the network from internal code or events from the GUI, possibly simultaneously (See section \ref{networking_design} for further discussion on the motivation behind this buffer).
 
@@ -52,7 +52,7 @@ We anticipated this would be advantageous as it would reduce the repetition of c
 \section{Design of Client GUI}
 \label{gui_design}
 
-As we had decided to incorporate both group and one-to-one chats, this provided a wide scope in terms of interface design. We had the option to base our interface on either IRC or Windows Live Messenger style clients, or to create something entirely of our own. Windows Live was ultimately selected as the basis of the GUI for a number of reasons; primarily we believed that it was better suited to our feature set. An IRC style interface would require a considerable amount of redesigning to accommodate features such as display pictures, contact lists, and offline messaging. While creating our own style of IM interface would be interesting, it would likely lead to an inferior design, and be more time consuming to create. Windows Live style programs typically integrate the vast majority--if not all--of our MoSCoW feature set, and was therefore chosen as our starting point.
+As we had decided to incorporate both group and one-to-one chats, this provided a wide scope in terms of interface design. We had the option to base our interface on either IRC or Windows Live Messenger style clients, or to create something entirely of our own. Windows Live was ultimately selected as the basis of the GUI for a number of reasons; primarily we believed that it was better suited to our feature set. An IRC style interface would require a considerable amount of redesigning to accommodate features such as display pictures, contact lists, and offline messaging. While creating our own style of IM interface would be interesting, it would likely lead to an inferior design, and be more time consuming to create. Windows Live style programs typically integrate the vast majority--if not all--of our MoSCoW feature set (in section \ref{features}), and was therefore chosen as our starting point.
 
 With any user interface, the primary goal is usability. As instant messengers have existed for a number of years, there is a standard layout which users expect and are comfortable with. The goal of our GUI was to provide a simple and intuitive interface, without using something too different from what users would expect from an IM application.
  
@@ -60,13 +60,13 @@ With any user interface, the primary goal is usability. As instant messengers ha
 
 The GIM use cases were created in order to provide an easily understood reference for how the system should operate at a high layer of abstraction. The following are our most important use cases as defined during the design process. Two actors were identified for the system: ``Senders'' and ``Contacts.'' Both of these actors have equal privileges within the system and use the system in the same way, hence both derive from the ``User'' type. This distinction between senders and contacts is made for the design process, as in reality users of the system are both senders and contacts.
 
-{\bf Add contact}
+{\bf Add Contact}\\
 Sender clicks the ``add contact'' button in the main window, or the option from the top menu. They are prompted to enter the contacts's email. They enter the email and the system searches for that person in the database. If found, the contacts is sent a request for friendship. If the contact accepts, then both the sender and contact now have each other as contacts, and they show up in the main window. If not accepted, neither is added. If the contact is not found, they are prompted again to enter the email, with the option to cancel.
 
-{\bf Group Chat}
+{\bf Group Chat}\\
 Sender can choose to group chat from the main window button, main menu, or in a chat window with another contact. A window will show up in which the sender can create a chatroom, and then the sender will be prompted to choose the contacts they wish to invite. The chatroom appears to the sender. Those contacts will see the invitation, and if they accept, will be placed in the chatroom. Contacts will be able to invite other people as well. The chatroom will disappear once every user has left.
 
-{\bf Log Out}
+{\bf Log Out}\\
 User clicks the ``log out'' option in the menu. The X in the corner will only minimize the program. A dialog box appears, asking if they are sure they want to log out. If yes, they are logged out, and the log in/register pop-up appears. If they want to quit the program completely, they will have to choose``quit'' from the menu.
 
 At this stage of the process we had begun to make a few implementation decisions, and while some aspects of each use case were ommitted in the final product, generally these specifications were adheared to. Much of the redundancy was removed, primarilly due to time restrictions. For example the number of ways to start a group chat is reduced to one, from the three ways mentioned in the use case. Group chats can only be started by pressing the button on the main window in the final program. In contrast to this, the ``Log Out'' use case is implemented to this specification exactly.
@@ -85,11 +85,11 @@ With these use cases we started to design a GUI that could accommodate the desir
     \end{center}
 \end{figure}
 
-{\bf Walkthough}
+{\bf Walkthrough}
 
 \begin{enumerate}
 
-\item Menu - Drop down menus which provide more options for the user, such a logging out and qutting the program.
+\item Menu - Drop down menus which provide more options for the user, such logging out and qutting the program.
  
 \item Display Picture - An image which represents the user. This image box also acts as a button allowing users to select a different picture.
 
@@ -97,19 +97,19 @@ With these use cases we started to design a GUI that could accommodate the desir
 
 \item Personal Message - An editable text box which allows the user to set a message viewable by other users.
 
-\item Status - The user can select from a set list of statuses which will change the icon to indicate their status to other uses.
+\item Status - The user can choose from a set list of statuses, which will change their icon to indicate the selected status to other users.
 
 \item Contact List - The list of online and offline contacts the user has added to their contact list.
 
-\item Contact - A selectable element in the contact list to represent a user, contains a display picture, username, personal message and status.
+\item Contact - A selectable element in the contact list representing a user. Contains a display picture, username, personal message and status.
 
-\item Add User - Brings up a prompt to input a users email address and, if successful, add them to the contact list.
+\item Add User - Brings up a prompt to input a user's email address and, if successful, adds them to the contact list.
 
 \item Remove User - Brings up a prompt to remove the selected user from the contact list.
 
 \item Start Chat - Creates a chat window with the selected contact.
 
-\item Start Group Chat - Creates a Group chat with only the current user inside. 
+\item Start Group Chat - Creates a group chat window with only the current user.
 
 \end{enumerate}
 
@@ -125,4 +125,4 @@ The above wireframe is the main window the user will see after they have logged 
 
 This wireframe represents the window which is created when a chat is initiated, either by themselves or another user. The chat box has a similar layout to the main window, to aid consistency. The user details are at the top, the main body of content is in the middle, and the user operations are at the bottom.
 
-These wireframes served as the basis for the Swing implementation. While the features of the final interface are unchanged from the wireframes, some slight alterations were made to the layout. These modifications were typically the result of the practicalities of using Swing and the natural evolution during implementation. Examples of these alterations are the removal of buttons for emoticons, file transfer, and group chat, and a different position for the status icons in the main window.
+These wireframes served as the basis for the Swing implementation. While the features of the final interface are unchanged from the wireframes, some slight alterations were made to the layout. These modifications were typically the result of the practicalities of using Swing and the natural evolution during implementation. Examples of these alterations are the removal of buttons for emoticons, file transferring, and group chat, and a different position for the status icons in the main window.
