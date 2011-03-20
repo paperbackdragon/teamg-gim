@@ -16,6 +16,8 @@ In retrospect, we may have abused this option in our implementation. There are s
 
 In the section \ref{networking_design}, we outlined how we believed commands from the server would be parsed. While the operations of the proposed Command class remained largely intact, its responsibility of parsing had to be removed. Our original plan that this feature could be shared by the client and the server wasn't possible, as it was apparent that the server had some responsibilities with parsing that the client did not. It had to ensure that it was not receiving too many commands within a time frame, and that these commands were of a limitted length. These limits do not apply to the client, as it is allowed to receive large amounts of data from the server, such as the user information for the buddy list (which may be long).
 
+Additionally, some of our data in our client is not placed in the model like it should be, if strictly following the MVC model. The collection of chat windows is stored in GimClient.java (which is the class that manages the contact list), when it should be be in the model. This mistake was identified late in the project, and the code has not been refactored to follow the proper structure. Fixing this would be relatively simple - the collection should be moved to the model, and any methods accessing this data pointed to the model instead. 
+
 \subsection{Collaboration}
 \label{collab}
 
