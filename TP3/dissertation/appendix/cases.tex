@@ -1,0 +1,86 @@
+\section{Introduction}
+
+This appendix contains all of the use cases that were documented during the design process. In many cases, the specifics of how these actions occur in GIM are different than the outlines here. The higher priority use cases were documented while those which were less likely to be implemented
+
+\section{Actors}
+
+Two actors were identified for the system: ``Senders'' and ``Contacts.'' Both of these actors have equal privileges within the system and use the system in the same way, hence both derive from the ``User'' type.
+
+\section{Must Have}
+
+\subsection{Open application}
+
+User opens the application. They are prompted to either login or register. The user must choose File->Quit from the menu at the top to exit, as the X will only minimize the program.
+
+\subsection{Register}
+
+{\bf Actors}: User
+
+User chooses to register, and then enters their email, nickname, and password (same window). If no one with that email or nickname has registered yet, the user is successfully registered, and can now log in. There is an option to login automatically, and it will do so if selected. If it isn’t selected, they will be led back to the original screen (register or log-in).
+
+\subsection{Log In}
+
+{\bf Actors}: User
+
+It is automatic, unless the option isn’t checked. Otherwise, the user either knows their login info or chooses to reset their password (via email). They enter their email and password into the fields. If it is not correct, they are prompted again. When logged in, anyone who has them as a friend is shown that they are online.
+
+\subsection{Add contact}
+
+User clicks the “add contact” button in the main window, or the option from the top menu. They are prompted to enter their friend’s email. They enter the email and the system searches for that person in the database. If found, the contact is sent a request for friendship. If the contact accepts, then both the user and contact now have each other as contacts, and they show up in the main window. If not accepted, neither is added. If the contact is not found, they are prompted again to enter the email, with the option to cancel.
+
+\subsection{Remove contact}
+
+{\bf Actors}: User
+
+User single-clicks the contact in their list that they want to remove and then presses the “remove contact” button in the main window (This can also be done from the top menu). This button will be grayed out until the user clicks a contact. A dialog box will pop up to confirm that they want to remove that person as a contact. There is also an option to block the contact. The contact will not have the user removed from their contact list.
+
+\subsection{Chat/Send/Receive Messages}
+
+Four ways to begin a chat: selecting a contact and pressing the “Enter” key, double clicking a contact, right clicking a contact and selecting “Chat”, and selecting a contact then pressing a chat icon on the Client UI. The button to chat will be grayed out until the user clicks a contact.
+A new window appears. The user types a message into the text box and clicks “send” or hits enter. This makes a new window show up on the contact's screen. Both the contact and the user see the message in the window. The user has the option of closing the window. If they reopen it, it will be cleared, unless they have the option chosen to show the last 10 or so messages with that contact.
+
+\subsection{Change status}
+
+{\bf Actors}: User
+
+User clicks on their status and is given an option of either Online, Busy, Away, or Appear Offline. They click an option and their status is now shown as whichever one was picked. There will be some sort of icon to indicate a contact’s status, and text shading will be used to indicate Online or Offline, possibly for other statues as well. Both the user and anyone who has the user as a contact (and is online) can see the changed status.
+
+\subsection{Change nickname}
+
+{\bf Actors}: User
+
+User either clicks “options” on the top menu and the options panel appears, or directly on their name in the main window and they type the new name there. When “ok” is clicked at the bottom of the window, the window disappears and the user, plus anyone who is online and has them as a friend, can see their changed nickname.
+
+\subsection{Option change}
+
+{\bf Actors}: User
+
+User clicks “options” on the top menu and the options window appears. User changes the options they want and clicks “ok.” the changes are now made. \\
+Changeable Options (in progress):\\
+An option will be available to show the last 10 messages from a previous chat session with a contact when a new chat window is opened.
+
+\subsection{Log Out}
+
+{\bf Actors}: User
+
+User clicks the “log out” option in the menu. The X in the corner will only minimize the program. A dialog box appears, asking if they are sure they want to log out. If yes, they are logged out, and the log in/register pop-up appears. If they want to quit the program completely, they will have to choose “quit” from the menu.
+
+\section{Should Have}
+
+\subsection{Add/remove/change Display Picture}
+
+{\bf Actors}: User
+
+User can click the display pic in the main window to bring up the options to change it, or go into the options menu.
+
+\subsection{Send file}
+
+The user can right-click on a contact’s name to show a context menu that includes “send file.” They can also choose to send the file from the chat window.
+
+\subsection{Edit personal message}
+
+User will change this by clicking on the message itself and typing right there, or changing it in the options panel.
+
+\subsection{Group Chat}
+
+User can choose to group chat from the main window button, main menu, or in a chat window with another contact. A window will show up in which the user can create a chatroom, and then the user will be prompted to choose the contacts they wish to invite. The chatroom appears to the user. Those contacts will see the invitation, and if they accept, will be placed in the chatroom. Contacts will be able to invite other people as well. The chatroom will disappear once every user has left.
