@@ -8,15 +8,6 @@ While implementing the client, it became clear that some of our larger design ch
 \subsection{Design Implementation}
 \label{designimpl}
 
-\begin{figure}
-    \begin{center}
-        \includegraphics[scale=0.6]{Implementation/diagrams/login.png}
-        \includegraphics[scale=0.6]{Implementation/diagrams/main.png}
-        \caption{The login panel and main window of the GIM Client}
-        \label{MainWindowDia}
-    \end{center}
-\end{figure}
-
 In the design section we outlined how we envisioned the flow of information between the controller and networking components would work. When we started coding the controller component, it became clear that it would be more sensible for it to be made up of multiple classes. In our design, we thought the controller would be made up of one class, which implemented the two interfaces created in the design stage. These interfaces would handle incoming and outgoing commands in the GIM protocol. However, as we began writing method stubs, our controller class looked bloated, and incorporated too many responsibilities. Instead, we created two classes: one to handle events for outgoing traffic, and one to handle incoming traffic, implementing the `networkingOut' and `networkingIn' interfaces respectively.
 
 To create the networking component, the client had to create an instance of the ClientConnection class and pass the network a ServerConnection object. It used this object to call methods after receiving commands from the server. There is a further difference here from our design. Our original plan was to have the controller thread waiting until a buffer between the networking component and controller component had a new message from the server. This thread would then parse it and call a method within the controller. However, as our understanding of threading progressed, we realised that this plan would not work as the interface can only be accessed from the GUI thread. After some confusion attempting to implement our ill informed design, we had to investigate an alternative method of altering the GUI. Upon further learning of concurrency in Swing, we discovered that Swing has a `buffer' (named the ``Event Queue'') of its own, that could be used as an alternative to queue GUI events.\footnote{See http://www.kauss.org/Stephan/swing/index.html for a more detailed discussion of the Swing Event Queue.} To use this event queue, it is necessary to wrap any code you wish to run on the GUI thread in an anonymous class implementing a method called Runnable as a parameter to the invokeLater method.  While it would be possible to read commands off our own buffer, and then buffer alterations to the GUI in to event queue, we thought this would be redundant behaviour as there would then be two intermediate queues. Instead, we decided the appropriate method would be called directly from the network reader, and the event queue would be used where it was necessary to alter the interface.
@@ -24,15 +15,6 @@ To create the networking component, the client had to create an instance of the 
 In retrospect, we may have abused this option in our implementation. There are some operations we add to the Swing Event Queue that do not effect the interface. In some cases, this is necessary as some information has to be changed in order to keep operations sequential. However, there are some cases where it is not clear if operations need to be run on the event queue. Furthermore, in some cases our program appeared to working as expected, except in some fringe cases. After much work, we found we had not wrapped code that needed to be synchronized in the event queue. A possible alternative would be to have used our original plan of reading commands from the buffer, parsing them in the controller, and calling the appropriate method. Since most almost all commands from the server effect the GUI, all method calls could have been wrapped in the event queue at this stage. This would have served to have kept our code tidier (as the event queue would only be used once), and have inherently solved many of the threading problems we had by not invoking the event queue. As we only incrementally became aware of methods that required the event queue, it is clear we did not have a full understanding of the problems of threading in the early stages. By tackling this project, we have since learned the need for more careful consideration of threading issues.
 
 In the section \ref{networking_design}, we outlined how we believed commands from the server would be parsed. While the operations of the proposed Command class remained largely intact, its responsibility of parsing had to be removed. Our original plan that this feature could be shared by the client and the server wasn't possible, as it was apparent that the server had some responsibilities with parsing that the client did not. It had to ensure that it was not receiving too many commands within a time frame, and that these commands were of a limitted length. These limits do not apply to the client, as it is allowed to receive large amounts of data from the server, such as the user information for the buddy list (which may be long).
-
-\begin{figure}
-    \begin{center}
-        \includegraphics[scale=0.5]{Implementation/diagrams/single_chat.png}
-        \includegraphics[scale=0.5]{Implementation/diagrams/group_chat.png}
-        \caption{Examples of single and group chat windows in GIM.}
-        \label{MainWindowDia}
-    \end{center}
-\end{figure}
 
 \subsection{Collaboration}
 \label{collab}
