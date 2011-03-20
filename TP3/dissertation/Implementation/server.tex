@@ -17,7 +17,7 @@ Originally the server did not enforce any of the limits defined in the protocol 
 
 Limiting the number of commands in a moving window turned out to be an interesting problem to solve efficiently. We could not simply count the number of commands and reset it after 5 seconds as this would not be a rolling window. We realised that we would have to record the times of the last 100 commands, and compare the time of the most recent command against the time of the oldest command. To make this as efficient as possible we store the list of times in an array of size 100, looping round the array, checking and updating the time in each index sequentially. If we reach an index where the time difference is less than 5000 milliseconds ago then we know that we have executed over 100 commands in 5 seconds.
 
-The following pseudo code describes the algorithm used:
+The following pseudo code describes the algorithm used: %TODO: is this actually pseudocode?
 
 \begin{verbatim}
 this.lastCommandTime = System.currentTimeMillis();
