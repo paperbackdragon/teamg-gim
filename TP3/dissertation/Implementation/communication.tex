@@ -1,8 +1,8 @@
 \section{Client-Server Communication}
-While no encryption is specifically defined in the protocol, the GIM client and server use SSL encryption to keep their communication secure. The \texttt{java.net.ssl} package provides access to all of classed needed to enable the secure connection, in particular the SSLSocket and SSLServerSocket classes.
+While no encryption is specifically defined in the protocol, the GIM client and server use SSL encryption to keep their communication secure. The \texttt{java.net.ssl} package provides access to all classes needed to enable the secure connection, in particular the SSLSocket and SSLServerSocket classes.
 
 When the server starts it creates an SSLServerSocket on port 4444. It then generates a list of supported cipher suites and filters them to only include ones which use 128bit AES encryption, limits the socket to using only these ciphers, and waits for incoming connections using the accept() method.
 
 The client does something very similar. When it first starts it creates an SSLSocket on port 4444 using the hostname of the server (rooster.dyndns.info was used as the development server). It then generates a list of 128bit AES encryption ciphers, limits the socket to these and allows Java to negotiate a connection with the server using a cipher which is supported by both parties.
 
-Once the server has accepted the connection and created a new worker for the client, both the client are server create new BufferedReaders and PrintWriters using the input and output streams of the socket. The sockets can then be used  with  the standard I/O methods built into Java, making communication over the socket no more complicated than writing to the console.
+Once the server has accepted the connection and created a new worker for the client, both the client and server create new BufferedReaders and PrintWriters using the input and output streams of the socket. The sockets can then be used with the standard I/O methods built into Java, making communication over the socket no more complicated than writing to the console.

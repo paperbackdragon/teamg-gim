@@ -2,7 +2,7 @@
 
 This section will analyse how well the server implementation fulfils the design outlined in section \ref{ServerDesign}. In general, the implementation of the server was a straight-forward affair with very few problems encountered during its development. The most challenging part of the server's development related to concurrency, and is discussed in section \ref{concur}. Spelling errors and typos were the most common cause of problems, however given their easy-to-fix nature, they are not discussed.
 
-The server was coded relatively quickly, with the majority of functionality complete before any serious progress was made with the client. This worked particular well as it meant the client was not hindered by the lack of server support and its core networking components could be developed very quickly. It also meant that the server could be thoroughly tested before being used by the client. This made debugging the client easier as it was clear which bugs were caused by the client, and which bugs were caused by the server.
+The server was coded relatively quickly, with the majority of functionality complete before any serious progress was made with the client. This worked particularly well as it meant the client was not hindered by the lack of server support and its core networking components could be developed very quickly. It also meant that the server could be thoroughly tested before being used by the client. This made debugging the client easier as it was clear which bugs were caused by the client, and which bugs were caused by the server.
 
 \subsection{Concurrency}
 \label{concur}
