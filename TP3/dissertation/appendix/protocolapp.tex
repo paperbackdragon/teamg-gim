@@ -162,9 +162,9 @@ The last command executed okay.
 If requested by the client, the server may send data about the server status, as defined in section 4.1. If more than 1 argument is provided then the data is returned with each segment on its own line, in the same order which the arguments appeared. If no arguments are provided then the data can be in any format containing any information, so do not rely on it to have a consistent format.
 
 Example:
-\texttt{:SERVERSTATUS TIME: Wed 17 Nov, 23:31;}
-\texttt{:SERVERSTATUS USERS: 56 Online, 423 Total;}
-\texttt{:SERVERSTATUS UPTIME: 21 days, 14:41;}
+\texttt{:SERVERSTATUS TIME: Wed 17 Nov, 23:31;} \\
+\texttt{:SERVERSTATUS USERS: 56 Online, 423 Total;} \\
+\texttt{:SERVERSTATUS UPTIME: 21 days, 14:41;} \\
 
 {\bf :KILL: <message>;}
 
@@ -324,7 +324,7 @@ Example: \\
 \texttt{:ROOM CREATED: 0;} \\
 \texttt{:ROOM JOINED: 0 CYBLOB@GMAIL.COM;} \\
 \texttt{:ROOM LEFT: 0 CYBLOB@GMAIL.COM;} \\
-\texttt{:ROOM INVITED: 0 HAPPY0@GMAIL.COM; \#HAPPY0@HOTMAIL.COM INVITED YOU TO THE ROOM;} \\
+\texttt{:ROOM INVITED: 0 HAPPY0@GMAIL.COM;} \\
 \texttt{:ROOM USERS: CYBLOB@GMAIL.COM HAPPY0@HOTMAIL.COM \\SOMEONEELSE@GMAAIL.COM ANOTHER@HOTMAIL.COM;} \\
 
 {\bf :FRIENDLIST: ONLINE <user> <user>... OFFLINE <user> <user>... BLOCKED <user> <user>...;}
