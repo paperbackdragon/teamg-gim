@@ -11,15 +11,14 @@ The GIM server is primarily responsible for synchronising the communication betw
     \item{Storing user information such as nicknames, passwords, display pictures, friend lists, etc.}
 \end{itemize}
 
-%TODO: Dont end a section with a list
+This section discusses the design of the server to cope with these requirements and the the reasoning behind these decisions.
 
 \subsection{Server Structure}
 
 From the very beginning the server was designed to be secure, scalable, and simple. Users must trust it to keep their information safe and route messages correctly, and it must be able to cope with any number of connected clients.
 
-In order to manage this, the server generates a new worker for every connected client. This new worker acts as the single point of contact for its respective client. This greatly simplifies the design of the server as we can treat each connection individually and allows the server to easily scale to a large number of clients.
+In order to manage this, the server generates a new worker for every connected client, as shown in figure \ref{WorkersDia}. This new worker acts as the single point of contact for its respective client. This greatly simplifies the design of the server as we can treat each connection individually and allows the server to easily scale to a large number of clients.
 
-%TODO: Refer to figures by numbers from written text
 \begin{figure}
     \begin{center}
         \includegraphics[scale=0.6]{Design/diagrams/server_workers.png}
@@ -28,7 +27,7 @@ In order to manage this, the server generates a new worker for every connected c
     \end{center}
 \end{figure}
 
-Each worker has two buffers, one which stores commands read from the network (the command buffer), and one which stores commands to be written to the network (the response buffer). The worker continually reads commands from the command buffer, processes them, and puts the responses into the response buffer. At the same time the worker is also performing network reads and writes to fill and empty the respective buffers.
+Each worker has two buffers, one which stores commands read from the network (the command buffer), and one which stores commands to be written to the network (the response buffer). The worker continually reads commands from the command buffer, processes them, and puts the responses into the response buffer. At the same time the worker is also performing network reads and writes to fill and empty the respective buffers. This is show in figure \ref{WorkerDatailedDia}.
 
 The buffers allow the worker to run using several threads which increases the performance on multi-core systems as the server is able to read from the network, process commands, and write to the network in a truly concurrent fashion. This means that at any one time a worker could be handling up to three different commands, each at a different stage of execution, and still have several commands stored in the buffers waiting to be used.
 
@@ -90,9 +89,8 @@ When a user changes any piece of their user information such as their status, ni
 Subscriptions are also used as a method of access control. A user is only able to request information about another user if they are subscribed to that user. This limitation means that a user is effectively granting another user access to read their information by adding them to their friend list. However, the converse is not true. Removing a user from your friend list does not remove their access to your information as they may still have you in their friend list. In order to combat this, you are able to block a user which removes this access to your information and status updates. This enhances privacy and gives the user control of who is able to access their data.
 
 \subsection{Synchronisation}
-The server has a large section of backing data which stores all of the users, rooms, workers and any other operational data required by the server. Due to the highly concurrent nature of the server it is very important to ensure that the data is properly synchronised. This is to prevent race conditions where two writes occur on an object at the same time giving an unpredictable output.
+The server has a large section of backing data which stores all of the users, rooms, workers and any other operational data required by the server. Due to the highly concurrent nature of the server it is very important to ensure that the data is properly synchronised. This is to prevent race conditions where two writes occur on an object at the same time giving an unpredictable output, as show in \ref{RaceConditionDia}.
 
-%TODO: Refer to figure my number from text
 \begin{figure}
     \begin{center}
         \includegraphics[scale=0.6]{Design/diagrams/server_race_condition.png}
@@ -103,7 +101,7 @@ The server has a large section of backing data which stores all of the users, ro
 
 To stop this the server must lock (claim ownership of) the data before it is updated. This is a very tricky thing to do as as the lock must be long enough to ensure that no updates occur between reading the original data and writing the updated data, while also keeping the lock as short as possible to avoid long periods of blocking and keep performance high.
 
-The server must also make sure only to lock when needed, and not obtain a lock for objects it does not require. This simplest solution would be to lock the entire data object, and only allow reads and writes through a proxy. However this would be extremely costly in terms of performance as writes to individual objects inside the data object would block writes to other objects, meaning that at any one time only a single write could occur. Instead the data object must be clever and only lock the objects which are to be written to, allowing for simultaneouswrites to separate objects while still stopping race conditions from occurring.
+The server must also make sure only to lock when needed, and not obtain a lock for objects it does not require. This simplest solution would be to lock the entire data object, and only allow reads and writes through a proxy. However this would be extremely costly in terms of performance as writes to individual objects inside the data object would block writes to other objects, meaning that at any one time only a single write could occur. Instead the data object must be clever and only lock the objects which are to be written to, allowing for simultaneous writes to separate objects while still stopping race conditions from occurring.
 
 \begin{figure}
     \begin{center}
@@ -114,7 +112,7 @@ The server must also make sure only to lock when needed, and not obtain a lock f
 \end{figure}
 
 \subsection{The Controller and Timeout Manager}
-Even though the server should be capable of functioning autonomously, some of the features defined by the protocol require interaction with the server that deviates from the client-server model. For example, the \texttt{:BROADCAST:} commandallows the server to send a message to all of the clients it is connected to. The controller allows authorised users to interact through a command line interface with the server. These authorised users are allowed by the operating system to connect to the session that is running the server. They are then able to execute several commands defined by the controller to broadcast messages and control the server. These commands are independent from protocol commands.
+Even though the server should be capable of functioning autonomously, some of the features defined by the protocol require interaction with the server that deviates from the client-server model. For example, the \texttt{:BROADCAST:} command allows the server to send a message to all of the clients it is connected to. The controller allows authorised users to interact through a command line interface with the server. These authorised users are allowed by the operating system to connect to the session that is running the server. They are then able to execute several commands defined by the controller to broadcast messages and control the server. These commands are independent from protocol commands.
 
 For example, the \texttt{:QUIT:} command tells the server to shut down and create a persistence file to store user data, and the following would send a \texttt{:BROADCAST:} command to all of the connected clients:
 
@@ -128,7 +126,7 @@ Due to the nature of the Controller and Timeout Manager, they both must run on s
     \begin{figure}
         \begin{center}
             \includegraphics[scale=0.5]{Design/diagrams/server_uml.png}
-            \caption{UML showing the structure of the GIM Server. Still needs a little work.}
+            \caption{UML showing the structure of the GIM Server.}
             \label{umlDia}
         \end{center}
     \end{figure}
