@@ -1,2 +1,4 @@
 \section{Storage}
-blah blah blah
+Both the GIM client and server use Java's built-in serialization features to store data locally while they are not running. The Data class of the server, and the Options class of the client both implement the Serializable from \texttt{java.io}. This allows them to be serialized and stored on disk using an ObjectOutputStream object, also in \texttt{java.io}.
+
+When the client starts it reads this file from the disk and uses an ObjectInputStream to turn the raw data back into the Options object. For the server, it is not quite so simple. Because the relies on several interconnecting links between the users in the system and because of the way that the serialization works, these references are not maintained in a way that makes them reliable. 
