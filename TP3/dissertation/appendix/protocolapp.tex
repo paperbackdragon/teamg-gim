@@ -13,7 +13,7 @@ The role of the client is to allow the user to retrieve, via an interface, infor
 
 \section{Commands}
 
-\subsection{Command Structure}
+\subsection*{Command Structure}
 
 Each message will follow this high level syntax: \\
 \texttt{:COMMAND [ ARG1 \ \vline \ ARG2 \ \vline \ ARG3 ]: $<$data$>$;} \\
@@ -44,7 +44,7 @@ Every command or request which the sever receives must be followed by a response
 
 Commands have a maximum length of 8192 characters, including any punctuation, with the exception of the \texttt{:SET DISPLAY\_PIC:} command, which has a character limit of 32768.
 
-\subsection{Heart Beat}
+\subsection*{Heart Beat}
 
 In order for the server to recognise that the client is still functioning, it must receive a command from the client on a regular basis (around every 15 seconds). In the event that no command is received for an extended period, the server will disconnect the client.
 
@@ -56,7 +56,7 @@ These are the only commands possible before a user has logged in and remain poss
 
 These include all commands necessary for establishing a connection, logging in to the server and creating a new account.
 
-\subsection{Server Commands}
+\subsection*{Server Commands}
 
 \texttt{:PING:;}
 
@@ -148,7 +148,7 @@ Examples:
 \texttt{:QUIT:;} \\
 User is logged out and disconnected.
 
-\subsection{Client Commands}
+\subsection*{Client Commands}
 
 {\bf :OKAY:;}
 
@@ -194,7 +194,7 @@ The user is logged in and has permissions to use post-login commands
 
 These commands are accessible only once the user has logged in. The server should issue an \texttt{:ERROR UNAUTHORISED:} response if an unauthorised user attempts to use one of these commands. After repeated attempts, the server may temporarily block or ban the user.
 
-\subsection{Server Commands}
+\subsection*{Server Commands}
 
 {\bf :SET [ NICKNAME\ \vline \ STATUS \ \vline \ PERSONAL\_MESSAGE \ \vline \ DISPLAY\_PIC ]: $<$value$>$;}
 
@@ -285,7 +285,7 @@ Example: \\
 \texttt{:LOGOUT:;}\\
 The user is logged out
 
-\subsection{Client Commands}
+\subsection*{Client Commands}
 
 {\bf :MESSAGE: $<$roomid$>$ $<$sender$>$ $<$message$>$;}
 
