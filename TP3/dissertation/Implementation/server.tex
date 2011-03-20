@@ -10,7 +10,23 @@ Originally the server used the HashMap class from the \texttt{java.util} package
 
 The Buffer class implements a thread-safe, unbounded blocking queue. Essentially the buffer is a LinkedList made thread-safe by only allowing items to be added and removed through synchronised methods. This ensured that at no point could more than one operation be performed on the list, preventing race conditions from occurring.
 
-One of the most difficult bugs to find occurred when a user attempted to log in from 2 different clients. The server located the the worker which was allocated to the client already logged, placed an \texttt{:ERROR:} and \texttt{:QUIT} commands into their buffer, and then set the users worker to the worker of the new client. The new client then mysteriously disconnected. We eventually realised that by putting the \texttt{:QUIT:} command into the workers buffer it was not immediately being disconnected, there would be a slight delay between placing the command into buffer and the command being executed. The \texttt{:QUIT:} command logs out the user and then kills their client. As we had already set the user's worker to the one associated with the new client we were effectively killing both the old and new workers. This was something we had not considered when designing the server. Fortunately the solution was fairly simple and did not require any sizeable changes to the structure of the server. We forced the new worker to wait until the old worker had died, and therefore has empted its buffer and logged the user out, meaning that it was now safe to assign the new worker to the user and log them in.
+One of the most difficult to find bugs occurred when a user attempted to log in from 2 different clients. The server located the the worker which was allocated to the client already logged, placed an \texttt{:ERROR:} and \texttt{:QUIT} commands into their buffer, and then set the users worker to the worker of the new client. The new client then mysteriously disconnected. We eventually realised that by putting the \texttt{:QUIT:} command into the workers buffer it was not immediately being disconnected, there would be a slight delay between placing the command into buffer and the command being executed. The \texttt{:QUIT:} command logs out the user and then kills their client. As we had already set the user's worker to the one associated with the new client we were effectively killing both the old and new workers. This was something we had not considered when designing the server. Fortunately the solution was fairly simple and did not require any sizeable changes to the structure of the server. We forced the new worker to wait until the old worker had died, and therefore has empted its buffer and logged the user out, meaning that it was now safe to assign the new worker to the user and log them in.
 
 \subsection{Detecting Abuse and Enforcing Limits}
-Originally the server did not enforce any of the limits defined in the protocol and these had to be built in at a later date.
+Originally the server did not enforce any of the limits defined in the protocol and these had to be introduced at a later on in development. As we were aware from the start of development that they would need to be implemented in the future, we were able to design the server so that they could easily be added. 
+
+Limiting the number of commands in moving window turned out to be an interesting problem to solve efficiently.
+
+\begin{verbatim}
+this.lastCommandTime = System.currentTimeMillis();
+long oldest = this.commandTimes[this.last];
+
+if (oldest != 0 && oldest > (this.lastCommandTime - 5000))
+    killWorker();
+
+this.commandTimes[last] = this.lastCommandTime;
+this.last = (this.last + 1) % (this.commandTimes.length - 1);
+\end{verbatim}
+
+
+		
