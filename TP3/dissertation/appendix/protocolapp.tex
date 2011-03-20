@@ -15,7 +15,7 @@ The role of the client is to allow the user to retrieve, via an interface, infor
 \subsection{Command Structure}
 
 Each message will follow this high level syntax: \\
-\texttt{:COMMAND [ ARG1 \ \vline \ ARG2 \ \vline \ ARG3 ]: <data>;} \\
+\texttt{:COMMAND [ ARG1 \ \vline \ ARG2 \ \vline \ ARG3 ]: $<$data$>$;} \\
 
 \begin{itemize}
 
@@ -25,14 +25,14 @@ Each message will follow this high level syntax: \\
 
 \item{A colon is used in the first instance to indicate the opening of a command, and in the second to indicate a boundary between a command and arguments, and the data set.}
 
-\item{Angular brackets < … > are used to show data that has been provided by the user and should be considered unsafe.}
+\item{Angular brackets $<$ … $>$ are used to show data that has been provided by the user and should be considered unsafe.}
 
 \item{A semi colon ; is used to show the end of a command.}
 
 \end{itemize}
 
 By example:
-\texttt{:GET \{ NICKNAME \ \vline \ STATUS \ \vline \ PERSONAL\_MESSAGE \ \vline \ DISPLAY\_PIC \}: <user> <user>...;}\\
+\texttt{:GET \{ NICKNAME \ \vline \ STATUS \ \vline \ PERSONAL\_MESSAGE \ \vline \ DISPLAY\_PIC \}: $<$user$>$ $<$user$>$...;}\\
 Could be used as follows: \\
 \texttt{:GET NICKNAME STATUS PERSONAL\_MESSAGE: cyblob@idgmail.com meow@hotmail.com;} \\
 Which means request the Nickname, Status and Personal Message of users cyblob@gmail.com and meow@hotmail.com.
@@ -88,11 +88,11 @@ The up-time of the server instance}
 
 Examples:
 \texttt{:SERVERSTATUS USERS:;} \\
-Response>:\texttt{SERVERSTATUS USERS: 23 Online, 565 Total} \\
+Response$>$:\texttt{SERVERSTATUS USERS: 23 Online, 565 Total} \\
 \texttt{:SERVERSTATUS TIME:;} \\
-Response>:\texttt{SERVERSTATUS TIME: Wed 17 Nov, 23:31} \\
+Response$>$:\texttt{SERVERSTATUS TIME: Wed 17 Nov, 23:31} \\
 
-{\bf :AUTH \{ LOGIN \ \vline \ REGISTER \}: <email address> <password>;}
+{\bf :AUTH \{ LOGIN \ \vline \ REGISTER \}: $<$email address$>$ $<$password$>$;}
 
 The \texttt{AUTH} commands deals with all aspects of user authorisation and permissions. The \texttt{AUTH} command alone should should return the users' current authorisation state, either \texttt{LOGGEDIN} or \texttt{UNAUTHORIZED}.
 
@@ -166,7 +166,7 @@ Example:
 \texttt{:SERVERSTATUS USERS: 56 Online, 423 Total;} \\
 \texttt{:SERVERSTATUS UPTIME: 21 days, 14:41;} \\
 
-{\bf :KILL: <message>;}
+{\bf :KILL: $<$message$>$;}
 
 In the event that the server wants the client to disconnect, it will issue a \texttt{KILL} command. As soon as the command has been sent the server will disconnect. 
 
@@ -174,7 +174,7 @@ Example:
 \texttt{:KILL: Too many bad login attempts.;}\\
 The server closes the connection.
 
-{\bf :BROADCAST: <message>;}
+{\bf :BROADCAST: $<$message$>$;}
 
 A \texttt{BROADCAST} message sent by the server to all users. The broadcast message should be displayed immediately and is likely to contain critical information about the server.
 
@@ -195,14 +195,14 @@ These commands are accessible only once the user has logged in. The server shoul
 
 \subsection{Server Commands}
 
-{\bf :SET [ NICKNAME\ \vline \ STATUS \ \vline \ PERSONAL\_MESSAGE \ \vline \ DISPLAY\_PIC ]: <value>;}
+{\bf :SET [ NICKNAME\ \vline \ STATUS \ \vline \ PERSONAL\_MESSAGE \ \vline \ DISPLAY\_PIC ]: $<$value$>$;}
 
 The \texttt{SET} commands allows various user attributes to be set by the client. The exact attribute depends on the augment given however only 1 attribute can be set at a time. In the case of \texttt{DISPLAY\_PIC}, the image is Base 64 encoded.
 
 Example:
 \texttt{:SET NICKNAME: Andrew;} \\
 
-{\bf :GET \{ NICKNAME\ \vline \ STATUS \ \vline \ PERSONAL\_MESSAGE \ \vline \ DISPLAY\_PIC \}: <user>\{<user>\};} \\
+{\bf :GET \{ NICKNAME\ \vline \ STATUS \ \vline \ PERSONAL\_MESSAGE \ \vline \ DISPLAY\_PIC \}: $<$user$>$\{$<$user$>$\};} \\
 
 The \texttt{GET} command requests a set of attributes for each user in a space separated list of users. The server should respond with an \texttt{INFO} command and the appropriate data.
 
@@ -216,7 +216,7 @@ The \texttt{FRIENDLIST} command requests a list of users in the users friendlist
 Example: \\
 \texttt{:FREINDLIST:} 
 	
-{\bf :ROOM [ CREATE \{GROUP\} \ \vline \ INVITE \ \vline \ JOIN \ \vline \ LEAVE \ \vline \ USERS \ \vline \ TYPE ]: \{<roomid> \ \vline \ <user>\};}
+{\bf :ROOM [ CREATE \{GROUP\} \ \vline \ INVITE \ \vline \ JOIN \ \vline \ LEAVE \ \vline \ USERS \ \vline \ TYPE ]: \{$<$roomid$>$ \ \vline \ $<$user$>$\};}
 
 The \texttt{ROOM} command deals with all room related requests.
 
@@ -239,14 +239,14 @@ The \texttt{USERS} argument request a list of the users in the room from the ser
 
 \end{itemize}
 
-\texttt{:MESSAGE: <roomid> <message>;}
+\texttt{:MESSAGE: $<$roomid$>$ $<$message$>$;}
 
 The \texttt{MESSAGE} command specifies a room and a message which should be delivered to the room.
 
 Example: \\
 \texttt{:MESSAGE: 25 Hey guys, what’s up?;}
 
-{\bf :FRIEND [ ADD \ \vline \ BLOCK \ \vline \ UNBLOCK \ \vline \ ACCEPT \ \vline \ DECLINE \ \vline \ DELETE ]: <target>;}
+{\bf :FRIEND [ ADD \ \vline \ BLOCK \ \vline \ UNBLOCK \ \vline \ ACCEPT \ \vline \ DECLINE \ \vline \ DELETE ]: $<$target$>$;}
 
 The \texttt{FRIEND} command controls all friend list data.
 
@@ -286,14 +286,14 @@ The user is logged out
 
 \subsection{Client Commands}
 
-{\bf :MESSAGE: <roomid> <sender> <message>;}
+{\bf :MESSAGE: $<$roomid$>$ $<$sender$>$ $<$message$>$;}
 
 The \texttt{MESSAGE} command represents a message received by the user. The sender is the email address of the person who sent the message, and message is the message itself.
 
 Example: \\
 \texttt{:MESSAGE: 56 cyblob@gmail.com How’s it going?;}
 
-{\bf :ROOM [ CREATED \ \vline \ JOINED \ \vline \ LEFT \ \vline \ INVITED \ \vline \ USERS \ \vline \ PERSONAL \ \vline \ GROUP ]: <roomid> \{<user>\};}
+{\bf :ROOM [ CREATED \ \vline \ JOINED \ \vline \ LEFT \ \vline \ INVITED \ \vline \ USERS \ \vline \ PERSONAL \ \vline \ GROUP ]: $<$roomid$>$ \{$<$user$>$\};}
 
 \begin{itemize}
 
@@ -327,28 +327,28 @@ Example: \\
 \texttt{:ROOM INVITED: 0 HAPPY0@GMAIL.COM;} \\
 \texttt{:ROOM USERS: CYBLOB@GMAIL.COM HAPPY0@HOTMAIL.COM \\SOMEONEELSE@GMAAIL.COM ANOTHER@HOTMAIL.COM;} \\
 
-{\bf :FRIENDLIST: ONLINE <user> <user>... OFFLINE <user> <user>... BLOCKED <user> <user>...;}
+{\bf :FRIENDLIST: ONLINE $<$user$>$ $<$user$>$... OFFLINE $<$user$>$ $<$user$>$... BLOCKED $<$user$>$ $<$user$>$...;}
 
 The \texttt{FRIENDLIST} command specifies the users friend list using the format specified above.
 
 Example: \\
 \texttt{:FREINDLIST: ONLINE cyblob@gmail.com blah@ddfdf.com OFFLINE meow@hotmail.com woof@gmail.com sheep@yahoo.com BLOCKED wtf@wtf.com;}
 
-{\bf :FRIENDREQUEST: <user> <nickname>;}
+{\bf :FRIENDREQUEST: $<$user$>$ $<$nickname$>$;}
 
 The \texttt{FRIENDREQUEST} command tells the client that the user has a friend request and specifies who sent it and their nickname at the time of sending. The client should the respond with the appropriate \texttt{FRIEND} command.
 
 Example: \\
 \texttt{:FRIENDREQUEST: cyblob@gmail.com James;}
 
-{\bf :UPDATE [ NICKNAME\ \vline \ STATUS \ \vline \ PERSONAL\_MESSAGE \ \vline \ DISPLAY\_PIC \ \vline \ FRIENEDLIST  ]: <user>;}
+{\bf :UPDATE [ NICKNAME\ \vline \ STATUS \ \vline \ PERSONAL\_MESSAGE \ \vline \ DISPLAY\_PIC \ \vline \ FRIENEDLIST  ]: $<$user$>$;}
 
 The \texttt{UPDATE} command notifies the client that a user in their friend list has just updated one of their attributes. The client can then retrieve the updated attribute if necessary.
 
 Example: \\
 \texttt{:UPDATE NICKNAME: cyblob@gmail.com;}
 
-\texttt{:INFO \{ NICKNAME \ \vline \ STATUS \ \vline \ PERSONAL\_MESSAGE \ \vline \ DISPLAY\_PIC \}: <user> <data> \{<user> <data>\};} 
+\texttt{:INFO \{ NICKNAME \ \vline \ STATUS \ \vline \ PERSONAL\_MESSAGE \ \vline \ DISPLAY\_PIC \}: $<$user$>$ $<$data$>$ \{$<$user$>$ $<$data$>$\};} 
 
 The data is returned one line per value, in the same order as the arguments given, separated by the users email address. In the case of \texttt{DISPLAY\_PIC}, the image is Base 64 encoded to enable it to be embedded as text.
 
@@ -365,7 +365,7 @@ Online \\
 I’m not a panda \\
 DAREAAhEBAxEB/8QAHQAAAgIDAQEBAAAAAAAAAAAABAUDBgECBwAICf/EAE4QAAIBAg...;}
 
-\texttt{:ERROR [ UNAUTHORISED \ \vline \ INVALID\_EMAIL \ \vline \ \\ EMAIL\_ALREADY\_IN\_USE \ \vline \ PASSWORD\_TOO\_SHORT \ \vline \ MISSING\_ARGUMENTS \ \vline \ \\ TOO\_MANY\_ARGUMENTS \ \vline \ INVALID\_ARGUMENT \ \vline \ LOGGED\_IN\_FROM\_OTHER\_LOCATION \ \vline \ \\ USER\_DOES\_NOT\_EXIST \ \vline \ LOGIN\_DETAILS\_INCORRECT ]: <message>;}
+\texttt{:ERROR [ UNAUTHORISED \ \vline \ INVALID\_EMAIL \ \vline \ \\ EMAIL\_ALREADY\_IN\_USE \ \vline \ PASSWORD\_TOO\_SHORT \ \vline \ MISSING\_ARGUMENTS \ \vline \ \\ TOO\_MANY\_ARGUMENTS \ \vline \ INVALID\_ARGUMENT \ \vline \ LOGGED\_IN\_FROM\_OTHER\_LOCATION \ \vline \ \\ USER\_DOES\_NOT\_EXIST \ \vline \ LOGIN\_DETAILS\_INCORRECT ]: $<$message$>$;}
 
 If an error occurs then the server should return one of these commands to the client. The exact command and the message will be specified by the sever.
 
