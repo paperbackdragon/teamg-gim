@@ -22,7 +22,12 @@ import javax.swing.UIManager;
 
 import client.net.ClientConnection;
 import client.net.ServerConnection;
-import client.ui.*;
+import client.ui.ChatPanel;
+import client.ui.ChatWindowIdentifier;
+import client.ui.SingleChatPanel;
+import client.ui.GroupChatPanel;
+import client.ui.LoginPanel;
+import client.ui.MainWindow;
 
 public class GimClient {
 
@@ -169,7 +174,6 @@ public class GimClient {
 				return windows.get(i);
 			}
 		}
-		System.out.println("Hello");
 		return null;
 	}
 
@@ -296,11 +300,6 @@ public class GimClient {
 
 			ActionListener actionListener = new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					/*
-					 * trayIcon.displayMessage("Action Event",
-					 * "An Action Event Has Been Performed!",
-					 * TrayIcon.MessageType.INFO);
-					 */
 
 					if (e.getSource() == trayIcon) {
 						// Bring window to front. NEED TO WORK OUT HOW TO DO
