@@ -15,7 +15,7 @@ One of the most difficult bugs to find occurred when a user attempted to log in 
 \subsection{Detecting Abuse and Enforcing Limits}
 Originally the server did not enforce any of the limits defined in the protocol and these had to be introduced later on in development. As we were aware from the start of development that they would need to be implemented in the future, we were able to design the server so that they could easily be added. 
 
-Limiting the number of commands in a moving window turned out to be an interesting problem to solve efficiently. We could not simply count the number of commands and reset it after 5 seconds as this would not be a rolling window. We realised that we would have to record the times of the last 100 commands, and compare the time of the most recent command against the time of the oldest command. To make this as efficient as possible we store the list of times in an array of size 100, looping round the array and checking then updating the time in each index sequentially. If we reach an index where the time difference is less than 5000 milliseconds ago then we know that we have executed over 100 commands in 5 seconds.
+Limiting the number of commands in a moving window turned out to be an interesting problem to solve efficiently. We could not simply count the number of commands and reset it after 5 seconds as this would not be a rolling window. We realised that we would have to record the times of the last 100 commands, and compare the time of the most recent command against the time of the oldest command. To make this as efficient as possible we store the list of times in an array of size 100, looping round the array, checking and updating the time in each index sequentially. If we reach an index where the time difference is less than 5000 milliseconds ago then we know that we have executed over 100 commands in 5 seconds.
 
 The following pseudo code describes the algorithm used:
 
@@ -30,5 +30,5 @@ this.commandTimes[last] = this.lastCommandTime;
 this.last = (this.last + 1) % (this.commandTimes.length - 1);
 \end{verbatim}
 
-Because this must record the time of the last command it can also be used to help identify workers which have timed out. As the Timeout class does not need to be particularly accurate, it is only run once every 30 seconds and sleeps until it is next scheduled. The Timeout class works independent of the workers, relying on the workers to keep the times updated. It loops through every worker on the system, checking the time of their last command against the current time, and if it finds that the difference is greater than 15000 milliseconds then kills the worker.
-		
+Because this must record the time of the last command it can also be used to help identify workers which have timed out. As the Timeout class does not need to be particularly accurate, it is only run once every 30 seconds and sleeps until it is next scheduled. The Timeout class works independent of the workers, relying on the workers to keep the times updated. It loops through every worker on the system, checking the time of their last command against the current time, and if it finds that the difference is greater than 15000 milliseconds then it kills the worker.
+
