@@ -14,31 +14,40 @@ The role of the client is to allow the user to retrieve, via an interface, infor
 
 \subsection{Command Structure}
 
-Each message will follow this high level syntax:
-\texttt{:COMMAND [ ARG1 | ARG2 | ARG3 ]: <data>;}
-- Square brackets [ ... ] denote a list of 1 or more arguments of which only one can be given and is required.  
-- Parenthesis \{ ... \} are used to represent arguments which are optional and can be non-singular.
-- A colon is used in the first instance to indicate the opening of a command, and in the second to indicate a boundary between a command and arguments, and the data set.
-- Angular brackets < … > are used to show data that has been provided by the user and should be considered unsafe.
-- A semi colon ; is used to show the end of a command.
+Each message will follow this high level syntax: \\
+\texttt{:COMMAND [ ARG1 \ \vline \ ARG2 \ \vline \ ARG3 ]: <data>;} \\
+
+\begin{itemize}
+
+\item{Square brackets [ ... ] denote a list of 1 or more arguments of which only one can be given and is required.}  
+
+\item{Parenthesis \{ ... \} are used to represent arguments which are optional and can be non-singular.}
+
+\item{A colon is used in the first instance to indicate the opening of a command, and in the second to indicate a boundary between a command and arguments, and the data set.}
+
+\item{Angular brackets < … > are used to show data that has been provided by the user and should be considered unsafe.}
+
+\item{A semi colon ; is used to show the end of a command.}
+
+\end{itemize}
 
 By example:
-\texttt{:GET \{ NICKNAME | STATUS | PERSONAL_MESSAGE | DISPLAY_PIC \}: <user> <user>...;}\\
-Could be used as follows:
-\textttt{:GET NICKNAME STATUS PERSONAL_MESSAGE: cyblob@idgmail.com meow@hotmail.com;}
+\texttt{:GET \{ NICKNAME \ \vline \ STATUS \ \vline \ PERSONAL\_MESSAGE \ \vline \ DISPLAY\_PIC \}: <user> <user>...;}\\
+Could be used as follows: \\
+\texttt{:GET NICKNAME STATUS PERSONAL\_MESSAGE: cyblob@idgmail.com meow@hotmail.com;} \\
 Which means request the Nickname, Status and Personal Message of users cyblob@gmail.com and meow@hotmail.com.
 
 Remarkably, this minimalistic structure is suitable to fulfil every requirement of the system, and promotes readability.
 
-Every command or request which the sever receives must be followed by a response of some type. Where there is a command which does not return any data the server should response with the :OKAY: command to signal that the command was received and error free.
+Every command or request which the sever receives must be followed by a response of some type. Where there is a command which does not return any data the server should response with the \texttt{:OKAY:} command to signal that the command was received and error free.
 
-Commands have a maximum length of 8192 characters, including any punctuation, with the exception of the :SET DISPLAY_PIC: command, which has a character limit of 32768.
+Commands have a maximum length of 8192 characters, including any punctuation, with the exception of the \texttt{:SET DISPLAY\_PIC:} command, which has a character limit of 32768.
 
 \subsection{Heart Beat}
 
 In order for the server to recognise that the client is still functioning, it must receive a command from the client on a regular basis (around every 15 seconds). In the event that no command is received for an extended period, the server will disconnect the client.
 
-Any command will reset the timeout, however it is reccomended that the PING command is used.
+Any command will reset the timeout, however it is reccomended that the \texttt{PING} command is used.
 
 \section{Pre-login Commands}
 
@@ -54,71 +63,71 @@ The command is used as a keep-alive command. Its primary use it to indicate that
 
 Examples:
 \texttt{:PING: ;} \\
-The client responding to a :PING: commands
+The client responding to a \texttt{:PING:} commands
 
-{\bf :SERVERSTATUS \{ USERS | TIME | UPTIME \}:;}
+{\bf :SERVERSTATUS \{ USERS \ \vline \ TIME \ \vline \ UPTIME \}:;}
 
-The SERVERSTATUS command returns information about the server including the number of users, the local system time and server up-time.
+The \texttt{SERVERSTATUS} command returns information about the server including the number of users, the local system time and server up-time.
  
-In that case that an argument is provided, the server should then return a SERVERSTATUS as defined in the client section. If more than one argument is provided, then the server should return each value on a new line in the order which the arguments were received (reading from left to right).
+In that case that an argument is provided, the server should then return a \texttt{SERVERSTATUS} as defined in the client section. If more than one argument is provided, then the server should return each value on a new line in the order which the arguments were received (reading from left to right).
 
 The arguments for this command are as follows:
 
 \begin{itemize}
 
-\item \texttt{USERS \\
+\item{ \texttt{USERS} \\
 The total number of users and number of online users}
 
-\item \texttt{TIME \\
+\item{ \texttt{TIME} \\
 The current local time of the server}
 
-\item \texttt{UPTIME \\
+\item{ \texttt{UPTIME} \\
 The up-time of the server instance}
 
 \end{itemize}
 
 Examples:
 \texttt{:SERVERSTATUS USERS:;} \\
-Response>:\texttt{SERVERSTATUS USERS: 23 Online, 565 Total}
+Response>:\texttt{SERVERSTATUS USERS: 23 Online, 565 Total} \\
 \texttt{:SERVERSTATUS TIME:;} \\
-Response>:\texttt{SERVERSTATUS TIME: Wed 17 Nov, 23:31}
+Response>:\texttt{SERVERSTATUS TIME: Wed 17 Nov, 23:31} \\
 
-{\bf :AUTH \{ LOGIN | REGISTER \}: <email address> <password>;}
+{\bf :AUTH \{ LOGIN \ \vline \ REGISTER \}: <email address> <password>;}
 
-The AUTH commands deals with all aspects of user authorisation and permissions. The AUTH command alone should should return the users' current authorisation state, either LOGGEDIN or UNAUTHORIZED.
+The \texttt{AUTH} commands deals with all aspects of user authorisation and permissions. The \texttt{AUTH} command alone should should return the users' current authorisation state, either \texttt{LOGGEDIN} or \texttt{UNAUTHORIZED}.
 
 {\bf LOGIN}
 
-If the details are valid then the server should respond with an \texttt{:AUTH LOGGEDIN:} command. It should set the user’s state (but not status) to ONLINE.
-In the event that an error occurs the server should generate one of the following ERROR statuses:
+If the details are valid then the server should respond with an \texttt{:AUTH LOGGEDIN:} command. It should set the user’s state (but not status) to \texttt{ONLINE}.
+In the event that an error occurs the server should generate one of the following \texttt{ERROR} statuses:
 
-\texttt{USER_DOES_NOT_EXIST}\\
-The email address has not been registered
-\texttt{LOGIN_DETAILS_INCORRECT} \\
-The password was incorrect
-\texttt{MISSING_ARGUMENTS} \\
-There were too few arguments
+\texttt{USER\_DOES\_NOT\_EXIST}\\
+The email address has not been registered \\
+\texttt{LOGIN\_DETAILS\_INCORRECT} \\
+The password was incorrect \\
+\texttt{MISSING\_ARGUMENTS} \\
+There were too few arguments \\
 
-If the user is already logged in then the server should send a \texttt{LOGGED_IN_FROM_OTHER_LOCATION} error and KILL command to the already connected user.
+If the user is already logged in then the server should send a \texttt{LOGGED\_IN\_FROM\_OTHER\_LOCATION} error and \texttt{KILL} command to the already connected user.
 
 {\bf REGISTER}
 
-The register argument allows for new users to be registered by providing a valid email address and password. If the new account is registered correctly then the server should respond with AUTH REGISTERED, however, it should not log the user in. 
+The register argument allows for new users to be registered by providing a valid email address and password. If the new account is registered correctly then the server should respond with \texttt{AUTH REGISTERED}, however, it should not log the user in. 
 
-If the registration is unsuccessful the server should return one of the following ERROR messages:
+If the registration is unsuccessful the server should return one of the following \texttt{ERROR} messages:
 
 \begin{itemize}
 
-\item{INVALID_EMAIL \\
+\item{\texttt{INVALID\_EMAIL} \\
 The email address was invalid}
 
-\item{EMAIL_ALREADY_IN_USE \\
+\item{\texttt{EMAIL\_ALREADY\_IN\_USE} \\
 The email address has already by registered}
 
-\item{PASSWORD_TOO_SHORT \\
+\item{\texttt{PASSWORD\_TOO\_SHORT} \\
 The password is too short}
 
-\item{MISSING_ARGUMENTS	\\
+\item{\texttt{MISSING\_ARGUMENTS}	\\
 There were too few arguments}
 
 \end{itemize}
@@ -126,13 +135,13 @@ There were too few arguments}
 Examples:
 \texttt{:AUTH REGISTER: cyblob@gmail.com p455w0rd;} \\
 \texttt{:AUTH REGISTER: blah lol;} \\
-Server responds \texttt{:ERROR INVALID_EMAIL:} \\
+Server responds \texttt{:ERROR INVALID\_EMAIL:} \\
 \texttt{:AUTH LOGIN: cyblob@gmail.com p455w0rd;}\\
 Server responds \texttt{:AUTH OKAY:} \\
 
 {\bf :QUIT:;}
 
-The \texttt{QUIT} command tells the server that the users wishes to log out (if applicable) and disconnect from the server. Once the quit command has been received the users’ state should be changed to OFFLINE and the the connection broken.
+The \texttt{QUIT} command tells the server that the users wishes to log out (if applicable) and disconnect from the server. Once the quit command has been received the users’ state should be changed to \texttt{OFFLINE} and the the connection broken.
 
 Examples:
 \texttt{:QUIT:;} \\
@@ -142,13 +151,13 @@ User is logged out and disconnected.
 
 {\bf :OKAY:;}
 
-In the event that a command received from the client does not have any other response, the :OKAY: command is sent to signify that the command was successful. 
+In the event that a command received from the client does not have any other response, the \texttt{:OKAY:} command is sent to signify that the command was successful. 
 
 Examples:
 \texttt{:OKAY:;}\\
 The last command executed okay.
 
-{\bf :SERVERSTATUS \{ USERS | TIME | UPTIME \}:;}
+{\bf :SERVERSTATUS \{ USERS \ \vline \ TIME \ \vline \ UPTIME \}:;}
 
 If requested by the client, the server may send data about the server status, as defined in section 4.1. If more than 1 argument is provided then the data is returned with each segment on its own line, in the same order which the arguments appeared. If no arguments are provided then the data can be in any format containing any information, so do not rely on it to have a consistent format.
 
@@ -167,14 +176,14 @@ The server closes the connection.
 
 {\bf :BROADCAST: <message>;}
 
-A BROADCAST message sent by the server to all users. The broadcast message should be displayed immediately and is likely to contain critical information about the server.
+A \texttt{BROADCAST} message sent by the server to all users. The broadcast message should be displayed immediately and is likely to contain critical information about the server.
 
 Example:
 \texttt{:BROADCAST: The server is on fire and about to crash. ;}
 
-{\bf :AUTH [ LOGGEDIN | UNAUTHORIZED ]:;}
+{\bf :AUTH [ LOGGEDIN \ \vline \ UNAUTHORIZED ]:;}
 
-The AUTH command indicated to the client its current status. If the user is logged in then it will have the LOGGEDIN argument, otherwise it will have the UNAUTHORISED argument.
+The \texttt{AUTH} command indicated to the client its current status. If the user is logged in then it will have the \texttt{LOGGEDIN} argument, otherwise it will have the \texttt{UNAUTHORISED} argument.
 
 Example:
 \texttt{:AUTH LOGGEDIN:;}\\
@@ -186,91 +195,92 @@ These commands are accessible only once the user has logged in. The server shoul
 
 \subsection{Server Commands}
 
-{\bf :SET [ NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC ]: <value>;}
+{\bf :SET [ NICKNAME\ \vline \ STATUS \ \vline \ PERSONAL\_MESSAGE \ \vline \ DISPLAY\_PIC ]: <value>;}
 
-The SET commands allows various user attributes to be set by the client. The exact attribute depends on the augment given however only 1 attribute can be set at a time. In the case of DISPLAY_PIC, the image is Base 64 encoded.
-
-Example:
-\texttt{:SET NICKNAME: Andrew;}
-
-{\bf :GET \{ NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC \}: <user>\{<user>\};}
-
-The GET command requests a set of attributes for each user in a space separated list of users. The server should respond with an INFO command and the appropriate data.
+The \texttt{SET} commands allows various user attributes to be set by the client. The exact attribute depends on the augment given however only 1 attribute can be set at a time. In the case of \texttt{DISPLAY\_PIC}, the image is Base 64 encoded.
 
 Example:
-\texttt{:GET NICKNAME STATUS PERSONAL_MESSAGE DISPLAY_PIC: user1@host.com, user2@hotmail.com;}
+\texttt{:SET NICKNAME: Andrew;} \\
+
+{\bf :GET \{ NICKNAME\ \vline \ STATUS \ \vline \ PERSONAL\_MESSAGE \ \vline \ DISPLAY\_PIC \}: <user>\{<user>\};} \\
+
+The \texttt{GET} command requests a set of attributes for each user in a space separated list of users. The server should respond with an \texttt{INFO} command and the appropriate data.
+
+Example:
+\texttt{:GET NICKNAME STATUS PERSONAL\_MESSAGE DISPLAY\_PIC: user1@host.com, user2@hotmail.com;}
 
 {\bf :FRIENDLIST:;}
 
-The FRIENDLIST command requests a list of users in the users friendlist. It should return a FREINDLIST command as specified in section 5.2
+The \texttt{FRIENDLIST} command requests a list of users in the users friendlist. It should return a \texttt{FREINDLIST} command as specified in section 5.2
 
-Example:
+Example: \\
 \texttt{:FREINDLIST:} 
 	
-{\bf :ROOM [ CREATE \{GROUP\} | INVITE | JOIN | LEAVE | USERS | TYPE ]: \{<roomid> | <user>\};}
+{\bf :ROOM [ CREATE \{GROUP\} \ \vline \ INVITE \ \vline \ JOIN \ \vline \ LEAVE \ \vline \ USERS \ \vline \ TYPE ]: \{<roomid> \ \vline \ <user>\};}
 
-The ROOM command deals with all room related requests.
+The \texttt{ROOM} command deals with all room related requests.
 
 \begin{itemize}
 
 \item{CREATE \\
-The CREATE arguments specifies that the client wishes to create a new chat room for use. If the GROUP argument is not supplied then the room will be limited to a maximum of 2 participants and a userID must be supplied so that the server can invite the other user. Upon creation of the room, the user who created it is automatically placed in the room.}
+The \texttt{CREATE} arguments specifies that the client wishes to create a new chat room for use. If the \texttt{GROUP} argument is not supplied then the room will be limited to a maximum of 2 participants and a userID must be supplied so that the server can invite the other user. Upon creation of the room, the user who created it is automatically placed in the room.}
 
 \item {INVITE \\
-The INVITE argument sends an invite to join the room to the specified user. They are then allowed to join the room at any point.}
+The \texttt{INVITE} argument sends an invite to join the room to the specified user. They are then allowed to join the room at any point.}
 
 \item{JOIN \\
-The JOIN command specifies that the user wishes to join the specified room. The must first have received an invite from someone already in the room.}
+The \texttt{JOIN} command specifies that the user wishes to join the specified room. The must first have received an invite from someone already in the room.}
 
 \item{LEAVE \\
-The LEAVE argument specifies that the user wishes to leave the specified room.}
+The \texttt{LEAVE} argument specifies that the user wishes to leave the specified room.}
 
 \item{USERS \\
-The USERS argument request a list of the users in the room from the server separated by a space;}
+The \texttt{USERS} argument request a list of the users in the room from the server separated by a space;}
 
 \end{itemize}
 
 \texttt{:MESSAGE: <roomid> <message>;}
 
-The MESSAGE command specifies a room and a message which should be delivered to the room.
+The \texttt{MESSAGE} command specifies a room and a message which should be delivered to the room.
 
-Example:
+Example: \\
 \texttt{:MESSAGE: 25 Hey guys, what’s up?;}
 
-{\bf :FRIEND [ ADD | BLOCK | UNBLOCK | ACCEPT | DECLINE | DELETE ]: <target>;}
+{\bf :FRIEND [ ADD \ \vline \ BLOCK \ \vline \ UNBLOCK \ \vline \ ACCEPT \ \vline \ DECLINE \ \vline \ DELETE ]: <target>;}
 
-The FRIEND command controls all friend list data.
+The \texttt{FRIEND} command controls all friend list data.
 
 \begin{itemize}
 
 \item{ADD \\
-The ADD arguments specifies that the client wishes to add the target user to their friend list. The server should then send a request to the target user asking for permission to access their data.}
+The \texttt{ADD} arguments specifies that the client wishes to add the target user to their friend list. The server should then send a request to the target user asking for permission to access their data.}
 
 \item{BLOCK \\
-The BLOCK argument places the target user into a list of blocked users who cannot access any data about the user.}
+The \texttt{BLOCK} argument places the target user into a list of blocked users who cannot access any data about the user.}
 
 \item{UNBLOCK \\
-The UNBLOCK argument removes the target from the current users blocked list.}
+The \texttt{UNBLOCK} argument removes the target from the current users blocked list.}
 
 \item{ACCEPT \\
-The ACCEPT arguments specifies that the user is responding to a previous friend request, where the target is the user who sent the request. If the user accepts then the target user should be given permissions to use the users data.}
+The \texttt{ACCEPT} arguments specifies that the user is responding to a previous friend request, where the target is the user who sent the request. If the user accepts then the target user should be given permissions to use the users data.}
 
 \item{DELETE \\
-The DELETE  argument specifies that the target user should be deleted from the users friend list, however the target user will still have access to the users details.}
+The \texttt{DELETE}  argument specifies that the target user should be deleted from the users friend list, however the target user will still have access to the users details.}
 
 \item{DECLINE \\
-The DECLINE argument specifies that the user does not wish the target user to be to able to access their data.}
+The \texttt{DECLINE} argument specifies that the user does not wish the target user to be to able to access their data.}
 
 \end{itemize}
 
-Example:
-\texttt{:FRIEND ADD: cyblob@gmail.com;}	# Request access to cyblob@gmail.com’s data
+Example: \\
+\texttt{:FRIEND ADD: cyblob@gmail.com;}	\\
+Request access to cyblob@gmail.com’s data
 
 {\bf :LOGOUT:;}
 
-The LOGOUT command specifies that the client wishes to logout but not drop the connection to the server.
+The \texttt{LOGOUT} command specifies that the client wishes to logout but not drop the connection to the server.
 
-Example:
+Example: \\
 \texttt{:LOGOUT:;}\\
 The user is logged out
 
@@ -280,84 +290,84 @@ The user is logged out
 
 The \texttt{MESSAGE} command represents a message received by the user. The sender is the email address of the person who sent the message, and message is the message itself.
 
-Example:
+Example: \\
 \texttt{:MESSAGE: 56 cyblob@gmail.com How’s it going?;}
 
-{\bf :ROOM [ CREATED | JOINED | LEFT | INVITED | USERS | PERSONAL | GROUP ]: <roomid> \{<user>\};}
+{\bf :ROOM [ CREATED \ \vline \ JOINED \ \vline \ LEFT \ \vline \ INVITED \ \vline \ USERS \ \vline \ PERSONAL \ \vline \ GROUP ]: <roomid> \{<user>\};}
 
 \begin{itemize}
 
 \item{CREATED \\
-The CREATED argument tells the client what their request to create a room was successful and specifies the room id.}
+The \texttt{CREATED} argument tells the client what their request to create a room was successful and specifies the room id.}
 
 \item{JOINED \\
-The JOINED argument tells the client that a new user has joined the room and specifies the room and id of the user who joined.}
+The \texttt{JOINED} argument tells the client that a new user has joined the room and specifies the room and id of the user who joined.}
 
 \item{LEFT \\
-The LEFT argument tells the client that a user has left the room and specifies the room and the id of the user who left.}
+The \texttt{LEFT} argument tells the client that a user has left the room and specifies the room and the id of the user who left.}
 
 \item{INVITED \\
-The INVITED argument tells that client that they have been invited to join a room. It specifies the room and the user who invited them;}
+The \texttt{INVITED} argument tells that client that they have been invited to join a room. It specifies the room and the user who invited them;}
 
 \item{USERS \\
-The USERS argument provides a list of users (one per line) who are currently in the room.}
+The \texttt{USERS} argument provides a list of users (one per line) who are currently in the room.}
 
 \item{PERSONAL \\
-The PERSONAL argument tells the client that the room is a personal room (No more than 2 users).}
+The \texttt{PERSONAL} argument tells the client that the room is a personal room (No more than 2 users).}
 
 \item{GROUP \\
-The GROUP argument tells the client that the room is a group room any any number of users can join.}
+The \texttt{GROUP} argument tells the client that the room is a group room any any number of users can join.}
 	
 \end{itemize}
 
-Example:
-\texttt{:ROOM CREATED: 0;}
-\texttt{:ROOM JOINED: 0 CYBLOB@GMAIL.COM;}
-\texttt{:ROOM LEFT: 0 CYBLOB@GMAIL.COM;}
-\texttt{:ROOM INVITED: 0 HAPPY0@GMAIL.COM; #HAPPY0@HOTMAIL.COM INVITED YOU TO THE ROOM;}
-\texttt{:ROOM USERS: CYBLOB@GMAIL.COM HAPPY0@HOTMAIL.COM SOMEONEELSE@GMAAIL.COM ANOTHER@HOTMAIL.COM;}
+Example: \\
+\texttt{:ROOM CREATED: 0;} \\
+\texttt{:ROOM JOINED: 0 CYBLOB@GMAIL.COM;} \\
+\texttt{:ROOM LEFT: 0 CYBLOB@GMAIL.COM;} \\
+\texttt{:ROOM INVITED: 0 HAPPY0@GMAIL.COM; \#HAPPY0@HOTMAIL.COM INVITED YOU TO THE ROOM;} \\
+\texttt{:ROOM USERS: CYBLOB@GMAIL.COM HAPPY0@HOTMAIL.COM \\SOMEONEELSE@GMAAIL.COM ANOTHER@HOTMAIL.COM;} \\
 
 {\bf :FRIENDLIST: ONLINE <user> <user>... OFFLINE <user> <user>... BLOCKED <user> <user>...;}
 
-The FRIENDLIST command specifies the users friend list using the format specified above.
+The \texttt{FRIENDLIST} command specifies the users friend list using the format specified above.
 
-Example:
+Example: \\
 \texttt{:FREINDLIST: ONLINE cyblob@gmail.com blah@ddfdf.com OFFLINE meow@hotmail.com woof@gmail.com sheep@yahoo.com BLOCKED wtf@wtf.com;}
 
 {\bf :FRIENDREQUEST: <user> <nickname>;}
 
-The FRIENDREQUEST command tells the client that the user has a friend request and specifies who sent it and their nickname at the time of sending. The client should the respond with the appropriate FRIEND command.
+The \texttt{FRIENDREQUEST} command tells the client that the user has a friend request and specifies who sent it and their nickname at the time of sending. The client should the respond with the appropriate \texttt{FRIEND} command.
 
-Example:
+Example: \\
 \texttt{:FRIENDREQUEST: cyblob@gmail.com James;}
 
-{\bf :UPDATE [ NICKNAME| STATUS | PERSONAL_MESSAGE | DISPLAY_PIC | FRIENEDLIST  ]: <user>;}
+{\bf :UPDATE [ NICKNAME\ \vline \ STATUS \ \vline \ PERSONAL\_MESSAGE \ \vline \ DISPLAY\_PIC \ \vline \ FRIENEDLIST  ]: <user>;}
 
-The UPDATE command notifies the client that a user in their friend list has just updated one of their attributes. The client can then retrieve the updated attribute if necessary.
+The \texttt{UPDATE} command notifies the client that a user in their friend list has just updated one of their attributes. The client can then retrieve the updated attribute if necessary.
 
-Example:
+Example: \\
 \texttt{:UPDATE NICKNAME: cyblob@gmail.com;}
 
-\texttt{:INFO \{ NICKNAME | STATUS | PERSONAL_MESSAGE | DISPLAY_PIC \}: <user> <data> \{<user> <data>\};} 
+\texttt{:INFO \{ NICKNAME \ \vline \ STATUS \ \vline \ PERSONAL\_MESSAGE \ \vline \ DISPLAY\_PIC \}: <user> <data> \{<user> <data>\};} 
 
-The data is returned one line per value, in the same order as the arguments given, separated by the users email address. In the case of \texttt{DISPLAY_PIC}, the image is Base 64 encoded to enable it to be embedded as text.
+The data is returned one line per value, in the same order as the arguments given, separated by the users email address. In the case of \texttt{DISPLAY\_PIC}, the image is Base 64 encoded to enable it to be embedded as text.
 
-Example:
+Example: \\
 
-\texttt{:INFO NICKNAME STATUS PERSONAL_MESSAGE DISPLAY_PIC: user1@host.com
-James
-Away
-I’m a panda
-/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBAQFBAYFBQYJBgUGCQsIBgYICwwKCgsK...
-user2@host.com
-Gordon
-Online
-I’m not a panda
-DAREAAhEBAxEB/8QAHQAAAgIDAQEBAAAAAAAAAAAABAUDBgECBwAICf/EAE4QAAIBAg...;
+\texttt{:INFO NICKNAME STATUS PERSONAL\_MESSAGE DISPLAY\_PIC: user1@host.com \\
+James \\
+Away \\
+I’m a panda \\
+/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBAQFBAYFBQYJBgUGCQsIBgYICwwKCgsK... \\
+user2@host.com \\
+Gordon \\
+Online \\
+I’m not a panda \\
+DAREAAhEBAxEB/8QAHQAAAgIDAQEBAAAAAAAAAAAABAUDBgECBwAICf/EAE4QAAIBAg...;}
 
-:ERROR [ UNAUTHORISED | INVALID_EMAIL | EMAIL_ALREADY_IN_USE | PASSWORD_TOO_SHORT | MISSING_ARGUMENTS | TOO_MANY_ARGUMENTS | INVALID_ARGUMENT | LOGGED_IN_FROM_OTHER_LOCATION | USER_DOES_NOT_EXIST | LOGIN_DETAILS_INCORRECT ]: <message>;}
+\texttt{:ERROR [ UNAUTHORISED \ \vline \ INVALID\_EMAIL \ \vline \ \\ EMAIL\_ALREADY\_IN\_USE \ \vline \ PASSWORD\_TOO\_SHORT \ \vline \ MISSING\_ARGUMENTS \ \vline \ \\ TOO\_MANY\_ARGUMENTS \ \vline \ INVALID\_ARGUMENT \ \vline \ LOGGED\_IN\_FROM\_OTHER\_LOCATION \ \vline \ \\ USER\_DOES\_NOT\_EXIST \ \vline \ LOGIN\_DETAILS\_INCORRECT ]: <message>;}
 
 If an error occurs then the server should return one of these commands to the client. The exact command and the message will be specified by the sever.
 
-Example:
-\texttt{:ERROR INVALID_EMAIL: No domain specified.;}
+Example: \\
+\texttt{:ERROR INVALID\_EMAIL: No domain specified.;}
