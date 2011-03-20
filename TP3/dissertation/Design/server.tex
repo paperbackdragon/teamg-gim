@@ -43,26 +43,27 @@ The buffers allow the worker to run using several threads which increases the pe
 A user is a registered account on the server with a unique identifier (an email address), password, nickname, personal message, display picture, status, and friend list. 
 
 \begin{itemize}
-\item{Identification:
+\item{{\bf Identification}\\
 The user's identifier and password are used to authenticate the user at login. These cannot be changed one the account has been created.} 
 
-\item{Nickname:
+\item{{\bf Nickname}\\
 A user's nickname is a short and familiar name for that user. A nickname does not need to be unique and is not intended to be used as an identifier by the system. By default a user's nickname is their email address.}
 
-\item{Personal Message:
+\item{{\bf Personal Message}\\
 The personal message is a medium length message (usually only a sentence or two) which the user can use to share news or any information about themselves.}
 
-\item{Status:
+\item{{\bf Status}\\
 A user can have one of several statuses: Online, Away, Busy and Appear Offline. The first three statuses are used simply as an indication of the user's likelihood to respond to a message. The Appear Offline status allows the user to appear to other users as though they were not signed in but still receive updates and messages from other users.}
 
-\item{State:
+\item{{\bf State}\\
 A user can have one of only two states, Online or Offline. States should not be confused with a user's status. A users status is simply an abstract representation, picked by the user, while a users state is an internal representation of the actual online state of the user. A user is only considered to be Online if they are connected using a client, and that client has logged-in successfully, otherwise they are considered to be Offline.}
 
-\item{Friend List:
+\item{{\bf Friend List}\\
 Each user has their own Friend List, a list of users who have accepted a friend request from the owner of the Friend List. When a user accepts a friend request, the sender and receiver are added to each other's Friend List.}
 \end{itemize}
 
-%TODO: Explain the design choices below. 
+
+
 \subsection{Client-to-Client Messaging}
 \label{c2c}
 No direct client-to-client communication is possible. However, workers and (in an ad-hoc fashion) clients are able to indirectly communicate with other clients (i.e. clients to which they are not connected) by passing commands to the other client's worker. This is the server's main method of inter-client communication and relies heavily on the use of the buffers to pass messages from one worker to the network writer or command processor of another worker.
