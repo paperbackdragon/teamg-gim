@@ -20,7 +20,7 @@ import client.ui.SingleChatPanel;
  * Contacts all the methods which should be called upon receipt of a command
  * from the server.
  */
-public class ServerConnection {
+public class ServerConnection implements NetworkingIn {
 
 	private Model model = Model.getInstance();
 	private ClientConnection server;

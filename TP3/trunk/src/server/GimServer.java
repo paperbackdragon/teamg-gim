@@ -116,9 +116,7 @@ public class GimServer {
 			}
 		}
 
-		/**
-		 * Save the user data
-		 */
+		// Save the user data
 		FileOutputStream fos = null;
 		ObjectOutputStream out = null;
 		ArrayList<User> list = new ArrayList<User>(data.getUsers());

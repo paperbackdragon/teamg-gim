@@ -1,5 +1,9 @@
 package client.net;
 
+import java.util.LinkedList;
+
+import client.User;
+
 public interface NetworkingIn {
 
 	// :OKAY:;
@@ -61,8 +65,7 @@ public interface NetworkingIn {
 	 *            An array of the users who are blocked on the buddy list
 	 * */
 
-	void friendlist(String[] onlinelist,
-			String[] offlinelist, String[] blockedlist);
+	void friendlist(LinkedList<String> onlinelist, LinkedList<String> offlinelist, LinkedList<String> blockedlist);
 
 	// :BROADCAST: <message>;
 
@@ -130,7 +133,7 @@ public interface NetworkingIn {
 	 * @param roomid
 	 *            the id of the room the person was invited to
 	 */
-	void invited(String user, String roomid);
+	void invited(User user, String roomid);
 
 	/**
 	 * The server has notified that a person has joined a group chat that the
@@ -190,7 +193,7 @@ public interface NetworkingIn {
 	 * @param message
 	 *            The message the sender sent
 	 */
-	void message(String roomid, String sender, String message);
+	void message(String roomid, User sender, String message);
 
 	// end :ROOM
 

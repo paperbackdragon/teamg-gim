@@ -17,8 +17,11 @@ public class Buffer<T> {
 			} catch (InterruptedException e) {
 			}
 		}
+		
+		T cmd = commands.remove();
 		notifyAll();
-		return commands.remove();
+		
+		return cmd;
 	}
 
 	public synchronized void putCommand(T cmd) {
