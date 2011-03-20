@@ -22,14 +22,28 @@ This high level approach allowed us to draw boundaries between components and as
 \subsection {Controller}
 \label{controller}
 
+
+
+\begin{figure}
+    \begin{center}
+        \includegraphics[scale=0.65]{Design/diagrams/mvc.png}
+        \caption{The MVC pattern.}
+        \label{mvc}
+    \end{center}
+\end{figure}
+
 The controller was one of the more challenging parts of the design process. The controller would be called by both the networking component and the viewer, implying that its operations must be thread safe. We were constrained by our use of the Java Swing\footnote{\texttt{http://download.oracle.com/javase/6/docs/technotes/guides/swing/}} environment, which we had learned from previous experience will freeze if the networking code is run on the GUI thread. A further complexity was ensuring that the controller could use the commands of the GIM protocol without having to know its workings in detail. Naturally, the GUI architects should not need to concern themselves with the specifics of the protocol while designing the GUI.
 
 To deal with the threading complexity, we designed a scheme with an intermediate buffer between the controller component and the networking code. The controller thread waits until there is a command from the network placed into the buffer, and acts accordingly on the model and GUI. Furthermore, when the controller component needs to call the network, it places a command into the buffer to be interpreted by the networking code. We believed this scheme to be appropriate as the controller could either call the network from internal code or events from the GUI, possibly simultaneously (See section \ref{networking_design} for further discussion on the motivation behind this buffer).
 
 To deal with the design complexity of abstracting the protocol from the controller's use of its commands, the network architects designed two interfaces to describe the different methods. One interface contained method stubs concerning incoming commands from the server, and the other methods that could be called to send commands to the server. This allowed other team members to understand what the controller must do to implement the GIM protocol, without having to understand the inner workings of the protocol. This had the additional advantage of allowing the structure of the protocol to change, without having to change the interface or consult the team members working on other areas of the GUI. Another way we kept it unnecessary for other team members to understand the protocol was the inclusion of a parsing method in the controller the networking architects would write. This method parses incoming messages from the server and calls the appropriate method. The methods called would be written by any team member. The network architects would then be responsible for implementing the methods in the interface for outgoing commands to the server.
 
-note: not final version
-\includegraphics[scale=0.65]{Design/diagrams/buffer.png}
+\begin{figure}
+    \begin{center}
+        \includegraphics[scale=0.65]{Design/diagrams/buffer.png}
+        \label{buffer}
+    \end{center}
+\end{figure}
 
 \subsection {Model}
 \label{model}
@@ -46,8 +60,12 @@ After some interface design work (see section \ref{gui_design} for more of a dis
 
 We anticipated this would be advantageous as it would reduce the repetition of code and keep functionality consistent between the two windows. We felt this consistency would be important, as our code using the Swing components used to display messages would evolve, or need configuring, as we implemented some of our `should have' features (such as emoticons and font colours.) Therefore, this class structure would be crucial for the displaying of messages in Group Chat and SingleChat windows to remain consistent.
 
-\includegraphics[scale=0.65]{Design/diagrams/chatwin.png}
-
+\begin{figure}
+    \begin{center}
+        \includegraphics[scale=0.65]{Design/diagrams/chatwin.png}
+        \label{chatwin}
+    \end{center}
+\end{figure}
 
 \section{Design of Client GUI}
 \label{gui_design}
@@ -77,11 +95,11 @@ The use of informal notation for the use cases was, in retrospect, ill-conceived
 
 With these use cases we started to design a GUI that could accommodate the desired features. Although many UI sketches were made, they were all minor variations on the core design which we derived from the traditional instant messenger model, such as used in Windows Live.
 
-\begin{figure}[!h]
+\begin{figure}
     \begin{center}
         \includegraphics[width=7cm]{Design/diagrams/Main_UI.png}
         \caption{The original wireframe for the main window of the client.}
-        \label{lockingDia}
+        \label{mainui}
     \end{center}
 \end{figure}
 
@@ -115,11 +133,11 @@ With these use cases we started to design a GUI that could accommodate the desir
 
 The above wireframe is the main window the user will see after they have logged in. The layout is typical of instant messenger programs, and represents what users would expect to see.
 
-\begin{figure}[!h]
+\begin{figure}
     \begin{center}
         \includegraphics[width=7cm]{Design/diagrams/Chat_Box.png}
         \caption{The original wireframe design of a chat window for the client.}
-        \label{lockingDia}
+        \label{chatBox}
     \end{center}
 \end{figure}
 
