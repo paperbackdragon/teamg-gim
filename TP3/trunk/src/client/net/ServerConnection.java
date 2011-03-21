@@ -415,25 +415,6 @@ public class ServerConnection implements NetworkingIn {
 
 					}
 
-					else { // uhmm, this isn't meant to happen (should always
-						// have a different room id)
-						// this would mean that we've got a window open that
-						// earlier had this id,
-						// but this should never happen because the roomid
-						// is
-						// reset when chat is over
-						// (personal chat: someone leaves, group chat...
-						// hmm, this reminds me. i don't think i've handled
-						// the
-						// user logging out,
-						// and keeping windows open. hence odd behaviour
-						// when
-						// logs back in.
-						// if you're reading this, i've probably sorted it!
-						// </monologue>
-
-					}
-
 				}
 			});
 
@@ -451,11 +432,6 @@ public class ServerConnection implements NetworkingIn {
 					public void run() {
 
 						l.getChatPanel().setId(roomid);
-
-						// !! note to self: this is here because (enable on
-						// other guy joining)
-						// l.getChatPanel().setInProgress(true); // find a
-						// better way
 
 					}
 				});
@@ -609,14 +585,6 @@ public class ServerConnection implements NetworkingIn {
 	public void personal(final String roomid) {
 		System.out.println("the room we were invited to is a personal chat, roomid: " + roomid);
 
-		/*
-		 * gordon: spawn a personal chat window immediately ... oh wait, what if
-		 * no message has been sent yet... ... we might need to keep a log of
-		 * messages, and make the IM window visable ... only when a message has
-		 * been received. This should only be a few lines in the chat window
-		 * handler class. Like, when the "write message to window" method is
-		 * invoked, if messagecount == 0, spawn a window...
-		 */
 		final User invitedBy = model.getNextInvitation();
 
 		model.getServer().join(roomid);
@@ -657,9 +625,6 @@ public class ServerConnection implements NetworkingIn {
 	}
 
 	public void invalidUserError(String message) {
-		// FIX THIS LATER TO PARSE FOR CONTEXT. FOR NOW, ASSUME
-		// USER HAS DOUBLE CLICKED 'ONLINE' on buddy list
-
 		// the invitatiation we queued up was invalid
 		SwingUtilities.invokeLater(new Runnable() {
 
@@ -672,9 +637,6 @@ public class ServerConnection implements NetworkingIn {
 	}
 
 	public void userOfflineError(String message) {
-		// FIX THIS LATER TO PARSE FOR CONTEXT. FOR NOW, ASSUME
-		// USER HAS DOUBLE CLICKED AN OFFLINE USER on buddy list
-
 		// the invitation we queued up was invalid
 		model.getNextRoom();
 	}
@@ -684,7 +646,6 @@ public class ServerConnection implements NetworkingIn {
 
 			@Override
 			public void run() {
-
 				JOptionPane.showMessageDialog(GimClient.getMainWindow(),
 						"Connection to server lost. Try logging in again. ");
 			}

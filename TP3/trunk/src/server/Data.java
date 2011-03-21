@@ -35,7 +35,6 @@ public class Data {
 	private ConcurrentHashMap<String, User> users = new ConcurrentHashMap<String, User>();
 	private ConcurrentHashMap<Integer, Room> rooms = new ConcurrentHashMap<Integer, Room>();
 	private ConcurrentHashMap<Integer, Worker> workers = new ConcurrentHashMap<Integer, Worker>();
-	public boolean debug = false;
 
 	/**
 	 * Do nothing, and do it well!

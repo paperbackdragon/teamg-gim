@@ -1,10 +1,16 @@
 package client.ui;
 
-//Ewan's only class, taken from the Internet.
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
+/**
+ * Inspired by:
+ * 
+ * http://blogdieu.com/tutorial/code/java/swing/jtextfield/limit-jtextfield
+ * -input-to-a-maximum-length.html
+ * 
+ */
 public class LimitedDocument extends PlainDocument {
 
 	private static final long serialVersionUID = 1L;
@@ -23,7 +29,8 @@ public class LimitedDocument extends PlainDocument {
 		toUppercase = upper;
 	}
 
-	public void insertString(int offset, String str, AttributeSet attr) throws BadLocationException {
+	public void insertString(int offset, String str, AttributeSet attr)
+			throws BadLocationException {
 		if (str == null)
 			return;
 

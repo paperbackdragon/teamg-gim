@@ -3,7 +3,7 @@ package client;
 import java.io.Serializable;
 
 /**
- * Oh yeah baby!
+ * Stores global options
  * 
  * @author james
  * 

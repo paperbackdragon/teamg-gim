@@ -461,37 +461,6 @@ public class ContactPanel extends JPanel {
 						model.createRoom(getSelectedContacts().getFirst());
 					}
 
-					// if this screws up, removing this else should work...
-
-					// they are offline, so create a chat window anyway
-					else {
-
-						/*
-						 * Careful now ;x! Couldn't get this working for some
-						 * reason
-						 */
-
-						/*
-						 * SwingUtilities.invokeLater(new Runnable() { public
-						 * void run() { SingleChatPanel scp = new
-						 * SingleChatPanel(getSelectedContacts().getFirst(),
-						 * "-1");
-						 * 
-						 * scp.setChatWith(getSelectedContacts().getFirst());
-						 * 
-						 * ChatWindow ui = new ChatWindow("GIM - Chat with2 " +
-						 * getSelectedContacts().getFirst().getEmail(), scp);
-						 * GimClient.addWindow(getSelectedContacts().getFirst(),
-						 * ui, scp);
-						 * 
-						 * ui.setLocationRelativeTo(null);// center new chat
-						 * window ui.setVisible(true); } });
-						 */
-
-						/* hope this works */
-
-					}
-
 				} else { // already a window open for them
 					GimClient.getWindow(selectedUsers.getFirst()).setVisible(true);
 				}
