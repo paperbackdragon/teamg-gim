@@ -1,6 +1,5 @@
 \section{Networking Design}
 \label{networking_design}
-%TODO: I got rid of the "Client Networking Structure" heading... will there be a "server networking structure, or will this section be incorporated into client design? Or are we just keeping it like this?
 
 We determined the role of the client networking component to be maintaining a connection with the server: reading commands from the command buffer and passing them to the server, and passing commands from the server to the client. These two concerns came with different challenges. Keeping a connection with the server involved considering how to manage writing and reading data to the socket, while allowing the client to run efficiently. Sending and receiving commands involved considering how best to parse data coming from the socket and pass data between components.
 
