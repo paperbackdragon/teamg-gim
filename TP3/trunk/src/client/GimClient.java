@@ -152,7 +152,6 @@ public class GimClient {
 	public static ChatWindowIdentifier getWindowIdentifierFromUser(User user) {
 		for (int i = 0; i < windows.size(); i++) {
 			if (windows.get(i).getChatPanel() instanceof SingleChatPanel) {
-				// I changed this... note to self, incase shit storm..
 				
 				if (windows.get(i).getChatPanel().getChatWith().getEmail().equals(user.getEmail())) {
 					return windows.get(i);

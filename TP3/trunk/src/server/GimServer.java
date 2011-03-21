@@ -37,36 +37,38 @@ public class GimServer {
 			in = new ObjectInputStream(fis);
 			users = (ArrayList<Object>) in.readObject();
 			in.close();
+
+			// Add all the users
+			for (Object user : users) {
+				data.addUser((User) user);
+			}
+
+			// Make the friendlists etc. work correctly by recreating the
+			// friendlist
+			// from the list of users
+			for (User user : data.getUsers()) {
+				for (User friend : user.getFriendList()) {
+					User realUser = data.getUser(friend.getId());
+					user.addFreindRequest(realUser);
+					realUser.addToInFriendList(user);
+				}
+
+				for (User blocked : user.getBlockedUsers()) {
+					user.block(data.getUser(blocked.getId()));
+				}
+			}
+
+			System.out.println(users.size() + " users loaded.");
+
 		} catch (IOException e) {
-			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		}
 
-		// Add all the users
-		for (Object user : users) {
-			data.addUser((User) user);
-		}
-
-		// Make the friendlists etc. work correctly by recreating the friendlist
-		// from the list of users
-		for (User user : data.getUsers()) {
-			for (User friend : user.getFriendList()) {
-				User realUser = data.getUser(friend.getId());
-				user.addFreindRequest(realUser);
-				realUser.addToInFriendList(user);
-			}
-
-			for (User blocked : user.getBlockedUsers()) {
-				user.block(data.getUser(blocked.getId()));
-			}
-		}
-
-		System.out.println(users.size() + " users loaded.");
-
-		SSLServerSocketFactory sslSrvFactory = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
+		SSLServerSocketFactory sslSrvFactory = (SSLServerSocketFactory) SSLServerSocketFactory
+				.getDefault();
 		try {
-			data.serverSocket = (SSLServerSocket) sslSrvFactory.createServerSocket(4444);
+			data.serverSocket = (SSLServerSocket) sslSrvFactory
+					.createServerSocket(4444);
 		} catch (IOException e1) {
 			System.err.println("Could not listen on port: 4444.");
 			System.exit(1);
@@ -78,7 +80,8 @@ public class GimServer {
 		Matcher matcher;
 		boolean matchFound;
 
-		String supportedSuites[] = ((SSLServerSocket) data.serverSocket).getSupportedCipherSuites();
+		String supportedSuites[] = ((SSLServerSocket) data.serverSocket)
+				.getSupportedCipherSuites();
 		String suitePickOrder[] = new String[supportedSuites.length];
 
 		int j = 0, k = supportedSuites.length - 1;
@@ -90,7 +93,8 @@ public class GimServer {
 			else
 				suitePickOrder[k--] = supportedSuites[i];
 		}
-		((SSLServerSocket) data.serverSocket).setEnabledCipherSuites(suitePickOrder);
+		((SSLServerSocket) data.serverSocket)
+				.setEnabledCipherSuites(suitePickOrder);
 
 		// Create a new thread to check for timeouts and update system data
 		Timeout timeout = new Timeout(30);
@@ -106,7 +110,8 @@ public class GimServer {
 			try {
 				int clientID = data.getNextClientID();
 				Worker worker = new Worker(clientID, data.serverSocket.accept());
-				System.out.println("Creating new worker thread width id " + clientID);
+				System.out.println("Creating new worker thread width id "
+						+ clientID);
 				data.addWorker(clientID, worker);
 				Thread t = new Thread(worker);
 				t.setName(clientID + " ");
