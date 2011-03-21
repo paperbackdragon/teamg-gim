@@ -85,10 +85,6 @@ public class GimClient {
 		return mainWindow;
 	}
 
-	// HELPER METHODS
-	// public static void addRoom(ChatPanel panel) {
-	// rooms.add(panel);
-	// }
 
 	public static void removeRoom(ChatPanel panel) {
 		for (int i = 0; i < windows.size(); i++) {

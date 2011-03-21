@@ -121,7 +121,6 @@ public interface NetworkingIn {
 	 */
 	void invalidUserError(String message);
 
-	// need james to clarify on these:
 
 	// :ROOM [ CREATED | JOINED | LEFT | INVITED | USERS ]: <roomid> {<user>};
 

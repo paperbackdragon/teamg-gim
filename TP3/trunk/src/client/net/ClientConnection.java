@@ -134,12 +134,9 @@ public class ClientConnection implements NetworkingOut, Runnable {
 	 * Run the thread.
 	 */
 	public void run() {
-		// heart beat
-		// NO IDEA IF THIS IS SENSIBLE, OR EVEN THE WAY TO DO IT
 
 		while (connected) {
 			try {
-				Thread.currentThread();
 				Thread.sleep(12000);
 				ping();
 			} catch (InterruptedException e) {

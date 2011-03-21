@@ -20,7 +20,8 @@ public class User {
 	private String nickname = "";
 	private Status status = Status.OFFLINE;
 	private String personalMessage = "";
-	private ImageIcon displayPic = new ImageIcon(Model.getInstance().getPath() + "default.jpg");
+	private ImageIcon displayPic = new ImageIcon(Model.getInstance().getPath()
+			+ "default.jpg");
 	private LinkedList<UserChangedListener> listeners = new LinkedList<UserChangedListener>();
 
 	/**
@@ -59,7 +60,8 @@ public class User {
 	 */
 	public synchronized void setNickname(String nickname) {
 		this.nickname = nickname;
-		for (UserChangedListener l : this.listeners.toArray(new UserChangedListener[0])) {
+		for (UserChangedListener l : this.listeners
+				.toArray(new UserChangedListener[0])) {
 			l.nicknameChanged();
 			l.changed();
 		}
@@ -91,10 +93,10 @@ public class User {
 			this.status = Status.ONLINE;
 		}
 
-		// This shit is wack. Apparently if this isn't converted to an array
-		// then
+		// Apparently if this isn't converted to an array then
 		// it throws ConcurrentModificationException
-		for (UserChangedListener l : this.listeners.toArray(new UserChangedListener[0])) {
+		for (UserChangedListener l : this.listeners
+				.toArray(new UserChangedListener[0])) {
 			l.statusChanged();
 			l.changed();
 		}
@@ -119,7 +121,8 @@ public class User {
 	public synchronized void setPersonalMessage(String personalMessage) {
 		this.personalMessage = personalMessage;
 
-		for (UserChangedListener l : this.listeners.toArray(new UserChangedListener[0])) {
+		for (UserChangedListener l : this.listeners
+				.toArray(new UserChangedListener[0])) {
 			l.personalMessageChanged();
 			l.changed();
 		}
@@ -144,7 +147,8 @@ public class User {
 	 * @return The new ImageIcon at the specified size
 	 */
 	public ImageIcon getDisplayPic(int width, int height) {
-		return new ImageIcon(this.getDisplayPic().getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH));
+		return new ImageIcon(this.getDisplayPic().getImage()
+				.getScaledInstance(width, height, Image.SCALE_SMOOTH));
 	}
 
 	/**
@@ -157,9 +161,11 @@ public class User {
 		this.displayPic = new ImageIcon(Base64.decode(displayPic));
 
 		if (this.displayPic.getIconWidth() == 0)
-			this.displayPic = new ImageIcon(Model.getInstance().getPath() + "default.jpg");
+			this.displayPic = new ImageIcon(Model.getInstance().getPath()
+					+ "default.jpg");
 
-		for (UserChangedListener l : this.listeners.toArray(new UserChangedListener[0])) {
+		for (UserChangedListener l : this.listeners
+				.toArray(new UserChangedListener[0])) {
 			l.displayPicChanged();
 			l.changed();
 		}
@@ -182,7 +188,8 @@ public class User {
 	 * @param listener
 	 *            The listener to remove
 	 */
-	public synchronized void removeUserChangedListener(UserChangedListener listener) {
+	public synchronized void removeUserChangedListener(
+			UserChangedListener listener) {
 		this.listeners.remove(listener);
 	}
 

@@ -36,7 +36,7 @@ public class Model {
 	private String latestperson;
 
 	/**
-	 * Apparently doing it this way makes constructing it thread-safe...
+	 * Doing it this way makes constructing it thread-safe...
 	 */
 	private static class SingeltonHolder {
 		public static final Model INSTANCE = new Model();
