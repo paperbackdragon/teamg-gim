@@ -16,6 +16,8 @@ The program is stable and does not appear to have any substantial bugs. The prog
 
 \item{If a user goes offline while talking to a contact, any messages that the contact sends while the user is offline will be sent when they sign back online, assuming the contact remains online. This could be considered a feature of the system, as this it is a partial implementation of offline messages. As the user is not made aware that this will happen, the issue is considered a defect.}
 
+\item{If a chat is in progress, attempting to initiate another chat with them will do nothing. Ideally the current chat window should come into focus. This is a limitation of Java Swing. One possible way to fix this issue would be to use the JNI library, however this is non-portable.}
+
 \end{itemize}
 
 \end{document}
