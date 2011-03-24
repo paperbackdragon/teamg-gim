@@ -44,6 +44,7 @@ The application is an online micro blogging website which allows users to post m
 
 We aim to learn what the process of creating a web app involves, while learning how to use technologies like Django.
 
+%Describe this shit
 \begin{itemize}
 \item	Required Functionality:
 
@@ -80,16 +81,12 @@ Mobile browser support
 
 We plan to achieve all of the required functionality as well as a fair amount of the desired functionality. We are making the application slightly more complex than the problem description entails, but we believe we can achieve this, and it will give our project an edge over other similar ones. It is designed to be distributed across the web.
 
+%Describe each component
 \section{Application Architecture}
 
 \includegraphics[width=250px]{images/architecture.jpg}
 
-\begin{itemize}
-
-\item	Describe the data model i.e. what data needs to be stored or persisted by the application?
-
-\end{itemize}
-
+%Describe each entity, fix Metion to Mention, VARCHAR max lengths.
 \subsection{ER Diagram}
 
 \includegraphics[width=250px]{images/erdiagram.png}
@@ -107,8 +104,6 @@ A number of other web application frameworks are available such as Ruby On Rails
 Using Django has some disadvantages.  For example, we are now restricted to using the MVT architecture used by Django. We are also more vulnerable as we rely on the Django developers for security and other updates. 
 
 \section{Message Parsing}
-
-
 
 \begin{verbatim}
 JSON message examples to represent 
@@ -192,7 +187,7 @@ This section details 4 key use cases for the system.
 
 \item Login - On visiting the site, the user will be prompted to log in to access the rest of the site content. This provides a basic level of security and allows users to access their personal profile.
 
-\item Post Message - On the home page which is reached after logging in, the user is able to post messages. This is done by entering text into the text box and pressing the ``Meow'' button or pressing the `Enter' key. Users can assign media content to their message by clicking one of the content buttons, which beings up a prompt to embed a URL link.
+\item Post Message - On the home page which is reached after logging in, the user is able to post messages. This is done by entering text into the text box and pressing the ``Meow'' button or pressing the `Enter' key. Users can assign media content to their message by clicking one of the content buttons, which brings up a prompt to embed a URL link.
 
 \item Follow User - Following a user makes all posts by that user appear in the ``following stream''. The first stage of following a user is reaching their profile page, which can be done in various ways: Users can press a user name on the global stream, search for a user name, directly type in the URL or if that user is following them, click the name from the `followers/following' page. On the profile page of another user, pressing the `Follow' button adds the user to the list of users being followed. If a user is being followed already, the `Follow' button becomes `Unfollow'.
 
@@ -206,6 +201,7 @@ The message streams are the most important components which will require dynamic
 
 One of the key design goals for Meow was to develop a clean and simple website. Users should be instantly familiar with the mechanics of the website if they have used Twitter, Tumbler or any other similar application, and if not, should still be able to understand the site in a short amount of time.
 
+%This needs changed, purple is no more...
 The colour scheme will feature a sedate purple motif which will hopefully be inoffensive and visually appealing.
 
 \section{Summary and Future Work}
@@ -216,9 +212,10 @@ The next stage of development is implementation. We have a simple layout already
 
 \section{Acknowledgements}
 
-Special thanks to Matt Roszak for providing his art work for this project.
+%Do we need this?
 
 \bibliographystyle{abbrv}
 \bibliography{sig-proc}
+%References, Django, AJAX, JSON, JQuery, any others.
 
 \end{document}
